@@ -1,0 +1,21 @@
+CONTEXT FOR LECTURE 7 SLAVE — "OAuth 2.0" (slides titled "Lecture 8, OAuth 2.0")
+Folder: 07 - 2026-03-30 - OAuth 2.0
+Files in your folder to READ IN FULL: Lecture 8, OAuth 2.0 300326.txt (2479 lines, 52 pages), 3119-essential-oauth-primer (10.2016).txt (639 lines, Ping Identity), 260330-OAUTH2.0 Exercise.txt (136 lines — THE exercise guide).
+
+YOU OWN EXAM QUESTION 8. Verbatim sub-parts:
+Q8. OAuth 2.0
+ a) "What is the main idea of OAuth 2.0?"
+ b) "Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes."
+ c) "What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."
+
+CRITICAL: Q8c explicitly asks the student to EXPLAIN THE EXERCISES. The exercise guide (260330-OAUTH2.0 Exercise.txt) is exam syllabus. Extract every exercise task into exercises[] verbatim, and create drills that walk through what the student did (API calls with scopes, PKCE for public clients, DPoP proof-of-possession).
+
+CROSS-LECTURE NOTES:
+- Q8b is the big one: ROLES (resource owner, client, authorization server, resource server), GRANTS (authorization code; note implicit & ROPC are deprecated — say so), client profiles (public vs confidential), TOKENS (access token, refresh token; bearer), ENDPOINTS (authorization, token), SCOPES, information flow.
+- Outdated grants: "implicit" and "resource owner password credential" are no longer recommended — mention but don't dwell.
+- PKCE (RFC 7636) protects public clients against auth-code interception; DPoP (RFC 9449) binds tokens to a key (sender-constrained) vs bearer tokens.
+- OAuth is authorization/delegation, NOT authentication — that gap is why OpenID Connect exists (lecture 11, Q9). Note this.
+
+FLOW/DIAGRAM RULE: Authorization Code flow — only ordered steps if textual in slides/primer; else diagram labels + diagram_only=true. The Ping primer often has the flow as text — prefer citing it if so.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~20-25 total given Q8b/Q8c depth); JSON ONLY.

@@ -1,0 +1,17 @@
+CONTEXT FOR LECTURE 3 SLAVE — "Authentication"
+Folder: 03 - 2026-02-24 - Authentication
+Files in your folder to READ IN FULL: IAM Lecture-3.txt (1168 lines, 62 pages), eIDAS Levels of Assurance.txt (107 lines), Test Questions.txt (21 lines).
+
+YOU OWN EXAM QUESTION 3. Verbatim sub-parts:
+Q3. Authentication
+ a) "What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems."
+ b) "What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?"
+ c) "What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?"
+
+CROSS-LECTURE NOTES:
+- Q3a assurance levels: cover BOTH NIST assurance levels and eIDAS Levels of Assurance (low/substantial/high) — eIDAS Levels of Assurance.txt is your dedicated source for the eIDAS side.
+- Authentication factors = something you know / have / are. Authenticators = the things implementing factors (authenticator apps, tokens). Feeds FIDO (Q4).
+- Q3c X.509 certificates build on asymmetric crypto & digital signatures from lecture 1 (Q1c). Kerberos uses symmetric keys / KDC.
+- Kerberos flow: only emit numbered steps if they appear AS TEXT in slides; if it's a diagram, describe visible labels + diagram_only=true.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~18-22 total); extract Test Questions into exercises[]. JSON ONLY.

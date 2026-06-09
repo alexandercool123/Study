@@ -1,0 +1,17 @@
+CONTEXT FOR LECTURE 10 SLAVE — "JSON Web Tokens and Verifiable Credentials (+ PwC Guest)"
+Folder: 10 - 2026-04-20 - JSON Web Tokens and Verifiable Credentials (+ PwC Guest)
+Files in your folder to READ IN FULL: IAM - JWT.txt (1170 lines, 45 pages — main JWT lecture), RFC 7519 JWT.txt (1765 lines — the JWT RFC), IAM in the enterprise 20260421.txt (803 lines, 35 pages — PwC IGA guest deck). NOTE: also present is "Info about exam exam questions 2026.txt" (250 lines) — this is the exam questions file (already processed by the orchestrator); you may skip re-deriving questions from it but it is in your folder.
+
+YOU OWN EXAM QUESTION 7. Verbatim sub-parts:
+Q7. JSON Web Tokens (JWT)
+ a) "How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?"
+ b) "Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?"
+ c) "Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?"
+
+CROSS-LECTURE NOTES:
+- Q7b JWT structure: header.payload.signature (three base64url parts dot-separated). Header: alg, typ. Claims: registered (iss, sub, aud, exp, nbf, iat, jti), public, private. Signature via JWS (HMAC or RSA/ECDSA). RFC 7519 is authoritative — cite specific registered-claim names from it. JWS/JWE are the signing/encryption layers.
+- Q7a JWT vs session ID: stateless/self-contained vs server-side session store. Connect to OAuth/OIDC tokens (lectures 7 & 11) which are JWTs.
+- Q7c Verifiable Credentials: components (credential metadata, claims, proof/signature), roles issuer/holder/verifier, the trust triangle. This also appears in lecture 6 (SSI/DID) and EU wallet (lecture 8). SD-JWT (lecture 11) is the JWT-based selective-disclosure VC format.
+- The PwC "IAM in the enterprise" deck (IGA) is guest support — a few drills from it can anchor to examQ 5 (governance) if relevant, but keep focus on Q7.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE / RFC section or null+unverified; 3-6 drills per sub-part (~20-24 total); extract any exercise prompts into exercises[]. JSON ONLY.

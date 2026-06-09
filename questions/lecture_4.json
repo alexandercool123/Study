@@ -1,0 +1,444 @@
+{
+  "lecture": 4,
+  "lectureTitle": "FIDO2 and WebAuthn",
+  "examQuestions": [
+    {
+      "examQ": 4,
+      "subPart": "a",
+      "promptVerbatim": "Explain the steps in FIDO Registration and Login (including all challenge and response details)."
+    },
+    {
+      "examQ": 4,
+      "subPart": "b",
+      "promptVerbatim": "What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented."
+    },
+    {
+      "examQ": 4,
+      "subPart": "c",
+      "promptVerbatim": "Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?"
+    }
+  ],
+  "drills": [
+    {
+      "id": "L4-4a-1",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "flow",
+      "question": "An examiner asks you to walk through FIDO Registration. What are the steps the slides list, starting from the user choosing an authenticator?",
+      "keyBeats": [
+        "User prompted to choose authenticator matching service policy",
+        "User unlocks authenticator (fingerprint / button / PIN)",
+        "Device creates new public/private key pair (unique to device+service+account)",
+        "Public key sent to service; private key + auth method stay local"
+      ],
+      "modelAnswer": "During FIDO registration the user is first prompted to choose a FIDO authenticator that matches the online service's acceptance policy. The user then unlocks the authenticator with a fingerprint reader, a button, a PIN or similar. The device creates a new public/private key pair that is unique to the local device, the online service and the user's account. The public key is sent to the service and associated with the account, while the private key and any information about the local authentication method never leave the device.",
+      "citation": "\"Public key is sent to the online service\", IAM Lecture 4.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4a-2",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "flow",
+      "question": "A user is already registered and now logs in. What are the FIDO Login steps as the slide numbers them?",
+      "keyBeats": [
+        "Service challenges user to login with a registered device",
+        "User unlocks authenticator (same method as registration)",
+        "Device uses account identifier to select correct key, signs challenge",
+        "Signed challenge sent back; service verifies with stored public key"
+      ],
+      "modelAnswer": "First the online service challenges the user to log in with a previously registered device that matches the service's acceptance policy. The user unlocks the authenticator using the same method as at registration. The device uses the account identifier provided by the service to select the correct key and signs the service's challenge. Finally the client device sends the signed challenge back to the service, which verifies it with the stored public key and logs in the user.",
+      "citation": "\"sign the service's challenge\", IAM Lecture 4.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4a-3",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "Why does FIDO authentication rely on signing a challenge rather than sending a stored secret? What does the signature prove?",
+      "keyBeats": [
+        "PKI provides strong authentication",
+        "Auth = proving possession of the private key",
+        "Done by signing a fresh challenge",
+        "No shared secret leaves the device"
+      ],
+      "modelAnswer": "FIDO uses public-key cryptography for strong authentication. Instead of transmitting a stored password, the user proves possession of the private key by signing a fresh challenge issued by the relying party. Because the private key never leaves the device and only a signature over a server-chosen challenge is sent, there is no reusable secret to steal, and the relying party verifies the signature with the registered public key.",
+      "citation": "\"User authentication is done by proving the possession\", IAM Lecture 4.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4a-4",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "How does the basic passwordless registration ceremony (before any device specifics) establish trust between user and relying party?",
+      "keyBeats": [
+        "User device generates key pair",
+        "Public key shared with relying party",
+        "RP creates a challenge",
+        "Challenge signed with private key, RP verifies with public key"
+      ],
+      "modelAnswer": "The conceptual ceremony begins with the user's device generating a key pair and sharing the public key with the relying party (e.g. the server). When authentication is needed, the relying party creates a challenge. The device signs that challenge with the private key to prove possession, and the relying party verifies the signed challenge using the stored public key. This challenge-response over asymmetric keys is the foundation of FIDO.",
+      "citation": "\"Relying Party Verifies the Signed Challenge Using the Public Key\", IAM Lecture 4.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4a-5",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "diagram",
+      "question": "The WebAuthn registration flow in the slides is a box-and-arrow diagram. What labelled values appear, and what does the client send back to the relying party?",
+      "keyBeats": [
+        "RP sends Challenge + Relying Party ID (foo.com)",
+        "Client verifies, generates key pair",
+        "Client returns signed challenge, public key, origin, credential ID",
+        "RP sets counter to 0, saves public key + credential ID"
+      ],
+      "modelAnswer": "The WebAuthn registration is shown as a diagram, not numbered text. The relying party sends back a Challenge (e.g. fwae2) and a Relying Party ID (foo.com). The client verifies and generates a key pair, then responds with the signed challenge, the public key, the Origin (http://foo.com) and a Credential ID (o1nd0h10r). The relying party then verifies, sets the counter to 0, and saves the public key and credential ID. I am describing the labelled diagram values rather than asserting an exact numbered sequence.",
+      "citation": "\"Challenge: fwae2 Relying Party ID: foo.com\", IAM Lecture 4.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "L4-4a-6",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "diagram",
+      "question": "In the WebAuthn authentication diagram, what does the relying party send, and what labelled fields come back including the anti-replay one?",
+      "keyBeats": [
+        "RP sends Credential IDs [b27, 2kf] + Challenge (hiufe31)",
+        "Client finds key, increments counter, signs challenge",
+        "Response: signed challenge, Origin (https://foo.com), Counter: 42",
+        "RP verifies challenge + counter, saves new counter"
+      ],
+      "modelAnswer": "The WebAuthn authentication is also a diagram. The relying party sends a list of Credential IDs ([b27, 2kf]) and a Challenge (hiufe31). The client verifies, uses the credential to find the private key, increments the counter and signs the challenge. It returns the signed challenge, the Origin (https://foo.com) and a Counter value (42). The relying party verifies the challenge and the counter and saves the new counter. The counter is the anti-replay element. I describe the diagram labels rather than inventing a numbered ceremony.",
+      "citation": "\"Verify counter, Save new counter\", IAM Lecture 4.txt, PAGE 46",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "L4-4b-1",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "An examiner asks 'What is FIDO2?' What are its two component specifications and who defines them?",
+      "keyBeats": [
+        "FIDO2 (2018), passwordless on common devices",
+        "= W3C WebAuthn + FIDO Alliance CTAP",
+        "WebAuthn: standard web API in browsers/platforms",
+        "CTAP2: client-to-authenticator protocol"
+      ],
+      "modelAnswer": "FIDO2 (2018) lets users leverage common devices to authenticate to online services on mobile and desktop. It consists of two specifications: the W3C Web Authentication (WebAuthn) specification and the FIDO Alliance's Client-to-Authenticator Protocol (CTAP). WebAuthn defines a standard web API built into browsers and platforms to support FIDO authentication, while CTAP2 is the protocol that lets the client device talk to platform and external authenticators over USB, NFC or BLE.",
+      "citation": "\"FIDO2 specifications are the World Wide Web Consortium's (W3C) Web Authentication (WebAuthn)\", IAM Lecture 4.txt, PAGE 50",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4b-2",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "compare",
+      "question": "How do U2F and FIDO2 differ in purpose and authenticator support? Give the key distinctions.",
+      "keyBeats": [
+        "U2F: adds 2nd factor to passwords; FIDO2: passwordless",
+        "U2F: CTAP1/U2F; FIDO2: CTAP2 + WebAuthn",
+        "U2F: external authenticators only; FIDO2: external + platform",
+        "FIDO2 supports biometrics/PIN/security keys, full browser support"
+      ],
+      "modelAnswer": "U2F adds a second factor on top of passwords: the user still logs in with username and password and presents a security key, using CTAP1/U2F, and it only supports external authenticators (USB/NFC security keys). FIDO2 enables passwordless authentication and can work without passwords using biometrics, a PIN or security keys; it uses CTAP2 plus WebAuthn and supports both external and platform authenticators. U2F has limited browser support while FIDO2 is fully supported by modern browsers.",
+      "citation": "\"U2F (Universal 2nd Factor) Adds a second factor to passwords\", IAM Lecture 4.txt, PAGE 57",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4b-3",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "What exactly is a FIDO attestation key and when is it created? How is it tied to a device model?",
+      "keyBeats": [
+        "Key pair burned into device at manufacturing time",
+        "Specific to a device model, not per-user",
+        "E.g. all YubiKey 4 share the same attestation certificate",
+        "New credential's public key is signed with attestation private key"
+      ],
+      "modelAnswer": "A FIDO attestation key is a key pair burned into the device during manufacturing that is specific to a device model rather than to an individual user. For example, all YubiKey 4 devices share the same attestation certificate, as do all Samsung Galaxy S8 phones. When a user creates a new credential key pair, the public key sent to the service is signed with the attestation private key, allowing the service to confirm the authenticator's model and origin.",
+      "citation": "\"key pair that is burned into the device during manufacturing time\", IAM Lecture 4.txt, PAGE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4b-4",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "How is trust in an attestation key actually established at the relying party, and what two things does attestation accomplish?",
+      "keyBeats": [
+        "Attestation certs chain to a root cert the service trusts",
+        "(1) Prevents MITM swapping the public key (signature won't match)",
+        "(2) Lets service trust the source/model of the authenticator",
+        "Model ID (AAGUID in FIDO2) looked up in FIDO Metadata Service"
+      ],
+      "modelAnswer": "Attestation keys have associated attestation certificates that chain to a root certificate the service trusts, which is how the service establishes trust in the authenticator's attestation key. Attestation accomplishes two things: an attacker intercepting a registration message cannot swap in their own public key because the attestation signature would not match; and the service can trust it knows the source of the authenticator. During registration the device's unique model number is sent (an AAGUID in FIDO2, AAID in UAF, or Attestation Certificate Key Identifier in U2F) and can be looked up in the FIDO Metadata Service.",
+      "citation": "\"certificates chain to a root certificate that the service trusts\", IAM Lecture 4.txt, PAGE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4b-5",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "What is CTAP2 for, and how does it relate to the older U2F/CTAP1?",
+      "keyBeats": [
+        "Communication between client device and external authenticator",
+        "Extends U2F to platform + external authenticators",
+        "Works over USB/NFC/BLE for passwordless, 2FA or MFA",
+        "Encodes messages in CBOR"
+      ],
+      "modelAnswer": "CTAP2 (Client-to-Authenticator Protocol) facilitates secure, interoperable communication between a client device such as a computer or smartphone and an external authenticator like a security key. It extends U2F (which is CTAP1) by supporting both platform and external authenticators on FIDO2-enabled browsers and operating systems over USB, NFC or BLE, enabling a passwordless, second-factor or MFA experience. CTAP2 encodes all messages in the CBOR encoding scheme.",
+      "citation": "\"CTAP2 extends U2F by supporting both platform and external authenticators\", IAM Lecture 4.txt, PAGE 50",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4b-6",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "Name the entities that participate in the FIDO2 WebAuthn/CTAP2 setup and what role each plays.",
+      "keyBeats": [
+        "Client device: hardware hosting authentication (laptop, phone)",
+        "WebAuthn client: the web browser",
+        "Platform authenticator: built into device (Windows Hello, biometrics)",
+        "Roaming authenticator: removable (USB key); CTAP2 host negotiates with authenticators"
+      ],
+      "modelAnswer": "The FIDO2 entities are: the client device, the hardware hosting authentication such as a laptop or smartphone; the WebAuthn client, which is the web browser; a platform authenticator, built into and bound to the device's OS and hardware (e.g. Windows Hello or smartphone biometrics); a roaming authenticator, a removable cross-platform authenticator like a USB security key that can connect to multiple devices; and the CTAP2 host/platform, the part of the client device that negotiates with authenticators and reports the origin of the request. The relying party is the remote server.",
+      "citation": "\"Platform authenticator: A platform authenticator is an authenticator that is built into\", IAM Lecture 4.txt, PAGE 51",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-1",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "An examiner asks 'What is a passkey?' Give a precise definition and break down its parts.",
+      "keyBeats": [
+        "Password replacement / passwordless login",
+        "A discoverable WebAuthn credential",
+        "Discoverable = contains user info, no username needed",
+        "Credential = cryptographic private key; approved with biometric/PIN"
+      ],
+      "modelAnswer": "A passkey is a password replacement that provides faster, easier and more secure passwordless sign-ins across a user's devices. The user approves a sign-in with the same biometric or PIN they use to unlock the device. Precisely, a passkey is a discoverable WebAuthn credential: discoverable means the credential contains user information (e.g. a user id) so an authentication flow can proceed without entering a username; WebAuthn is the browser API for creating/using the credential; and the credential itself is a cryptographic private key. Passkeys are based on FIDO2 authentication.",
+      "citation": "\"a Passkey is a discoverable WebAuthn credential\", IAM Lecture 4.txt, PAGE 59",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-2",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "What are the main advantages of passkeys over passwords, per the slides?",
+      "keyBeats": [
+        "No secrets exchanged between server and authenticator",
+        "PKI-based: no shared secret stored on the server",
+        "Can't be guessed or reused; phishing resistant",
+        "Stored on user device, so server/DB compromise can't steal them"
+      ],
+      "modelAnswer": "Passkeys' advantages: no secrets are exchanged between the server and the authenticator, and being based on PKI there is no shared secret stored on the server. As a result passkeys cannot be guessed or reused, and they are phishing resistant because each passkey is unique to the app or website it was created for. Because passkeys are stored on the user's device, adversaries cannot steal them by compromising the provider's server or database.",
+      "citation": "\"Phishing resistant. (Passkeys are unique to the app or website\", IAM Lecture 4.txt, PAGE 62",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-3",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "Can a replay attack reuse a previous passkey/FIDO authentication response? Explain why or why not.",
+      "keyBeats": [
+        "Slides pose the replay question explicitly",
+        "Each login uses a fresh server challenge -> signature differs",
+        "Signature counter increments each authentication",
+        "RP verifies counter; a replayed (stale) response is rejected"
+      ],
+      "modelAnswer": "No. The slides explicitly raise whether an attacker can reuse a previous authentication response. Replay is prevented because each login uses a fresh challenge from the relying party, so an old signature does not match the new challenge. In addition, the authenticator maintains a signature counter that increments on each authentication; the relying party verifies and saves this counter, so a replayed (stale) response with an old or non-increasing counter is detected and rejected.",
+      "citation": "\"Replay Attack: Can an attacker reuse a previous authentication response?\", IAM Lecture 4.txt, PAGE 49",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-4",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "exercise",
+      "question": "Using the 'Spot the Phishing Attempt' exercise: in Scenario B a user authenticates with WebAuthn and a security key on a fake site. Are they phished? Why not?",
+      "keyBeats": [
+        "Scenario A (password): phished, credentials captured",
+        "Scenario B (WebAuthn key): not phished",
+        "Credential/passkey is bound to the origin (RP ID)",
+        "Fake origin != registered origin -> no valid signature produced"
+      ],
+      "modelAnswer": "In Scenario A the user types credentials into a phishing site that looks like their bank, so the attacker captures them. In Scenario B, where the user authenticates with WebAuthn and a security key, phishing fails: the credential is bound to the origin / relying party ID it was registered for. On the fake website the origin does not match the registered one, so the authenticator will not produce a valid signature for that origin, and there is no reusable secret for the attacker to capture. This origin binding is what makes WebAuthn/passkeys phishing resistant.",
+      "citation": "\"A user tries to authenticate using WebAuthn on a fake website\", IAM Lecture 4.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-5",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "Mechanically, how does a passkey work during login from the authenticator's perspective?",
+      "keyBeats": [
+        "Authenticator generates public/private key pair at setup",
+        "Private key stays secret, only on the device",
+        "Server sends a challenge on login",
+        "Challenge solved/signed with private key, response returned"
+      ],
+      "modelAnswer": "Passkeys use public-key cryptography. An authenticator (the user's smartphone, another device, or a password manager) generates a related pair of keys during account configuration. The private key is secret and only stored on the device. On login the server sends a challenge to the authenticator; the challenge is solved using the private key, essentially signing the data, and the response is sent back to the server, which verifies it with the public key.",
+      "citation": "\"the server sends a challenge to the authenticator\", IAM Lecture 4.txt, PAGE 61",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L4-4c-6",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "Why are credential stuffing and OTP-phishing problems that passkeys solve, where passwords and OTPs fail?",
+      "keyBeats": [
+        "Password reuse -> one breach enables credential stuffing",
+        "OTPs can be relayed by phishing-aware attackers",
+        "Passkeys: no shared secret, unique per site, origin-bound",
+        "Resistant to phishing, credential stuffing, remote attacks"
+      ],
+      "modelAnswer": "Passwords are reused, so one breach lets attackers try the same credentials elsewhere (credential stuffing), and OTPs can still be captured and relayed in real time by a phishing-aware attacker. Passkeys solve this because they are based on FIDO2 with no shared secret on the server, are unique to each app or website, and are origin-bound. The slides state passkeys are proven resistant to phishing, credential stuffing and other remote attacks, since there is nothing reusable to steal or replay.",
+      "citation": "\"resistant to threats of phishing, credential stuffing and other remote attacks\", IAM Lecture 4.txt, PAGE 59",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "L4-EX-1",
+      "source": "IAM Lecture 4.txt, PAGE 27",
+      "promptVerbatim": "Exercise: Spot the Phishing Attempt. Objective: Learn how cryptographic keys solution prevents phishing attacks. Scenario A: A user logs into a phishing site that looks exactly like their bank's website and enters credentials. Scenario B: A user tries to authenticate using WebAuthn on a fake website with a Security Key.",
+      "whatItTests": "Whether the student understands that origin/RP-ID binding makes WebAuthn passkeys phishing-resistant while password entry is not.",
+      "answerSketch": "Scenario A: phished - the user types credentials into the lookalike site and the attacker captures them. Scenario B: not phished - the WebAuthn credential is bound to the registered origin (RP ID); on a fake website the origin doesn't match, so the security key produces no valid signature and no reusable secret leaks.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-2",
+      "source": "IAM Lecture 4.txt, PAGE 21",
+      "promptVerbatim": "If You Were the Attacker... The system uses signature-based authentication (public/private key). No passwords. No OTP. Just cryptographic signatures. Your task: How would you try to break it? What assumptions would you attack? How could you impersonate a legitimate user? For each attack, suggest a possible defense.",
+      "whatItTests": "Threat-modelling a signature-based passwordless system: identifying attack surfaces (device theft, malware stealing signatures, MITM, replay) and matching defenses.",
+      "answerSketch": "Attacks/defenses: steal the private key -> keys never leave device / hardware-protected; malware signs without user -> require user activation (button/biometric); MITM swaps public key at registration -> attestation signature won't match; replay an old response -> fresh challenge + signature counter; phish on fake site -> origin/RP-ID binding.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-3",
+      "source": "IAM Lecture 4.txt, PAGE 49",
+      "promptVerbatim": "Replay Attack: Can an attacker reuse a previous authentication response?",
+      "whatItTests": "Understanding the anti-replay mechanisms in FIDO/WebAuthn: fresh per-login challenge and the incrementing signature counter.",
+      "answerSketch": "No. Each login uses a new server challenge so an old signature won't validate, and the authenticator's signature counter increments each time; the relying party verifies and stores the counter, rejecting any stale/non-increasing (replayed) response.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-4",
+      "source": "IAM Lecture 4.txt, PAGE 63",
+      "promptVerbatim": "Passkeys - revisiting the demo. Step 1: Setup of Yubikeys. Step 2: Use Yubikey manager. Step 3: Go to passkeys.io to understand setting up a passkey. Step 5: Use the service to setup a passkey and choose 'External device or key'. Step 6: Sign out and try to sign in with the passkey.",
+      "whatItTests": "Hands-on registration and login with a roaming (YubiKey) passkey authenticator, choosing 'External device or key'.",
+      "answerSketch": "Plug in the YubiKey, manage it with YubiKey Manager, register a passkey at passkeys.io choosing 'External device or key', then sign out and sign back in using the key (MAC users may use TouchID instead).",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-5",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What is FIDO and explain its primary purpose?",
+      "whatItTests": "Definition of the FIDO Alliance framework and its goal of strong, phishing-resistant authentication.",
+      "answerSketch": "FIDO is a framework of standards using protocols such as WebAuthn and CTAP to achieve strong, phishing-resistant authentication (passwordless or 2FA).",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-6",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What are the basic steps in FIDO registration process?",
+      "whatItTests": "Recall of the FIDO registration ceremony steps.",
+      "answerSketch": "Choose authenticator matching policy; unlock it (fingerprint/PIN/button); device creates a key pair unique to device+service+account; public key sent to service, private key stays local.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-7",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What are FIDO attestation keys? What is their purpose?",
+      "whatItTests": "Attestation key definition (per-model, manufactured-in) and purpose (prove authenticator model/source, prevent public-key swap).",
+      "answerSketch": "A per-model key pair burned in at manufacture; the new credential's public key is signed with the attestation private key so the service can trust the authenticator model/source and an MITM cannot swap the public key.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-8",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What is FIDO U2F? What does it provide in terms of authentication?",
+      "whatItTests": "U2F as a strong second factor on top of passwords.",
+      "answerSketch": "FIDO Universal 2nd Factor: a strong second factor added to username/password login via a security key (button/NFC/BLE), one key pair per service, external authenticators only.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-9",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What is FIDO2? What are the entities participating in FIDO2",
+      "whatItTests": "FIDO2 = WebAuthn + CTAP2, and the participating entities.",
+      "answerSketch": "FIDO2 (2018) = W3C WebAuthn + FIDO CTAP2, enabling passwordless auth. Entities: client device, WebAuthn client (browser), platform authenticator, roaming authenticator, CTAP2 host/platform, and the relying party.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-10",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What is CTAP2? What does it provide?",
+      "whatItTests": "CTAP2 role in client-authenticator communication.",
+      "answerSketch": "Client-to-Authenticator Protocol v2: secure interoperable communication between client device and platform/external authenticators over USB/NFC/BLE for passwordless, 2FA or MFA; extends U2F; uses CBOR encoding.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-11",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What is WebAuthn? What is its purpose and its involvement in FIDO2?",
+      "whatItTests": "WebAuthn as the W3C browser API half of FIDO2.",
+      "answerSketch": "WebAuthn is a W3C standard web API built into browsers/platforms enabling websites to create and use FIDO credentials; it is the WebAuthn half of FIDO2 (the other being CTAP2).",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-12",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "Explain the registration process in WebAuthn",
+      "whatItTests": "WebAuthn registration flow values (challenge, RP ID, signed challenge, public key, origin, credential ID) shown as a diagram.",
+      "answerSketch": "RP sends challenge + RP ID; client verifies and generates a key pair; client returns signed challenge, public key, origin and credential ID; RP verifies, sets counter to 0 and stores the public key and credential ID. (Slides show this as a diagram.)",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-13",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What are PassKeys? How do they work?",
+      "whatItTests": "Passkey definition (discoverable WebAuthn credential) and the challenge-signing mechanism.",
+      "answerSketch": "Passkeys are a passwordless replacement and a discoverable WebAuthn credential; an authenticator generates a key pair, keeps the private key on-device, and signs the server's login challenge which the server verifies with the public key.",
+      "unverified": false
+    },
+    {
+      "id": "L4-EX-14",
+      "source": "IAM24-FIDO-testQuestions.txt, PAGE 1",
+      "promptVerbatim": "What are the advantages of using Passkeys over traditional Passwords?",
+      "whatItTests": "Passkey advantages versus passwords.",
+      "answerSketch": "No shared secret/no secrets exchanged; can't be guessed or reused; phishing resistant (unique per site, origin-bound); stored on device so server/DB breaches can't steal them; resistant to credential stuffing.",
+      "unverified": false
+    }
+  ],
+  "_sources_read": ["IAM Lecture 4.txt:1308", "IAM24-FIDO-testQuestions.txt:25", "lecture_4_context.txt:19"]
+}

@@ -1,0 +1,424 @@
+{
+  "lecture": 6,
+  "lectureTitle": "SAML and Self-Sovereign Identities",
+  "examQuestions": [
+    {
+      "examQ": 6,
+      "subPart": "a",
+      "promptVerbatim": "Explain the concept and principles of Single Sign-On. What are the pros and cons?"
+    },
+    {
+      "examQ": 6,
+      "subPart": "b",
+      "promptVerbatim": "Discuss the working principles of SAML, its architecture, and typical use cases."
+    },
+    {
+      "examQ": 6,
+      "subPart": "c",
+      "promptVerbatim": "Discuss different types of SAML assertions and their content."
+    }
+  ],
+  "drills": [
+    {
+      "id": "L6-6a-1",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "A user must access dozens of cloud and internal apps daily, each with its own password. What is Single Sign-On and what core principle does it apply to fix this?",
+      "keyBeats": [
+        "Log in once",
+        "Reuse authentication across services",
+        "Circle of trust between IdP and SPs",
+        "No re-authentication for further services"
+      ],
+      "modelAnswer": "Single Sign-On lets a user authenticate once with an identity provider and then access multiple services without logging in again. The user authenticates once to the IdP, which issues a token carrying an assertion; the user can then access further services from other service providers in the same circle of trust without re-authenticating. User attributes may be shared with all members of the circle.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6a-2",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "What is the 'Circle of Trust' that SSO depends on, and which two trust relationships make it work?",
+      "keyBeats": [
+        "Business + operational agreements between IdP and SPs",
+        "Identity info handled per agreed policies",
+        "IdP-SP trust agreement defines relationship",
+        "Separate user-IdP circle of trust"
+      ],
+      "modelAnswer": "SSO relies on a circle of trust between an identity provider and several service providers that have business relationships and operational agreements, within which identity information is handled confidentially per agreed policies. There must be an agreement between IdP and SP defining their trust relationship. Separately, the user and IdP form another circle of trust: the user trusts the IdP to store her identities and use them properly.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6a-3",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "pros-cons",
+      "question": "An IT manager asks why SSO/federation is worth deploying. What are the main pros for users, IT and the business?",
+      "keyBeats": [
+        "Users: no battery of passwords, click-and-work",
+        "IT: better security + lower help-desk burden",
+        "Business: faster sharing, compliance, less risk",
+        "Passwords never cross the firewall"
+      ],
+      "modelAnswer": "Users love it because internet SSO frees them from remembering and resetting many passwords, giving click-and-work access. IT loves it because it simultaneously enhances security and reduces the support/help-desk burden. Business leaders love it because it accelerates application and data sharing with partners while decreasing risk and increasing regulatory compliance. With SAML the user password never crosses the firewall, eliminating opportunities for identity theft and phishing.",
+      "citation": "saml-101-white-paper.txt, PAGE 06",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6a-4",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "pros-cons",
+      "question": "What are the cons and limitations of SSO/SAML, and how do newer protocols address them?",
+      "keyBeats": [
+        "SAML never optimised for native mobile apps",
+        "Weak for API-driven multi-source apps",
+        "Single point of compromise concern",
+        "OAuth 2.0 / OpenID Connect successors"
+      ],
+      "modelAnswer": "The major limitation is that SAML was never optimised to enable SSO for native mobile applications or for apps consolidating data via API calls from many third-party sources. OAuth 2.0 and OpenID Connect (which builds on OAuth) emerged to meet these needs, becoming key standards for mobile and machine-to-machine interactions. Conceptually SSO also concentrates risk: if the single IdP login is compromised, access to many apps is exposed, which is why strong authentication at the IdP matters.",
+      "citation": "saml-101-white-paper.txt, PAGE 03",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6a-5",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "context",
+      "question": "Where does SSO sit in the four-phase evolution of identity management, and what comes after it?",
+      "keyBeats": [
+        "Phase 1 centralized",
+        "Phase 2 federated = SSO",
+        "Phase 3 user-centric detour",
+        "Phase 4 self-sovereign / decentralized"
+      ],
+      "modelAnswer": "Christopher Allen's model has four phases: centralized identity, federated identity, user-centric identity, and self-sovereign identity. SSO corresponds to the federated phase, where administrative control is held by multiple federated authorities and users can use the same identity across multiple sites. Federated IDMS (SAML, OpenID Connect) is still dominant, but decentralized/self-sovereign identity is the next step and is rapidly gaining momentum.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 04",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-1",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "A colleague asks 'what exactly is SAML?' How would you define it, including who standardised it and which version dominates?",
+      "keyBeats": [
+        "XML-based framework for security/identity info",
+        "OASIS standard, roots in Liberty Alliance",
+        "SAML 2.0 approved March 2005",
+        "Exchanges auth + authz between security domains"
+      ],
+      "modelAnswer": "SAML (Security Assertion Markup Language) is an open, XML-based framework for exchanging security and identity management information, developed by OASIS (with roots in the Liberty Alliance / Shibboleth / ID-FF convergence). Version 2.0 was approved in March 2005 and is the dominant version. It enables the secure exchange of authentication and authorization information between security domains such as separate organisations or company divisions, and notably never requires a third party to access the user's credentials.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-2",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "architecture",
+      "question": "What are the two main entity roles in SAML architecture, and what does each do?",
+      "keyBeats": [
+        "IdP = SAML authority / asserting party",
+        "IdP authenticates user, issues assertions",
+        "SP = relying party that consumes assertions",
+        "SP uses assertions for access control"
+      ],
+      "modelAnswer": "SAML has two roles. The SAML authority / asserting party is the identity provider (IdP), responsible for maintaining and authenticating the user's identity (usually via an IdM system) and producing assertions. The relying party / service provider (SP) is the system entity that uses received assertions; typically several SPs make use of assertions about a subject in order to control access and provide a customised service.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-3",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "flow",
+      "question": "Walk through the steps of an SP-initiated SAML SSO flow from the lecture.",
+      "keyBeats": [
+        "1. User authenticates once with IdP",
+        "2. User requests RP resource",
+        "3. RP asks for assertion",
+        "4. IdP composes + signs assertion, sends to RP",
+        "5. RP verifies DSIG, makes access decision"
+      ],
+      "modelAnswer": "In the SP-initiated flow the lecture lists ordered steps: (1) the user authenticates once with the IdP (Single Sign-On); (2) the user requests access to the relying party's resources; (3) the RP asks for an assertion to be provided; (4) the IdP composes the assertion, signs it with its digital signature and sends it to the RP; (5) the RP inspects the digital signature (DSIG) to verify the SAML token's integrity and authenticity, then analyses its contents and makes access-control decisions. The SP-side endpoint receiving the assertion is the Assertion Consumer Service.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-4",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "use-cases",
+      "question": "Give the typical enterprise use cases for SAML federation.",
+      "keyBeats": [
+        "Outbound internet SSO to cloud/partner/vendor apps",
+        "Inbound internet SSO for customers/partners to internal apps",
+        "Internal web SSO across subsidiaries/acquisitions",
+        "Bridges separate security domains / IdM systems"
+      ],
+      "modelAnswer": "Typical enterprise use cases are: outbound internet SSO to web-based cloud, business-process-outsourcing, partner, vendor or supplier applications; inbound internet SSO to give customers, business partners and affiliates/subsidiaries secure access to internal web applications; and internal web SSO providing centralized access for the organisation and any subsidiaries, acquisitions or joint ventures where separate security domains, multiple federation standards or separate IdM systems exist.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-5",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "security",
+      "question": "How does SAML protect assertions and messages cryptographically, and what guarantees does this provide?",
+      "keyBeats": [
+        "Uses W3C XML Signature (enveloped/enveloping/detached)",
+        "Optional XML Encryption for confidentiality",
+        "Signed assertion: integrity, origin auth, non-repudiation",
+        "Can be packaged in SOAP tokens over untrusted networks"
+      ],
+      "modelAnswer": "SAML uses the W3C XML Signature standard (which supports three node types: enveloped, enveloping, detached) and may also use XML Encryption for confidentiality. A SAML assertion signed by the asserting party supports integrity of the assertion, authentication of the asserting party to a relying party, and non-repudiation of origin if based on the authority's key pair; a signed protocol message gives equivalent guarantees for the message. Assertions can be packaged into encrypted security tokens, e.g. SOAP messages, to be sent over an unprotected network.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6b-6",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "comparison",
+      "question": "Why did SAML become dominant over WS-Federation for B2B federation?",
+      "keyBeats": [
+        "OASIS standard since 2002, field-proven",
+        "Interoperability certification (Liberty/Kantara)",
+        "Thousands of production deployments",
+        "Even Microsoft added SAML 2.0 to ADFS"
+      ],
+      "modelAnswer": "SAML's major advantage is its widespread and growing adoption. As an OASIS standard since 2002 it enjoys field-proven security, scalability and dependability in thousands of production deployments, plus rigorous interoperability certification (Liberty Alliance / Kantara). WS-Federation, part of the Microsoft/IBM WS-* suite, stays popular only in Microsoft-centric ADFS environments. Significantly, Microsoft added SAML 2.0 support to ADFS, acknowledging SAML's dominance in B2B identity federation.",
+      "citation": "saml-101-white-paper.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6c-1",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "enumeration",
+      "question": "How many types of SAML assertion statements are specified, and what does each one tell the Service Provider?",
+      "keyBeats": [
+        "Exactly 3 types",
+        "Authentication <AuthnStatement>: how/when authenticated",
+        "Attribute <AttributeStatement>: identifying attributes",
+        "Authorization Decision <AuthzDecisionStatement>: what resource allowed"
+      ],
+      "modelAnswer": "SAML specifies three (and only three) assertion statement types. Authentication (<AuthnStatement>) tells the SP that the subject was authenticated with the IdP using a particular method at a specific time, and may include authentication context. Attribute (<AttributeStatement>) informs the SP that the user has specific identifying attributes. Authorization Decision (<AuthzDecisionStatement>) tells the SP what resource a user is entitled to access based on certain evidence.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6c-2",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "content",
+      "question": "Beyond the statement, what common information does every SAML assertion contain?",
+      "keyBeats": [
+        "Issuer of the assertion",
+        "Issue time (IssueInstant)",
+        "Subject (<Subject> element)",
+        "Statement(s) + validity conditions"
+      ],
+      "modelAnswer": "A SAML assertion is a package of information made by a SAML authority, usually about a subject represented by the <Subject> element. It contains the issuer of the assertion, the time it was issued, the subject, one or more statements about the subject, and the conditions under which the assertion is valid. These statements are what service providers use for access-control decisions.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6c-3",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "example",
+      "question": "In the lecture's AuthnStatement XML example, what does the assertion actually state about the subject?",
+      "keyBeats": [
+        "Subject NameID jygH5F90I",
+        "Authenticated at AuthnInstant time",
+        "AuthnContextClassRef = PasswordProtectedTransport",
+        "Issuer + signature wrap the assertion"
+      ],
+      "modelAnswer": "The example asserts that the subject (NameID 'jygH5F90I') was authenticated at the given AuthnInstant using the Authentication Context Class named 'Password Protected Transport' (urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport). The assertion is wrapped with version, ID, IssueInstant, the <saml:Issuer>, and a <ds:Signature>, with the claim carried inside the <saml:AuthnStatement> / <saml:AuthnContext> elements.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6c-4",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "example",
+      "question": "In the SOAP/attribute example, how is an attribute like eduPersonAffiliation represented, and what limits the assertion's validity?",
+      "keyBeats": [
+        "AttributeStatement holds Attribute Name + values",
+        "eduPersonAffiliation = member, staff",
+        "Conditions: NotBefore / NotOnOrAfter window",
+        "AudienceRestriction limits intended SP"
+      ],
+      "modelAnswer": "Inside the <saml:AttributeStatement>, an <saml:Attribute> (e.g. FriendlyName 'eduPersonAffiliation', a urn:oid name) carries one or more <saml:AttributeValue> elements such as 'member' and 'staff'. Validity is bounded by the <saml:Conditions> element with NotBefore / NotOnOrAfter timestamps, and an <saml:AudienceRestriction>/<saml:Audience> limiting which SP may consume it. SubjectConfirmation (e.g. method bearer) ties the assertion to the subject and recipient.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-6c-5",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "link",
+      "question": "How do SAML assertions relate to the broader claims/assertions/credentials concepts from earlier lectures (Q2c)?",
+      "keyBeats": [
+        "RP requests a claim from the user",
+        "User asks IdP to make an assertion to the claim",
+        "Assertion = signed statement backing a claim",
+        "Claim = (package of) attributes about a subject"
+      ],
+      "modelAnswer": "An assertion is the IdP's signed statement backing a claim. In the SSO model the RP requests a claim from the user, the user asks the IdP to make an assertion to that claim, and the user presents the asserted claim (claim + assertion) to the RP. A claim is a (package of) attributes describing a subject; the SAML attribute assertion is precisely the mechanism that lets a trusted authority vouch for those attribute claims so the SP can make access decisions.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 07",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-7c-1",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What is a Verifiable Credential (VC), and what makes it trustworthy in the SSI model?",
+      "keyBeats": [
+        "Set of claims issued by an Issuer to a Holder",
+        "Tamper-evident with cryptographic authorship",
+        "Includes metadata: issuer, expiry, key, revocation",
+        "Proof = Issuer's digital signature"
+      ],
+      "modelAnswer": "A Verifiable Credential is a set of one or more claims made by an Issuer about a subject (Holder); it is a tamper-evident credential whose authorship can be cryptographically verified. It contains the claims plus metadata (issuer, expiry date/time, a public key for verification, the revocation mechanism) and a proof supplied by the Issuer such as a digital signature. This lets a Verifier confirm who issued it and that it was not tampered with, without contacting the Issuer.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-7c-2",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "roles",
+      "question": "Describe the three key SSI roles (Issuer, Holder, Verifier) and how a Verifiable Presentation flows between them.",
+      "keyBeats": [
+        "Issuer issues VCs to Holder",
+        "Holder stores VCs in wallet, composes VPs",
+        "Verifier checks VP without asking Issuer",
+        "Verifier resolves Issuer's DID Document"
+      ],
+      "modelAnswer": "The Issuer issues Verifiable Credentials on demand to a subject (Holder). The Holder keeps a collection of VCs in a Digital Identity Wallet and can compose a Verifiable Presentation from one or more VCs to show a Verifier on demand. The Verifier (typically a service provider asking for user info) can verify the statements in the VP and which party made them without asking the Issuer; instead it verifies the Issuer's signature by checking the Issuer's DID Document. This puts Holders back in control of their data.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-7c-3",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What is a Decentralized Identifier (DID), and what are its four core properties?",
+      "keyBeats": [
+        "Globally unique identifier, text string in 3 parts",
+        "Scheme : DID method : method-specific id",
+        "Persistent, resolvable, cryptographically-verifiable, decentralized",
+        "Private key proves ownership; no central authority"
+      ],
+      "modelAnswer": "A DID is a new type of globally unique identifier (a URI) that associates a DID subject with a DID document. It is a text string of three parts: the DID URI scheme identifier, the DID method, and the method-specific identifier (e.g. did:example:123456789abcdefghi). Its four core properties are: permanent/persistent, resolvable (look it up for metadata), cryptographically-verifiable (prove control with cryptography), and decentralized (no central registration authority). The private key proves ownership.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-7c-4",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "How does the Verifiable Data Registry act as the trust mechanism in SSI, and how does selective/minimum disclosure protect privacy?",
+      "keyBeats": [
+        "Registry = distributed ledger, immutable once recorded",
+        "Issuer writes DID + public key; Verifier resolves it",
+        "Holder selects only requested info into a VP",
+        "Minimum disclosure / SD-JWTs, ZKP techniques"
+      ],
+      "modelAnswer": "The Verifiable Data Registry is typically a distributed ledger (Sovrin, IOTA, Ethereum, Hyperledger Besu); once a DID and DID document are registered they become immutable, and a Verifier can resolve the DID document to get the subject's public key and the Issuer's DID. For privacy, the Holder selects only the requested information from one or more VCs, makes transformations, and composes a Verifiable Presentation as a minimum-disclosure claim. Selective Disclosure JWTs (SD-JWTs) and zero-knowledge techniques realise this.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L6-7c-5",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "comparison",
+      "question": "Contrast the SSO/federated trust model with the SSI trust model. What is the fundamental shift?",
+      "keyBeats": [
+        "Federated: IdP is intermediary in every transaction",
+        "SSI: trust triangle Issuer-Holder-Verifier",
+        "Verifier need not contact Issuer (uses ledger)",
+        "User/Holder controls and stores own data"
+      ],
+      "modelAnswer": "In the federated/SSO model an identity provider sits between user and service provider and makes assertions in each transaction. SSI uses two different trust models: a trust triangle where an Issuer issues credentials to a Holder, the Holder sends presentations to a Verifier, and all register/verify identifiers via a verifiable data registry. The fundamental shift is that the Verifier can verify cryptographically against the ledger without contacting the Issuer, and the Holder (user) controls and stores their own data rather than depending on an IdP.",
+      "citation": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 09",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "L6-EX-1",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "Discuss the information flow in Single Sign-On systems and SAML in particular!"
+    },
+    {
+      "id": "L6-EX-2",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "Discuss the detailed content of SAML assertions! Which technologies are used for composing assertions?"
+    },
+    {
+      "id": "L6-EX-3",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "Discuss the pros and cons of Single Sign-On systems!"
+    },
+    {
+      "id": "L6-EX-4",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "Explain the basic idea of Self-Sovereign Identities! What are some of the barriers for introducing SSI?"
+    },
+    {
+      "id": "L6-EX-5",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "What is the difference between SSO and SSI systems? What do we want to achieve?"
+    },
+    {
+      "id": "L6-EX-6",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "What are DIDs and DID documents? How are they used?"
+    },
+    {
+      "id": "L6-EX-7",
+      "source": "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt, PAGE 42",
+      "prompt": "What are Verifiable Credentials and Verifiable Presentations? How are they used?"
+    }
+  ],
+  "_sources_read": [
+    "lecture_6_context.txt:18",
+    "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt:2510",
+    "saml-101-white-paper.txt:535",
+    "Path to SSI - Alacrity.txt:268"
+  ]
+}

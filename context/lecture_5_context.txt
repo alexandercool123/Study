@@ -1,0 +1,18 @@
+CONTEXT FOR LECTURE 5 SLAVE — "Resources, Policies and Identity Management"
+Folder: 05 - 2026-03-10 - Resources, Policies and Identity Management
+Files in your folder to READ IN FULL: Lecture 5, Resources, policies and identity management, 060325.txt (2344 lines, 49 pages), NIST.SP.800-162.txt (2408 lines — NIST ABAC guide), Learning XML, Markup and core concepts, ch02.txt (1586 lines — O'Reilly XML primer).
+
+YOU OWN EXAM QUESTION 5. Verbatim sub-parts:
+Q5. Access control and policies
+ a) "Explain the difference between authentication and authorization. How can authorization be implemented?"
+ b) "Explain the key parts of XACML 3.0 and its policy architecture."
+ c) "Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."
+
+CROSS-LECTURE NOTES:
+- Q5b XACML: the policy architecture components are PEP, PDP, PAP, PIP and the Policy/PolicySet/Rule structure with combining algorithms. NIST.SP.800-162 is your authoritative source for ABAC and also describes these components — cite it AND the lecture slides. Use the XML primer only for what XACML's XML structure needs; don't over-invest there.
+- Q5a: this lecture recaps identification/identity-proofing/authentication from lecture 2 then pivots to authorization. AuthN (who you are) vs AuthZ (what you may do).
+- Q5c RBAC vs ABAC tradeoffs (role explosion vs attribute flexibility). Guest lecture 9 (IAM Use Cases) supports the enterprise angle.
+
+FLOW/DIAGRAM RULE: XACML data-flow (PEP->PDP...) — only emit ordered steps if textual in source; else describe diagram labels + diagram_only=true.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE/section or null+unverified; 3-6 drills per sub-part (~18-22 total); extract any exercise prompts into exercises[]. JSON ONLY.

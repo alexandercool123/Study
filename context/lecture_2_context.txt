@@ -1,0 +1,17 @@
+CONTEXT FOR LECTURE 2 SLAVE — "Digital Identities and IAM"
+Folder: 02 - 2026-02-17 - Digital Identities and IAM
+Files in your folder to READ IN FULL: Lecture-2.txt (2327 lines, 53 pages), TheLawsOfIdentity.txt (1289 lines, Kim Cameron), Path to SSI - Alacrity.txt (268 lines, Christopher Allen), Physical and online credentials.txt (36 lines), Test Questions.txt (27 lines).
+
+YOU OWN EXAM QUESTION 2. Verbatim sub-parts:
+Q2. Digital identities and credentials
+ a) "What is a digital identity? Discuss important concepts, terms and principles."
+ b) "Explain the difference between identification, identity proofing and authentication."
+ c) "Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these."
+
+CROSS-LECTURE NOTES:
+- Q2a "principles": Kim Cameron's 7 Laws of Identity (TheLawsOfIdentity.txt) are central — name and cite them. Christopher Allen's Path to SSI gives the evolution toward self-sovereign identity (also revisited in lecture 6).
+- Key identity concepts (from curriculum): linkability, personally identifiable information (PII), personal data, attributes, claims, assertions; privacy, trust, claims-based identities; physical vs online identities; NIST framework & GDPR.
+- Q2b (identification / identity proofing / authentication) is REVISITED and expanded in lecture 5 — keep your answer here at the concepts level.
+- Q2c claims/assertions/credentials connects forward to SAML assertions (Q6c, lecture 6), JWT claims (Q7b, lecture 10), and Verifiable Credentials (Q7c).
+
+STUDENT DESIGN: problem-first openers; keyBeats (terse skeleton) DISTINCT from modelAnswer (2-4 sentence prose); <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~18-22 total); extract Test Questions into exercises[]. JSON ONLY.

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IAM Oral Exam — Study</title>
+<style>
+  :root{
+    --bg:#0e1116; --bg2:#161b22; --bg3:#1c2330; --line:#2a3340;
+    --fg:#e6edf3; --mut:#9aa7b4; --acc:#4fa3ff; --acc2:#7ee787;
+    --warn:#ffb454; --bad:#ff6b6b; --ok:#3fb950;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  header{position:sticky;top:0;z-index:10;background:var(--bg2);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.2px}
+  header .sub{color:var(--mut);font-size:12px}
+  nav{margin-left:auto;display:flex;gap:6px}
+  nav button{background:var(--bg3);color:var(--fg);border:1px solid var(--line);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
+  nav button.active{background:var(--acc);color:#04101f;border-color:var(--acc);font-weight:600}
+  main{max-width:1000px;margin:0 auto;padding:18px 16px 80px}
+  .examq{background:var(--bg2);border:1px solid var(--line);border-radius:12px;margin:14px 0;overflow:hidden}
+  .examq>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+  .examq>summary::-webkit-details-marker{display:none}
+  .qnum{flex:0 0 auto;width:30px;height:30px;border-radius:8px;background:var(--acc);color:#04101f;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .qtitle{font-weight:600;font-size:15px}
+  .qmeta{color:var(--mut);font-size:12px;margin-top:2px}
+  .chev{margin-left:auto;color:var(--mut);transition:transform .15s}
+  details[open]>summary .chev{transform:rotate(90deg)}
+  .subpart{border-top:1px solid var(--line);padding:12px 16px 4px}
+  .sublabel{display:flex;gap:8px;align-items:baseline}
+  .subbadge{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:var(--bg3);border:1px solid var(--line);color:var(--acc2);font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .subprompt{color:var(--fg);font-size:13.5px;font-style:italic}
+  .drill{background:var(--bg);border:1px solid var(--line);border-radius:10px;margin:10px 0 10px 30px;padding:10px 12px}
+  .dq{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:flex-start}
+  .typetag{font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:5px;border:1px solid var(--line);color:var(--mut);flex:0 0 auto;margin-top:1px}
+  .typetag.opener{color:var(--acc);border-color:var(--acc)}
+  .typetag.mechanism{color:var(--acc2);border-color:var(--acc2)}
+  .typetag.specific{color:var(--warn);border-color:var(--warn)}
+  .reveal-btn{margin-top:8px;background:var(--bg3);border:1px solid var(--line);color:var(--fg);padding:5px 12px;border-radius:7px;cursor:pointer;font-size:12px}
+  .answer{margin-top:10px;display:none}
+  .answer.show{display:block}
+  .beats{margin:0 0 8px;padding-left:18px}
+  .beats li{margin:2px 0;color:var(--acc2)}
+  .label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:8px 0 3px}
+  .model{background:var(--bg3);border-left:3px solid var(--acc);padding:8px 10px;border-radius:0 6px 6px 0;font-size:13.5px}
+  .cite{margin-top:8px;font-size:12px;color:var(--mut);border-top:1px dashed var(--line);padding-top:6px}
+  .cite code{color:var(--acc2);background:transparent}
+  .flag{display:inline-block;font-size:10px;padding:2px 6px;border-radius:5px;margin-left:6px;vertical-align:middle}
+  .flag.unv{background:rgba(255,107,107,.15);color:var(--bad);border:1px solid var(--bad)}
+  .flag.diag{background:rgba(255,180,84,.15);color:var(--warn);border:1px solid var(--warn)}
+  .exrow{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+  .exrow .src{font-size:12px;color:var(--mut)}
+  .exrow .prm{font-weight:600;margin:4px 0}
+  .exrow .tst{font-size:12.5px;color:var(--mut)}
+  .exrow .ans{margin-top:6px;font-size:13px;background:var(--bg3);padding:8px 10px;border-radius:6px;display:none}
+  .exrow .ans.show{display:block}
+  .grp{font-size:13px;color:var(--mut);margin:22px 0 6px;text-transform:uppercase;letter-spacing:.6px}
+  /* quiz */
+  #quizArea{text-align:center}
+  .drawbtn{background:var(--acc);color:#04101f;border:none;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
+  .timer{font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;margin:10px 0}
+  .timer.warn{color:var(--warn)} .timer.over{color:var(--bad)}
+  .tctrl button{margin:0 4px}
+  .grade button{padding:10px 18px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-weight:600;margin:0 5px}
+  .grade .pass{background:rgba(63,185,80,.18);color:var(--ok);border-color:var(--ok)}
+  .grade .unsure{background:rgba(255,180,84,.18);color:var(--warn);border-color:var(--warn)}
+  .grade .fail{background:rgba(255,107,107,.18);color:var(--bad);border-color:var(--bad)}
+  .score{margin-top:14px;color:var(--mut);font-size:13px}
+  .hidden{display:none!important}
+  .miss{color:var(--bad);font-size:13px}
+  a{color:var(--acc)}
+  .tip{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--mut);margin:6px 0 16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>IAM Oral Exam Trainer</h1>
+  <span class="sub">9 known questions · draw 2 · 15 min talk · no notes</span>
+  <nav>
+    <button id="navHybrid" class="active" onclick="show('hybrid')">Questions</button>
+    <button id="navExercises" onclick="show('exercises')">Exercises</button>
+    <button id="navQuiz" onclick="show('quiz')">Quiz</button>
+  </nav>
+</header>
+<main>
+  <section id="view-hybrid">
+    <div class="tip">Each exam question expands into its a/b/c sub-parts and granular drill questions. Answer aloud first, then <b>Reveal</b>. <b>Key beats</b> = the skeleton to say; <b>Model answer</b> = the spoken prose. Citations trace every fact to a slide/page.</div>
+    <div id="hybridList"></div>
+  </section>
+
+  <section id="view-exercises" class="hidden">
+    <div class="tip">Every exercise prompt collected from the course material. The examiner may ask you to explain these (esp. OAuth &amp; OpenID Connect). Don't be surprised orally.</div>
+    <div id="exerciseList"></div>
+  </section>
+
+  <section id="view-quiz" class="hidden">
+    <div id="quizArea">
+      <p class="sub">Simulate the exam: draw a random question, talk for 15 minutes, then self-grade.</p>
+      <button class="drawbtn" onclick="drawQuestion()">🎲 Draw a question</button>
+      <div id="quizCard" class="hidden" style="text-align:left;margin-top:18px"></div>
+      <div id="score" class="score"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+// ---- The 9 known exam questions (verbatim from "Info about exam exam questions 2026.txt") ----
+const EXAM = [
+ {n:1,title:"Essential Concepts for IAM",anchor:1,parts:{
+   a:"Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized.",
+   b:"Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?",
+   c:"Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"}},
+ {n:2,title:"Digital identities and credentials",anchor:2,parts:{
+   a:"What is a digital identity? Discuss important concepts, terms and principles.",
+   b:"Explain the difference between identification, identity proofing and authentication.",
+   c:"Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these."}},
+ {n:3,title:"Authentication",anchor:3,parts:{
+   a:"What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems.",
+   b:"What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?",
+   c:"What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?"}},
+ {n:4,title:"FIDO and WebAuthn",anchor:4,parts:{
+   a:"Explain the steps in FIDO Registration and Login (including all challenge and response details).",
+   b:"What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented.",
+   c:"Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?"}},
+ {n:5,title:"Access control and policies",anchor:5,parts:{
+   a:"Explain the difference between authentication and authorization. How can authorization be implemented?",
+   b:"Explain the key parts of XACML 3.0 and its policy architecture.",
+   c:"Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."}},
+ {n:6,title:"Single Sign-On systems and SAML",anchor:6,parts:{
+   a:"Explain the concept and principles of Single Sign-On. What are the pros and cons?",
+   b:"Discuss the working principles of SAML, its architecture, and typical use cases.",
+   c:"Discuss different types of SAML assertions and their content."}},
+ {n:7,title:"JSON Web Tokens (JWT)",anchor:10,parts:{
+   a:"How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?",
+   b:"Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?",
+   c:"Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?"}},
+ {n:8,title:"OAuth 2.0",anchor:7,parts:{
+   a:"What is the main idea of OAuth 2.0?",
+   b:"Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.",
+   c:"What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."}},
+ {n:9,title:"OpenID Connect",anchor:11,parts:{
+   a:"How does OpenID Connect relate to OAuth 2.0? What is it used for?",
+   b:"Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.",
+   c:"Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?"}}
+];
+
+let DATA = {};        // lecture number -> json
+let DRILLS = [];      // flattened drills
+let EXS = [];         // flattened exercises
+
+function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+async function loadAll(){
+  const nums=[1,2,3,4,5,6,7,8,9,10,11];
+  await Promise.all(nums.map(async n=>{
+    try{
+      const r=await fetch(`questions/lecture_${n}.json`,{cache:"no-store"});
+      if(!r.ok) return;                 // 404 gracefully
+      const j=await r.json();
+      DATA[n]=j;
+      (j.drills||[]).forEach(d=>DRILLS.push({...d,lecture:n,lectureTitle:j.lectureTitle}));
+      (j.exercises||[]).forEach(e=>EXS.push({...e,lecture:n,lectureTitle:j.lectureTitle}));
+    }catch(e){/* malformed / missing -> skip */}
+  }));
+  renderHybrid(); renderExercises();
+}
+
+function drillCard(d){
+  const beats=(d.keyBeats||[]).map(b=>`<li>${esc(b)}</li>`).join("");
+  let cite="";
+  if(d.unverified){ cite=`<div class="cite">⚠ <span class="flag unv">UNVERIFIED</span> not found verbatim in source — double-check.</div>`; }
+  else if(d.citation){ cite=`<div class="cite">📖 <code>${esc(d.citation)}</code></div>`; }
+  const diag = d.diagram_only?`<span class="flag diag">DIAGRAM ONLY</span>`:"";
+  const t=(d.type||"").toLowerCase();
+  return `<div class="drill">
+    <div class="dq"><span class="typetag ${t}">${esc(d.type||"")}</span><span>${esc(d.question)}${diag}</span></div>
+    <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.nextElementSibling.classList.contains('show')?'Hide':'Reveal'">Reveal</button>
+    <div class="answer">
+      <div class="label">Key beats — say these aloud</div>
+      <ul class="beats">${beats}</ul>
+      <div class="label">Model answer — spoken prose</div>
+      <div class="model">${esc(d.modelAnswer)}</div>
+      ${cite}
+    </div>
+  </div>`;
+}
+
+function renderHybrid(){
+  const host=document.getElementById('hybridList');
+  host.innerHTML = EXAM.map(q=>{
+    const lec=DATA[q.anchor];
+    const subs=Object.keys(q.parts).map(sp=>{
+      const ds=DRILLS.filter(d=>+d.anchorsExamQ===q.n && (d.anchorsSubPart||"").toLowerCase()===sp);
+      const cards = ds.length? ds.map(drillCard).join("") :
+        `<div class="drill"><span class="miss">No drills loaded for this sub-part yet.</span></div>`;
+      return `<div class="subpart">
+        <div class="sublabel"><span class="subbadge">${sp}</span><span class="subprompt">${esc(q.parts[sp])}</span></div>
+        ${cards}
+      </div>`;
+    }).join("");
+    const cnt=DRILLS.filter(d=>+d.anchorsExamQ===q.n).length;
+    const support=DRILLS.filter(d=>+d.anchorsExamQ===q.n && d.lecture!==q.anchor);
+    const supTxt=support.length?` · +${support.length} cross-lecture`:"";
+    const title=lec?esc(lec.lectureTitle):("Lecture "+q.anchor);
+    return `<details class="examq">
+      <summary><span class="qnum">${q.n}</span>
+        <span><span class="qtitle">${esc(q.title)}</span>
+        <div class="qmeta">Anchor: ${title} · ${cnt} drills${supTxt}${lec?"":" · <span class='miss'>JSON not loaded</span>"}</div></span>
+        <span class="chev">▶</span></summary>
+      ${subs}
+    </details>`;
+  }).join("");
+}
+
+function renderExercises(){
+  const host=document.getElementById('exerciseList');
+  if(!EXS.length){host.innerHTML=`<p class="miss">No exercises loaded yet. (Build the lecture JSON files in questions/.)</p>`;return;}
+  // group by lecture
+  let html="";
+  const byLec={};
+  EXS.forEach(e=>{(byLec[e.lecture]=byLec[e.lecture]||[]).push(e);});
+  Object.keys(byLec).sort((a,b)=>a-b).forEach(n=>{
+    html+=`<div class="grp">Lecture ${n} — ${esc(byLec[n][0].lectureTitle||"")}</div>`;
+    byLec[n].forEach(e=>{
+      const ans = e.answerSketch? `<div class="ans">${esc(e.answerSketch)}${e.unverified?' <span class="flag unv">UNVERIFIED</span>':''}</div>` :
+        `<div class="ans"><span class="miss">No answer sketch in material.</span></div>`;
+      html+=`<div class="exrow">
+        <div class="src">${esc(e.source||"")} · <code>${esc(e.id||"")}</code></div>
+        <div class="prm">${esc(e.promptVerbatim)}</div>
+        <div class="tst">Tests: ${esc(e.whatItTests||"")}</div>
+        <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.nextElementSibling.classList.contains('show')?'Hide sketch':'Answer sketch'">Answer sketch</button>
+        ${ans}
+      </div>`;
+    });
+  });
+  host.innerHTML=html;
+}
+
+// -------- Quiz mode --------
+let timerId=null, remaining=900, stats={pass:0,unsure:0,fail:0};
+function drawQuestion(){
+  const q=EXAM[Math.floor(Math.random()*EXAM.length)];
+  const lec=DATA[q.anchor];
+  const subs=Object.keys(q.parts).map(sp=>{
+    const ds=DRILLS.filter(d=>+d.anchorsExamQ===q.n && (d.anchorsSubPart||"").toLowerCase()===sp);
+    const cards=ds.length?ds.map(drillCard).join(""):`<div class="drill"><span class="miss">No drills loaded.</span></div>`;
+    return `<div class="subpart"><div class="sublabel"><span class="subbadge">${sp}</span><span class="subprompt">${esc(q.parts[sp])}</span></div>${cards}</div>`;
+  }).join("");
+  remaining=900;
+  document.getElementById('quizCard').classList.remove('hidden');
+  document.getElementById('quizCard').innerHTML=`
+    <div class="examq" open style="border-color:var(--acc)">
+      <div style="padding:14px 16px;display:flex;gap:12px;align-items:center">
+        <span class="qnum">${q.n}</span><span class="qtitle">${esc(q.title)}</span>
+        <span class="qmeta" style="margin-left:auto">Anchor: ${lec?esc(lec.lectureTitle):("L"+q.anchor)}</span>
+      </div>
+      <div style="text-align:center;padding:0 16px 8px">
+        <div class="timer" id="tmr">15:00</div>
+        <div class="tctrl">
+          <button class="reveal-btn" onclick="startTimer()">▶ Start</button>
+          <button class="reveal-btn" onclick="pauseTimer()">⏸ Pause</button>
+          <button class="reveal-btn" onclick="resetTimer()">↺ Reset</button>
+        </div>
+      </div>
+      <div style="padding:4px 0 10px">${subs}</div>
+      <div style="text-align:center;padding:0 0 16px" class="grade">
+        <div class="label">Talk for 15 min covering all sub-parts, then grade yourself:</div>
+        <button class="pass" onclick="grade('pass')">✓ Pass</button>
+        <button class="unsure" onclick="grade('unsure')">~ Unsure</button>
+        <button class="fail" onclick="grade('fail')">✗ Fail</button>
+      </div>
+    </div>`;
+  pauseTimer();updTimer();
+}
+function updTimer(){
+  const m=String(Math.floor(Math.abs(remaining)/60)).padStart(2,'0');
+  const s=String(Math.abs(remaining)%60).padStart(2,'0');
+  const el=document.getElementById('tmr');if(!el)return;
+  el.textContent=(remaining<0?"-":"")+m+":"+s;
+  el.className="timer"+(remaining<=0?" over":(remaining<=180?" warn":""));
+}
+function startTimer(){if(timerId)return;timerId=setInterval(()=>{remaining--;updTimer();},1000);}
+function pauseTimer(){clearInterval(timerId);timerId=null;}
+function resetTimer(){pauseTimer();remaining=900;updTimer();}
+function grade(g){stats[g]++;pauseTimer();
+  document.getElementById('score').textContent=`Self-grade tally — ✓ ${stats.pass} pass · ~ ${stats.unsure} unsure · ✗ ${stats.fail} fail. Draw again to keep training.`;
+  drawQuestion();
+}
+
+function show(v){
+  ['hybrid','exercises','quiz'].forEach(x=>{
+    document.getElementById('view-'+x).classList.toggle('hidden',x!==v);
+    document.getElementById('nav'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('active',x===v);
+  });
+  if(v!=='quiz')pauseTimer();
+}
+loadAll();
+</script>
+</body>
+</html>

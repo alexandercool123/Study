@@ -1,0 +1,20 @@
+CONTEXT FOR LECTURE 1 SLAVE — "Essential Concepts for IAM"
+Folder: 01 - 2026-02-03 - Essential Concepts for IAM
+Files in your folder to READ IN FULL: IAM Lecture-1.txt (1288 lines, 54 pages), Test Questions.txt (24 lines, 1 page).
+
+YOU OWN EXAM QUESTION 1. Verbatim sub-parts (cite as needed, student is graded on these):
+Q1. Essential Concepts for IAM
+ a) "Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized."
+ b) "Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?"
+ c) "Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"
+
+CROSS-LECTURE NOTES:
+- This lecture is the crypto/CIA foundation. Digital signatures & certificates here feed Q3c (X.509) and Q1c (non-repudiation). Hashing/HMAC feed JWT signatures (Q7b, lecture 10). Don't go deeper than needed to PASS — principles + purpose, not full algorithm internals.
+- Curriculum topics for this lecture (from Moodle): CIA model; symmetric vs asymmetric crypto; one-way hash; key distribution; data integrity/authenticity/non-repudiation (Hash/Message Digest, MAC, HMAC, signing/verification, encoding); key management.
+
+STUDENT DESIGN (apply to every drill):
+- Problem-first: openers must state the PROBLEM solved before the mechanism.
+- keyBeats = terse skeleton bullets to say aloud. modelAnswer = 2-4 sentences of connective spoken prose. They MUST be DISTINCT content, not the same text twice.
+- Every specific fact needs a <=15-word verbatim quote + "file.txt, PAGE n". If not in source: citation=null, unverified=true.
+- Granular: 3-6 small drills per sub-part (a/b/c). Aim ~15-20 drills total. Extract every Test Questions prompt into exercises[].
+- JSON ONLY, schema exact. No HTML/code.

@@ -1,0 +1,265 @@
+{
+  "lecture": 8,
+  "lectureTitle": "Guest: MitID and EU Digital Identity Wallet",
+  "examQuestions": [],
+  "drills": [
+    {
+      "id": "L8-2a-1",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "A country needs one identity system trusted by both banks and government. How does MitID position itself as a national eID?",
+      "keyBeats": [
+        "3rd-gen Danish national eID, launched 2021",
+        "serves both public and private sector",
+        "covers assurance levels low, substantial, high",
+        "focus on shared public/private needs"
+      ],
+      "modelAnswer": "MitID is Denmark's 3rd-generation national eID, launched in 2021, providing context-free identification and authentication for natural persons across both the public and private sector. It supports assurance levels low, substantial and high, and is built around the shared needs of both sectors rather than any single one.",
+      "citation": "\"3'rd generation national elD\" — Presentation AAU April 2026.txt, PAGE 05",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2b-1",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "Identity proofing at high assurance cannot rely on online forms alone. How does MitID raise registration assurance to IAL high?",
+      "keyBeats": [
+        "registration on level high requires physical presence",
+        "at a registration office",
+        "role separation during registration",
+        "online vs physical-presence enrollment paths exist"
+      ],
+      "modelAnswer": "MitID lets users register and enroll online via self-service, but enrollment at level high requires physical presence at a registration office with role separation during registration. This stronger identity proofing binds the physical person to the identity before high-assurance means are issued.",
+      "citation": "\"Registration on level high requires physical presence\" — Presentation AAU April 2026.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2a-2",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Assurance level depends on combining factors correctly. Which MitID identification-means combinations reach substantial versus high?",
+      "keyBeats": [
+        "Substantial: MitID App, or code display/reader + password",
+        "High: password + MitID chip, App + chip, App enhanced security",
+        "Low: password alone, chip alone, code display alone",
+        "multi-factor = knowledge + possession"
+      ],
+      "modelAnswer": "MitID combines knowledge and possession factors into level-specific combinations. Level low can be password alone or a chip alone. Level substantial is reached by the MitID App, or a code display/reader plus password. Level high requires password plus MitID chip, App plus chip, or the App in enhanced-security mode. Substantial currently suffices for all Danish public and financial services.",
+      "citation": "\"Level substantial is sufficient currently for all public and financial services\" — Presentation AAU April 2026.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2a-3",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the MitID App achieve assurance level high differently from level substantial?",
+      "keyBeats": [
+        "same as substantial except stricter constraints",
+        "keys must be in mobile hardware (SE/TEE)",
+        "single user only, physical mobile is possession",
+        "only PIN allowed; user registered on IAL high"
+      ],
+      "modelAnswer": "The MitID App at level high is the substantial app with stricter constraints: cryptographic keys must reside in mobile hardware (SE/TEE), it is single-user only with the physical phone as possession element, only a PIN is allowed for knowledge, and the user must be registered at IAL high with role separation.",
+      "citation": "\"Cryptographic keys must be in mobile hardware (SE/TEE)\" — Presentation AAU April 2026.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2c-1",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "How does the MitID identification app bind a physical person to a digital identity during proofing?",
+      "keyBeats": [
+        "scan passport to access chip content",
+        "chip checked for authenticity and clone detection",
+        "face recognition from chip image",
+        "passive liveness check on the person"
+      ],
+      "modelAnswer": "The app scans the passport's electronic chip, checks the chip for authenticity and performs clone detection, then runs face recognition comparing the chip's portrait against the live person with a passive liveness check. This binds the physical person to the claimed identity during proofing.",
+      "citation": "\"passive liveness check on the physical person\" — Presentation AAU April 2026.txt, PAGE 08",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2c-2",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Account-takeover via social engineering threatens eIDs. What channel-binding mechanisms does MitID use to counter it?",
+      "keyBeats": [
+        "proximity activation: new App instance needs BLE range of existing App",
+        "prevents remote attacker triggering activation approval",
+        "QR-code authentication channel binding couples client and App",
+        "OTP fallback for users who cannot scan QR"
+      ],
+      "modelAnswer": "MitID uses channel binding at two points. Proximity activation requires a new App instance to be within BLE range of a device holding an existing App, so a remote attacker cannot get a user to approve activation. At authentication, a QR code (or OTP fallback) tightly couples the login client to the App, making it hard for an attacker to have the victim approve an attacker-initiated login.",
+      "citation": "\"impossible for an attacker to get an end-user to approve an activation request\" — Presentation AAU April 2026.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2a-4",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why does MitID interpose 'brokers' between service providers and the authentication core?",
+      "keyBeats": [
+        "brokers add context, build sector-specific solutions",
+        "shield core IDP from SPs",
+        "enforce part of security model and UX scheme",
+        "must be certified; three usage models"
+      ],
+      "modelAnswer": "Brokers sit between service providers and the MitID authentication core. They add context to the context-free eID, build sector-specific solutions (banking, insurance, education), and provide smooth SP connectivity. They enforce part of the MitID security model and UX scheme while shielding the core IDP from SPs, and must be certified, choosing among three usage models.",
+      "citation": "\"core functionality of the MitID IDP is shielded from SP\" — Presentation AAU April 2026.txt, PAGE 07",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-2a-5",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does MitID interoperate across EU borders, and at what assurance level?",
+      "keyBeats": [
+        "notified as national eID scheme under eIDAS (June 2022)",
+        "notified at assurance level substantial and high",
+        "level high required for most SPs in other EU countries"
+      ],
+      "modelAnswer": "MitID was notified as Denmark's national eID scheme under eIDAS in June 2022 at assurance levels substantial and high, enabling cross-border recognition. Level high is required for most service providers in other EU countries, even though substantial suffices domestically.",
+      "citation": "\"EU (elDAS) notification in the EU as national elD scheme (June 2022)\" — Presentation AAU April 2026.txt, PAGE 05",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-7c-1",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The EUDI Wallet is a real SSI deployment. What three roles structure its ecosystem and how do they interact?",
+      "keyBeats": [
+        "issuer, holder, verifier triangle",
+        "issuer provides PID/credentials to holder",
+        "holder presents proof to verifier (relying party)",
+        "verifier validates signatures via public key"
+      ],
+      "modelAnswer": "The EUDI Wallet ecosystem follows the SSI issuer-holder-verifier triangle. An issuer provides Person Identification Data and attestations to the holder's wallet; the holder presents proof to a verifier (relying party); and the verifier validates the signatures using the issuer's public key. This mirrors the verifiable-credentials trust model.",
+      "citation": "\"Holder ... Issuer ... Verifier\" — Presentation AAU April 2026.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "L8-7c-2",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "How does the EUDI Wallet support data minimisation and selective disclosure in practice?",
+      "keyBeats": [
+        "digital age attestation proves age only",
+        "data minimisation principle",
+        "AltID 'choose yourself what you share'",
+        "pseudonyms supported in feature set"
+      ],
+      "modelAnswer": "The wallet supports selective disclosure: the Danish AltID offers a digital age attestation that proves age alone under a data-minimisation principle, lets users 'choose what they share', and the EUDI feature set includes pseudonyms. Rather than revealing a full identity, the holder discloses only the attribute the relying party needs.",
+      "citation": "\"proving age via a data minimisation principle\" — Presentation AAU April 2026.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-7c-3",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "What core characteristics make the EUDI Wallet distinct from a centralised national eID?",
+      "keyBeats": [
+        "free for all EU citizens, voluntary basis",
+        "provided by Member States, recognised across Union",
+        "accepted by public and private relying parties",
+        "user controls identity, personal data, digital assets"
+      ],
+      "modelAnswer": "The EUDI Wallet is provided by Member States and free for all EU citizens on a voluntary basis. It is recognised across the Union by both public and private relying parties for transactions requiring authentication, and it is privacy-oriented so citizens control and protect their own identity, personal data and digital assets. This user-controlled, cross-border model distinguishes it from a single centralised eID.",
+      "citation": "\"Citizens can control and protect their identity, personal data and digital assets\" — Presentation AAU April 2026.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-7c-4",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Which credential types and functions does the EUDI Wallet feature set cover beyond simple login?",
+      "keyBeats": [
+        "PID and Electronic Attestation of Attributes (EAA)",
+        "qualified certificates, QES, seals",
+        "credential issuance/sharing online and offline",
+        "transaction authorization (payments & QES), pseudonyms"
+      ],
+      "modelAnswer": "Beyond login, the wallet handles Person Identification Data, Electronic Attestation of Attributes, qualified certificates and seals, and qualified electronic signatures. It supports online and offline issuance and presentation, credential sharing between users, pseudonyms, and transaction authorization for payments and QES, plus supporting functions like misbehaviour reporting and transaction history.",
+      "citation": "\"Electronic Attestation of Attributes (EAA)\" — Presentation AAU April 2026.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-7c-5",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "What legal and certification framework underpins the EUDI Wallet, and what deadline drives it?",
+      "keyBeats": [
+        "eIDAS2 Regulation (2024/1183) anchors it",
+        "surrounded by GDPR, CSA, NIS2, PSD2/3, DSA",
+        "Article 5c, CIR 2024/2981, EUCC conformance",
+        "each MS to deliver one certified wallet by 24/12-2026"
+      ],
+      "modelAnswer": "The EUDI Wallet is anchored in the eIDAS2 Regulation (2024/1183), within a wider landscape of GDPR, the Cybersecurity Act, NIS2, PSD2/3 and the DSA. Certification draws on Article 5c, CIR 2024/2981 and EUCC conformance, but schemes and standards are still incomplete and the ARF is a moving target. Every Member State must deliver at least one certified wallet by 24 December 2026.",
+      "citation": "\"All MS to deliver a least one certified EUDIW by 24/12-2026\" — Presentation AAU April 2026.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L8-7c-6",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Denmark argues 'security is not a hardware issue' for the wallet. What is the reasoning and design consequence?",
+      "keyBeats": [
+        "fraudsters' objective is financial gain",
+        "users are the weakest link, not software/hardware",
+        "phishing likely the biggest threat",
+        "external hardware = bad UX; favour convenient app"
+      ],
+      "modelAnswer": "Denmark holds that since fraudsters seek financial gain and the users, not the software or hardware, are the weakest link, phishing is the biggest threat. External hardware gives most users a poor experience, so the design favours a convenient app-based wallet, treating security, privacy and usability as equal parameters rather than betting on dedicated hardware.",
+      "citation": "\"The users are the weakest link, not software or hardware\" — Presentation AAU April 2026.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "prompt": "When the speaker asks 'why?' during the talk, give your best input — there is no right or wrong answer, as public-sector decisions are often political and neither binary nor logical.",
+      "citation": "\"When I ask \\\"why?\\\" then give your best input\" — Presentation AAU April 2026.txt, PAGE 02",
+      "unverified": false
+    },
+    {
+      "prompt": "Discuss whether MitID will be replaced by AltID / the EUDI Wallet, and for how long MitID will run (stated as at least 2031).",
+      "citation": "\"Replaced by AItID, EUDI Wallet? — TBD\" — Presentation AAU April 2026.txt, PAGE 17",
+      "unverified": false
+    },
+    {
+      "prompt": "Discuss whether the EUDI Wallet 'will fly' given remaining implementing acts, missing standards, and the 24/12-2026 rollout deadline.",
+      "citation": "\"Will it fly?\" — Presentation AAU April 2026.txt, PAGE 31",
+      "unverified": false
+    }
+  ],
+  "_sources_read": [
+    "Presentation AAU April 2026.txt:856",
+    "lecture_8_context.txt:15"
+  ]
+}

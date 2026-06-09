@@ -1,0 +1,310 @@
+{
+ "lecture": 1,
+ "lectureTitle": "Essential Concepts for IAM",
+ "examQuestions": [
+  {
+   "examQ": 1,
+   "subPart": "a",
+   "promptVerbatim": "Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized."
+  },
+  {
+   "examQ": 1,
+   "subPart": "b",
+   "promptVerbatim": "Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?"
+  },
+  {
+   "examQ": 1,
+   "subPart": "c",
+   "promptVerbatim": "Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"
+  }
+ ],
+ "drills": [
+  {
+   "id": "L1-1a-1",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "a",
+   "type": "opener",
+   "question": "Alice and Bob must communicate over an insecure channel. What security objectives must IAM secure, and what is the foundational model?",
+   "keyBeats": ["Problem: insecure channel, attacker can read/alter/impersonate", "CIA triad: confidentiality, integrity, availability", "Parkerian Hexad extends CIA by adding authenticity", "These are foundations for IAM"],
+   "modelAnswer": "When Alice and Bob talk over an unsecure channel, an attacker can eavesdrop, tamper, or impersonate, so we need defined security objectives. The classic model is the CIA triad, confidentiality, integrity and availability, which sits at the heart of information security. Extended models such as the Parkerian Hexad add authenticity to close CIA's gaps, and these objectives form the foundation for IAM.",
+   "citation": "\"The 'CIA triad' of confidentiality, integrity, and ... at the heart of information security, 1972\" — IAM Lecture-1.txt, PAGE 07",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1a-2",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "a",
+   "type": "specific",
+   "question": "Define confidentiality and give an example of how it is realized.",
+   "keyBeats": ["Confidentiality = data not disclosed to unauthorized entity", "Realized by encryption", "Examples: full disk encryption, database encryption"],
+   "modelAnswer": "Confidentiality means information is not disclosed to any unauthorized entity. It is realized in practice with encryption, which scrambles plaintext so only key holders can read it. Concrete use cases from the lecture include full disk encryption and database encryption.",
+   "citation": "\"Confidentiality: data or ... information is not disclosed to unauthorized entity\" — IAM Lecture-1.txt, PAGE 07",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1a-3",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "a",
+   "type": "specific",
+   "question": "Define integrity and availability in the CIA model.",
+   "keyBeats": ["Integrity = message not altered, malicious or accidental, in transit", "Availability = info/service usable on demand by authorized person", "Integrity realized via hashes, MAC, HMAC, signatures"],
+   "modelAnswer": "Integrity ensures that a communication has not been altered, either maliciously or by accident during transmission, and is realized with cryptographic hash functions, MACs, HMAC and signatures. Availability ensures that information or a service is accessible and usable on demand by an authorized person.",
+   "citation": "\"Availability: Information or the service is accessible and usable on demand by an authorized person\" — IAM Lecture-1.txt, PAGE 07",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1a-4",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "a",
+   "type": "specific",
+   "question": "How is authenticity realized, and how does it relate to integrity?",
+   "keyBeats": ["Authenticity = assurance of message origin", "MAC: receiving party assured of origin of message", "MAC gives integrity AND authentication", "Realized via MAC, HMAC, digital signatures"],
+   "modelAnswer": "Authenticity is the assurance that a message really comes from its claimed sender. It is realized using a MAC, where the receiving party is assured of the origin of the message, or with HMAC and digital signatures. Note these same tools also provide integrity, so authenticity and integrity are commonly delivered together.",
+   "citation": "\"The receiving party is assured of the origin of the message\" — IAM Lecture-1.txt, PAGE 34",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1a-5",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "a",
+   "type": "specific",
+   "question": "What three security properties does a cryptographic hash function support, and why can't it replace encryption?",
+   "keyBeats": ["Hash = one-way, fixed-size unique output", "Properties: preimage, second preimage, collision resistance", "Cannot decrypt message back, so not a substitute for encryption"],
+   "modelAnswer": "A cryptographic hash function is a one-way algorithm producing a fixed-size output, and its security rests on preimage resistance, second preimage resistance and collision resistance. It supports integrity but cannot be used as a substitute for encryption because we cannot decrypt the message again from the hash.",
+   "citation": "\"Can't be used as substitute for encryption because we can not decrypt the message again\" — IAM Lecture-1.txt, PAGE 28",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-1",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "opener",
+   "question": "In symmetric cryptography Alice and Bob share one key. What problem does this create, and why is it called symmetric?",
+   "keyBeats": ["Same key encrypts and decrypts, hence symmetric", "Key is secret", "Problem: key must reach both parties without interception", "Key must be transmitted via a secure channel"],
+   "modelAnswer": "In symmetric cryptography the same secret key is used to encrypt and to decrypt, which is why it is called symmetric. The core problem is that this secret key must somehow reach both Alice and Bob without an attacker intercepting it. The lecture states the key must be transmitted via a secure channel between Alice and Bob, which is exactly the bootstrap problem.",
+   "citation": "\"The key must be transmitted via a secure channel between Alice and Bob\" — IAM Lecture-1.txt, PAGE 12",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-2",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "specific",
+   "question": "What are the advantages of symmetric cryptography? Why keep using it?",
+   "keyBeats": ["AES/3DES very secure, fast, widespread", "Extremely fast encryption/decryption, efficient for bulk data", "Smaller keys than asymmetric for equal security"],
+   "modelAnswer": "Symmetric algorithms such as AES or 3DES are very secure, fast and widespread. They offer extremely fast encryption and decryption, making them efficient for bulk data, and they reach a given security level with much smaller keys than asymmetric schemes. That performance is why we keep symmetric crypto in most practical applications.",
+   "citation": "\"Symmetric algorithms, e.g., AES or 3DES, are very secure, fast & widespread\" — IAM Lecture-1.txt, PAGE 16",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-3",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "mechanism",
+   "question": "Explain the number-of-keys problem in symmetric cryptography. How many keys for n users?",
+   "keyBeats": ["Each pair of users needs an individual key", "n users need n(n-1)/2 keys", "Example: 6 users = 15 keys", "750 employees = 561,750 keys"],
+   "modelAnswer": "In a symmetric network each pair of users requires its own individual key, so n users need n(n-1)/2 key pairs, which grows roughly with n squared. For example 6 users need 15 keys, and a mid-size company of 750 employees would need 750 x 749, that is 561,750 keys distributed securely. This poor scaling is a major limitation.",
+   "citation": "\"In a network, each pair of users requires an individual key\" — IAM Lecture-1.txt, PAGE 16",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-4",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "specific",
+   "question": "Why does symmetric cryptography scale poorly when a new user joins, and for which networks does it work?",
+   "keyBeats": ["New user Ivan -> new keys to every existing user", "Each new key via secure channel", "Only works for small, relatively static networks"],
+   "modelAnswer": "When a new user such as Ivan joins, a fresh key must be transported via secure channels to each of the existing users, so onboarding cost grows with network size. Because of this, symmetric-only key distribution only works for small networks that are relatively static, and breaks down for large or dynamic ones.",
+   "citation": "\"Only works for small networks which are relatively static\" — IAM Lecture-1.txt, PAGE 17",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-5",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "mechanism",
+   "question": "How does asymmetric cryptography solve the key distribution problem? Use the mailbox analogy.",
+   "keyBeats": ["Mailbox principle: anyone drops a letter, only owner opens", "Key pair: public key encrypts, private key decrypts", "Public key can travel over unsecure channel", "Use case: secure key distribution, signatures, certificates"],
+   "modelAnswer": "Asymmetric crypto uses the mailbox principle: everyone can drop a letter in, but only the owner has the key to open the box. A key pair is generated, the public key encrypts and the private key decrypts, so the public key can be shared openly while no secret needs pre-sharing. This solves symmetric's distribution problem and enables secure key distribution, digital signatures and certificates.",
+   "citation": "\"Everyone can drop a letter ... only the owner has the correct key to open the box\" — IAM Lecture-1.txt, PAGE 21",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-6",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "mechanism",
+   "question": "How does a Key Distribution Center (KDC) reduce the symmetric key burden?",
+   "keyBeats": ["KDC = central party trusted by all users", "Shares a key encryption key (KEK) with each user", "Sends session keys encrypted with KEKs", "Only n long-term key pairs; new user only needs key with KDC"],
+   "modelAnswer": "A Key Distribution Center is a central party trusted by all users that shares a key encryption key, or KEK, with each user. The KDC then sends session keys to users encrypted with those KEKs, so only n long-term keys exist instead of n squared. When a new user joins, a secure key is only needed between that user and the KDC, so it scales well to moderately sized networks. Kerberos is built on KDCs.",
+   "citation": "\"Key Distribution Center (KDC) = Central party, trusted by all users\" — IAM Lecture-1.txt, PAGE 44",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1b-7",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "b",
+   "type": "specific",
+   "question": "What is key freshness and why is changing keys frequently a good practice?",
+   "keyBeats": ["Frequently change the key in a crypto system", "Exposed key -> limited damage if changed often", "Limited ciphertext per key makes attacks harder", "Attacker must recover several keys for long messages"],
+   "modelAnswer": "Key freshness means it is often desirable to frequently change the key in a cryptographic system. If a key is exposed, say through hackers, frequent rotation limits the damage. It also means only a limited amount of ciphertext is generated per key, making cryptanalytic attacks harder, and an attacker wanting long stretches of plaintext must recover several keys.",
+   "citation": "\"If a key is exposed ... limited damage if the key is changed often\" — IAM Lecture-1.txt, PAGE 43",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-1",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "opener",
+   "question": "Bob orders a car with a shared secret key then denies it. What problem does this illustrate?",
+   "keyBeats": ["Problem: no way to prove who generated a message", "Both share key, both can encrypt/decrypt", "Judge cannot determine real sender", "Motivates non-repudiation"],
+   "modelAnswer": "This is the accountability problem of symmetric cryptography. Bob orders a car using a shared secret key, then later denies it, claiming Alice could have fabricated the request. Because both share the same cryptographic capabilities, a judge cannot determine the real sender, which is exactly the gap that non-repudiation must close.",
+   "citation": "\"Problem: No way to prove who actually generated a message\" — IAM Lecture-1.txt, PAGE 19",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-2",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "specific",
+   "question": "Define non-repudiation and explain why it matters.",
+   "keyBeats": ["Sender cannot deny having sent a message", "Prevents fraudulent denials in disputes", "Essential for legal and financial transactions"],
+   "modelAnswer": "Non-repudiation ensures that a sender cannot deny having sent a message. It prevents fraudulent denials in disputes, such as Bob denying his car order, and is therefore essential for legal and financial transactions where accountability must be provable to a third party.",
+   "citation": "\"Ensures that a sender cannot deny having sent a message\" — IAM Lecture-1.txt, PAGE 20",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-3",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "specific",
+   "question": "How does non-repudiation differ from authenticity?",
+   "keyBeats": ["Authenticity = receiver assured of message origin", "Non-repudiation = sender cannot deny, provable to third party", "MAC gives authenticity but no non-repudiation", "Only private-key owner can sign -> non-repudiation"],
+   "modelAnswer": "Authenticity assures the receiver of the origin of a message, but it can rest on a shared symmetric key, so it convinces only the communicating parties. Non-repudiation is stronger: it must be provable to an outside party like a judge that a specific sender produced the message. A MAC provides authenticity but no non-repudiation because both parties share the key, whereas a digital signature gives non-repudiation since only the private-key owner can sign.",
+   "citation": "\"Since MACs are based on symmetric principles, they do not provide nonrepudiation\" — IAM Lecture-1.txt, PAGE 34",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-4",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "mechanism",
+   "question": "Why can't symmetric encryption alone provide non-repudiation?",
+   "keyBeats": ["Both parties share the same secret key", "Either party can encrypt/decrypt", "Impossible to prove who generated a message", "Third party cannot determine authorship"],
+   "modelAnswer": "In symmetric encryption such as AES both parties share the same secret key, so either party can encrypt or decrypt messages. This makes it impossible to prove who actually generated a message, and a third party such as a judge cannot determine authorship. Without a private element unique to the sender, denial cannot be ruled out.",
+   "citation": "\"Either party can encrypt or decrypt messages, making it impossible to prove who actually generated a message\" — IAM Lecture-1.txt, PAGE 20",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-5",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "mechanism",
+   "question": "Walk through the digital signature signing and verification process.",
+   "keyBeats": ["Sign: hash data to a digest", "Encrypt digest with sender's private key = signature", "Send message + signature", "Verify: receiver hashes message, decrypts signature with public key", "Match hash to digest -> integrity and authenticity verified"],
+   "modelAnswer": "In signing, the data is first hashed to produce a digest, then the digest is encrypted with the sender's private key to produce the signature, and the original message plus signature are sent. In verification, the receiver hashes the original message and decrypts the signature with the sender's public key to retrieve the digest; if the hash and the digest match, integrity is verified. Because only the sender holds the private key, this also gives authentication and non-repudiation.",
+   "citation": "\"the digest is encrypted with the private key of the user to produce a signature\" — IAM Lecture-1.txt, PAGE 31",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-6",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "specific",
+   "question": "What role do certificates play in making digital signatures trustworthy in IAM?",
+   "keyBeats": ["Problem: how to trust a public key belongs to the sender?", "MIM attack: public keys are not authenticated", "Certificate = public key + ID + signature over both", "Issued by a certifying authority (CA)"],
+   "modelAnswer": "Signatures only work if you trust that a public key truly belongs to the sender; otherwise a man-in-the-middle can swap keys, because public keys are not authenticated. To fix this, all public keys are digitally signed by a central trusted authority, and this construction is a certificate, which binds a user's identity to her public key. The issuing certifying authority, or CA, signs the public key and ID, and a receiver verifies the certificate using the CA's public key.",
+   "citation": "\"certificate = public key + ID(user) + digital signature over public key and ID\" — IAM Lecture-1.txt, PAGE 49",
+   "unverified": false,
+   "diagram_only": false
+  },
+  {
+   "id": "L1-1c-7",
+   "anchorsExamQ": 1,
+   "anchorsSubPart": "c",
+   "type": "specific",
+   "question": "Why is HMAC preferred over a naive hash-based MAC, even though neither gives non-repudiation?",
+   "keyBeats": ["Naive MAC H(k||x) vulnerable to length extension attacks", "HMAC: hash function combined with secret key", "HMAC resistant to length extension and collision attacks", "Used in TLS, IPsec, SSH, HOTP"],
+   "modelAnswer": "A naive MAC of the form H(k concatenated with x) using SHA-1 or SHA-2 is vulnerable to length extension attacks. HMAC combines a cryptographic hash function with a secret key in a way that is highly resistant to such attacks, which is why it is used in TLS, IPsec, SSH and HOTP. However, like any MAC it is symmetric and so still provides no non-repudiation, unlike a digital signature.",
+   "citation": "\"Highly resistant to various cryptographic attacks, including collision attacks, length extension attacks\" — IAM Lecture-1.txt, PAGE 36",
+   "unverified": false,
+   "diagram_only": false
+  }
+ ],
+ "exercises": [
+  {
+   "id": "L1-EX-1",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "Explain the CIA triad and its importance in Identity and Access Management (IAM). How does it relate to secure communication between Alice and Bob?",
+   "whatItTests": "Understanding of confidentiality, integrity, availability and their role as the foundation of IAM and secure channels.",
+   "answerSketch": "CIA = confidentiality (no disclosure to unauthorized), integrity (not altered in transit), availability (usable on demand by authorized). Foundation of information security and IAM. For Alice-Bob over an unsecure channel, confidentiality is realized by encryption and integrity by hashes/MAC, protecting against eavesdropping and tampering.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-2",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "What are the drawbacks of symmetric cryptography? Discuss at least two major limitations and provide real-world examples where these limitations pose security risks.",
+   "whatItTests": "Key distribution problem and quadratic key scaling, plus lack of non-repudiation.",
+   "answerSketch": "Two main drawbacks: (1) key distribution problem, the secret key must be transported securely; (2) number of keys, each user pair needs an individual key, n(n-1)/2 total, e.g. 750 employees need 561,750 keys. Also no non-repudiation. Real-world risk: scaling and onboarding new users in large/dynamic networks.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-3",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "How does asymmetric cryptography solve the key distribution problem in symmetric cryptography? Provide an example where public-key cryptography is essential.",
+   "whatItTests": "Public/private key pair concept and its use for key exchange/distribution.",
+   "answerSketch": "Mailbox principle: public key encrypts and may travel over unsecure channels, private key decrypts, so no shared secret must be pre-distributed. RSA can encrypt a symmetric session key for distribution; the receiver decrypts it with their private key. Essential for secure key exchange, digital signatures and certificates.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-4",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "What is non-repudiation, and why is symmetric cryptography not suitable for it? How does asymmetric cryptography ensure non-repudiation in secure transactions?",
+   "whatItTests": "Definition of non-repudiation, symmetric shared-key failure, and signature-based assurance.",
+   "answerSketch": "Non-repudiation = sender cannot deny having sent a message. Symmetric fails because both parties share the key, so either could have produced the message and a judge cannot determine authorship. Asymmetric ensures it via digital signatures: only the private-key owner can sign, so authorship is provable to a third party.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-5",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "What is the role of the Key Distribution Center (KDC) in key management? Compare the number of keys required in a peer-to-peer network versus a KDC-based system.",
+   "whatItTests": "KDC as trusted third party and key-count comparison (n(n-1)/2 vs n).",
+   "answerSketch": "KDC is a central party trusted by all users, sharing a KEK with each user and issuing session keys encrypted with KEKs. Peer-to-peer needs n(n-1)/2 keys; a KDC needs only n long-term keys (one per user). New users only need a key with the KDC. Kerberos is based on KDCs.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-6",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "Discuss the concept of key freshness in cryptographic security. Why is it important, and how does frequent key changes mitigate security threats?",
+   "whatItTests": "Rationale for frequent key rotation.",
+   "answerSketch": "Key freshness = frequently changing the key. If a key is exposed, frequent change limits damage. Limited ciphertext per key makes some attacks harder, and recovering long messages forces an attacker to recover several keys, making attacks harder.",
+   "unverified": false
+  },
+  {
+   "id": "L1-EX-7",
+   "source": "Test Questions.txt, PAGE 1",
+   "promptVerbatim": "How does HMAC differ from a standard MAC, and why is it preferred in network security protocols? Discuss the advantages of HMAC over standard MAC techniques.",
+   "whatItTests": "HMAC construction and its resistance to length extension attacks vs naive MAC.",
+   "answerSketch": "A naive hash MAC H(k||x) with SHA-1/SHA-2 is vulnerable to length extension attacks. HMAC combines a hash function with a secret key in a key-modified construction that resists length extension and collision attacks. Preferred and widely used in TLS, IPsec, SSH and HOTP. Like all MACs it is symmetric, so no non-repudiation.",
+   "unverified": false
+  }
+ ],
+ "_sources_read": ["IAM Lecture-1.txt:1288", "Test Questions.txt:24", "lecture_1_context.txt:21"]
+}

@@ -1,0 +1,20 @@
+CONTEXT FOR LECTURE 11 SLAVE — "OpenID Connect" (slides titled "Lecture 9, OpenID Connect")
+Folder: 11 - 2026-04-21 - OpenID Connect
+Files in your folder to READ IN FULL: Lecture 9, OpenID Connect 210426.txt (2325 lines, 42 pages), 3127-openid-connect-101.txt (640 lines, Ping Identity), Exercises.txt (131 lines — THE exercise guide).
+
+YOU OWN EXAM QUESTION 9. Verbatim sub-parts:
+Q9. OpenID Connect
+ a) "How does OpenID Connect relate to OAuth 2.0? What is it used for?"
+ b) "Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes."
+ c) "Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?"
+
+CRITICAL: Q9c explicitly asks the student to EXPLAIN THE EXERCISES. Exercises.txt is exam syllabus. Extract every exercise task into exercises[] verbatim, and create drills walking through what the student did (Google APIs, client app setup, scopes, token verification, fetching user info from the UserInfo endpoint with consent).
+
+CROSS-LECTURE NOTES:
+- Q9a: OIDC is an identity/authentication LAYER on top of OAuth 2.0 (which is authorization only). Prerequisite knowledge = OAuth roles/grants/tokens/endpoints (lecture 7, Q8) — assume and briefly restate.
+- Q9b: ID TOKEN (a JWT — ties to lecture 10, Q7b) vs access token; UserInfo endpoint; standard scopes (openid, profile, email); the openid scope triggers OIDC. Endpoints: authorization, token, userinfo; discovery/.well-known.
+- SD-JWT and OIDC for Verifiable Credentials connect to SSI (Q7c). Note OIDC is the modern SSO successor to SAML (Q6).
+
+FLOW/DIAGRAM RULE: OIDC authorization-code flow — only ordered steps if textual in slides/primer; else diagram labels + diagram_only=true.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~20-24 total); JSON ONLY.

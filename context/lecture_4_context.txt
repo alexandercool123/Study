@@ -1,0 +1,18 @@
+CONTEXT FOR LECTURE 4 SLAVE — "FIDO2 and WebAuthn"
+Folder: 04 - 2026-03-02 - FIDO2 and WebAuthn
+Files in your folder to READ IN FULL: IAM Lecture 4.txt (1308 lines, 68 pages), IAM24-FIDO-testQuestions.txt (25 lines).
+
+YOU OWN EXAM QUESTION 4. Verbatim sub-parts:
+Q4. FIDO and WebAuthn
+ a) "Explain the steps in FIDO Registration and Login (including all challenge and response details)."
+ b) "What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented."
+ c) "Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?"
+
+CRITICAL — Q4a is a FLOW question (registration + login challenge/response). The examiner explicitly wants the steps. ONLY emit a numbered flow if the steps appear AS TEXT (numbered/bulleted) in the slides. If the registration/login ceremony is a box-and-arrow diagram, describe the visible labels (challenge, credential public key, signature, etc.) and set diagram_only=true rather than inventing the sequence. Cite the exact page.
+
+CROSS-LECTURE NOTES:
+- FIDO2 = W3C WebAuthn + CTAP2; U2F is the older FIDO standard (2nd factor only). Attestation keys vouch for the authenticator model.
+- Builds on asymmetric crypto / challenge-response (lecture 1) and authenticators/factors (lecture 3). Passkeys are syncable FIDO credentials; phishing-resistance comes from origin binding.
+- Q4c references the "Spot the Phishing Attempt" exercise/slide — find it and cite it; capture it in exercises[].
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~18-22 total); extract FIDO test questions into exercises[]. JSON ONLY.

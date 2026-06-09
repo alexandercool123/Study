@@ -1,0 +1,553 @@
+{
+  "lecture": 7,
+  "lectureTitle": "OAuth 2.0",
+  "examQuestions": [
+    {
+      "examQ": 8,
+      "subPart": "a",
+      "promptVerbatim": "What is the main idea of OAuth 2.0?"
+    },
+    {
+      "examQ": 8,
+      "subPart": "b",
+      "promptVerbatim": "Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes."
+    },
+    {
+      "examQ": 8,
+      "subPart": "c",
+      "promptVerbatim": "What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."
+    }
+  ],
+  "drills": [
+    {
+      "id": "L7-8a-1",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "An app like TripIt wants to read your Google calendar. Before OAuth, how did it get access, and why was that a bad idea?",
+      "keyBeats": [
+        "password anti-pattern",
+        "client collects/replays user password",
+        "no granular permissions, no easy revocation",
+        "locks site into password auth"
+      ],
+      "modelAnswer": "Before OAuth the client simply asked the user for their password at the other site (Google) and replayed it on every API call to prove authorization. This 'password anti-pattern' teaches users to share passwords (phishing risk), gives the client full impersonation rights (no read-only vs write), makes revocation hard (you must change your password, killing all other grants), and locks the site into password authentication. OAuth fixes this by having TripIt ask Google to ask the user for the desired permissions.",
+      "citation": "3119-essential-oauth-primer (10.2016).txt, PAGE 04",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8a-2",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "In one sentence, what is OAuth 2.0 actually for, and what single word captures it better than 'authorization'?",
+      "keyBeats": [
+        "delegated/secure delegated access",
+        "third-party access without sharing credentials",
+        "suggested name 'O-Delegate'"
+      ],
+      "modelAnswer": "OAuth 2.0 provides client applications a secure delegated access to server resources on behalf of a resource owner, without the owner sharing their credentials. It is fundamentally about delegation; some have suggested it should have been called 'O-Delegate' since delegation also enables easy tracking and revocation of the permissions granted.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 09",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8a-3",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "trap",
+      "question": "A student says 'OAuth is how I log in to a site with my Google account, so it authenticates me.' What is wrong with that, and which standard fills the gap?",
+      "keyBeats": [
+        "OAuth does NOT do authentication",
+        "it is authorization/delegation",
+        "access token is not a user identifier",
+        "OpenID Connect adds identity layer"
+      ],
+      "modelAnswer": "OAuth does not do authentication; the slides state this explicitly. In OAuth the resource owner's identity is implicit, expressed only indirectly in the permissions carried in the access token, which is not an identifier for the user but a means to obtain resources. To get an actual user identity you add an identity layer on top of OAuth, which is the OpenID Connect premise (covered in lecture 11 / Q9).",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 08",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8a-4",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "concept",
+      "question": "Why is delegating access (instead of handing over your password) such a security win? Name the concrete properties OAuth gives you.",
+      "keyBeats": [
+        "client gets different credentials, not the password",
+        "scope-limited (not full access)",
+        "time-limited, logged, revocable",
+        "consent given at the AS, recorded centrally"
+      ],
+      "modelAnswer": "The user delegates limited and precisely controlled access to the client: the client is issued a different set of credentials than the resource owner's, never gets the user's password, access is limited to a certain scope (not full access), and access is time-limited, logged, and can be revoked. Because consent occurs at the authorization server (e.g. Google), it can be recorded and the user given an interface to manage and revoke individual grants.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 09",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-1",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "Name the four OAuth 2.0 roles and state, for each, who issues or hosts what.",
+      "keyBeats": [
+        "resource owner = entity granting access (end-user if person)",
+        "client = app making requests on owner's behalf",
+        "authorization server = issues access tokens after authenticating owner",
+        "resource server = hosts protected resources, validates tokens"
+      ],
+      "modelAnswer": "Resource owner: an entity capable of granting access to a protected resource (an end-user when it is a person). Client: an application making protected-resource requests on behalf of the resource owner with its authorization. Authorization server (AS): the server issuing access tokens to the client after successfully authenticating the resource owner and obtaining authorization. Resource server (RS): the server hosting the protected resources, capable of accepting and responding to requests using access tokens.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-2",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "Walk through the Authorization Code flow step by step (steps A through G). Use the textual description, not just the diagram.",
+      "keyBeats": [
+        "A: client redirects user-agent to authorization endpoint (client ID, scope, state, redirect URI)",
+        "B: AS authenticates owner, owner grants/denies",
+        "C: AS redirects back with authorization code",
+        "D: client posts code to token endpoint, authenticates itself",
+        "E: AS validates code+redirect URI, returns access token (+ optional refresh)",
+        "F/G: client presents token to RS, RS validates and serves resource"
+      ],
+      "modelAnswer": "(A) The client initiates the flow and directs the resource owner's user-agent to the authorization endpoint, including its client ID, requested scope, local state and a redirection URI. (B) The AS authenticates the resource owner via the user-agent and establishes whether access is granted or denied. (C) Assuming access is granted, the AS redirects the user-agent back to the client's redirection URI carrying an authorization code and local state. (D) The client requests an access token from the token endpoint, including the authorization code and the redirect URI, and authenticates itself. (E) The AS authenticates the client, validates the code, checks the redirect URI matches, and if valid returns an access token and optionally a refresh token. (F) The client requests the protected resource from the RS, presenting the access token. (G) The RS validates the token and, if valid, serves the request.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-3",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "List the OAuth 2.0 grant types in the slides, and say which two are legacy/deprecated and why one of them resembles the password anti-pattern.",
+      "keyBeats": [
+        "Authorization Code (+ with PKCE)",
+        "Client Credentials, Device Code (RFC 8628)",
+        "Legacy: Implicit and Resource Owner Password Credentials",
+        "ROPC has client collect owner's password (anti-pattern-like)"
+      ],
+      "modelAnswer": "Current grants: Authorization Code (intermediate code delegates authorization via the user-agent, password and token never shared with the owner's browser), Authorization Code with PKCE (public clients add a Proof Key for Code Exchange), Client Credentials (client uses its own credentials for its own data), and Device Code (RFC 8628, for browserless or input-constrained devices). Legacy grants, not recommended and to be removed: the Implicit grant (AS returns the token directly) and Resource Owner Password Credentials (the client collects the owner's password and presents it to the AS, similar to the password anti-pattern, only a transition mechanism).",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-4",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "What is the difference between a confidential client and a public client, and give an example of each from the three client profiles?",
+      "keyBeats": [
+        "confidential = can keep credentials secret (web app on server)",
+        "public = cannot keep a secret (browser-based, native app)",
+        "credentials in public clients are extractable/visible",
+        "client must declare type at registration"
+      ],
+      "modelAnswer": "A confidential client is capable of maintaining the confidentiality of its credentials, e.g. a web application running on a web server where the client credentials and access tokens are stored on the server and not exposed to the resource owner. A public client is incapable of keeping its credentials confidential: examples are a browser-based application (code downloaded and run in the browser, where protocol data and credentials are easily visible) and a native application (installed on the device, where it is assumed any embedded client authentication credentials can be extracted). At registration the client must specify its type (confidential or public) and a redirection endpoint.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-5",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "Contrast the access token and the refresh token: lifetime, purpose, and where each is (and is not) sent.",
+      "keyBeats": [
+        "access token short-lived (~1h), like a session",
+        "refresh token long-lived, like a password",
+        "refresh token trades in for fresh access token without new owner consent",
+        "refresh tokens are never sent to the RS"
+      ],
+      "modelAnswer": "The access token is short-lived (typically 1 hour), 'like a session': it is the data object by which a client authenticates to the RS and lays claim to authorizations, with a specific scope and duration. The refresh token is long-lived, 'like a password': a client trades it in to the AS to obtain a new access token with the same authorizations, allowing fresh access tokens without obtaining fresh authorization from the resource owner. Crucially, refresh tokens are never sent to the resource server, only to the AS.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-6",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "What are the two OAuth endpoints, and what does the client send to each in the Authorization Code flow?",
+      "keyBeats": [
+        "authorization endpoint: front-channel, gets the code",
+        "client sends client_id, response_type=code, redirect_uri, scope, state",
+        "token endpoint: back-channel, exchanges code for token",
+        "client sends grant_type, code, redirect_uri, authenticates"
+      ],
+      "modelAnswer": "The authorization endpoint is reached via the front channel (browser redirect): the client sends client_id, response_type=code, redirect_uri, the requested scope and a state value, and the user authenticates and consents there, after which the AS returns an authorization code to the redirect URI. The token endpoint is reached via the back channel: the client POSTs grant_type=authorization_code, the code and the redirect_uri and authenticates itself, and the AS returns an access token (and optionally a refresh token).",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-7",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "What is a scope in OAuth 2.0, and what does the client have to do with it when requesting authorization?",
+      "keyBeats": [
+        "scope = permissions, e.g. list of APIs / what client may do",
+        "client MUST specify scope in the authorization request",
+        "space-separated list, shown on consent screen",
+        "example Microsoft Graph mail.read"
+      ],
+      "modelAnswer": "Scopes are like permissions, for example a list of APIs and what the client is authorized to do. The client must specify a scope when requesting authorization; in the request it appears as a (URL-encoded) space-separated list of scopes the user is asked to consent to, e.g. graph.microsoft.com/mail.read. The requested scopes are what the user sees and approves on the consent screen, and they bound what the issued access token may access.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-8",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "Distinguish 3-legged from 2-legged OAuth: which grant does each use and who is involved?",
+      "keyBeats": [
+        "3 legs = end user, client app, API server",
+        "3-legged uses Code grant, involves user consent",
+        "2-legged uses Client Credentials grant",
+        "2-legged: app uses own data, no user/consent"
+      ],
+      "modelAnswer": "The three legs are the end user, the client app, and the server receiving the API calls. 3-legged OAuth uses the authorization Code grant: the application requests access to resources on behalf of end users and it involves user consent. 2-legged OAuth uses the Client Credentials grant: the application works with its own data rather than a user's, users are not directly involved and there is no giving of consent.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-9",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "concept",
+      "question": "How does a client get registered and what credentials result? Why is a client secret sometimes omitted?",
+      "keyBeats": [
+        "client registers/authenticates with AS (RFC 6749)",
+        "specifies client type + redirection endpoint",
+        "AS assigns client ID (public) and client secret (confidential)",
+        "secret omitted if client cannot keep it confidential (public client)"
+      ],
+      "modelAnswer": "The client registers with the authorization server (RFC 6749), specifying its client type (confidential or public) and a redirection endpoint. As a result the AS assigns client credentials: a client ID, a unique public identifier string, and a client secret, the client password that prevents unauthorized apps from obtaining a valid access token. The secret must be kept confidential and is omitted if the client cannot keep it confidential, i.e. for public clients. API keys are analogous to client IDs.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8b-10",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "b",
+      "type": "trap",
+      "question": "A diagram shows the resource owner and the user as the same box. Is the resource owner always the end user?",
+      "keyBeats": [
+        "resource owner can differ from the user",
+        "AS may use policies to grant access",
+        "important note on the flow slide"
+      ],
+      "modelAnswer": "No. The slides note explicitly that the resource owner can be different from the user; in that case the authorization server may use policies to grant access to the client rather than relying on a live human consent. This matters for enterprise scenarios where, for instance, an organization's policy authorizes access on the employee's behalf.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-1",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "What problem does PKCE (RFC 7636) solve, and for which kind of client?",
+      "keyBeats": [
+        "public clients cannot use client ID + secret",
+        "risk: malicious app intercepts the authorization code",
+        "PKCE for browser-based/native (public) clients",
+        "mitigates code interception attacks"
+      ],
+      "modelAnswer": "PKCE solves the problem that public clients (browser-based or native apps) cannot authenticate with a client ID and client secret, so an intercepted authorization code could be redeemed for tokens by a malicious application on the device. PKCE protects against malicious clients intercepting an authorization code grant and using it to get an access token, by binding the code to a one-time secret only the legitimate client knows.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-2",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "Walk through the PKCE mechanism: what are the code_verifier, code_challenge and t_m, and what does the AS check?",
+      "keyBeats": [
+        "code_verifier = high-entropy random string (secret)",
+        "code_challenge = BASE64URL(SHA256(verifier)), method t_m=S256",
+        "step A: send challenge + t_m to authorization endpoint",
+        "step C: send verifier to token endpoint",
+        "AS transforms verifier, compares to stored challenge; deny if unequal"
+      ],
+      "modelAnswer": "The client creates and records a secret code_verifier (a high-entropy random string) and derives a code_challenge = BASE64URL-ENCODE(SHA256(ASCII(code_verifier))) using transformation method t_m=S256. (A) In the authorization request the client sends the code_challenge and t_m to the authorization endpoint, which records them. (C) In the access token request the client sends the original code_verifier. (D) The AS transforms the verifier with the recorded method and compares it to the stored challenge; access is denied if they are not equal, otherwise it returns the access token. It is essentially a hash/checksum proof that the same client that started the flow is finishing it.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-3",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "What problem does DPoP (RFC 9449) solve that PKCE does not? Explain the bearer-vs-sender-constrained distinction.",
+      "keyBeats": [
+        "bearer token: mere possession = proof, can be stolen and reused",
+        "PKCE only protects the auth code, not the issued token",
+        "DPoP makes the access token sender-constrained",
+        "binds token to client's public/private key pair"
+      ],
+      "modelAnswer": "Access tokens have traditionally been bearer tokens, where mere possession is interpreted as proof, so anyone who steals one (like a coin found on the street) can use it. PKCE only protects the authorization code during the flow, not the issued access token. DPoP solves this by making the access token sender-constrained: the client generates a public/private key pair and sends a DPoP proof with the public key, so the AS binds (sender-constrains) the token to that key. The token then cannot be used without proving possession of the corresponding private key, so with DPoP it is not enough to merely have the access token.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-4",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "Walk through the end-to-end DPoP flow (A-D): what does the client send to the AS, what does the AS bind, and what does the RS verify?",
+      "keyBeats": [
+        "A: token request + DPoP proof (HTTP header JWT)",
+        "B: AS issues DPoP-bound access token (token_type=DPoP)",
+        "C: client calls RS with token + fresh DPoP proof",
+        "RS verifies bound public key matches proof key and access-token hash",
+        "refresh token also key-bound for public clients"
+      ],
+      "modelAnswer": "(A) In the token request the client sends the authorization grant plus a DPoP proof attached as an HTTP header (a JWT carrying the public key). (B) The AS binds (sender-constrains) the access token to the public key claimed in the proof, returning a DPoP-bound access token (token_type=DPoP); a refresh token issued to a public client is also bound to that key. (C) To call the RS the client again adds a DPoP proof header for that request. The RS verifies that the public key the token is bound to matches the proof's public key, and that the access-token hash in the proof matches the presented token. (D) The RS refuses the request if the signature check fails or the proof data is wrong (e.g. the htu target URI does not match).",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-5",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "What is inside a DPoP proof JWT, and which field links it specifically to a given access token?",
+      "keyBeats": [
+        "signature over HTTP request data, timestamp, unique id, optional nonce",
+        "header carries public key (jwk) to verify proof-of-possession",
+        "htm/htu describe the HTTP method and target URI",
+        "ath claim = hash of the associated access token"
+      ],
+      "modelAnswer": "A DPoP proof is roughly a signature over some data of the HTTP request it is attached to, a timestamp (iat, valid only a limited time window), a unique identifier (jti, for replay checking), an optional server-provided nonce, and a hash of the associated access token when one is present. The JWT header carries the public key (jwk) used to verify the signature and demonstrate proof-of-possession; htm and htu give the HTTP method and target URI. The ath claim, the hash of the access token, is what ties the proof to one specific access token.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-6",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "exercise-walkthrough",
+      "question": "Exercise 1 walkthrough: in the Google OAuth Playground you authorized at least three APIs with different scopes. What is that playground actually demonstrating?",
+      "keyBeats": [
+        "playground = Google OAuth 2.0 flow against real account",
+        "pick scopes per API (Calendar, Drive, YouTube)",
+        "fill {...} parameters, watch the URLs",
+        "demonstrates making API calls with different scopes via standard flow"
+      ],
+      "modelAnswer": "In Exercise 1 you go to the Google OAuth Playground, authorize at least three different Google APIs (e.g. Calendar, Drive, YouTube) by selecting different scopes and supplying the parameters where the playground shows curly brackets {...}, while inspecting the browser URLs. It demonstrates how to make API calls with different scopes using the standard OAuth 2.0 authorization code flow against a real Google account: you authenticate, consent to the requested scopes, get an authorization code exchanged for an access token, and then call each API. It shows concretely that the token only grants what the consented scopes allow.",
+      "citation": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-7",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "exercise-walkthrough",
+      "question": "Exercise 2 walkthrough: at oauth.com's authorization-code-with-pkce playground, which extra parameters appear versus a plain code flow, and what is the security gain?",
+      "keyBeats": [
+        "register client, log in with generated user creds",
+        "extra params: code_challenge + code_challenge_method on /authorize",
+        "code_verifier sent on token exchange",
+        "secures public clients against code interception"
+      ],
+      "modelAnswer": "In Exercise 2 you register a client at oauth.com's PKCE playground and log in with the generated user credentials, then follow the authorization-code-with-PKCE flow. Compared with a plain code flow, the authorization request carries the extra code_challenge and code_challenge_method parameters, and the token exchange sends the matching code_verifier. The gain is that even if the authorization code is intercepted, an attacker without the verifier cannot exchange it for a token, which is what makes the flow safe for public clients that cannot hold a client secret.",
+      "citation": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-8",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "exercise-walkthrough",
+      "question": "Exercise 2 question: the playground says 'The state value isn't strictly necessary here since the PKCE parameters provide CSRF protection themselves.' What does that mean?",
+      "keyBeats": [
+        "state param normally provides CSRF protection",
+        "PKCE binds the flow to the original client's verifier",
+        "an injected/forged code fails the verifier check",
+        "so PKCE already gives the CSRF protection state would"
+      ],
+      "modelAnswer": "Normally the state parameter is used to detect CSRF: the client checks the returned state matches what it sent. With PKCE, the authorization code is cryptographically bound to the code_verifier that only the legitimate client holds, so a code injected or forged by an attacker cannot be redeemed (the verifier check fails at the token endpoint). Because PKCE already prevents an attacker from completing a flow against the victim's client, it inherently provides the same CSRF protection that state would, so state is no longer strictly necessary.",
+      "citation": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-9",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "exercise-walkthrough",
+      "question": "Exercise 3 question: in a full Zero-Trust model we would use mutual TLS client certificates to identify the sender. Why is that not possible in a typical web application, and what does DPoP do instead?",
+      "keyBeats": [
+        "mTLS needs client certs provisioned/managed per client",
+        "browser/public web apps cannot reliably hold a client cert",
+        "DPoP substitutes an app-generated key pair + proof JWT",
+        "achieves sender-constraint without PKI/mTLS infrastructure"
+      ],
+      "modelAnswer": "Mutual TLS (mTLS) requires every client to hold and present a provisioned client certificate, which is impractical for typical web/public clients: a browser-based or native app cannot reliably store and manage a certificate, and the surrounding PKI infrastructure is not available. DPoP achieves the same sender-constraining goal without certificates: the client itself generates a public/private key pair on the fly and proves possession of the private key with a signed DPoP proof JWT on each request, so the token is bound to that key rather than to an mTLS certificate. The exercise has you run the dpoptest demo, click through the green-box steps, and end with an API response containing both an access token and a DPoP proof whose header/payload/signature you decode.",
+      "citation": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-10",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "exercise-walkthrough",
+      "question": "Exercise 3 final question: in your own words, how does DPoP protect, and why is PKCE not sufficient by itself?",
+      "keyBeats": [
+        "PKCE only protects the authorization code in transit",
+        "once the bearer access token is issued, theft still works",
+        "DPoP binds the access token to a key (proof-of-possession)",
+        "stolen DPoP token is useless without the private key"
+      ],
+      "modelAnswer": "PKCE protects only the authorization code: it stops an intercepted code from being exchanged for a token. But once the access token has been issued, if it is a bearer token, stealing it still grants full access, so PKCE does not protect the token itself. DPoP closes that gap by making the access token sender-constrained, binding it to a key pair the client generated; every API call carries a fresh DPoP proof signed with the private key, and the RS checks the bound public key and the access-token hash. A stolen DPoP-bound token is useless to an attacker who lacks the private key, so DPoP protects the token at use-time, complementing PKCE's protection of the code.",
+      "citation": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L7-8c-11",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "c",
+      "type": "concept",
+      "question": "OAuth 2.1 makes one PKCE-related change mandatory and drops some legacy items. What changes relate directly to the PKCE/DPoP security story?",
+      "keyBeats": [
+        "PKCE required for all clients using the auth code flow",
+        "Implicit and ROPC grants omitted",
+        "refresh tokens for public clients: sender-constrained or one-time use",
+        "exact-string redirect URI matching"
+      ],
+      "modelAnswer": "In OAuth 2.1, PKCE is required for all OAuth clients using the authorization code flow (not just public ones), the Implicit and Resource Owner Password Credentials grants are omitted, redirect URIs must be compared by exact string matching, and refresh tokens for public clients must be either sender-constrained or one-time use. The refresh-token rule directly reflects the DPoP/proof-of-possession idea of preventing reuse of stolen long-lived credentials.",
+      "citation": "Lecture 8, OAuth 2.0 300326.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "L7-EX-1",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 1",
+      "promptVerbatim": "In this exercise you will learn: How to make API calls with different scopes using standard OAuth 2.0 flows; How the Proof Key for Code Exchange (PKCE) is used to increase the security for public clients; How do we further enhance the security of using access tokens by Demonstrating Proof of Possession (DPoP)",
+      "whatItTests": "Overall learning goals of the OAuth 2.0 exercise set: scopes, PKCE for public clients, DPoP for access tokens.",
+      "answerSketch": "Three goals map to the three exercises: Ex1 = API calls with different scopes via standard flows; Ex2 = PKCE securing public clients against code interception; Ex3 = DPoP sender-constraining access tokens via proof-of-possession.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-2",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 1",
+      "promptVerbatim": "Before digging into the exercises, be sure that you know: What is a grant, and which ones are used with OAuth? What is a token, and how is this used in OAuth? What is a client ID, a client secret and a scope relating to OAuth? What is PKCE used for? Why do we need DPoP as an extra protection layer and for what?",
+      "whatItTests": "Prerequisite conceptual knowledge before the hands-on exercises: grants, tokens, client ID/secret, scope, PKCE, DPoP.",
+      "answerSketch": "Grant = the resource owner's authorization the client exchanges for a token (Authorization Code, Client Credentials, Device Code; Implicit and ROPC legacy). Token = access token (short-lived, used at the RS) and refresh token (long-lived, used at the AS). Client ID = public identifier; client secret = confidential client password (omitted for public clients); scope = the permissions requested. PKCE = protects public clients against authorization-code interception. DPoP = sender-constrains the access token so a stolen bearer token cannot be reused.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-3",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "Go to: https://developers.google.com/oauthplayground/ Try authorising different APIs (at least three APIs) with different scopes / API calls and provide the proper parameters, where OAuth Playground inserts curly brackets {...}.",
+      "whatItTests": "Hands-on use of the standard OAuth 2.0 authorization code flow with multiple APIs and distinct scopes.",
+      "answerSketch": "Authorize three Google APIs (e.g. Calendar, Drive, YouTube), each with its own scopes, filling in the {...} parameters and watching the browser URLs. Each consent grants only the requested scopes, and the issued access token can only call the APIs those scopes cover.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-4",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "Be sure, you can explain with your own words, what this playground is demonstrating. It is very important before moving on to any of the other exercises.",
+      "whatItTests": "Ability to articulate what the Google OAuth Playground demonstrates.",
+      "answerSketch": "It demonstrates the standard OAuth 2.0 delegated-authorization flow end to end: authenticate the resource owner, consent to specific scopes, exchange an authorization code for an access token, and call protected APIs with that scope-limited token.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-5",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "Goto this link: https://www.oauth.com/playground/authorization-code-with-pkce.html ... Follow the guide step-by-step, which starts by registering a client. ... Remember to open the user credentials generated for you in order to login. ... Follow the guide step-by-step and understand the steps in detail.",
+      "whatItTests": "Hands-on execution of the authorization-code-with-PKCE flow: client registration, login, code_challenge/code_verifier exchange.",
+      "answerSketch": "Register a client, log in with the generated user credentials, and step through the flow: client generates code_verifier and code_challenge, sends challenge + method on /authorize, receives the code, then sends the verifier on the token exchange where the AS validates it before issuing a token.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-6",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "Explain the PKCE flow and focus on the parts of the updated OAuth 2.0 authorisation flow and what is made more secure with the use of PKCE.",
+      "whatItTests": "Explaining how PKCE modifies the authorization code flow and the security improvement.",
+      "answerSketch": "Added parts: code_challenge + code_challenge_method on the authorization request, and code_verifier on the token request, with AS-side comparison. Security gain: an intercepted authorization code is useless to an attacker without the verifier, protecting public clients that have no client secret.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-7",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "In the Step 3 of the online playground, it is stated: \"The state value isn't strictly necessary here since the PKCE parameters provide CSRF protection themselves.\" What is meant by that?",
+      "whatItTests": "Understanding that PKCE provides CSRF protection equivalent to the state parameter.",
+      "answerSketch": "Because the code is bound to the client's secret code_verifier, an attacker cannot inject or forge a code that the victim's client will redeem; this prevents the CSRF that state normally guards against, so state becomes redundant for CSRF protection in a PKCE flow.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-8",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 2",
+      "promptVerbatim": "For a greater overview off all the opportunities with OAUTH2 and possibility to tailor-make your security flows and test your services based on OAUTH2, follow this link: https://oauth.tools/ a. Get familiar with the menus and the flow - understand \"the moving parts\" b. What and who is the tool for? Get familiar with claims part, as we will be revisiting this in OIDC exercise.",
+      "whatItTests": "Familiarity with oauth.tools for exploring and tailoring OAuth 2.0 flows; foreshadows claims for OIDC.",
+      "answerSketch": "oauth.tools lets developers/architects build and test OAuth2 (and OIDC) flows interactively, inspecting the moving parts (endpoints, grants, tokens, claims). It is aimed at developers and security engineers designing/debugging flows; the claims view is revisited in the OIDC exercise.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-9",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "promptVerbatim": "In a full Zero-Trust model, we would use client-certificates (mutual TLS) to identify the sender. However, in a typical web application this is not possible, why is that?",
+      "whatItTests": "Why mTLS client certificates are impractical for typical web/public clients, motivating DPoP.",
+      "answerSketch": "Typical web/public clients (browsers, native apps) cannot reliably provision, store and present a client certificate, and the surrounding PKI/mTLS infrastructure is generally unavailable; DPoP instead uses an app-generated key pair plus a signed proof, giving sender-constraint without certificates.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-10",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "promptVerbatim": "Let's play with DPoP: Following this link: https://dpoptest.z1.web.core.windows.net/index.htm Complete all the steps in the guide (Only click the green boxes and progress manually) ... You should end by getting a response from the API with both access token and DPOP proof.",
+      "whatItTests": "Hands-on execution of a DPoP flow ending in an API response with access token and DPoP proof.",
+      "answerSketch": "Step manually through the dpoptest demo (green boxes only): the client generates a key pair and a DPoP proof, requests a DPoP-bound access token from the AS, then calls the API sending both the access token and a DPoP proof, ending with the API response.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-11",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "promptVerbatim": "Please note all of the information in the different steps. You will be able to decipher all the elements in the JSON formatted token with header, payload and signature.",
+      "whatItTests": "Reading/decoding the JWT structure (header, payload, signature) of the DPoP proof / token.",
+      "answerSketch": "Decode the JWT into header (alg, typ=dpop+jwt, jwk public key), payload (jti, htm, htu, iat, optional nonce, ath access-token hash) and signature. These elements are exactly what bind the token to the client's key and to a specific request.",
+      "unverified": false
+    },
+    {
+      "id": "L7-EX-12",
+      "source": "260330-OAUTH2.0 Exercise.txt, PAGE 3",
+      "promptVerbatim": "Describe in your words, how DPoP works and what and how it protects. Why is PKCE not sufficient in its self?",
+      "whatItTests": "Explaining DPoP's protection mechanism and why PKCE alone is insufficient.",
+      "answerSketch": "DPoP binds the access token to a client-held key pair; each request carries a signed DPoP proof, and the RS verifies the bound key and access-token hash, so a stolen token is useless without the private key. PKCE only protects the authorization code in transit, not the issued bearer token, so it cannot stop token theft/replay after issuance.",
+      "unverified": false
+    }
+  ],
+  "_sources_read": [
+    "Lecture 8, OAuth 2.0 300326.txt:2479",
+    "3119-essential-oauth-primer (10.2016).txt:639",
+    "260330-OAUTH2.0 Exercise.txt:136"
+  ]
+}

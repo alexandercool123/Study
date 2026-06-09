@@ -1,0 +1,65 @@
+{
+  "course": "Identity and Access Management (IAM) — ICTE2/CYBER2, Spring 2026",
+  "examFormat": "Oral, ~20 min (15 min questioning + 5 min voting). Student draws 2 of 9 known questions. Examiner asks; student answers (does NOT start). No notes allowed.",
+  "note": "Lecture N = folder number 1..11. Internal slide titles sometimes differ (e.g. folder 07 slides say 'Lecture 8, OAuth'; folder 10 = JWT; folder 11 = 'Lecture 9, OpenID Connect'). The 9 exam questions are the backbone; each anchors to one folder-lecture (plus cross-refs).",
+  "examQuestions": [
+    { "examQ": 1, "title": "Essential Concepts for IAM", "anchorLecture": 1, "crossRefs": [], "subParts": {
+      "a": "Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized.",
+      "b": "Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?",
+      "c": "Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"
+    }},
+    { "examQ": 2, "title": "Digital identities and credentials", "anchorLecture": 2, "crossRefs": [6, 8], "subParts": {
+      "a": "What is a digital identity? Discuss important concepts, terms and principles.",
+      "b": "Explain the difference between identification, identity proofing and authentication.",
+      "c": "Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these."
+    }},
+    { "examQ": 3, "title": "Authentication", "anchorLecture": 3, "crossRefs": [], "subParts": {
+      "a": "What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems.",
+      "b": "What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?",
+      "c": "What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?"
+    }},
+    { "examQ": 4, "title": "FIDO and WebAuthn", "anchorLecture": 4, "crossRefs": [], "subParts": {
+      "a": "Explain the steps in FIDO Registration and Login (including all challenge and response details).",
+      "b": "What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented.",
+      "c": "Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?"
+    }},
+    { "examQ": 5, "title": "Access control and policies", "anchorLecture": 5, "crossRefs": [9], "subParts": {
+      "a": "Explain the difference between authentication and authorization. How can authorization be implemented?",
+      "b": "Explain the key parts of XACML 3.0 and its policy architecture.",
+      "c": "Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."
+    }},
+    { "examQ": 6, "title": "Single Sign-On systems and SAML", "anchorLecture": 6, "crossRefs": [11], "subParts": {
+      "a": "Explain the concept and principles of Single Sign-On. What are the pros and cons?",
+      "b": "Discuss the working principles of SAML, its architecture, and typical use cases.",
+      "c": "Discuss different types of SAML assertions and their content."
+    }},
+    { "examQ": 7, "title": "JSON Web Tokens (JWT)", "anchorLecture": 10, "crossRefs": [6, 11], "subParts": {
+      "a": "How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?",
+      "b": "Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?",
+      "c": "Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?"
+    }},
+    { "examQ": 8, "title": "OAuth 2.0", "anchorLecture": 7, "crossRefs": [11], "subParts": {
+      "a": "What is the main idea of OAuth 2.0?",
+      "b": "Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.",
+      "c": "What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."
+    }},
+    { "examQ": 9, "title": "OpenID Connect", "anchorLecture": 11, "crossRefs": [7, 10], "subParts": {
+      "a": "How does OpenID Connect relate to OAuth 2.0? What is it used for?",
+      "b": "Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.",
+      "c": "Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?"
+    }}
+  ],
+  "lectures": [
+    { "lecture": 1, "folder": "01 - 2026-02-03 - Essential Concepts for IAM", "title": "Essential Concepts for IAM", "ownsExamQ": [1] },
+    { "lecture": 2, "folder": "02 - 2026-02-17 - Digital Identities and IAM", "title": "Digital Identities and IAM", "ownsExamQ": [2] },
+    { "lecture": 3, "folder": "03 - 2026-02-24 - Authentication", "title": "Authentication", "ownsExamQ": [3] },
+    { "lecture": 4, "folder": "04 - 2026-03-02 - FIDO2 and WebAuthn", "title": "FIDO2 and WebAuthn", "ownsExamQ": [4] },
+    { "lecture": 5, "folder": "05 - 2026-03-10 - Resources, Policies and Identity Management", "title": "Resources, Policies and Identity Management", "ownsExamQ": [5] },
+    { "lecture": 6, "folder": "06 - 2026-03-13 - SAML and Self-Sovereign Identities", "title": "SAML and Self-Sovereign Identities", "ownsExamQ": [6] },
+    { "lecture": 7, "folder": "07 - 2026-03-30 - OAuth 2.0", "title": "OAuth 2.0", "ownsExamQ": [8] },
+    { "lecture": 8, "folder": "08 - 2026-04-07 - Guest - MitID and EU Digital Identity Wallet", "title": "Guest: MitID and EU Digital Identity Wallet", "ownsExamQ": [], "supports": [2, 7] },
+    { "lecture": 9, "folder": "09 - 2026-04-10 - Guest - IAM Use Cases and Implementation Strategy", "title": "Guest: IAM Use Cases and Implementation Strategy", "ownsExamQ": [], "supports": [5] },
+    { "lecture": 10, "folder": "10 - 2026-04-20 - JSON Web Tokens and Verifiable Credentials (+ PwC Guest)", "title": "JSON Web Tokens and Verifiable Credentials (+ PwC Guest)", "ownsExamQ": [7] },
+    { "lecture": 11, "folder": "11 - 2026-04-21 - OpenID Connect", "title": "OpenID Connect", "ownsExamQ": [9] }
+  ]
+}

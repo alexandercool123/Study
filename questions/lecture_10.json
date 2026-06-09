@@ -1,0 +1,318 @@
+{
+  "lecture": 10,
+  "lectureTitle": "JSON Web Tokens and Verifiable Credentials (+ PwC Guest)",
+  "examQuestions": [
+    {
+      "examQ": 7,
+      "subPart": "a",
+      "promptVerbatim": "How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?"
+    },
+    {
+      "examQ": 7,
+      "subPart": "b",
+      "promptVerbatim": "Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?"
+    },
+    {
+      "examQ": 7,
+      "subPart": "c",
+      "promptVerbatim": "Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?"
+    }
+  ],
+  "drills": [
+    {
+      "id": "L10-7a-1",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "compare",
+      "question": "A teammate says 'a JWT is just a fancy session ID.' Where does the server store each, and why does that distinction matter?",
+      "keyBeats": ["session ID = random string, server stores state", "JWT = self-contained, server keeps no session state", "session ID is a lookup key; JWT carries the claims itself"],
+      "modelAnswer": "A session ID is a randomly generated string that the server stores server-side (DB or in-memory cache) along with the user's data; the ID is just a lookup key. A JWT is stateless and self-contained: the server creates it after authentication and does not store it server-side, so all the claims (userID, role, permissions) travel inside the token itself and are stored only client-side.",
+      "citation": "IAM - JWT.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7a-2",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "scenario",
+      "question": "Your app runs behind a load balancer across several replica servers and sessions keep breaking on different servers. Why, and how do JWTs help?",
+      "keyBeats": ["stateful sessions tied to one server", "workarounds: shared cache or sticky sessions", "JWT is stateless -> any server can validate -> scales"],
+      "modelAnswer": "With stateful sessions the session data lives on the server that created it, so a request hitting a different replica fails; the deck shows fixes like a shared Redis cache or sticky sessions, both with drawbacks. Because a JWT is stateless and self-contained, any server can verify it without a shared session store, which simplifies scalability and efficient request handling.",
+      "citation": "IAM - JWT.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7a-3",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "recall",
+      "question": "Name two concrete scenarios where you'd prefer a JWT over traditional session management.",
+      "keyBeats": ["authorization after login (most common)", "SSO: low overhead + cross-domain", "OIDC ID Token", "information exchange between parties"],
+      "modelAnswer": "Authorization is the most common case: after login each request carries the JWT so the user can reach resources allowed by its claims. JWTs suit Single Sign On because of low overhead and cross-domain usage, and the OIDC ID Token is a JWT. They are also good for secure information exchange between parties since being signed lets the recipient verify integrity.",
+      "citation": "IAM - JWT.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7a-4",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "tradeoff",
+      "question": "The statelessness that makes JWTs scalable creates one operational headache. What is it, and what's a partial fix?",
+      "keyBeats": ["hard to revoke before expiry", "server-side blocklist contradicts statelessness", "refresh tokens get new tokens without re-auth"],
+      "modelAnswer": "Because JWTs are stateless, it is hard to revoke one before its expiration time. A possible fix is a server-side blocklist, but that contradicts the no-state idea. Refresh tokens are a related artifact that let a client obtain new access tokens without forcing the user to authenticate again.",
+      "citation": "IAM - JWT.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7a-5",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "recall",
+      "question": "Where exactly is a JWT stored, and where is it explicitly NOT stored?",
+      "keyBeats": ["NOT stored server-side", "stored client-side only", "examples: local storage, HTTP cookies, in-memory, IndexedDB"],
+      "modelAnswer": "A JWT is created by the server after authentication but is not stored at the server side. It is stored only at the client side, for example in local storage, HTTP cookies, in-memory, or IndexedDB. This is the inverse of a session ID, whose authoritative state lives on the server.",
+      "citation": "IAM - JWT.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-1",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "Sketch the three-part structure of a JWT as it appears on the wire and how the parts are joined.",
+      "keyBeats": ["header.payload.signature", "three base64url parts", "separated by dots ('.')"],
+      "modelAnswer": "A JWT is three base64url-encoded strings separated by dots: header.payload.signature (aaaaaa.bbbbbb.cccccc). The format is URL-safe so it can be passed easily in HTML and HTTP environments. The RFC describes it as a sequence of URL-safe parts separated by period characters.",
+      "citation": "RFC 7519 JWT.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-2",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "What two things does a JWT header (JOSE header) typically contain, and what does each mean?",
+      "keyBeats": ["alg = signing algorithm (e.g. HS256)", "typ = token type, JWT", "header describes the crypto operations"],
+      "modelAnswer": "The header typically has two parts: 'typ', the type of the token (JWT), and 'alg', the signing algorithm the server used, e.g. HMAC SHA256. Per the RFC the JOSE Header describes the cryptographic operations applied to the JWT, and 'typ' (recommended value 'JWT') disambiguates the object's media type.",
+      "citation": "IAM - JWT.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-3",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "The payload holds claims. What are the three classes of claims, and how do they differ?",
+      "keyBeats": ["registered: predefined, optional but recommended", "public: defined at will, collision-resistant", "private: agreed between producer/consumer, collision-prone"],
+      "modelAnswer": "Claims are statements about an entity. The RFC defines three classes: Registered claim names (predefined, optional but recommended, e.g. iss); Public claim names (defined at will but should be collision-resistant or IANA-registered to avoid collisions); and Private claim names (custom names a producer and consumer agree to use, which are subject to collision and used with caution).",
+      "citation": "RFC 7519 JWT.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-4",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "List the seven registered claim names from RFC 7519 and give a one-line meaning for each.",
+      "keyBeats": ["iss issuer, sub subject, aud audience", "exp expiration, nbf not-before, iat issued-at", "jti unique JWT ID (anti-replay)"],
+      "modelAnswer": "iss identifies the principal that issued the JWT; sub identifies the subject the claims are about; aud identifies the intended recipients; exp is the expiration time on/after which the JWT must not be accepted; nbf is the time before which it must not be accepted; iat is when the JWT was issued; and jti is a unique identifier that can be used to prevent replay.",
+      "citation": "RFC 7519 JWT.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-5",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "compute",
+      "question": "How is the JWT signature computed, and what two inputs besides the secret/key feed into it?",
+      "keyBeats": ["sign over base64url(header) + '.' + base64url(payload)", "plus a secret/key and the chosen algorithm", "e.g. HMACSHA256(header.payload, secret)"],
+      "modelAnswer": "The signature is computed over the encoded header plus the encoded payload, using a secret (or key) and the chosen algorithm. For an HS256 token it is HMAC-SHA256(base64urlEncoding(header) + '.' + base64urlEncoding(payload), secret). With an asymmetric algorithm like RS256/ES256 the issuer signs with its private key instead.",
+      "citation": "IAM - JWT.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-6",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "explain",
+      "question": "What role does the signature play, and what extra guarantee do you get if it was made with a private key?",
+      "keyBeats": ["integrity: message not changed in transit", "private key also proves the sender", "verifiable via JWS; HMAC vs RSA/ECDSA"],
+      "modelAnswer": "The signature lets the recipient verify the message was not changed along the way; if it was signed with a private key it also verifies the sender of the JWT. JWTs are digitally signed via JWS and can be signed with a secret (HMAC) or a public/private key pair (RSA or ECDSA), which is what makes the token verifiable and trustworthy.",
+      "citation": "IAM - JWT.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-7",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "JWS and JWE both appear around JWTs. What does each provide, and which is the focus for tokens?",
+      "keyBeats": ["JWS = signing/integrity (MAC or signature)", "JWE = encryption/confidentiality", "focus is on signed tokens"],
+      "modelAnswer": "JWS (JSON Web Signature) provides the cryptographic signature for authenticity and integrity, while JWE (JSON Web Encryption) provides confidentiality by encrypting the content. JWTs can be encrypted, but the focus is on signed tokens; encryption is used when you also need to hide the information.",
+      "citation": "IAM - JWT.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7b-8",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "scenario",
+      "question": "An attacker submits a token with header alg=none. Per the JWT attacks slide, what is the attack and the mitigation?",
+      "keyBeats": ["alg=none -> server skips validation", "goal: bypass auth / impersonate", "mitigation: reject alg=none, whitelist algorithms"],
+      "modelAnswer": "Setting 'alg' to 'none' instructs the server to skip token validation, letting an attacker forge a token and bypass authentication or impersonate an authenticated user. The mitigation is to reject JWTs with alg=none and only accept tokens signed using algorithms specified in a whitelist. Related attacks are payload tampering and secret brute-forcing.",
+      "citation": "IAM - JWT.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-1",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "recall",
+      "question": "What is a Verifiable Credential, and what are its three components?",
+      "keyBeats": ["tamper-evident claims + metadata, cryptographically provable issuer", "components: credential metadata, claims, proof", "proof = issuer's digital signature"],
+      "modelAnswer": "A VC is a set of tamper-evident claims and metadata that cryptographically prove who issued it. Its three components are: Credential Metadata (info about the credential such as issuer, type, dates), Claims (the actual information, e.g. degree or name), and Proof (a cryptographic signature ensuring authenticity, provided by the issuer).",
+      "citation": "IAM - JWT.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-2",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "analogy",
+      "question": "Use the diploma analogy from the deck to explain the three VC components to a non-technical person.",
+      "keyBeats": ["metadata = diploma header (university, issue date)", "claims = student name, degree, GPA", "proof = official stamp & signature"],
+      "modelAnswer": "Think of a diploma. The Credential Metadata is the header on the diploma (university name, issue date). The Claims are the actual content, the student's name, degree and GPA. The Proof is the official university stamp and signature, which in a VC is a cryptographic signature ensuring authenticity.",
+      "citation": "IAM - JWT.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-3",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "recall",
+      "question": "Name the three key roles in a VC ecosystem and state what each one does.",
+      "keyBeats": ["issuer issues the VC (university, government, employer)", "holder stores it in a digital wallet (student, citizen)", "verifier checks authenticity (employer, airport, website)"],
+      "modelAnswer": "The three players are the Issuer (a university, government or employer that issues the verifiable credential), the Holder (a student, employee or citizen who stores the credential in a digital wallet), and the Verifier (an employer, airport security or website that verifies the credential's authenticity).",
+      "citation": "IAM - JWT.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-4",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "explain",
+      "question": "Describe the VC 'trust triangle': how do the three roles relate and where does trust actually come from?",
+      "keyBeats": ["issuer -> holder: issues credential", "holder -> verifier: presents credential", "verifier trusts issuer's signature, not the holder"],
+      "modelAnswer": "The issuer issues a credential to the holder, who stores it in a wallet; the holder presents it to a verifier when needed. The verifier does not have to contact the issuer at verification time, it checks the issuer's cryptographic proof against the issuer's public key. So trust flows from the verifier's trust in the issuer, with the holder in the middle controlling presentation.",
+      "citation": "IAM - JWT.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-5",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "compare",
+      "question": "A VC can be JWT-encoded or JSON-LD-encoded. How does the proof differ between the two?",
+      "keyBeats": ["JWT/JWS: credential mapped into JWT payload", "JWS signature is an external proof", "JSON-LD: Linked Data Proofs embedded in the object"],
+      "modelAnswer": "A JSON-encoded VC is based on JSON Web Tokens (JWT/JWS): the credential is mapped into a JWT payload and the JWT signature acts as an external proof. A JSON-LD-encoded VC is based on Linked Data Proofs, where proofs are embedded into various parts of the credential object. JSON-LD also adds semantic disambiguation via linked-data context.",
+      "citation": "IAM - JWT.txt, PAGE 38",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-6",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "recall",
+      "question": "In a JWT-encoded VC (JWT-VC), which claims sit in the payload alongside the 'vc' object?",
+      "keyBeats": ["header: alg, typ, kid", "payload: iss, nbf, exp, jti, sub + vc", "signature = external proof"],
+      "modelAnswer": "A JWT-VC has three sections. The header contains alg, typ and kid (which public key to validate with). The payload contains iss, nbf, exp, jti and sub claims plus the vc credential object (@context, type, credentialSubject). The signature is the signature of the encoded header and payload, serving as the external proof.",
+      "citation": "IAM - JWT.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-7c-7",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "explain",
+      "question": "What is JSON-LD and what problem does it solve that plain JSON does not?",
+      "keyBeats": ["extends JSON with RDF/Linked Data", "@context gives terms machine-meaning", "computers understand relationships, not just labels"],
+      "modelAnswer": "JSON-LD extends traditional JSON by incorporating features from RDF (Resource Description Framework); it is a human-readable serialization for linked data. Plain JSON labels like 'name' and 'school' are just strings to a computer, but with an @context and @type a machine can understand that John Doe is a Person who attended a School, capturing the relationships.",
+      "citation": "IAM - JWT.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-5-1",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": null,
+      "type": "recall",
+      "question": "(PwC guest) The IGA deck frames the whole discipline around one question. What is it, and what is IGA broadly about?",
+      "keyBeats": ["'who has access to what - and why?'", "managing users and access rights in connected systems", "improving IT security and compliance"],
+      "modelAnswer": "IGA answers the question: do you know who has access to what, and why? It is about managing users and access rights across connected applications and IT systems, improving overall IT security by supporting key IT controls, and staying compliant with regulations and good practices. PAM, by contrast, secures privileged access.",
+      "citation": "IAM in the enterprise 20260421.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L10-5-2",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": null,
+      "type": "compare",
+      "question": "(PwC guest) RBAC vs ABAC: which is admin-time vs runtime, and what PIP/PDP/PEP roles appear?",
+      "keyBeats": ["RBAC = admin-time preauthorize (provision entitlements)", "ABAC = runtime real-time decision on attributes", "PIP info, PDP decision, PEP enforcement"],
+      "modelAnswer": "RBAC is access administration done at admin time: roles and entitlements are preauthorized and provisioned. ABAC is access enforcement at runtime: a real-time decision is made from user/resource attributes. The policy components are PIP (Policy Information Point), PDP (Policy Decision Point) and PEP (Policy Enforcement Point), and authorization logic can be embedded in the app or externalized.",
+      "citation": "IAM in the enterprise 20260421.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "L10-EX-1",
+      "source": "IAM - JWT.txt, PAGE 28",
+      "promptVerbatim": "Go to https://jwt.io/ ... Try to change the payload, and the secret ... Go to https://token.dev/ and paste the JWT ... paste the secret you created. The signature is now \"verified\"",
+      "whatItTests": "Hands-on understanding that header/payload are only base64url-encoded (readable) while the signature requires the correct signing key to verify.",
+      "answerSketch": "Decoding shows header and payload in clear; verification fails until the matching secret is supplied, after which the signature verifies. Demonstrates integrity protection, not confidentiality.",
+      "unverified": false
+    },
+    {
+      "id": "L10-EX-2",
+      "source": "IAM - JWT.txt, PAGE 44",
+      "promptVerbatim": "How do JWTs differ from Certificates ?",
+      "whatItTests": "Conceptual contrast between a JWT (compact, self-contained signed claims set, typically short-lived) and an X.509 certificate (binds a public key to an identity, signed by a CA, used in PKI).",
+      "answerSketch": "Both are signed and verifiable, but a JWT carries arbitrary claims for transmitting authz/identity data between parties and is usually short-lived; a certificate binds a public key to an identity via a CA chain for establishing trust/TLS. Not stated verbatim in slides.",
+      "unverified": true
+    },
+    {
+      "id": "L10-EX-3",
+      "source": "IAM in the enterprise 20260421.txt, PAGE 29",
+      "promptVerbatim": "For all these changes, the IGA solution must re-calculate the rules-based access assignments. How many of these Organizational changes can be automatically handled by the IGA solution? Which changes requires some sort of manual input?",
+      "whatItTests": "Whether organizational-data-driven (rules-based) access can be auto-recalculated on org changes, and recognizing which changes need human judgment.",
+      "answerSketch": "Changes cleanly expressible in org data (new/closed/moved department, new manager) can be auto-recalculated; ambiguous ones (split/merge, employees reassigned) typically need manual input to map people to new units/roles.",
+      "unverified": true
+    }
+  ],
+  "_sources_read": [
+    "IAM - JWT.txt:1170",
+    "RFC 7519 JWT.txt:1765",
+    "IAM in the enterprise 20260421.txt:803"
+  ]
+}

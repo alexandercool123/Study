@@ -1,0 +1,14 @@
+CONTEXT FOR LECTURE 8 SLAVE — GUEST: "MitID and EU Digital Identity Wallet"
+Folder: 08 - 2026-04-07 - Guest - MitID and EU Digital Identity Wallet
+Files in your folder to READ IN FULL: Presentation AAU April 2026.txt (856 lines, 31 pages).
+
+THIS GUEST LECTURE OWNS NO EXAM QUESTION. It is supporting/real-world material. The exam note says "other relevant issues may also be discussed" and the examiner values understanding the principles in practice.
+
+YOUR JOB: produce a SMALLER set of supporting drills (~8-12) that connect MitID / eIDAS 2.0 / EU Digital Identity Wallet to the exam questions they illuminate:
+- Anchor drills to examQ 2 (digital identities, assurance, identity proofing) — MitID as a national identity/assurance system.
+- Anchor drills to examQ 7, subPart "c" (Verifiable Credentials / wallets / SSI) — the EU Digital Identity Wallet as a real SSI deployment.
+Use type "specific" for most. Keep examQuestions[] = [] (you own none); still set anchorsExamQ/anchorsSubPart on each drill to the related exam question.
+
+CROSS-LECTURE NOTES: ties to lecture 2 (digital identity, eIDAS), lecture 3 (assurance levels), lecture 6 & 10 (SSI / Verifiable Credentials / wallets).
+
+STUDENT DESIGN: problem-first; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; extract any exercise/discussion prompts into exercises[]. JSON ONLY.

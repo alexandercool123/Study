@@ -1,0 +1,18 @@
+CONTEXT FOR LECTURE 6 SLAVE — "SAML and Self-Sovereign Identities"
+Folder: 06 - 2026-03-13 - SAML and Self-Sovereign Identities
+Files in your folder to READ IN FULL: Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt (2510 lines, 49 pages), saml-101-white-paper.txt (535 lines, Ping Identity), Path to SSI - Alacrity.txt (268 lines, Christopher Allen).
+
+YOU OWN EXAM QUESTION 6. Verbatim sub-parts:
+Q6. Single Sign-On systems and SAML
+ a) "Explain the concept and principles of Single Sign-On. What are the pros and cons?"
+ b) "Discuss the working principles of SAML, its architecture, and typical use cases."
+ c) "Discuss different types of SAML assertions and their content."
+
+CROSS-LECTURE NOTES:
+- Q6c SAML assertion types: authentication, attribute, authorization-decision assertions. Connect to claims/assertions/credentials (Q2c).
+- SSI / Verifiable Credentials / DIDs are ALSO in this lecture (second half) but the VC exam question is Q7c (owned by lecture 10). Produce a few supporting drills on DID / VC / Presentations here and anchor them to examQ 7, subPart "c" (cross-support) so the student sees the SSI angle. Keep the bulk of your drills on SAML (Q6).
+- SSO is the conceptual parent of SAML; OpenID Connect (lecture 11) is the modern successor — note this in Q6a pros/cons.
+
+FLOW/DIAGRAM RULE: SAML SSO redirect/POST flow — only ordered steps if textual; else diagram labels + diagram_only=true.
+
+STUDENT DESIGN: problem-first openers; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; 3-6 drills per sub-part (~18-24 total incl. a few SSI support drills); extract any exercise prompts into exercises[]. JSON ONLY.

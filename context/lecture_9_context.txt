@@ -1,0 +1,14 @@
+CONTEXT FOR LECTURE 9 SLAVE — GUEST: "IAM Use Cases and Implementation Strategy"
+Folder: 09 - 2026-04-10 - Guest - IAM Use Cases and Implementation Strategy
+Files in your folder to READ IN FULL: IAM-Use-Case.txt (984 lines, 26 pages).
+
+THIS GUEST LECTURE OWNS NO EXAM QUESTION. It is enterprise-IAM real-world support material.
+
+YOUR JOB: produce a SMALLER set of supporting drills (~8-12) connecting enterprise IAM use cases / implementation strategy to the exam questions they illuminate:
+- Anchor most drills to examQ 5 (access control & policies — RBAC/ABAC, provisioning, governance in enterprises).
+- A few may anchor to examQ 2 (identity lifecycle/management) if the material covers it.
+Use type "specific" mostly. examQuestions[] = [] (you own none); still set anchorsExamQ/anchorsSubPart on each drill.
+
+CROSS-LECTURE NOTES: ties to lecture 5 (access control, RBAC/ABAC, identity management) and the IGA-in-the-enterprise theme also seen in lecture 10's PwC guest deck.
+
+STUDENT DESIGN: problem-first; keyBeats DISTINCT from modelAnswer; <=15-word verbatim citation + PAGE or null+unverified; extract any exercise/discussion prompts into exercises[]. JSON ONLY.

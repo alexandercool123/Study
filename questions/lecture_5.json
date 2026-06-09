@@ -1,0 +1,343 @@
+{
+  "lecture": 5,
+  "lectureTitle": "Resources, Policies and Identity Management",
+  "examQuestions": [
+    {
+      "examQ": 5,
+      "subPart": "a",
+      "promptVerbatim": "Explain the difference between authentication and authorization. How can authorization be implemented?"
+    },
+    {
+      "examQ": 5,
+      "subPart": "b",
+      "promptVerbatim": "Explain the key parts of XACML 3.0 and its policy architecture."
+    },
+    {
+      "examQ": 5,
+      "subPart": "c",
+      "promptVerbatim": "Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."
+    }
+  ],
+  "drills": [
+    {
+      "id": "L5-5a-1",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition-contrast",
+      "question": "An examiner says: 'A user just logged in successfully. Are they now allowed to do anything they want?' Distinguish authentication from authorization to answer.",
+      "keyBeats": [
+        "AuthN = who you are (proof of claimed identity)",
+        "AuthZ = what you may do (permit/block on resources)",
+        "Login proves identity only, not permissions",
+        "AuthZ follows AuthN, uses the proven identity"
+      ],
+      "modelAnswer": "No. Authentication only verifies who they are, proof of a claimed identity, that 'you are who you say you are'. Authorization is a separate step that decides what an authenticated subject may actually do. Once a subject has a proven identity, authorization grants or blocks access to resources based on that identity. So a successful login establishes identity but not entitlements; the system still applies authorization rules before allowing any specific action.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 22: \"Authorization: What can you do?\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5a-2",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "reasoning",
+      "question": "A small office has everyone log in with one shared account. Why does this break authorization, and what does it reveal about the AuthN-AuthZ dependency?",
+      "keyBeats": [
+        "Cannot differentiate users under one shared account",
+        "AuthZ depends on identification/authentication",
+        "Distinct accounts enable per-identity access",
+        "No separate AuthZ without AuthN/identification"
+      ],
+      "modelAnswer": "With one shared account you can grant or block access for everyone collectively, but you cannot differentiate between individual users, so per-user authorization is impossible. This shows that you cannot have separate authorization without authentication or identification: only when users authenticate with different accounts can they be granted access to different resources based on their identity. Authorization is therefore built on top of distinct, authenticated identities.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 22: \"you can't have separate authorization without authentication or identification\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5a-3",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanisms",
+      "question": "An examiner asks how authorization can actually be implemented in practice. Name the main models the lecture lists and what a policy specifies.",
+      "keyBeats": [
+        "Models: RBAC, ABAC (also PBAC hybrid)",
+        "Policy = WHO does WHAT on WHICH resources",
+        "Concerns subjects, resources, actions",
+        "Policy = rules; rule permits/denies + conditions"
+      ],
+      "modelAnswer": "Authorization is implemented through access-control policies and models. A policy specifies WHO is allowed to do WHAT on WHICH resources, concerning subjects (the requesting entity), resources, and actions; it is a collection of rules where each rule permits or denies authorization, optionally with conditions. The lecture lists role-based access control (RBAC), attribute-based access control (ABAC), and the hybrid policy-based access control (PBAC). Enterprises authorize employees based on privileges, roles and entitlements, often using RBAC, while ABAC evaluates attributes.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 29: \"WHO is allowed to do WHAT on WHICH resources\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5a-4",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "distinction",
+      "question": "Why does NIST stress that authentication is not the same as access control, and how does it define each?",
+      "keyBeats": [
+        "AuthN = verifying authorized use of an identifier",
+        "AuthZ/access control = permit/deny decision on objects",
+        "ABAC can even work without identification info",
+        "Terms access control and authorization used synonymously"
+      ],
+      "modelAnswer": "NIST stresses the separation because they are different functions. Authentication is the act of verifying that the subject has been authorized to use the presented identifier by a trusted identity provider. Access control or authorization, by contrast, is the decision to permit or deny a subject access to system objects such as networks, data, applications or services. NIST even notes ABAC can be used without identification information. It treats access control and authorization synonymously.",
+      "citation": "NIST.SP.800-162.txt, PAGE 12: \"Authentication is not the same as access control or authorization.\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5a-5",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "applied",
+      "question": "A hospital policy says 'any user with role head physician can read the patient record for which she is designated as head physician.' Map this onto the authentication then authorization sequence.",
+      "keyBeats": [
+        "First authenticate: prove claimed identity",
+        "Then authorize: check role + designation vs policy",
+        "Subject performs action on protected resource",
+        "Must be both authenticated AND authorized"
+      ],
+      "modelAnswer": "First the user authenticates, proving their claimed identity (e.g., user ID plus password or an authenticator). Authentication alone does not grant the read. Next, authorization evaluates the policy: does this proven identity hold the role 'head physician' and is she designated for that specific record? Only if both the role and the designation condition match is the read action on the protected resource permitted. The lecture states the subject must be both authenticated and authorized before performing the desired action.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 29: \"the subject must be authenticated and authorized\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-1",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "An examiner opens: 'What problem does XACML solve, and what two things does it actually define?' Answer at PASS level.",
+      "keyBeats": [
+        "XML-based language for access-control policies",
+        "Defines a declarative policy language",
+        "Defines a processing/evaluation model",
+        "Only care about v3.0 and later"
+      ],
+      "modelAnswer": "XACML (eXtensible Access Control Markup Language) is an XML-based language for expressing and interchanging access-control policies, solving the problem of writing portable, standardized authorization rules. It defines two things: a declarative access-control policy language implemented in XML, and a processing model describing how to evaluate access requests against the rules defined in policies. Version 3.0 (standardized Jan 2013, adding delegation) is the relevant version.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 38: \"XACML defines two things\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-2",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "structure",
+      "question": "Sketch the structure of an XACML Policy and PolicySet. What elements make up a Policy and how does a Rule decide?",
+      "keyBeats": [
+        "Policy = target + rule(s) + rule-combining algorithm",
+        "Optional obligations and advice",
+        "Rule = effect (permit/deny) + condition + target",
+        "PolicySet = target + policy-combining alg + policies"
+      ],
+      "modelAnswer": "An XACML document has either a Policy or a PolicySet root. A Policy consists of a Target (subject, resources, actions, environment; empty target applies to all requests), one or more Rules, a rule-combining algorithm, and optional obligations and advice. Each Rule has an Effect ('permit' or 'deny'), a Condition (the core Boolean expression deciding true/false), and a rule Target deciding whether the rule is evaluated. A PolicySet groups a target, a policy-combining algorithm identifier, a set of policies, and obligation/advice expressions.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 39: \"Each Policy consists of\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-3",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "components",
+      "question": "Name the four XACML architecture functional points (PEP, PDP, PAP, PIP) and state what each does.",
+      "keyBeats": [
+        "PEP enforces, makes decision requests",
+        "PDP evaluates policy, renders decision",
+        "PAP creates the policy / policy set",
+        "PIP supplies attribute values"
+      ],
+      "modelAnswer": "PEP (Policy Enforcement Point): the entity performing access control by making decision requests and enforcing authorization decisions. PDP (Policy Decision Point): evaluates applicable policy and renders an authorization decision. PAP (Policy Administration Point): creates a policy or policy set. PIP (Policy Information Point): acts as a source of attribute values, which may relate to identity (tokens, roles), run-time (location), or resources. NIST 800-162 lists the same PDP, PEP, PAP and PIP as the ACM functional points.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 44: \"PEP: Policy Enforcement Point ... PDP: Policy Decision Point ... PIP\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-4",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "algorithms",
+      "question": "If a PolicySet contains policies that disagree, how does XACML resolve the final decision? Give the combining algorithms.",
+      "keyBeats": [
+        "Combining algorithms resolve conflicting results",
+        "Deny-overrides: one deny -> deny",
+        "Permit-overrides: one permit -> permit",
+        "First-applicable; only-one-applicable (NotApplicable/Indeterminate)"
+      ],
+      "modelAnswer": "XACML uses combining algorithms (rule-combining within a policy, policy-combining within a policy set). Deny-overrides: if at least one policy evaluates to 'deny', the integrated output is 'deny'. Permit-overrides: if at least one evaluates to 'permit', the output is 'permit'. First-applicable: evaluate the first rule/policy/policy set whose target and condition apply. Only-one-applicable: exactly one must apply; if none applies the result is 'NotApplicable', and if more than one applies it is 'Indeterminate'.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 43: \"Deny-overrides ... Permit-overrides ... First-applicable\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-5",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "flow",
+      "question": "Walk through the XACML data-flow when a user requests access. Trace the request from PEP through the context handler, PDP, PAP and PIP.",
+      "keyBeats": [
+        "User -> PEP, PEP forms request to PDP",
+        "PDP finds policy at PAP",
+        "Attributes via context handler, querying PIP",
+        "PDP evaluates, returns response; PEP grants/denies"
+      ],
+      "modelAnswer": "The lecture gives an ordered textual scenario: (1) the user wants to perform an action on a resource; (2) the user sends a request to the Policy Enforcement Point (PEP); (3) the PEP forms a request (source/subject, resource, action, optional environment) and sends it to the Policy Decision Point (PDP); (4) the PDP looks for a suitable policy at the Policy Administration Point (PAP); (5) attributes are retrieved through the context handler, which can query the Policy Information Point (PIP) for missing data; (6) the PDP evaluates the policy against the attributes and returns an XACML response context; (7) the PEP grants or denies the request per the decision.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 48: \"Attributes are retrieved through the context handler, which can query the Policy Information Point (PIP)\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5b-6",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "request-response",
+      "question": "What is in an XACML request context and what can the response Decision contain? Tie this to XACML being XML/attribute-based.",
+      "keyBeats": [
+        "Request = attributes of subject, action, resource, environment",
+        "Evaluated against policy -> response context",
+        "Decision: Permit, Deny, NotApplicable, Indeterminate",
+        "XML attributes are name-value pairs"
+      ],
+      "modelAnswer": "The decision request is formulated as a request context carrying attributes of the subject, the action, the resource, and the environment. It is evaluated against the policy and the result returns as a response context. A policy/Decision can return 'Permit', 'Deny', 'NotApplicable', or 'Indeterminate'. Because XACML is XML-based, these are expressed as XML <Attributes>/<Attribute> elements; in XML an attribute is a name-value pair, which matches XACML's attribute-driven (ABAC-style) evaluation.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 45: \"Attributes of the subject making the access request\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-1",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition-contrast",
+      "question": "An examiner asks you to contrast RBAC and ABAC at a high level. How does each decide access?",
+      "keyBeats": [
+        "RBAC: roles carry permissions; users get roles",
+        "ABAC: evaluates attributes for decisions",
+        "ABAC attribute sets: subject, resource, action, environment",
+        "RBAC role = a special-case subject attribute"
+      ],
+      "modelAnswer": "In RBAC, roles are defined by the business; permissions for resources are assigned to roles, and users are granted one or more roles to receive access. ABAC instead relies on several attributes for authorization decisions, evaluating four sets: subject attributes, resource (object) attributes, action attributes, and environment attributes (e.g., time of day, IP subnet). NIST notes a role can be viewed as a subject attribute, so RBAC is essentially a special case of ABAC working on the 'role' attribute.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 31: \"ABAC policies are rules that evaluate access based upon four sets of attributes\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-2",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "benefits",
+      "question": "Why might an organization prefer RBAC? List its primary benefits.",
+      "keyBeats": [
+        "Deterministic: know who has access when",
+        "Easier to visualize actors and resources",
+        "Inherently auditable (before-the-fact audit possible)",
+        "Can be simpler; bundles assigned directly to user"
+      ],
+      "modelAnswer": "RBAC is deterministic: it is easy to know who has access to what at any moment. It is more direct and easier to visualize, so admins can see the actors and resources a policy affects. It is inherently auditable, making it simple for business owners to certify or attest to granted access, contrasting with ABAC where a 'before the fact audit' is impossible. RBAC can also be simpler, since bundles of access can be assigned directly to a user, whereas ABAC would require creating a new rule.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 33: \"RBAC is deterministic.\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-3",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "challenges",
+      "question": "An examiner says 'RBAC sounds great, so why move to ABAC at all?' Give RBAC's weaknesses, including role explosion.",
+      "keyBeats": [
+        "Needs advance knowledge of subjects/resources",
+        "No on-the-fly contextual decisions",
+        "Role explosion for fine-grained authorization",
+        "Many delegations to manage as roles grow"
+      ],
+      "modelAnswer": "RBAC requires advance knowledge of the subjects and resources and typically does not support on-the-fly contextual decisions (e.g., location, time). Achieving fine-grained authorization with RBAC alone can produce an enormous number of roles, known as 'role explosion'. NIST adds that RBAC does not easily support multi-factor decisions and that static role assignments struggle where dynamic decisions are needed. Resource owners must understand roles, resources must be organized into collections, and a large number of delegations must be created and managed.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 33: \"enormous number of roles to accomplish fine-grained authorization (Role Explosion)\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-4",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "benefits",
+      "question": "What are ABAC's primary benefits, especially for a large or growing enterprise?",
+      "keyBeats": [
+        "Centralized management of authorization policies",
+        "Fine-grained and contextual rules",
+        "Accommodates external/unanticipated users",
+        "No need to maintain RBAC role/location structure"
+      ],
+      "modelAnswer": "ABAC enforces centralized management of authorization policies and makes it easy to specify access as simple queries. Its rules can be extraordinarily fine-grained and contextual and can evaluate attributes not inventoried by the system, without maintaining the role/resource-location structure RBAC depends on. NIST highlights a key benefit: ABAC applies policy without prior knowledge of the specific subject, accommodating the external (unanticipated) user. As new subjects join, rules and objects need not change as long as the subject has the required attributes.",
+      "citation": "NIST.SP.800-162.txt, PAGE 9: \"accommodating the external (unanticipated) user and is one of the primary benefits\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-5",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "challenges",
+      "question": "What are ABAC's main challenges? Address auditability, attribute explosion, and performance.",
+      "keyBeats": [
+        "Before-the-fact audit extremely difficult",
+        "Rules may need executing in exact order",
+        "Attribute explosion: N attributes -> 2^N combinations",
+        "Complex multi-source rules can be slow; costly to maintain"
+      ],
+      "modelAnswer": "ABAC makes a 'before the fact audit' extremely difficult: determining a user's permissions may require running many rules in the exact order the system applies them, so risk exposure per position can be hard to assess. Analogous to role explosion, an attribute explosion can occur where N attributes give 2^N possible rule combinations. Unless rules stay simple, complex rules drawing from multiple attribute sources can be unacceptably slow to answer queries. NIST also notes ABAC is more complicated and more costly to implement and maintain than simpler systems.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 35: \"a system with N number of attributes would have 2 possible rule combinations\"",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L5-5c-6",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "synthesis",
+      "question": "An examiner asks whether you must choose RBAC or ABAC, or whether a middle ground exists. What does the lecture suggest?",
+      "keyBeats": [
+        "PBAC = hybrid between RBAC and ABAC",
+        "Policies as assignable, visualizable relationships",
+        "ABAC can implement existing RBAC policies",
+        "Supports migration RBAC -> finer-grained control"
+      ],
+      "modelAnswer": "You need not choose strictly. The lecture presents Policy-Based Access Control (PBAC), described as 'assignable ABAC', a hybrid between RBAC and ABAC where policies are expressed as assignment relationships that can be visualized and manipulated graphically, regaining RBAC's auditability while keeping attribute/context flexibility. NIST agrees that an ABAC system can implement existing role-based policies and support migration from role-based to more granular, characteristic-driven access control, so organizations can combine the two.",
+      "citation": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 36: \"A hybrid between RBAC and ABAC\"",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "L5-EX-1",
+      "source": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 34",
+      "promptVerbatim": "Example: Can Alice view Bob's X-Ray? ... Decision: ??",
+      "whatItTests": "Evaluating an ABAC rule with multiple AND/OR attribute conditions (action, context/emergency mode, network or MFA/LoA, title, out-of-office, confidential flag, attending-physician relationship) to reach a permit/deny decision, and recognizing the attribute-sourcing challenge.",
+      "answerSketch": "Walk each condition: action='View' AND not Emergency Mode AND (on Local Network OR MFA with LoA>=2) AND title='Doctor' AND status not 'out of office' AND (X-Ray not 'Confidential') OR relationship='attending physician'. The slide deliberately leaves Decision='??' to highlight that the answer depends on where each attribute is found and how long retrieval takes.",
+      "unverified": false
+    },
+    {
+      "id": "L5-EX-2",
+      "source": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 28",
+      "promptVerbatim": "User's release policies? Do they exist? What can users do instead of relying on policies?",
+      "whatItTests": "Reflecting on whether end users have enforceable privacy/data-release policies, and what privacy-protective alternatives users have when such policies are absent or unenforceable.",
+      "answerSketch": "User release policies should specify to which service and under which conditions parts of the profile/context data are disclosed, but they are usually not clearly defined and are difficult to enforce today. Instead of relying on policies, users can practise data minimization, use partial identities/pseudonyms, anonymity, or privacy-protective 'masks' to avoid revealing the real identity when it is not needed.",
+      "unverified": false
+    },
+    {
+      "id": "L5-EX-3",
+      "source": "Lecture 5, Resources, policies and identity management, 060325.txt, PAGE 22",
+      "promptVerbatim": "What are typical actions that need to be authorized?",
+      "whatItTests": "Identifying the concrete actions/operations an authorization system must control on protected resources.",
+      "answerSketch": "Typical authorized actions are operations on resources: execute a program, view/read, create, delete, or change (edit) files or records, plus print. NIST lists read, write, edit, delete, copy, execute, and modify as operations subject to access control.",
+      "unverified": false
+    }
+  ],
+  "_sources_read": [
+    "Lecture 5, Resources, policies and identity management, 060325.txt:2344",
+    "NIST.SP.800-162.txt:2408",
+    "Learning XML, Markup and core concepts, ch02.txt:1586"
+  ]
+}
