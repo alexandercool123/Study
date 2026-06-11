@@ -1,0 +1,8 @@
+OWNS — Exam Q8: OAuth 2.0
+  (a) What is the main idea of OAuth 2.0?
+  (b) Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.
+  (c) What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0.
+CROSS-SUPPORTS — Exam Q9: OpenID Connect (anchor lecture 11)
+  (a) How does OpenID Connect relate to OAuth 2.0? What is it used for?
+  (b) Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.
+  (c) Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?

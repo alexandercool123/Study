@@ -57,13 +57,15 @@
   .exrow .ans.show{display:block}
   .grp{font-size:13px;color:var(--mut);margin:22px 0 6px;text-transform:uppercase;letter-spacing:.6px}
   /* comments section */
-  .comment-section{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;position:relative}
-  .comment-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:0 0 6px;display:flex;align-items:center;gap:6px}
-  .comment-saved{font-size:11px;color:var(--ok);opacity:0;transition:opacity .2s;pointer-events:none}
-  .comment-saved.show{opacity:1}
+  .comment-section{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px}
+  .comment-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:0 0 6px}
   .comment-input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--fg);padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px;box-sizing:border-box}
   .comment-input:focus{outline:none;border-color:var(--acc)}
   .comment-input.has-content{border-color:var(--acc2)}
+  .comment-btns{display:flex;gap:6px;margin-top:8px}
+  .comment-btn{background:var(--bg);border:1px solid var(--line);color:var(--fg);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+  .comment-btn:hover{border-color:var(--acc)}
+  .comment-btn.save{color:var(--acc2);border-color:var(--acc2)}
   /* quiz */
   #quizArea{text-align:center}
   .drawbtn{background:var(--acc);color:#04101f;border:none;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
@@ -218,25 +220,25 @@ async function loadAll(){
   renderHybrid(); renderExercises();
 }
 
-const _commentTimers={};
 function commentSection(key){
   const stored=getComment(key);
+  const html=esc(stored);
   return `<div class="comment-section">
-    <div class="comment-label">💭 Your notes <span class="comment-saved" id="saved_${key}">✓ saved</span></div>
-    <textarea class="comment-input ${stored?"has-content":""}" id="comment_${key}" placeholder="Add your notes, gaps to fix, or reminders..."
-      oninput="autoSaveComment('${key}')">${esc(stored)}</textarea>
+    <div class="comment-label">💭 Your notes</div>
+    <textarea class="comment-input ${stored?"has-content":""}" id="comment_${key}" placeholder="Add your notes, gaps to fix, or reminders...">${html}</textarea>
+    <div class="comment-btns">
+      <button class="comment-btn save" onclick="saveComment('${key}')">Save</button>
+      <button class="comment-btn" onclick="document.getElementById('comment_${key}').value='';document.getElementById('comment_${key}').classList.remove('has-content')">Clear</button>
+    </div>
   </div>`;
 }
-function autoSaveComment(key){
-  clearTimeout(_commentTimers[key]);
-  _commentTimers[key]=setTimeout(()=>{
-    const el=document.getElementById('comment_'+key);
-    if(!el)return;
-    setComment(key,el.value);
-    el.classList.toggle('has-content',!!el.value.trim());
-    const tick=document.getElementById('saved_'+key);
-    if(tick){tick.classList.add('show');setTimeout(()=>tick.classList.remove('show'),1500);}
-  },600);
+
+function saveComment(key){
+  const el=document.getElementById('comment_'+key);
+  if(!el)return;
+  const val=el.value;
+  setComment(key,val);
+  el.classList.toggle('has-content',!!val.trim());
 }
 
 function drillCard(d,examQ){

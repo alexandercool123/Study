@@ -1,0 +1,8 @@
+OWNS — Exam Q7: JSON Web Tokens (JWT)
+  (a) How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?
+  (b) Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?
+  (c) Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?
+CROSS-SUPPORTS — Exam Q9: OpenID Connect (anchor lecture 11)
+  (a) How does OpenID Connect relate to OAuth 2.0? What is it used for?
+  (b) Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.
+  (c) Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?

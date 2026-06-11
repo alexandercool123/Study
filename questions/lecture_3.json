@@ -5,12 +5,12 @@
     {
       "examQ": 3,
       "subPart": "a",
-      "promptVerbatim": "What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems."
+      "promptVerbatim": "What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM (Identity and Access Management) systems."
     },
     {
       "examQ": 3,
       "subPart": "b",
-      "promptVerbatim": "What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?"
+      "promptVerbatim": "What is Kerberos and why was it developed? What problem does Kerberos solve in IAM (Identity and Access Management) systems? How does it reduce password exposure risks?"
     },
     {
       "examQ": 3,
@@ -25,7 +25,11 @@
       "anchorsSubPart": "a",
       "type": "opener",
       "question": "A user types a username and is then asked for a password. Which step is identification and which is authentication, and how do authentication factors fit in?",
-      "keyBeats": ["Identification = claiming an identity", "Authentication = proving it", "Factors = know/have/are"],
+      "keyBeats": [
+        "Identification = claiming an identity",
+        "Authentication = proving it",
+        "Factors = know/have/are"
+      ],
       "modelAnswer": "Typing the username is identification, claiming who you are; entering the password is authentication, proving the claim. Authentication relies on factors: something you know, have, or are. A password is a 'something you know' factor verified against stored credentials.",
       "citation": "Identification is the process of claiming an identity",
       "unverified": false,
@@ -36,10 +40,14 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "a",
       "type": "mechanism",
-      "question": "Why is a private key on a smart card activated via PIN considered a multi-factor authenticator rather than single-factor?",
-      "keyBeats": ["Single-factor = one factor only", "Multi-factor = two or more", "Card (have) + PIN (know)"],
-      "modelAnswer": "A multi-factor authenticator uses two or more of the three factors. The smart card is something you have, but it is only activated by a PIN, which is something you know. Because two distinct factor types are combined, it qualifies as multi-factor rather than single-factor like a bare password.",
-      "citation": "a private key on a smart card that is activated via PIN is a multi-factor authenticator",
+      "question": "Why is a private key on a smart card activated via PIN (Personal Identification Number) considered a multi-factor authenticator rather than single-factor?",
+      "keyBeats": [
+        "Single-factor = one factor only",
+        "Multi-factor = two or more",
+        "Card (have) + PIN (Personal Identification Number) (know)"
+      ],
+      "modelAnswer": "A multi-factor authenticator uses two or more of the three factors. The smart card is something you have, but it is only activated by a PIN (Personal Identification Number), which is something you know. Because two distinct factor types are combined, it qualifies as multi-factor rather than single-factor like a bare password.",
+      "citation": "a private key on a smart card that is activated via PIN (Personal Identification Number) is a multi-factor authenticator",
       "unverified": false,
       "diagram_only": false
     },
@@ -48,9 +56,13 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "An internal low-risk portal needs only AAL1. What authentication does AAL1 permit, and how do AAL2 and AAL3 differ in strength?",
-      "keyBeats": ["AAL1 = single-factor low", "AAL2 = MFA required moderate", "AAL3 = strong MFA + hardware high"],
-      "modelAnswer": "AAL1 permits single-factor authentication such as a username and password for low-risk use. AAL2 requires multi-factor authentication and suits financial or healthcare portals. AAL3 demands strong MFA plus hardware-based authenticators like FIDO2 or smart cards for government and highly sensitive systems.",
+      "question": "An internal low-risk portal needs only AAL1 (Authentication Assurance Level 1). What authentication does AAL1 permit, and how do AAL2 (Authentication Assurance Level 2) and AAL3 (Authentication Assurance Level 3) differ in strength?",
+      "keyBeats": [
+        "AAL1 (Authentication Assurance Level 1) = single-factor low",
+        "AAL2 (Authentication Assurance Level 2) = MFA (Multi-Factor Authentication) required moderate",
+        "AAL3 (Authentication Assurance Level 3) = strong MFA (Multi-Factor Authentication) + hardware high"
+      ],
+      "modelAnswer": "AAL1 (Authentication Assurance Level 1) permits single-factor authentication such as a username and password for low-risk use. AAL2 (Authentication Assurance Level 2) requires multi-factor authentication and suits financial or healthcare portals. AAL3 (Authentication Assurance Level 3) demands strong MFA (Multi-Factor Authentication) plus hardware-based authenticators like FIDO2 (Fast Identity Online 2) or smart cards for government and highly sensitive systems.",
       "citation": "Single-factor authentication (e.g., username & password)",
       "unverified": false,
       "diagram_only": false
@@ -60,9 +72,13 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "Under eIDAS, a tax authority demands a 'high' level of assurance. What enrolment and authentication distinguish high from low and substantial?",
-      "keyBeats": ["Low = self-registration, no verification", "Substantial = verified ID + password + OTP", "High = in-person + smartcard/National ID"],
-      "modelAnswer": "eIDAS defines three levels. Low uses self-registration in a web page without identity verification. Substantial verifies identity information and uses a username, password, and a one-time password to a mobile. High requires in-person registration in an office and authentication with a smartcard such as a National ID Card.",
+      "question": "Under eIDAS (electronic IDentification, Authentication and trust Services), a tax authority demands a 'high' level of assurance. What enrolment and authentication distinguish high from low and substantial?",
+      "keyBeats": [
+        "Low = self-registration, no verification",
+        "Substantial = verified ID + password + OTP (One-Time Password)",
+        "High = in-person + smartcard/National ID"
+      ],
+      "modelAnswer": "eIDAS (electronic IDentification, Authentication and trust Services) defines three levels. Low uses self-registration in a web page without identity verification. Substantial verifies identity information and uses a username, password, and a one-time password to a mobile. High requires in-person registration in an office and authentication with a smartcard such as a National ID Card.",
       "citation": "High: for instance, enrolment is performed by registering in person in an office",
       "unverified": false,
       "diagram_only": false
@@ -72,9 +88,13 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "a",
       "type": "mechanism",
-      "question": "What does an eIDAS 'level of assurance' actually measure, and which elements determine it?",
-      "keyBeats": ["Confidence in claimed identity", "Elements: enrolment, eID management, authentication", "Harder to impersonate = higher LoA"],
-      "modelAnswer": "Level of assurance is the degree of confidence that the claimed identity is genuinely the person authenticating. It is determined by the enrolment process, how the eID means is designed and managed, and how authentication is performed. Stronger enrolment and more factors make impersonation harder, raising the level.",
+      "question": "What does an eIDAS (electronic IDentification, Authentication and trust Services) 'level of assurance' actually measure, and which elements determine it?",
+      "keyBeats": [
+        "Confidence in claimed identity",
+        "Elements: enrolment, eID (electronic IDentification) management, authentication",
+        "Harder to impersonate = higher LoA (Level of Assurance)"
+      ],
+      "modelAnswer": "Level of assurance is the degree of confidence that the claimed identity is genuinely the person authenticating. It is determined by the enrolment process, how the eID (electronic IDentification) means is designed and managed, and how authentication is performed. Stronger enrolment and more factors make impersonation harder, raising the level.",
       "citation": "the degree of confidence in the claimed identity of a person",
       "unverified": false,
       "diagram_only": false
@@ -85,7 +105,11 @@
       "anchorsSubPart": "a",
       "type": "specific",
       "question": "What secret does an authenticator hold, and how does the verifier use it to confirm identity?",
-      "keyBeats": ["Secret = key pair or shared secret", "Private key stored on authenticator", "Verifier holds/uses public key"],
+      "keyBeats": [
+        "Secret = key pair or shared secret",
+        "Private key stored on authenticator",
+        "Verifier holds/uses public key"
+      ],
       "modelAnswer": "An authenticator contains a secret based on either asymmetric key pairs or shared secrets. The private key stays on the authenticator and the claimant uses it to prove possession and control. The verifier knows the public key and runs an authentication protocol to verify the claimant's identity.",
       "citation": "Private key is stored on the authenticator; used by the claimant to prove possession",
       "unverified": false,
@@ -97,8 +121,12 @@
       "anchorsSubPart": "b",
       "type": "opener",
       "question": "Why not just have every client send its password directly to each server it needs? What problems does that create that Kerberos was built to solve?",
-      "keyBeats": ["Scalability: servers store all credentials", "Password exposure via MITM", "Replay of captured credentials"],
-      "modelAnswer": "Direct authentication forces every server to store and verify credentials for thousands of users, which does not scale. Sending credentials directly exposes the password to interception in a man-in-the-middle attack. Even encrypted credentials could be captured and replayed. Kerberos addresses all three with tickets and symmetric cryptography.",
+      "keyBeats": [
+        "Scalability: servers store all credentials",
+        "Password exposure via MITM (Man-in-the-Middle)",
+        "Replay of captured credentials"
+      ],
+      "modelAnswer": "Direct authentication forces every server to store and verify credentials for thousands of users, which does not scale. Sending credentials directly exposes the password to interception in a MITM (Man-in-the-Middle) attack. Even encrypted credentials could be captured and replayed. Kerberos addresses all three with tickets and symmetric cryptography.",
       "citation": "the server would need to store and verify credentials for thousands/millions of users",
       "unverified": false,
       "diagram_only": false
@@ -109,7 +137,11 @@
       "anchorsSubPart": "b",
       "type": "mechanism",
       "question": "What is Kerberos at a high level, and what two technologies does it rely on to enable secure authentication?",
-      "keyBeats": ["Network authentication protocol", "Uses tickets + symmetric crypto", "Password-less between client/server"],
+      "keyBeats": [
+        "Network authentication protocol",
+        "Uses tickets + symmetric crypto",
+        "Password-less between client/server"
+      ],
       "modelAnswer": "Kerberos is a network authentication protocol that uses tickets and symmetric cryptography. It enables secure, password-less authentication between clients and servers in an untrusted network. Rather than passing passwords, parties present tickets issued by a trusted central authority.",
       "citation": "uses tickets and symmetric cryptography to enable secure, password-less authentication",
       "unverified": false,
@@ -120,10 +152,14 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "b",
       "type": "specific",
-      "question": "What are the roles of the AS, TGT, and TGS in Kerberos?",
-      "keyBeats": ["AS holds credential database, authenticates user", "TGT issued after auth, encrypted", "TGS issues service-specific tickets"],
-      "modelAnswer": "The Authentication Server maintains a centralized database of user credentials and shares a distinct secret key with each service. On successful authentication it issues a Ticket Granting Ticket containing the user's identity, network address, and target server details, encrypted with a shared secret. The Ticket-Granting Server then validates that ticket and issues service-specific tickets.",
-      "citation": "Issued upon successful authentication of a user by the AS",
+      "question": "What are the roles of the AS (Authentication Server), TGT (Ticket Granting Ticket), and TGS (Ticket Granting Server) in Kerberos?",
+      "keyBeats": [
+        "AS (Authentication Server) holds credential database, authenticates user",
+        "TGT (Ticket Granting Ticket) issued after auth, encrypted, and is GENERIC (not bound to a specific service)",
+        "TGS (Ticket Granting Server) validates the TGT (Ticket Granting Ticket) and issues a service-specific ticket bound to the target server"
+      ],
+      "modelAnswer": "The AS (Authentication Server) maintains a centralized database of user credentials and shares a distinct secret key with each service. On successful authentication it issues a TGT (Ticket Granting Ticket) containing the user's identity, network address, and a validity period, encrypted with a shared secret. The TGT is generic: it is presented to the TGS (Ticket Granting Server) but is not itself bound to any particular service. The TGS then validates the TGT and issues a service-specific ticket that IS bound to the requested target server. (Standard Kerberos / RFC (Request for Comments) 4120: the AS-exchange yields the TGT, the TGS-exchange yields the per-service ticket.)",
+      "citation": "Issued upon successful authentication of a user by the AS (Authentication Server)",
       "unverified": false,
       "diagram_only": false
     },
@@ -133,8 +169,13 @@
       "anchorsSubPart": "b",
       "type": "mechanism",
       "question": "Walk through the Kerberos ticket operation for Alice contacting Bob, as described in the slides.",
-      "keyBeats": ["Alice asks KDC to reach Bob", "KDC makes session key Kab", "Encrypts under Alice's and Bob's master keys", "Timestamp prevents replay; ticket = credential"],
-      "modelAnswer": "Alice requests the KDC to communicate with Bob; the KDC generates a session key Kab for them. It encrypts Kab under Alice's master key, and also encrypts Kab with Alice's identity and a timestamp under Bob's master key, forming the ticket. The timestamp prevents replay attacks. Only Alice and Bob know Kab, and the session key plus ticket serve as Alice's credentials.",
+      "keyBeats": [
+        "Alice asks KDC (Key Distribution Center) to reach Bob",
+        "KDC (Key Distribution Center) makes session key Kab",
+        "Encrypts under Alice's and Bob's master keys",
+        "Timestamp prevents replay; ticket = credential"
+      ],
+      "modelAnswer": "Alice requests the KDC (Key Distribution Center) to communicate with Bob; the KDC generates a session key Kab for them. It encrypts Kab under Alice's master key, and also encrypts Kab with Alice's identity and a timestamp under Bob's master key, forming the ticket. The timestamp prevents replay attacks. Only Alice and Bob know Kab, and the session key plus ticket serve as Alice's credentials.",
       "citation": "The timestamp t is included to prevent replay attacks",
       "unverified": false,
       "diagram_only": false
@@ -145,8 +186,12 @@
       "anchorsSubPart": "b",
       "type": "specific",
       "question": "How exactly does Kerberos reduce password exposure, and how are the keys derived from passwords?",
-      "keyBeats": ["Workstation keeps session key + TGT, not password", "Session key Sa replaces master key", "Keys derived from password hash"],
-      "modelAnswer": "After the KDC issues a session key and TGT, the workstation retains only those and can forget Alice's password, so it is never repeatedly transmitted. Use of the TGT tells the KDC to use the session key instead of the master key. Secret keys are themselves derived from users' passwords via a cryptographic technique such as a hash, so the raw password is never sent on the wire.",
+      "keyBeats": [
+        "Workstation keeps session key + TGT (Ticket Granting Ticket), not password",
+        "Session key Sa replaces master key",
+        "Keys derived from password hash"
+      ],
+      "modelAnswer": "After the KDC (Key Distribution Center) issues a session key and TGT (Ticket Granting Ticket), the workstation retains only those and can forget Alice's password, so it is never repeatedly transmitted. Use of the TGT tells the KDC to use the session key instead of the master key. Secret keys are themselves derived from users' passwords via a cryptographic technique such as a hash, so the raw password is never sent on the wire.",
       "citation": "Sa also means that the workstation can forget Alice's password",
       "unverified": false,
       "diagram_only": false
@@ -156,9 +201,13 @@
       "anchorsExamQ": 3,
       "anchorsSubPart": "b",
       "type": "specific",
-      "question": "What is the KDC's main weakness, and what symmetric ciphers has Kerberos used?",
-      "keyBeats": ["KDC = single point of failure", "Runs on physically secure node", "Traditionally DES, now AES, 3DES phased out"],
-      "modelAnswer": "The Key Distribution Center runs on a physically secure node and holds keys for all users, but it is a single point of failure. Kerberos traditionally used DES; the latest versions began removing 3DES with warnings and moved to AES. In Windows environments the KDC runs on the Domain Controller in Active Directory.",
+      "question": "What is the KDC (Key Distribution Center)'s main weakness, and what symmetric ciphers has Kerberos used?",
+      "keyBeats": [
+        "KDC (Key Distribution Center) = single point of failure",
+        "Runs on physically secure node",
+        "Traditionally DES (Data Encryption Standard), now AES (Advanced Encryption Standard), 3DES (Triple DES) phased out"
+      ],
+      "modelAnswer": "The KDC (Key Distribution Center) runs on a physically secure node and holds keys for all users, but it is a single point of failure. Kerberos traditionally used DES (Data Encryption Standard); the latest versions began removing 3DES (Triple DES) with warnings and moved to AES (Advanced Encryption Standard). In Windows environments the KDC runs on the Domain Controller in Active Directory.",
       "citation": "Single Point of Failure",
       "unverified": false,
       "diagram_only": false
@@ -169,8 +218,12 @@
       "anchorsSubPart": "c",
       "type": "opener",
       "question": "If a user can just receive a server's public key, why bother with a digital certificate at all? What attack does the bare-key approach allow?",
-      "keyBeats": ["Bare key vulnerable to MITM", "Attacker substitutes fake public key", "Certificate binds key to identity via CA"],
-      "modelAnswer": "With only a public key, a man-in-the-middle can send a fake public key instead of the server's real one; the user encrypts with the attacker's key, who decrypts, reads, and re-encrypts to the real server. A digital certificate prevents this by binding the public key to a verified identity, signed by a trusted Certificate Authority the browser can check.",
+      "keyBeats": [
+        "Bare key vulnerable to MITM (Man-in-the-Middle)",
+        "Attacker substitutes fake public key",
+        "Certificate binds key to identity via CA (Certificate Authority)"
+      ],
+      "modelAnswer": "With only a public key, a man-in-the-middle can send a fake public key instead of the server's real one; the user encrypts with the attacker's key, who decrypts, reads, and re-encrypts to the real server. A digital certificate prevents this by binding the public key to a verified identity, signed by a trusted CA (Certificate Authority) the browser can check.",
       "citation": "the attacker sends a fake public key (pink key) to the user",
       "unverified": false,
       "diagram_only": false
@@ -181,8 +234,12 @@
       "anchorsSubPart": "c",
       "type": "specific",
       "question": "What is the X.509 standard, and where is it used?",
-      "keyBeats": ["Standard format for public key certificates", "From ITU", "Used by HTTPS/TLS, code signing, client auth"],
-      "modelAnswer": "X.509 is a standard from the International Telecommunication Union defining the format of public key certificates. It is used by many protocols, notably HTTPS via SSL/TLS. It also underpins code signing and client authentication.",
+      "keyBeats": [
+        "Standard format for public key certificates",
+        "From ITU (International Telecommunication Union)",
+        "Used by HTTPS (HyperText Transfer Protocol Secure)/TLS (Transport Layer Security), code signing, client auth"
+      ],
+      "modelAnswer": "X.509 is a standard from the ITU (International Telecommunication Union) defining the format of public key certificates. It is used by many protocols, notably HTTPS (HyperText Transfer Protocol Secure) via SSL (Secure Sockets Layer)/TLS (Transport Layer Security). It also underpins code signing and client authentication.",
       "citation": "Is a standard defining the format of public key certificates",
       "unverified": false,
       "diagram_only": false
@@ -193,7 +250,11 @@
       "anchorsSubPart": "c",
       "type": "specific",
       "question": "What fields are typically included in an X.509 certificate?",
-      "keyBeats": ["Serial number, Subject, Issuer", "Signature + Signature Algorithm", "Valid-From/To, Key-Usage, Public Key, Thumbprint"],
+      "keyBeats": [
+        "Serial number, Subject, Issuer",
+        "Signature + Signature Algorithm",
+        "Valid-From/To, Key-Usage, Public Key, Thumbprint"
+      ],
       "modelAnswer": "A certificate includes a serial number uniquely identifying it, the subject (entity identified), the issuer that verified and issued it, and validity dates Valid-From and Valid-To. It carries the public key, the signature algorithm, and the actual signature to prove it came from the issuer. Key-Usage states the key's purpose, and the thumbprint is a hash of the certificate.",
       "citation": "Used to uniquely identify the certificate",
       "unverified": false,
@@ -205,9 +266,13 @@
       "anchorsSubPart": "c",
       "type": "mechanism",
       "question": "When a browser visits netflix.com, what steps does it take to verify the certificate and establish trust?",
-      "keyBeats": ["Extract cert + issuer (Amazon Root CA)", "Find issuer's public key in trusted root store", "Verify signature with that public key"],
-      "modelAnswer": "The browser extracts Netflix's certificate, which states it was issued by Amazon Root CA and contains that CA's digital signature. It finds Amazon Root CA's public key in the pre-installed Trusted Root Certificate Store. It then uses that public key to verify the signature on Netflix's certificate; if valid, the certificate is authentic.",
-      "citation": "This key is stored in the Trusted Root Certificate Store (pre-installed in browsers/OS)",
+      "keyBeats": [
+        "Extract cert + issuer (Amazon Root CA (Certificate Authority))",
+        "Find issuer's public key in trusted root store",
+        "Verify signature with that public key"
+      ],
+      "modelAnswer": "The browser extracts Netflix's certificate, which states it was issued by Amazon Root CA (Certificate Authority) and contains that CA's digital signature. It finds Amazon Root CA's public key in the pre-installed Trusted Root Certificate Store. It then uses that public key to verify the signature on Netflix's certificate; if valid, the certificate is authentic.",
+      "citation": "This key is stored in the Trusted Root Certificate Store (pre-installed in browsers/OS (Operating System))",
       "unverified": false,
       "diagram_only": false
     },
@@ -217,9 +282,13 @@
       "anchorsSubPart": "c",
       "type": "mechanism",
       "question": "How does the certificate chain of root and intermediate certificates establish trust?",
-      "keyBeats": ["Root self-signed, pre-trusted", "Root signs intermediate", "Intermediate signs end-entity cert"],
-      "modelAnswer": "Trust flows down a chain. The Root Certificate is self-signed and pre-trusted in browsers and operating systems, and it signs the Intermediate CA. The Intermediate Certificate acts as a bridge, signed by the root's private key, and in turn signs the end-entity certificate that contains the server's public key. Verifying each signature up to the trusted root ensures the chain is trustworthy.",
-      "citation": "Self-signed & pre-trusted in browsers/OS",
+      "keyBeats": [
+        "Root self-signed, pre-trusted",
+        "Root signs intermediate",
+        "Intermediate signs end-entity cert"
+      ],
+      "modelAnswer": "Trust flows down a chain. The Root Certificate is self-signed and pre-trusted in browsers and operating systems, and it signs the Intermediate CA (Certificate Authority). The Intermediate Certificate acts as a bridge, signed by the root's private key, and in turn signs the end-entity certificate that contains the server's public key. Verifying each signature up to the trusted root ensures the chain is trustworthy.",
+      "citation": "Self-signed & pre-trusted in browsers/OS (Operating System)",
       "unverified": false,
       "diagram_only": false
     },
@@ -229,8 +298,13 @@
       "anchorsSubPart": "c",
       "type": "specific",
       "question": "What four pieces of information does Netflix's digital certificate contain, and what does each prove?",
-      "keyBeats": ["Subject = netflix.com", "Subject Public Key = real public key", "Issuer Name = Amazon Root CA", "Issuer Signature = authenticity proof"],
-      "modelAnswer": "The certificate contains the Subject, netflix.com, proving it was issued for Netflix; the Subject Public Key, Netflix's real public key; the Issuer Name, Amazon Root CA, the trusted authority that issued it; and the Issuer Signature, a cryptographic signature proving authenticity. Together these bind the key to the verified identity.",
+      "keyBeats": [
+        "Subject = netflix.com",
+        "Subject Public Key = real public key",
+        "Issuer Name = Amazon Root CA (Certificate Authority)",
+        "Issuer Signature = authenticity proof"
+      ],
+      "modelAnswer": "The certificate contains the Subject, netflix.com, proving it was issued for Netflix; the Subject Public Key, Netflix's real public key; the Issuer Name, Amazon Root CA (Certificate Authority), the trusted authority that issued it; and the Issuer Signature, a cryptographic signature proving authenticity. Together these bind the key to the verified identity.",
       "citation": "Issuer Signature: A cryptographic signature proving authenticity",
       "unverified": false,
       "diagram_only": false
@@ -257,7 +331,7 @@
       "id": "L3-EX-3",
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "How is “Trust” established in Digital Certificates? What is the role of ”Certificate Authorty”?",
-      "whatItTests": "Role of the CA and chain-of-trust verification.",
+      "whatItTests": "Role of the CA (Certificate Authority) and chain-of-trust verification.",
       "answerSketch": "A Certificate Authority verifies an entity's information and signs its certificate with the CA's private key, creating a trusted signature. Browsers verify that signature using the CA's pre-trusted public key in the root store, with trust flowing root to intermediate to end-entity.",
       "unverified": false
     },
@@ -266,7 +340,7 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are Directory services? What is their role in Authentication?",
       "whatItTests": "Directory services concept and authentication role; Active Directory.",
-      "answerSketch": "Slides describe Active Directory as a directory storing information about network objects (users, computers, printers) for centralized management, using LDAP, NTLM and Kerberos for secure authentication. A general definition of 'directory services' is not given verbatim.",
+      "answerSketch": "Slides describe Active Directory as a directory storing information about network objects (users, computers, printers) for centralized management, using LDAP (Lightweight Directory Access Protocol), NTLM (NT LAN Manager) and Kerberos for secure authentication. A general definition of 'directory services' is not given verbatim.",
       "unverified": true
     },
     {
@@ -274,15 +348,15 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are the steps involved in the “Enrollment and Identity Proofing”? Explain with an example",
       "whatItTests": "Enrollment and identity proofing process steps.",
-      "answerSketch": "The lecture does not present explicit numbered enrollment/identity-proofing steps. The eIDAS source illustrates enrolment by example (self-registration for low; verified ID for substantial; in-person registration for high).",
+      "answerSketch": "The lecture does not present explicit numbered enrollment/identity-proofing steps. The eIDAS (electronic IDentification, Authentication and trust Services) source illustrates enrolment by example (self-registration for low; verified ID for substantial; in-person registration for high).",
       "unverified": true
     },
     {
       "id": "L3-EX-6",
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are the different Authentication Assurance Levels? Explain each with an example",
-      "whatItTests": "AAL1/AAL2/AAL3 strengths, requirements, and use cases.",
-      "answerSketch": "AAL1 (low): single-factor like username and password for low-risk portals. AAL2 (moderate): MFA required, e.g. financial or healthcare logins. AAL3 (high): strong MFA plus hardware authenticators like FIDO2 or smart cards for government systems.",
+      "whatItTests": "AAL1 (Authentication Assurance Level 1)/AAL2 (Authentication Assurance Level 2)/AAL3 (Authentication Assurance Level 3) strengths, requirements, and use cases.",
+      "answerSketch": "AAL1 (Authentication Assurance Level 1) (low): single-factor like username and password for low-risk portals. AAL2 (Authentication Assurance Level 2) (moderate): MFA (Multi-Factor Authentication) required, e.g. financial or healthcare logins. AAL3 (Authentication Assurance Level 3) (high): strong MFA plus hardware authenticators like FIDO2 (Fast Identity Online 2) or smart cards for government systems.",
       "unverified": false
     },
     {
@@ -290,7 +364,7 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are Authentication factors? Explain them with an example",
       "whatItTests": "The three factor categories and examples.",
-      "answerSketch": "The three factors are something you know (e.g. a password/PIN), something you have (e.g. a look-up card or OTP device), and something you are (e.g. a fingerprint). Authenticators combine one (single-factor) or more (multi-factor) of these.",
+      "answerSketch": "The three factors are something you know (e.g. a password/PIN (Personal Identification Number)), something you have (e.g. a look-up card or OTP (One-Time Password) device), and something you are (e.g. a fingerprint). Authenticators combine one (single-factor) or more (multi-factor) of these.",
       "unverified": false
     },
     {
@@ -298,7 +372,7 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are Authenticators? Explain their purpose with an example",
       "whatItTests": "Definition and purpose of authenticators.",
-      "answerSketch": "Authenticators contain a secret (asymmetric key pair or shared secret) used in the authentication process; the private key proves possession while the verifier uses the public key. Example: a memorized secret (password) or a PIN-activated cryptographic USB device.",
+      "answerSketch": "Authenticators contain a secret (asymmetric key pair or shared secret) used in the authentication process; the private key proves possession while the verifier uses the public key. Example: a memorized secret (password) or a PIN (Personal Identification Number)-activated cryptographic USB device.",
       "unverified": false
     },
     {
@@ -306,7 +380,7 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What are the common issues with Authenticators?",
       "whatItTests": "Weaknesses/vulnerabilities of authenticators.",
-      "answerSketch": "The lecture poses this as an exploration question (vulnerabilities, attacks, limitations) but does not list issues verbatim. Related risks raised elsewhere include password exposure via MITM and replay attacks; pre-registered knowledge authenticators are no longer accepted.",
+      "answerSketch": "The lecture poses this as an exploration question (vulnerabilities, attacks, limitations) but does not list issues verbatim. Related risks raised elsewhere include password exposure via MITM (Man-in-the-Middle) and replay attacks; pre-registered knowledge authenticators are no longer accepted.",
       "unverified": true
     }
   ],

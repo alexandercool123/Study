@@ -1,0 +1,4 @@
+OWNS — Exam Q2: Digital identities and credentials
+  (a) What is a digital identity? Discuss important concepts, terms and principles.
+  (b) Explain the difference between identification, identity proofing and authentication.
+  (c) Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these.

@@ -1,0 +1,12 @@
+OWNS — Exam Q6: Single Sign-On systems and SAML
+  (a) Explain the concept and principles of Single Sign-On. What are the pros and cons?
+  (b) Discuss the working principles of SAML, its architecture, and typical use cases.
+  (c) Discuss different types of SAML assertions and their content.
+CROSS-SUPPORTS — Exam Q2: Digital identities and credentials (anchor lecture 2)
+  (a) What is a digital identity? Discuss important concepts, terms and principles.
+  (b) Explain the difference between identification, identity proofing and authentication.
+  (c) Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these.
+CROSS-SUPPORTS — Exam Q7: JSON Web Tokens (JWT) (anchor lecture 10)
+  (a) How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?
+  (b) Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?
+  (c) Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?

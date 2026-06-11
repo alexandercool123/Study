@@ -1,0 +1,28 @@
+{
+  "lecture": 5,
+  "checked": 21,
+  "findings": [
+    {
+      "id": "L5-5b3-context-handler",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "The XACML 3.0 architecture drill (5b-3) names only PEP/PDP/PAP/PIP, but the lecture's central data-flow figure also makes the context handler a first-class component, and an examiner asking to 'explain the policy architecture' (Q5b) would expect it to appear alongside the four points.",
+      "evidence": "Lecture 5 ... 060325.txt PAGE 48: \"5. Attributes are retrieved through the context handler, which can query the Policy Information Point (PIP) for missing resources\"; the same context handler is the hub of the PAGE 48 diagram (steps 4-11). 5b-3 keyBeats list only PEP/PDP/PAP/PIP.",
+      "fix": "Add a fifth bullet to 5b-3 (or cross-note from 5b-5): the context handler converts the native request into XACML canonical form, gathers attributes by querying the PIP, and mediates between PEP and PDP. 5b-5 already covers it, so this is a depth/cross-link note, not a contradiction."
+    },
+    {
+      "id": "L5-5b4-combining-scope",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "5b-4 presents deny-overrides / permit-overrides / first-applicable / only-one-applicable but does not state that 'only-one-applicable' is defined ONLY for policy/policy-set combining (not rules), which is the exact distinction an examiner probing combining algorithms tends to test.",
+      "evidence": "Lecture 5 ... 060325.txt PAGE 43: \"Only-one-applicable: One and only one policy or policy set is applicable by virtue of their targets.\" (phrased for policy/policy-set, not rules). 5b-4 modelAnswer applies it generically to 'rule/policy/policy set'.",
+      "fix": "Note in 5b-4 that only-one-applicable applies to policies/policy-sets (by their targets), yielding NotApplicable if none and Indeterminate if more than one apply, while deny/permit-overrides and first-applicable exist at both rule- and policy-combining levels. Grounded in PAGE 43."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all three owned sub-parts well (5a AuthN/AuthZ, 5b XACML language+architecture+flow+algorithms, 5c RBAC/ABAC benefits+challenges+PBAC hybrid). All factual claims are grounded in the lecture deck or NIST 800-162; the two NIST citations (5a-4 p.12, 5c-4) are verbatim-accurate, and PEP/PDP/PAP/PIP, the combining algorithms, the four ABAC attribute sets, role-explosion and 2^N attribute-explosion are all correct vs source and vs reality. No wrong-vs-source or wrong-vs-reality found. Most exam-critical residual gap: the context handler is under-emphasized as an architectural component for Q5b.",
+  "_sources_read": [
+    "Lecture 5, Resources, policies and identity management, 060325.txt:2344",
+    "NIST.SP.800-162.txt:2408",
+    "Learning XML, Markup and core concepts, ch02.txt:1586"
+  ]
+}

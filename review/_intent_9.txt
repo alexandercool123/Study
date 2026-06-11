@@ -1,0 +1,4 @@
+CROSS-SUPPORTS — Exam Q5: Access control and policies (anchor lecture 5)
+  (a) Explain the difference between authentication and authorization. How can authorization be implemented?
+  (b) Explain the key parts of XACML 3.0 and its policy architecture.
+  (c) Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them.

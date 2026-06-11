@@ -1,0 +1,4 @@
+OWNS — Exam Q1: Essential Concepts for IAM
+  (a) Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized.
+  (b) Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?
+  (c) Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?

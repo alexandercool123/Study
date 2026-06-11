@@ -1,0 +1,30 @@
+{
+  "lecture": 2,
+  "checked": 22,
+  "findings": [
+    {
+      "id": "L2-2a-5",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "Drill names all 7 Laws of Identity but explains only the first two (User Control/Consent and Minimal Disclosure); if the examiner asks about law 3-7 the student has nothing, even though sub-part 2a asks for identity 'principles'.",
+      "evidence": "modelAnswer lists all seven then states only 'The first law requires ... with the user's consent ...' and 'The second states ... the most stable long-term solution.' — lecture_2.json L2-2a-5. Full per-law text is available in source: 'Justifiable Parties: Digital identity systems must be designed so the disclosure of identifying information is limited to parties having a necessary and justifiable place' (TheLawsOfIdentity.txt PAGE 07, also Lecture-2.txt PAGE 42); 'Directed Identity: A universal identity system must support both “omni-directional” identifiers ... and “unidirectional” identifiers' (TheLawsOfIdentity.txt PAGE 08); 'Pluralism of Operators and Technologies: A universal identity system must channel and enable the inter-working of multiple identity technologies run by multiple identity providers' (PAGE 09); 'Human Integration: ... define the human user to be a component of the distributed system ... protection against identity attacks' (PAGE 10); 'Consistent Experience Across Contexts: ... guarantee its users a simple, consistent experience while enabling separation of contexts' (PAGE 10/11).",
+      "fix": "Add a one-line gloss for laws 3-7 grounded in TheLawsOfIdentity.txt PAGES 07-11: (3) Justifiable Parties = only parties with a necessary/justifiable role receive identifying info, each must give a use-policy; (4) Directed Identity = omni-directional identifiers for public entities, unidirectional (per-site) identifiers for private ones to prevent correlation; (5) Pluralism of Operators and Technologies = a metasystem inter-working multiple IdPs and identity technologies, no single monolith; (6) Human Integration = make the human a reliable component via unambiguous 'ceremony' resistant to phishing; (7) Consistent Experience Across Contexts = a simple, consistent UX while keeping contexts separated."
+    },
+    {
+      "id": "L2-EX-6",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "Exercise answerSketch for the Laws-of-Identity / SSI / GDPR comparison only NAMES Cameron's 7 laws and Allen's 10 principles without a speakable gloss, so it does not deliver the set at exam depth for sub-part 2a.",
+      "evidence": "answerSketch reads 'Cameron 7 laws (control/consent, minimal disclosure, justifiable parties, directed identity, pluralism, human integration, consistent experience). Allen 10 SSI principles (existence, control, access, ...)' — lecture_2.json L2-EX-6 — names only. Source provides full text for each law (TheLawsOfIdentity.txt PAGES 06-11) and each SSI principle (Path to SSI - Alacrity.txt lines 134-143 / Lecture-2.txt PAGE 42).",
+      "fix": "Attach the same one-line-per-member glosses as the L2-2a-5 fix for the 7 laws, and confirm the 10 SSI principles each have a one-line meaning (Existence, Control, Access, Transparency, Persistence, Portability, Interoperability, Consent, Minimalization, Protection) from Lecture-2.txt PAGE 42 / Alacrity lines 134-143."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all three owned sub-parts well: 2a (digital identity / subject / attribute / partial-complete identity / linkability / personal data vs PII / Cameron laws / Allen SSI), 2b (identification vs identity proofing vs authentication, IAL/LOA assurance levels, ordering with authorization), and 2c (claim/assertion/credential relationship, three ways to present claims, JWT as carrier, standards bodies, primary/secondary use). No WRONG and no truly MISSING concept. The one exam-critical weakness is depth, not breadth: the '7 Laws of Identity' set is named-but-not-explained beyond laws 1-2 (L2-2a-5, echoed in L2-EX-6).",
+  "_sources_read": [
+    "Lecture-2.txt:2327",
+    "TheLawsOfIdentity.txt:1289",
+    "Path to SSI - Alacrity.txt:268",
+    "Physical and online credentials.txt:36",
+    "Test Questions.txt:27"
+  ]
+}

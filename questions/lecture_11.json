@@ -24,14 +24,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "a",
       "type": "relationship",
-      "question": "A colleague says 'OAuth 2.0 already logs users in, so OpenID Connect is redundant.' Why is that wrong, and what does OIDC add?",
+      "question": "A colleague says 'OAuth 2.0 already logs users in, so OpenID Connect is redundant.' Why is that wrong, and what does OIDC (OpenID Connect) add?",
       "keyBeats": [
         "OAuth 2.0 = delegated authorization only, no identity",
-        "OIDC = identity/authentication LAYER built on top of OAuth 2.0",
-        "Adds user authentication + enables SSO",
+        "OIDC (OpenID Connect) = identity/authentication LAYER built on top of OAuth 2.0",
+        "Adds user authentication + enables SSO (Single Sign-On)",
         "Adds standardized fetch of profile/identity attributes (UserInfo)"
       ],
-      "modelAnswer": "OAuth 2.0 only delegates access to resources to a client; it has no explicit concept of identity and was not designed to authenticate users. OpenID Connect is a protocol built on top of OAuth 2.0 that logically adds an identity layer. It enables the client to verify the identity of the end-user based on the authentication done by the Authorization Server (enabling SSO, like SAML) and to obtain basic profile information in a REST-like manner. So OAuth handles authorization; OIDC adds authentication and identity on top.",
+      "modelAnswer": "OAuth 2.0 only delegates access to resources to a client; it has no explicit concept of identity and was not designed to authenticate users. OpenID Connect is a protocol built on top of OAuth 2.0 that logically adds an identity layer. It enables the client to verify the identity of the end-user based on the authentication done by the Authorization Server (enabling SSO (Single Sign-On), like SAML (Security Assertion Markup Language)) and to obtain basic profile information in a REST-like manner. So OAuth handles authorization; OIDC (OpenID Connect) adds authentication and identity on top.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 04",
       "unverified": false,
       "diagram_only": false
@@ -58,14 +58,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "a",
       "type": "use-cases",
-      "question": "An exam panel asks what OIDC is actually used for in practice. Give the two core jobs plus a concrete use case.",
+      "question": "An exam panel asks what OIDC (OpenID Connect) is actually used for in practice. Give the two core jobs plus a concrete use case.",
       "keyBeats": [
         "Job 1: user authentication + Single Sign-On",
         "Job 2: fine-grained access to user info at UserInfo endpoint, based on scopes",
-        "Use case: outbound/inbound web SSO, social login",
+        "Use case: outbound/inbound web SSO (Single Sign-On), social login",
         "Client flows are like OAuth 2.0"
       ],
-      "modelAnswer": "OIDC does two things: it adds user authentication to OAuth 2.0 and enables Single Sign-On (SSO), and it allows fine-grained access to user information from the client at the UserInfo endpoint based on scopes. A typical use case is web SSO: a user signs in via an enterprise or social provider (e.g. inbound web SSO with a social identity), the provider's AS delivers an id_token and access token to the client, and the client grants application access and can call APIs on the user's behalf.",
+      "modelAnswer": "OIDC (OpenID Connect) does two things: it adds user authentication to OAuth 2.0 and enables Single Sign-On (SSO), and it allows fine-grained access to user information from the client at the UserInfo endpoint based on scopes. A typical use case is web SSO: a user signs in via an enterprise or social provider (e.g. inbound web SSO with a social identity), the provider's AS (Authorization Server) delivers an id_token and access token to the client, and the client grants application access and can call APIs (Application Programming Interfaces) on the user's behalf.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 41",
       "unverified": false,
       "diagram_only": false
@@ -75,14 +75,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "a",
       "type": "comparison",
-      "question": "Why is OIDC called a 'modern alternative to SAML'? Contrast the two on format and trust setup.",
+      "question": "Why is OIDC (OpenID Connect) called a 'modern alternative to SAML (Security Assertion Markup Language)'? Contrast the two on format and trust setup.",
       "keyBeats": [
-        "OIDC uses JSON and REST; SAML uses XML and SOAP",
-        "Both do web SSO with signed assertions",
-        "SAML = static/pre-established trust; OIDC supports dynamic discovery/registration",
-        "JWT tokens are compact, mobile-friendly"
+        "OIDC (OpenID Connect) uses JSON and REST; SAML (Security Assertion Markup Language) uses XML and SOAP (Simple Object Access Protocol)",
+        "Both do web SSO (Single Sign-On) with signed assertions",
+        "SAML (Security Assertion Markup Language) = static/pre-established trust; OIDC (OpenID Connect) supports dynamic discovery/registration",
+        "JWT (JSON Web Token) tokens are compact, mobile-friendly"
       ],
-      "modelAnswer": "OIDC and SAML both provide web SSO using a signed assertion conveying claims about a subject. But SAML uses XML and SOAP with static, pre-established trust, whereas OIDC is a modern alternative focused on JSON and REST, using compact JWT-based tokens that suit mobile and bandwidth-constrained endpoints. OIDC also allows trust to be established dynamically between IdPs and RPs (discovery and dynamic registration), which SAML lacks.",
+      "modelAnswer": "OIDC (OpenID Connect) and SAML (Security Assertion Markup Language) both provide web SSO (Single Sign-On) using a signed assertion conveying claims about a subject. But SAML uses XML and SOAP (Simple Object Access Protocol) with static, pre-established trust, whereas OIDC is a modern alternative focused on JSON and REST, using compact JWT (JSON Web Token)-based tokens that suit mobile and bandwidth-constrained endpoints. OIDC also allows trust to be established dynamically between IdPs (Identity Providers) and RPs (Relying Parties) (discovery and dynamic registration), which SAML lacks.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 04",
       "unverified": false,
       "diagram_only": false
@@ -92,13 +92,13 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "a",
       "type": "concept",
-      "question": "State the two capabilities OIDC enables for clients, in the spec's own framing.",
+      "question": "State the two capabilities OIDC (OpenID Connect) enables for clients, in the spec's own framing.",
       "keyBeats": [
-        "(a) verify identity of End-User via AS authentication",
+        "(a) verify identity of End-User via AS (Authorization Server) authentication",
         "(b) obtain basic profile info, interoperable + REST-like",
-        "Single seamless flow combining auth + API authorization"
+        "Single seamless flow combining auth + API (Application Programming Interface) authorization"
       ],
-      "modelAnswer": "OIDC enables clients to (a) verify the identity of the End-User based on the authentication performed by an Authorization Server, and (b) obtain basic profile information about the End-User in an interoperable and REST-like manner. The design goal was a single, seamless flow that integrates user authentication and API authorization.",
+      "modelAnswer": "OIDC (OpenID Connect) enables clients to (a) verify the identity of the End-User based on the authentication performed by an Authorization Server, and (b) obtain basic profile information about the End-User in an interoperable and REST-like manner. The design goal was a single, seamless flow that integrates user authentication and API (Application Programming Interface) authorization.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 04",
       "unverified": false,
       "diagram_only": false
@@ -110,12 +110,12 @@
       "type": "tokens",
       "question": "A student confuses the ID token with the access token. Distinguish them by purpose, consumer, and format.",
       "keyBeats": [
-        "ID token: authentication assertion, consumed by Client, a JWT",
-        "Access token: authorization, consumed by RS, opaque OAuth 2.0 token",
-        "ID token enables SSO; access token used at UserInfo endpoint",
+        "ID token: authentication assertion, consumed by Client, a JWT (JSON Web Token)",
+        "Access token: authorization, consumed by RS (Resource Server), opaque OAuth 2.0 token",
+        "ID token enables SSO (Single Sign-On); access token used at UserInfo endpoint",
         "Refresh token optional"
       ],
-      "modelAnswer": "The ID token is an identity and authentication assertion issued by the AS and consumed by the Client; it is a structured JSON Web Token (JWT), and its delivery enables web SSO. The access token is a 'standard' OAuth 2.0 token, an identity and authorization assertion consumed by the Resource Server; the client treats it as an opaque string and presents it at the UserInfo endpoint to retrieve consented user details. Optionally a refresh token is also issued.",
+      "modelAnswer": "The ID token is an identity and authentication assertion issued by the AS (Authorization Server) and consumed by the Client; it is a structured JSON Web Token (JWT), and its delivery enables web SSO (Single Sign-On). The access token is a 'standard' OAuth 2.0 token, an identity and authorization assertion consumed by the Resource Server; the client treats it as an opaque string and presents it at the UserInfo endpoint to retrieve consented user details. Optionally a refresh token is also issued.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 07",
       "unverified": false,
       "diagram_only": false
@@ -125,14 +125,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "b",
       "type": "endpoints",
-      "question": "Name the three Identity Provider endpoints in OIDC and say what happens at each.",
+      "question": "Name the three Identity Provider endpoints in OIDC (OpenID Connect) and say what happens at each.",
       "keyBeats": [
         "Authorization endpoint: user authenticates + consents, client gets code",
         "Token endpoint: client exchanges code for ID + access tokens",
         "UserInfo endpoint: client presents access token, gets user info JSON",
-        "Plus client-side Redirect URI for returning the code"
+        "Plus client-side Redirect URI (Uniform Resource Identifier) for returning the code"
       ],
-      "modelAnswer": "The authorization endpoint is where the user authenticates and gives consent and where the client goes to get a code issued; it is the only endpoint the end-user interacts with. The token endpoint is where the client authenticates and exchanges the code for an ID token and access token. The UserInfo endpoint is where the client presents an access token to obtain user information as a JSON object. The client also exposes a Redirect URI, the endpoint to which the code is returned.",
+      "modelAnswer": "The authorization endpoint is where the user authenticates and gives consent and where the client goes to get a code issued; it is the only endpoint the end-user interacts with. The token endpoint is where the client authenticates and exchanges the code for an ID token and access token. The UserInfo endpoint is where the client presents an access token to obtain user information as a JSON object. The client also exposes a Redirect URI (Uniform Resource Identifier), the endpoint to which the code is returned.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 09",
       "unverified": false,
       "diagram_only": false
@@ -142,15 +142,15 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "b",
       "type": "flow",
-      "question": "Walk through the OIDC authorization-code flow step by step, from the user wanting access to receiving user info.",
+      "question": "Walk through the OIDC (OpenID Connect) authorization-code flow step by step, from the user wanting access to receiving user info.",
       "keyBeats": [
-        "1-2: Client builds auth request (scopes), sends to AS",
-        "3-4: AS authenticates End-User, obtains consent",
+        "1-2: Client builds auth request (scopes), sends to AS (Authorization Server)",
+        "3-4: AS (Authorization Server) authenticates End-User, obtains consent",
         "5-6: AS returns user to Client with a code",
         "7: Client sends code to Token Endpoint, AS returns ID+access token, client validates",
         "8: Client uses access token at UserInfo endpoint to get user info"
       ],
-      "modelAnswer": "1) The client prepares an Authentication Request containing the desired scopes. 2) The client sends it to the Authorization Server. 3) The AS authenticates the End-User. 4) The AS obtains the End-User's consent/authorization. 5) The AS sends the user back to the client with a code. 6) The code arrives at the client's Redirect URI. 7) The client sends the code to the Token Endpoint; the AS responds with an ID Token and an Access Token, and the client validates the tokens and retrieves the subject identifier. 8) With the access token the client can request user info from the UserInfo endpoint of the RS, after which the user gets access to the client's resources.",
+      "modelAnswer": "1) The client prepares an Authentication Request containing the desired scopes. 2) The client sends it to the Authorization Server. 3) The AS (Authorization Server) authenticates the End-User. 4) The AS obtains the End-User's consent/authorization. 5) The AS sends the user back to the client with a code. 6) The code arrives at the client's Redirect URI (Uniform Resource Identifier). 7) The client sends the code to the Token Endpoint; the AS responds with an ID Token and an Access Token, and the client validates the tokens and retrieves the subject identifier. 8) With the access token the client can request user info from the UserInfo endpoint of the RS (Resource Server), after which the user gets access to the client's resources.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 08",
       "unverified": false,
       "diagram_only": false
@@ -160,14 +160,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "b",
       "type": "scopes",
-      "question": "What are scopes in OIDC, and why is the 'openid' scope special?",
+      "question": "What are scopes in OIDC (OpenID Connect), and why is the 'openid' scope special?",
       "keyBeats": [
         "Scopes = collections of claims requested at authorization endpoint",
         "openid REQUIRED; signals an OpenID Connect request",
         "Without openid, behaviour entirely unspecified",
         "profile, email, address, phone are optional claim sets from UserInfo"
       ],
-      "modelAnswer": "Scopes are collections of claims that the client requests at the authorization endpoint, e.g. scope=openid profile email phone. The openid scope is required and informs the Authorization Server that the client is making an OpenID Connect request; if it is not present, the behaviour is entirely unspecified (so it 'triggers' OIDC). Optional scopes like profile, email, address and phone each map to a set of claims returned from the UserInfo endpoint.",
+      "modelAnswer": "Scopes are collections of claims that the client requests at the authorization endpoint, e.g. scope=openid profile email phone. The openid scope is required and informs the Authorization Server that the client is making an OpenID Connect request; if it is not present, the behaviour is entirely unspecified (so it 'triggers' OIDC (OpenID Connect)). Optional scopes like profile, email, address and phone each map to a set of claims returned from the UserInfo endpoint.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 10",
       "unverified": false,
       "diagram_only": false
@@ -181,10 +181,10 @@
       "keyBeats": [
         "A structured JSON Web Token (JWT)",
         "Concatenation: base64url header.base64url JSON claims.signature",
-        "MUST be signed with JWS; MAY be encrypted with JWE",
+        "MUST be signed with JWS (JSON Web Signature); MAY be encrypted with JWE (JSON Web Encryption)",
         "Provides authentication, integrity, non-repudiation, optional confidentiality"
       ],
-      "modelAnswer": "The ID token is a structured JSON Web Token (JWT) by which the AS asserts the authentication status of the subject to the client. It is the concatenation of a base64url-encoded header (the algorithm), a period, a base64url-encoded JSON claims object, a period, and a signature. ID tokens MUST be signed using JWS and may optionally also be encrypted using JWE, providing authentication, integrity, non-repudiation and optionally confidentiality. It resembles a digital identity card that client apps can validate.",
+      "modelAnswer": "The ID token is a structured JSON Web Token (JWT) by which the AS (Authorization Server) asserts the authentication status of the subject to the client. It is the concatenation of a base64url-encoded header (the algorithm), a period, a base64url-encoded JSON claims object, a period, and a signature. ID tokens MUST be signed using JWS (JSON Web Signature) and may optionally also be encrypted using JWE (JSON Web Encryption), providing authentication, integrity, non-repudiation and optionally confidentiality. It resembles a digital identity card that client apps can validate.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 15",
       "unverified": false,
       "diagram_only": false
@@ -196,13 +196,13 @@
       "type": "claims",
       "question": "What does the ID token contain? List the required claims and what they mean.",
       "keyBeats": [
-        "iss = issuer (AS URI)",
+        "iss = issuer (AS (Authorization Server) URI (Uniform Resource Identifier))",
         "sub = subject (unique user identifier)",
         "aud = audience (client_id of the RP)",
         "exp = expiration time; iat = issued time",
         "optional: auth_time, nonce, acr, amr, azp"
       ],
-      "modelAnswer": "The ID token typically includes the unique subject identifier, the issuing authority (AS URI), the intended audience (the client application), and issue/expiration times, and optionally how the user was authenticated. The required claims are iss (issuer identifier), sub (subject identifier, locally unique, max 255 ASCII chars), aud (audience, must contain the client_id of the RP), exp (expiration time) and iat (issued-at time). Optional claims include auth_time, nonce (to mitigate replay), acr (authentication context class), amr (authentication methods) and azp (authorized party).",
+      "modelAnswer": "The ID token typically includes the unique subject identifier, the issuing authority (AS (Authorization Server) URI (Uniform Resource Identifier)), the intended audience (the client application), and issue/expiration times, and optionally how the user was authenticated. The required claims are iss (issuer identifier), sub (subject identifier, locally unique, max 255 ASCII (American Standard Code for Information Interchange) chars), aud (audience, must contain the client_id of the RP (Relying Party)), exp (expiration time) and iat (issued-at time). Optional claims include auth_time, nonce (to mitigate replay), acr (authentication context class), amr (authentication methods) and azp (authorized party).",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 16",
       "unverified": false,
       "diagram_only": false
@@ -214,12 +214,12 @@
       "type": "endpoints",
       "question": "How does a client retrieve user info, and why is client authentication required at the token endpoint?",
       "keyBeats": [
-        "Token endpoint: client authenticates (client ID + secret, HTTP Basic) to prevent token leaks",
+        "Token endpoint: client authenticates (client ID + secret, HTTP (HyperText Transfer Protocol) Basic) to prevent token leaks",
         "UserInfo is an OAuth 2.0 protected resource",
-        "Client sends HTTPS GET with access token in Authorization: Bearer header",
+        "Client sends HTTPS (HyperText Transfer Protocol Secure) GET with access token in Authorization: Bearer header",
         "Returns JSON of consented claims (sub, name, email, ...)"
       ],
-      "modelAnswer": "At the token endpoint the client must authenticate itself (e.g. HTTP Basic with client ID and client secret) when exchanging the code for tokens; this authentication is required to prevent token leaks. To get user info, the client constructs an HTTPS GET request to the UserInfo endpoint and includes the access token in the Authorization header as a Bearer token. The UserInfo endpoint, an OAuth 2.0 protected resource, returns the consented profile information as a JSON document (e.g. sub, name, email, email_verified, phone_number, profile).",
+      "modelAnswer": "At the token endpoint the client must authenticate itself (e.g. HTTP (HyperText Transfer Protocol) Basic with client ID and client secret) when exchanging the code for tokens; this authentication is required to prevent token leaks. To get user info, the client constructs an HTTPS (HyperText Transfer Protocol Secure) GET request to the UserInfo endpoint and includes the access token in the Authorization header as a Bearer token. The UserInfo endpoint, an OAuth 2.0 protected resource, returns the consented profile information as a JSON document (e.g. sub, name, email, email_verified, phone_number, profile).",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 19",
       "unverified": false,
       "diagram_only": false
@@ -229,14 +229,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "b",
       "type": "discovery",
-      "question": "Besides the three core endpoints, how does a client find an AS's configuration automatically in OIDC?",
+      "question": "Besides the three core endpoints, how does a client find an AS's (Authorization Server's) configuration automatically in OIDC (OpenID Connect)?",
       "keyBeats": [
-        "Discovery endpoint publishes AS config + endpoint URLs",
+        "Discovery endpoint publishes AS (Authorization Server) config + endpoint URLs (Uniform Resource Locators)",
         "Uses WebFinger to turn a user identifier into the AS config address",
         "Dynamic registration: client gets client id + secret without manual setup",
-        "Contrast with SAML's static trust"
+        "Contrast with SAML's (Security Assertion Markup Language's) static trust"
       ],
-      "modelAnswer": "OIDC adds a discovery mechanism: the client uses the WebFinger specification to turn a user-provided identifier into the address of the AS configuration file, which lists the addresses of the different Connect endpoints (the .well-known config). Dynamic registration lets a client register with the AS and receive a client identifier and secret without manual intervention. This dynamically established trust contrasts with SAML's static, pre-established trust.",
+      "modelAnswer": "OIDC (OpenID Connect) adds a discovery mechanism: the client uses the WebFinger specification to turn a user-provided identifier into the address of the AS (Authorization Server) configuration file, which lists the addresses of the different Connect endpoints (the .well-known config). Dynamic registration lets a client register with the AS and receive a client identifier and secret without manual intervention. This dynamically established trust contrasts with SAML (Security Assertion Markup Language)'s static, pre-established trust.",
       "citation": "3127-openid-connect-101.txt, PAGE 9",
       "unverified": false,
       "diagram_only": false
@@ -246,14 +246,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "b",
       "type": "roles",
-      "question": "Who are the OIDC actors? Explain what the Identity Provider is composed of and what each part does.",
+      "question": "Who are the OIDC (OpenID Connect) actors? Explain what the Identity Provider is composed of and what each part does.",
       "keyBeats": [
-        "IdP = Authorization Server + Resource Server",
-        "AS: manages authentication (SSO) and scopes, issues ID/access/refresh tokens after consent",
-        "RS: manages user attributes, exposes UserInfo endpoint",
-        "Client/RP requests tokens; Subject = the user"
+        "IdP (Identity Provider) = Authorization Server + Resource Server",
+        "AS (Authorization Server): manages authentication (SSO (Single Sign-On)) and scopes, issues ID/access/refresh tokens after consent",
+        "RS (Resource Server): manages user attributes, exposes UserInfo endpoint",
+        "Client/RP (Relying Party) requests tokens; Subject = the user"
       ],
-      "modelAnswer": "The Identity Provider consists of an Authorization Server and a Resource Server. The AS manages user authentication (SSO) and the scopes of the request, and after authenticating the subject and getting consent it issues an ID token, an access token and optionally a refresh token. The Resource Server manages the user's attributes and exposes the UserInfo endpoint, returning user info as a JSON object. The Client (Relying Party / Service Provider) is an application requesting tokens, and the Subject is the user requesting access.",
+      "modelAnswer": "The Identity Provider consists of an Authorization Server and a Resource Server. The AS (Authorization Server) manages user authentication (SSO (Single Sign-On)) and the scopes of the request, and after authenticating the subject and getting consent it issues an ID token, an access token and optionally a refresh token. The Resource Server manages the user's attributes and exposes the UserInfo endpoint, returning user info as a JSON object. The Client (RP (Relying Party) / Service Provider) is an application requesting tokens, and the Subject is the user requesting access.",
       "citation": "Lecture 9, OpenID Connect 210426.txt, PAGE 07",
       "unverified": false,
       "diagram_only": false
@@ -263,14 +263,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "c",
       "type": "exercise-walkthrough",
-      "question": "Exercise 1 had you use the oauth.com OIDC playground and jwt.io. What were you meant to learn from copying the ID token into jwt.io?",
+      "question": "Exercise 1 had you use the oauth.com OIDC (OpenID Connect) playground and jwt.io. What were you meant to learn from copying the ID token into jwt.io?",
       "keyBeats": [
-        "Follow OIDC flow related to OAuth 2.0 on oauth.com playground",
+        "Follow OIDC (OpenID Connect) flow related to OAuth 2.0 on oauth.com playground",
         "Copy ID token to jwt.io to decode/interpret it",
-        "See the JWT structure: header.payload.signature with claims",
+        "See the JWT (JSON Web Token) structure: header.payload.signature with claims",
         "Identify the differences vs traditional OAuth 2.0 flow"
       ],
-      "modelAnswer": "Exercise 1 was a warm-up using the oauth.com OIDC playground to follow the OpenID Connect flow related to OAuth 2.0. You copied the ID token into jwt.io to interpret it, which reveals that the ID token is a JWT: a decoded header and a JSON payload of claims (iss, sub, aud, exp, iat, etc.) plus a signature. The point is to recognise that OIDC adds this signed identity token (and authentication/SSO) on top of the plain OAuth 2.0 authorization flow.",
+      "modelAnswer": "Exercise 1 was a warm-up using the oauth.com OIDC (OpenID Connect) playground to follow the OpenID Connect flow related to OAuth 2.0. You copied the ID token into jwt.io to interpret it, which reveals that the ID token is a JWT (JSON Web Token): a decoded header and a JSON payload of claims (iss, sub, aud, exp, iat, etc.) plus a signature. The point is to recognise that OIDC adds this signed identity token (and authentication/SSO (Single Sign-On)) on top of the plain OAuth 2.0 authorization flow.",
       "citation": "Exercises.txt, PAGE 1",
       "unverified": false,
       "diagram_only": false
@@ -285,9 +285,9 @@
         "Select OpenID scope and authorize in Google OAuth Playground",
         "Decode the ID token in jwt.io; compare to Exercise 1",
         "openid alone gives minimal claims (mainly sub); rest needs more scopes",
-        "Extra claims (profile/email) come from the UserInfo endpoint / People API"
+        "Extra claims (profile/email) come from the UserInfo endpoint / People API (Application Programming Interface)"
       ],
-      "modelAnswer": "In Exercise 2 you authorized only the openid scope in Google's OAuth Playground and decoded the resulting ID token in jwt.io. With openid alone the ID token carries minimal identity claims (essentially the subject identifier and issuer/audience), not the full profile. 'The rest' of the user info (name, email, etc.) is not in the token; it must be fetched separately from the UserInfo endpoint (or via Google's People API), and only when the matching scopes such as profile and email are also requested and consented.",
+      "modelAnswer": "In Exercise 2 you authorized only the openid scope in Google's OAuth Playground and decoded the resulting ID token in jwt.io. With openid alone the ID token carries minimal identity claims (essentially the subject identifier and issuer/audience), not the full profile. 'The rest' of the user info (name, email, etc.) is not in the token; it must be fetched separately from the UserInfo endpoint (or via Google's People API (Application Programming Interface)), and only when the matching scopes such as profile and email are also requested and consented.",
       "citation": "Exercises.txt, PAGE 1",
       "unverified": false,
       "diagram_only": false
@@ -299,12 +299,12 @@
       "type": "exercise-walkthrough",
       "question": "Exercise 2 also had you explore Google's People API (people/me). How does Google define a user there, and how do you call it?",
       "keyBeats": [
-        "People API explorer: people/get and People API v1",
+        "People API (Application Programming Interface) explorer: people/get and People API v1",
         "Resource for self is people/me",
         "Query with personFields, e.g. names,emailAddresses",
-        "Compares API exploration output to the playground response"
+        "Compares API (Application Programming Interface) exploration output to the playground response"
       ],
-      "modelAnswer": "Exercise 2 step 3-4 had you explore Google's People API to see how Google models a user as a resource with selectable fields. For yourself the resource name is people/me, and you specify which attributes to return via personFields, e.g. https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses. You then compared the People API explorer output with the Google OAuth Playground response to see how the same consented user attributes are returned over a REST/JSON API, similar in spirit to the OIDC UserInfo endpoint.",
+      "modelAnswer": "Exercise 2 step 3-4 had you explore Google's People API (Application Programming Interface) to see how Google models a user as a resource with selectable fields. For yourself the resource name is people/me, and you specify which attributes to return via personFields, e.g. https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses. You then compared the People API explorer output with the Google OAuth Playground response to see how the same consented user attributes are returned over a REST/JSON API, similar in spirit to the OIDC (OpenID Connect) UserInfo endpoint.",
       "citation": "Exercises.txt, PAGE 2",
       "unverified": false,
       "diagram_only": false
@@ -314,14 +314,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "c",
       "type": "app-setup",
-      "question": "Exercise 3: walk through how you set up your own Google app/client to do OIDC, including credentials and redirect URIs.",
+      "question": "Exercise 3: walk through how you set up your own Google app/client to do OIDC (OpenID Connect), including credentials and redirect URIs.",
       "keyBeats": [
         "Create a project in Google developer console, set active",
         "Credentials > Create credentials > OAuth Client ID > Web application",
-        "Set Authorized JavaScript origins + Authorized redirect URIs (openidconnect.net + /callback)",
+        "Set Authorized JavaScript origins + Authorized redirect URIs (Uniform Resource Identifiers) (openidconnect.net + /callback)",
         "Record Client ID and Secret; confirm authorized domain openidconnect.net"
       ],
-      "modelAnswer": "In Exercise 3 you created a Google project and selected it as active, then went to the API dashboard, opened Credentials, and chose Create credentials > OAuth Client ID > Web application. You entered a name, the Authorized JavaScript origins and the Authorized redirect URIs (for this exercise https://openidconnect.net and https://openidconnect.net/callback), then recorded the Client ID and Client Secret. Under Branding you confirmed the authorized domain openidconnect.net was listed (adding it if missing). This registers your client app with Google's Authorization Server so it can request tokens.",
+      "modelAnswer": "In Exercise 3 you created a Google project and selected it as active, then went to the API (Application Programming Interface) dashboard, opened Credentials, and chose Create credentials > OAuth Client ID > Web application. You entered a name, the Authorized JavaScript origins and the Authorized redirect URIs (Uniform Resource Identifiers) (for this exercise https://openidconnect.net and https://openidconnect.net/callback), then recorded the Client ID and Client Secret. Under Branding you confirmed the authorized domain openidconnect.net was listed (adding it if missing). This registers your client app with Google's Authorization Server so it can request tokens.",
       "citation": "Exercises.txt, PAGE 2",
       "unverified": false,
       "diagram_only": false
@@ -331,14 +331,14 @@
       "anchorsExamQ": 9,
       "anchorsSubPart": "c",
       "type": "scopes-consent",
-      "question": "Which scopes did you add to the Google app, and what does adding 'userinfo' scopes mean for OIDC vs OAuth's notion of profile data?",
+      "question": "Which scopes did you add to the Google app, and what does adding 'userinfo' scopes mean for OIDC (OpenID Connect) vs OAuth's notion of profile data?",
       "keyBeats": [
         "Data Access > Add scopes: openid, auth.userinfo.email, auth.userinfo.profile",
-        "openid triggers OIDC; profile/email are claim sets",
-        "userinfo scopes map to the OIDC UserInfo endpoint claims",
+        "openid triggers OIDC (OpenID Connect); profile/email are claim sets",
+        "userinfo scopes map to the OIDC (OpenID Connect) UserInfo endpoint claims",
         "OAuth alone has no standardized identity/profile definition; OIDC standardizes it"
       ],
-      "modelAnswer": "In the Google app's Data Access you added the scopes openid, auth.userinfo.email and auth.userinfo.profile. In OIDC terms, openid signals an OpenID Connect request and the userinfo email/profile scopes correspond to the standardized claim sets returned from the UserInfo endpoint. This is exactly how OIDC defines 'user profile data' as standard claims, whereas plain OAuth 2.0 has no standardized identity/profile definition; OIDC adds that interoperable identity layer. The user must consent to these scopes before the info is released.",
+      "modelAnswer": "In the Google app's Data Access you added the scopes openid, auth.userinfo.email and auth.userinfo.profile. In OIDC (OpenID Connect) terms, openid signals an OpenID Connect request and the userinfo email/profile scopes correspond to the standardized claim sets returned from the UserInfo endpoint. This is exactly how OIDC defines 'user profile data' as standard claims, whereas plain OAuth 2.0 has no standardized identity/profile definition; OIDC adds that interoperable identity layer. The user must consent to these scopes before the info is released.",
       "citation": "Exercises.txt, PAGE 2",
       "unverified": false,
       "diagram_only": false
@@ -353,9 +353,9 @@
         "Configure openidconnect.net server template = Google, enter client id/secret, same scopes",
         "Step 2 returns code, but exchange (step 3) errors",
         "Switching config to Auth0 lets the flow progress",
-        "Repair via oidcdebugger.com with Google auth endpoint + token URI; reflect why openidconnect.net failed"
+        "Repair via oidcdebugger.com with Google auth endpoint + token URI (Uniform Resource Identifier); reflect why openidconnect.net failed"
       ],
-      "modelAnswer": "You set openidconnect.net's server template to Google, entered your client ID/secret and matching scopes, and ran it. Step 2 returned the expected code but exchanging it for tokens errored, because the configuration/redirect or token-endpoint setup for Google was not correct on that tool. Switching the configuration to Auth0 let the flow progress to step 3, showing the mechanism works when correctly configured. To repair the Google access you used oidcdebugger.com: setting the authorization endpoint to https://accounts.google.com/o/oauth2/v2/auth, the redirect URI to https://oidcdebugger.com/debug (also registering that JavaScript domain in the Google app), the proper scopes (openid email profile), and Google's token URI https://oauth2.googleapis.com/token. Done correctly you end with an authorization code and an ID token, both interpretable at oauth.tools. The reflection is that openidconnect.net failed due to mismatched/incorrect Google client configuration (redirect URIs, domains, token endpoint).",
+      "modelAnswer": "You set openidconnect.net's server template to Google, entered your client ID/secret and matching scopes, and ran it. Step 2 returned the expected code but exchanging it for tokens errored, because the configuration/redirect or token-endpoint setup for Google was not correct on that tool. Switching the configuration to Auth0 let the flow progress to step 3, showing the mechanism works when correctly configured. To repair the Google access you used oidcdebugger.com: setting the authorization endpoint to https://accounts.google.com/o/oauth2/v2/auth, the redirect URI (Uniform Resource Identifier) to https://oidcdebugger.com/debug (also registering that JavaScript domain in the Google app), the proper scopes (openid email profile), and Google's token URI https://oauth2.googleapis.com/token. Done correctly you end with an authorization code and an ID token, both interpretable at oauth.tools. The reflection is that openidconnect.net failed due to mismatched/incorrect Google client configuration (redirect URIs, domains, token endpoint).",
       "citation": "Exercises.txt, PAGE 2",
       "unverified": false,
       "diagram_only": false
@@ -369,12 +369,29 @@
       "keyBeats": [
         "Register client app with provider (Google): get client ID + secret, set redirect URIs",
         "Request scopes openid + profile/email at authorization endpoint",
-        "User authenticates and consents; client receives code at redirect URI",
+        "User authenticates and consents; client receives code at redirect URI (Uniform Resource Identifier)",
         "Exchange code at token endpoint for ID token (verify in jwt.io/oauth.tools) + access token",
-        "Use access token at UserInfo / People API to fetch consented user info as JSON"
+        "Use access token at UserInfo / People API (Application Programming Interface) to fetch consented user info as JSON"
       ],
-      "modelAnswer": "First register the application as a client at the provider's Authorization Server (in the exercise, create a Google project and OAuth Client ID, set authorized origins/redirect URIs and record the client ID and secret). The client redirects the user to the authorization endpoint requesting scopes openid plus profile/email. The user authenticates and gives consent, and the AS returns an authorization code to the redirect URI. The client exchanges that code at the token endpoint (authenticating with its client ID/secret) for an ID token and access token, and verifies the ID token (e.g. decoded in jwt.io or oauth.tools). It then presents the access token at the UserInfo endpoint (or Google's People API people/me with personFields) to fetch the consented user attributes as a JSON document. Consent and scopes ensure the user controls which information is released.",
+      "modelAnswer": "First register the application as a client at the provider's Authorization Server (in the exercise, create a Google project and OAuth Client ID, set authorized origins/redirect URIs (Uniform Resource Identifiers) and record the client ID and secret). The client redirects the user to the authorization endpoint requesting scopes openid plus profile/email. The user authenticates and gives consent, and the AS (Authorization Server) returns an authorization code to the redirect URI. The client exchanges that code at the token endpoint (authenticating with its client ID/secret) for an ID token and access token, and verifies the ID token (e.g. decoded in jwt.io or oauth.tools). It then presents the access token at the UserInfo endpoint (or Google's People API (Application Programming Interface) people/me with personFields) to fetch the consented user attributes as a JSON document. Consent and scopes ensure the user controls which information is released.",
       "citation": "Exercises.txt, PAGE 1",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "L11-9b-validate",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "b",
+      "type": "recall",
+      "question": "After the client receives the id_token, how does it validate it before trusting the authentication?",
+      "keyBeats": [
+        "id_token is a JWT (JSON Web Token) signed by the AS (Authorization Server) (default RSA (Rivest-Shamir-Adleman) signature, as in SAML (Security Assertion Markup Language))",
+        "Client verifies the signature before any authorization decision",
+        "Check iss = the AS URI (Uniform Resource Identifier), aud = this client, and iat/exp (issue/expiry) are valid",
+        "Check the nonce matches the one the client sent (replay protection)"
+      ],
+      "modelAnswer": "The id_token is a JWT (JSON Web Token) signed by the Authorization Server (the default signature mechanism is an RSA (Rivest-Shamir-Adleman) signature, as in SAML (Security Assertion Markup Language)). On delivery the client validates the signature before making any authorization decision about the subject. It then checks the claims: iss must equal the issuing authority (the AS (Authorization Server) URI (Uniform Resource Identifier)), aud must name this client application, and the issue/expiration times must be current. The client also checks that the nonce it originally sent is echoed in the token, which protects against replay.",
+      "citation": "3127-openid-connect-101.txt, PAGE — id_token signed by AS (Authorization Server) / 'the client validates the signature before making an authorization decision' (lines 196-264)",
       "unverified": false,
       "diagram_only": false
     }
@@ -385,39 +402,39 @@
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "Let's start with getting to know OpenID Connect even better: https://rb.gy/6hsep8, https://rb.gy/evah5p and https://rb.gy/ohp655",
       "whatItTests": "Background familiarisation with OpenID Connect concepts before the practical flow.",
-      "answerSketch": "Read the three linked OIDC introductions to understand OIDC as an identity layer on OAuth 2.0 (tokens, endpoints, scopes).",
+      "answerSketch": "Read the three linked OIDC (OpenID Connect) introductions to understand OIDC as an identity layer on OAuth 2.0 (tokens, endpoints, scopes).",
       "unverified": false
     },
     {
       "id": "L11-EX-2",
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "Follow the OpenID Connect flow related to OAuth 2.0 to get an idea about the mechanism Copy the ID-token to https://jwt.io to interpret. What do you read from this?",
-      "whatItTests": "Running the OIDC authorization-code flow in a playground and decoding the ID token (a JWT).",
-      "answerSketch": "Step through the oauth.com OIDC playground flow; paste the ID token into jwt.io to see the decoded JWT header and claims (iss, sub, aud, exp, iat) plus the signature.",
+      "whatItTests": "Running the OIDC (OpenID Connect) authorization-code flow in a playground and decoding the ID token (a JWT (JSON Web Token)).",
+      "answerSketch": "Step through the oauth.com OIDC (OpenID Connect) playground flow; paste the ID token into jwt.io to see the decoded JWT (JSON Web Token) header and claims (iss, sub, aud, exp, iat) plus the signature.",
       "unverified": false
     },
     {
       "id": "L11-EX-3",
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "Which are the big differences of using OpenID Connect related to the traditional flow of OAuth 2.0?",
-      "whatItTests": "Conceptual difference between OIDC and plain OAuth 2.0.",
-      "answerSketch": "OIDC adds the openid scope, an ID token (JWT authentication assertion), user authentication/SSO and a standardized UserInfo endpoint; plain OAuth 2.0 only delegates authorization with an access token.",
+      "whatItTests": "Conceptual difference between OIDC (OpenID Connect) and plain OAuth 2.0.",
+      "answerSketch": "OIDC (OpenID Connect) adds the openid scope, an ID token (JWT (JSON Web Token) authentication assertion), user authentication/SSO (Single Sign-On) and a standardized UserInfo endpoint; plain OAuth 2.0 only delegates authorization with an access token.",
       "unverified": false
     },
     {
       "id": "L11-EX-4",
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "Let's try Google's OpenID Connect through 'the good old' Google OAuth Playground (https://rb.gy/762ovp) and find the \"Google OAuth2 API v2\". Select the \"OpenID\" scope and authorize it",
-      "whatItTests": "Using Google's OAuth Playground with the openid scope to obtain real OIDC tokens.",
-      "answerSketch": "Open Google OAuth Playground, select Google OAuth2 API v2, choose the OpenID scope, authorize and obtain a code/tokens.",
+      "whatItTests": "Using Google's OAuth Playground with the openid scope to obtain real OIDC (OpenID Connect) tokens.",
+      "answerSketch": "Open Google OAuth Playground, select Google OAuth2 API (Application Programming Interface) v2, choose the OpenID scope, authorize and obtain a code/tokens.",
       "unverified": false
     },
     {
       "id": "L11-EX-5",
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "What do you recognize compared to the \"warm-up\" exercise?",
-      "whatItTests": "Recognising the same OIDC flow pattern across tools.",
-      "answerSketch": "The same authorization-code OIDC flow: redirect to authorization endpoint, consent, code, token exchange yielding ID token + access token.",
+      "whatItTests": "Recognising the same OIDC (OpenID Connect) flow pattern across tools.",
+      "answerSketch": "The same authorization-code OIDC (OpenID Connect) flow: redirect to authorization endpoint, consent, code, token exchange yielding ID token + access token.",
       "unverified": false
     },
     {
@@ -433,30 +450,30 @@
       "source": "Exercises.txt, PAGE 1",
       "promptVerbatim": "What user info can be received? What about \"the rest\" of the user info?",
       "whatItTests": "Understanding which claims openid alone yields vs needing more scopes / UserInfo.",
-      "answerSketch": "openid alone gives mainly the subject identifier; the rest (name, email, profile) needs profile/email scopes and is fetched from the UserInfo endpoint / People API.",
+      "answerSketch": "openid alone gives mainly the subject identifier; the rest (name, email, profile) needs profile/email scopes and is fetched from the UserInfo endpoint / People API (Application Programming Interface).",
       "unverified": false
     },
     {
       "id": "L11-EX-8",
       "source": "Exercises.txt, PAGE 1",
-      "promptVerbatim": "Now follow the People API to explore users with OpenID Connect attributes: https://developers.google.com/people/api/rest/v1/people/get",
-      "whatItTests": "Familiarity with Google People API as a source of identity attributes.",
-      "answerSketch": "Use the People API explorer (people.get) to see how user attributes are exposed via REST/JSON.",
+      "promptVerbatim": "Now follow the People API (Application Programming Interface) to explore users with OpenID Connect attributes: https://developers.google.com/people/api/rest/v1/people/get",
+      "whatItTests": "Familiarity with Google People API (Application Programming Interface) as a source of identity attributes.",
+      "answerSketch": "Use the People API (Application Programming Interface) explorer (people.get) to see how user attributes are exposed via REST/JSON.",
       "unverified": false
     },
     {
       "id": "L11-EX-9",
       "source": "Exercises.txt, PAGE 2",
-      "promptVerbatim": "Explain how Google defines a user and the API",
-      "whatItTests": "How Google models a user resource and the People API.",
+      "promptVerbatim": "Explain how Google defines a user and the API (Application Programming Interface)",
+      "whatItTests": "How Google models a user resource and the People API (Application Programming Interface).",
       "answerSketch": "Google models a user as a person resource with selectable personFields; the self resource is people/me, queried via REST.",
       "unverified": false
     },
     {
       "id": "L11-EX-10",
       "source": "Exercises.txt, PAGE 2",
-      "promptVerbatim": "Go back to Google OAuth Playground and try out the People API v1 making different calls. Compare the results to the above API exploration and explain the output of the API response call in the playground.",
-      "whatItTests": "Making People API v1 calls and comparing playground output to the explorer.",
+      "promptVerbatim": "Go back to Google OAuth Playground and try out the People API (Application Programming Interface) v1 making different calls. Compare the results to the above API exploration and explain the output of the API response call in the playground.",
+      "whatItTests": "Making People API (Application Programming Interface) v1 calls and comparing playground output to the explorer.",
       "answerSketch": "Use people/me with personFields (e.g. names,emailAddresses); compare the JSON response in the playground to the explorer, noting consented attributes returned.",
       "unverified": false
     },
@@ -464,16 +481,16 @@
       "id": "L11-EX-11",
       "source": "Exercises.txt, PAGE 2",
       "promptVerbatim": "First, we need to create an app/project and select it as the active: https://console.developers.google.com/projectcreate?pli=1",
-      "whatItTests": "Creating a Google developer project as the basis for an OIDC client.",
+      "whatItTests": "Creating a Google developer project as the basis for an OIDC (OpenID Connect) client.",
       "answerSketch": "Create a new project in the Google developer console and set it active.",
       "unverified": false
     },
     {
       "id": "L11-EX-12",
       "source": "Exercises.txt, PAGE 2",
-      "promptVerbatim": "Now we need to authorise an API in a Google App with OAUTH2 access ... Select Credentials (the key) and select Create credentials",
-      "whatItTests": "Creating OAuth 2.0 credentials in the Google API console.",
-      "answerSketch": "Open the API dashboard, go to Credentials, click Create credentials.",
+      "promptVerbatim": "Now we need to authorise an API (Application Programming Interface) in a Google App with OAUTH2 access ... Select Credentials (the key) and select Create credentials",
+      "whatItTests": "Creating OAuth 2.0 credentials in the Google API (Application Programming Interface) console.",
+      "answerSketch": "Open the API (Application Programming Interface) dashboard, go to Credentials, click Create credentials.",
       "unverified": false
     },
     {
@@ -487,9 +504,9 @@
     {
       "id": "L11-EX-14",
       "source": "Exercises.txt, PAGE 2",
-      "promptVerbatim": "Insert the Name, Authorized JavaScript origins and Authorized redirect URIs (has to be https://openidconnect.net and https://openidconnect.net/callback for this exercise only)",
-      "whatItTests": "Configuring authorized origins and redirect URIs for the client.",
-      "answerSketch": "Enter a name and set the JavaScript origins and redirect URIs to https://openidconnect.net and https://openidconnect.net/callback.",
+      "promptVerbatim": "Insert the Name, Authorized JavaScript origins and Authorized redirect URIs (Uniform Resource Identifiers) (has to be https://openidconnect.net and https://openidconnect.net/callback for this exercise only)",
+      "whatItTests": "Configuring authorized origins and redirect URIs (Uniform Resource Identifiers) for the client.",
+      "answerSketch": "Enter a name and set the JavaScript origins and redirect URIs (Uniform Resource Identifiers) to https://openidconnect.net and https://openidconnect.net/callback.",
       "unverified": false
     },
     {
@@ -512,7 +529,7 @@
       "id": "L11-EX-17",
       "source": "Exercises.txt, PAGE 2",
       "promptVerbatim": "Click: Data Access and Add or Remove Scopes. Add the scopes of openid and auth.userinfo.email and auth.userinfo.profile and press update.",
-      "whatItTests": "Adding the OIDC scopes that drive authentication and user-info access.",
+      "whatItTests": "Adding the OIDC (OpenID Connect) scopes that drive authentication and user-info access.",
       "answerSketch": "In Data Access add scopes openid, auth.userinfo.email and auth.userinfo.profile and update.",
       "unverified": false
     },
@@ -520,8 +537,8 @@
       "id": "L11-EX-18",
       "source": "Exercises.txt, PAGE 2",
       "promptVerbatim": "Adding userinfo, what is that related to OpenID Connect specs? How are \"user profile data\" defined here? How is that different from OAUTH2's definition?",
-      "whatItTests": "Relating userinfo scopes to OIDC standardized claims vs OAuth 2.0.",
-      "answerSketch": "userinfo scopes map to OIDC's standardized UserInfo claim sets (email, profile); OAuth 2.0 has no standardized identity/profile definition, OIDC adds it.",
+      "whatItTests": "Relating userinfo scopes to OIDC (OpenID Connect) standardized claims vs OAuth 2.0.",
+      "answerSketch": "userinfo scopes map to OIDC's (OpenID Connect's) standardized UserInfo claim sets (email, profile); OAuth 2.0 has no standardized identity/profile definition, OIDC adds it.",
       "unverified": false
     },
     {
@@ -543,17 +560,17 @@
     {
       "id": "L11-EX-21",
       "source": "Exercises.txt, PAGE 2",
-      "promptVerbatim": "Copy the output of step 3 and paste it into JWT Token on https://oauth.tools/ in \"the right format\". What do you see?",
+      "promptVerbatim": "Copy the output of step 3 and paste it into JWT (JSON Web Token) Token on https://oauth.tools/ in \"the right format\". What do you see?",
       "whatItTests": "Decoding the ID token in oauth.tools to inspect claims.",
-      "answerSketch": "Paste the ID token into oauth.tools to see the decoded JWT header and identity claims.",
+      "answerSketch": "Paste the ID token into oauth.tools to see the decoded JWT (JSON Web Token) header and identity claims.",
       "unverified": false
     },
     {
       "id": "L11-EX-22",
       "source": "Exercises.txt, PAGE 3",
-      "promptVerbatim": "Let's repair the Google App access. Go to: https://oidcdebugger.com/ Use the Google configuration https://accounts.google.com/o/oauth2/v2/auth to set up the authorisation endpoint. Set redirect URI to: https://oidcdebugger.com/debug ... Insert your client ID ... select the proper scopes ... (openid email profile)",
-      "whatItTests": "Correctly configuring oidcdebugger with Google's authorization endpoint, redirect URI and scopes.",
-      "answerSketch": "Set authorization endpoint to accounts.google.com/o/oauth2/v2/auth, redirect URI oidcdebugger.com/debug (registered as authorized JS domain), client ID and scopes openid email profile; token URI https://oauth2.googleapis.com/token.",
+      "promptVerbatim": "Let's repair the Google App access. Go to: https://oidcdebugger.com/ Use the Google configuration https://accounts.google.com/o/oauth2/v2/auth to set up the authorisation endpoint. Set redirect URI (Uniform Resource Identifier) to: https://oidcdebugger.com/debug ... Insert your client ID ... select the proper scopes ... (openid email profile)",
+      "whatItTests": "Correctly configuring oidcdebugger with Google's authorization endpoint, redirect URI (Uniform Resource Identifier) and scopes.",
+      "answerSketch": "Set authorization endpoint to accounts.google.com/o/oauth2/v2/auth, redirect URI (Uniform Resource Identifier) oidcdebugger.com/debug (registered as authorized JS domain), client ID and scopes openid email profile; token URI https://oauth2.googleapis.com/token.",
       "unverified": false
     },
     {
@@ -569,7 +586,7 @@
       "source": "Exercises.txt, PAGE 3",
       "promptVerbatim": "When done right, you should end with an authorization code and an ID token to both be interpreted in https://oauth.tools/ ... Reflect upon the different parts of this exercise. Why did the https://openidconnect.net really fail? Does it all make sense now?",
       "whatItTests": "Final reflection: validating tokens and explaining the earlier failure.",
-      "answerSketch": "Interpret the code and ID token in oauth.tools; conclude openidconnect.net failed due to incorrect Google client configuration (redirect URIs, domains, token endpoint), now fixed via oidcdebugger.",
+      "answerSketch": "Interpret the code and ID token in oauth.tools; conclude openidconnect.net failed due to incorrect Google client configuration (redirect URIs (Uniform Resource Identifiers), domains, token endpoint), now fixed via oidcdebugger.",
       "unverified": false
     }
   ],

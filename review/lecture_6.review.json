@@ -1,0 +1,28 @@
+{
+  "lecture": 6,
+  "checked": 27,
+  "findings": [
+    {
+      "id": "L6-6a-3-cite",
+      "severity": "wrong",
+      "kind": "wrong-vs-source",
+      "what": "The drill's password/identity-theft/phishing claim is cited to saml-101 PAGE 06, but that exact content ('user password never crosses the corporate firewall', 'eliminates opportunities for identity theft', 'phishing') is on the LECTURE slide PAGE 12 and white-paper PAGE 09, not PAGE 06 (PAGE 06 only carries the Users/IT/Business 'love it' material).",
+      "evidence": "saml-101-white-paper.txt PAGE 06 = 'Users love federation... IT loves federation... Business leaders love federation' (no firewall/theft sentence). Firewall claim is at Lecture ...130325.txt PAGE 12 line 441 'The user password never crosses the corporate firewall (in the case of IdP-initiated SAML SSO)' and saml-101 PAGE 09 line 345 'User passwords never cross the firewall'.",
+      "fix": "Minor: the two claims are correctly drawn from the lecture but span two pages; split the citation (PAGE 06 for the pros, Lecture PAGE 12 / white-paper PAGE 09 for the firewall/theft point). Substance is accurate; non-blocking."
+    },
+    {
+      "id": "L6-6a-3-firewall-caveat",
+      "severity": "incomplete",
+      "kind": "wrong-vs-source",
+      "what": "The drill states flatly 'With SAML the user password never crosses the firewall' but the lecture source explicitly qualifies this to IdP-initiated SAML SSO; an examiner who knows the slide could push on the generalisation.",
+      "evidence": "Lecture ...130325.txt PAGE 12 line 441-442: 'The user password never crosses the corporate firewall (in the case of IdP-initiated SAML SSO)'.",
+      "fix": "Add the source's parenthetical caveat '(in the case of IdP-initiated SAML SSO)' so the claim matches the slide's scope. Low severity."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all owned Q6 sub-parts (a SSO concept/circle-of-trust/pros-cons, b SAML definition/entities/SP-initiated flow/use-cases/XML-Sig/WS-Fed, c the 3 assertion statement types + common content + XML examples) at speakable depth, and the cross-supported Q2c (claim/assertion/credential link via L6-6c-5) and Q7c (VC/VP, Issuer-Holder-Verifier, DID, verifiable data registry) are well delivered. Q7a/Q7b (JWT-vs-session, JWT structure/header/signature) are correctly absent here as they belong to anchor lecture 10 and the lecture 6 source only mentions SD-JWTs in passing (PAGE 39). No WRONG-vs-reality issues: '3 and only 3 SAML assertion types', SAML 2.0 approved March 2005, OASIS/Liberty roots, 4-property DID, and Issuer/Holder/Verifier trust triangle all match the standards. No exam-critical gap.",
+  "_sources_read": [
+    "Lecture 6, SAML Self-Sovereign Identities (SSI), 130325.txt:2510",
+    "saml-101-white-paper.txt:535",
+    "Path to SSI - Alacrity.txt:268"
+  ]
+}

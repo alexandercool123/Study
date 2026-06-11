@@ -1,6 +1,6 @@
 {
   "lecture": 9,
-  "lectureTitle": "Guest: IAM Use Cases and Implementation Strategy",
+  "lectureTitle": "Guest: IAM (Identity and Access Management) Use Cases and Implementation Strategy",
   "examQuestions": [],
   "drills": [
     {
@@ -8,13 +8,13 @@
       "anchorsExamQ": 5,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "An enterprise wants to govern who can touch which assets without ad-hoc per-user grants. What does IAM 'Management' actually entail here?",
+      "question": "An enterprise wants to govern who can touch which assets without ad-hoc per-user grants. What does IAM (Identity and Access Management) 'Management' actually entail here?",
       "keyBeats": [
         "Oversee + govern access methods",
         "Use IAM tools + centralized team",
         "Follow security best practices + compliance"
       ],
-      "modelAnswer": "Management means overseeing and governing the access methods through which identities reach assets. It is done with IAM tooling and a centralized team that applies security best practices and compliance guidelines, rather than scattered manual grants. This gives consistent, auditable access control across the enterprise.",
+      "modelAnswer": "Management means overseeing and governing the access methods through which identities reach assets. It is done with IAM (Identity and Access Management) tooling and a centralized team that applies security best practices and compliance guidelines, rather than scattered manual grants. This gives consistent, auditable access control across the enterprise.",
       "citation": "\"overseeing and governing these access methods using IAM tools\" — IAM-Use-Case.txt, PAGE 03",
       "unverified": false,
       "diagram_only": false
@@ -24,7 +24,7 @@
       "anchorsExamQ": 5,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "After a merger, access grants have multiplied uncontrollably across two combined orgs. What IAM governance moves rein this in?",
+      "question": "After a merger, access grants have multiplied uncontrollably across two combined orgs. What IAM (Identity and Access Management) governance moves rein this in?",
       "keyBeats": [
         "Centralized governance",
         "Recertification (attestation)",
@@ -41,14 +41,14 @@
       "anchorsExamQ": 5,
       "anchorsSubPart": "b",
       "type": "specific",
-      "question": "B2B partners need self-service and admin rights, but you cannot manage every partner user centrally. Which access-control model does the enterprise IAM use?",
+      "question": "B2B (Business-to-Business) partners need self-service and admin rights, but you cannot manage every partner user centrally. Which access-control model does the enterprise IAM (Identity and Access Management) use?",
       "keyBeats": [
         "Policy-based authorization system",
-        "Fine-grained API access control",
+        "Fine-grained API (Application Programming Interface) access control",
         "Central entitlement management",
         "Delegated administration to partners"
       ],
-      "modelAnswer": "Use a policy-based authorization system (ABAC-style) with fine-grained API access control and central entitlement management, while delegating administration of partner users to the partner. This scales authorization decisions by policy/attribute rather than enumerating per-user grants centrally.",
+      "modelAnswer": "Use a policy-based authorization system (ABAC (Attribute-Based Access Control)-style) with fine-grained API (Application Programming Interface) access control and central entitlement management, while delegating administration of partner users to the partner. This scales authorization decisions by policy/attribute rather than enumerating per-user grants centrally.",
       "citation": "\"Policy based authorization system\" — IAM-Use-Case.txt, PAGE 19",
       "unverified": false,
       "diagram_only": false
@@ -65,7 +65,7 @@
         "Indirect business-logic assignment vs direct",
         "Provisioning driven by HR data"
       ],
-      "modelAnswer": "Do role/attribute mining to define roles, then drive provisioning from identity attributes (HR source). At Nuuday most entitlements are 'birthright' (auto-granted by role) or assigned via indirect business logic, with only a small fraction directly assigned — this is RBAC/ABAC in practice reducing manual grants.",
+      "modelAnswer": "Do role/attribute mining to define roles, then drive provisioning from identity attributes (HR source). At Nuuday most entitlements are 'birthright' (auto-granted by role) or assigned via indirect business logic, with only a small fraction directly assigned — this is RBAC (Role-Based Access Control)/ABAC (Attribute-Based Access Control) in practice reducing manual grants.",
       "citation": "\"Entitlements assigned as part of birth right: 49.441\" — IAM-Use-Case.txt, PAGE 25",
       "unverified": false,
       "diagram_only": false
@@ -75,13 +75,13 @@
       "anchorsExamQ": 5,
       "anchorsSubPart": "c",
       "type": "specific",
-      "question": "Privileged service accounts and Tier 0 assets are the crown jewels an attacker wants. How does the enterprise IAM control privileged access?",
+      "question": "Privileged service accounts and Tier 0 assets are the crown jewels an attacker wants. How does the enterprise IAM (Identity and Access Management) control privileged access?",
       "keyBeats": [
-        "PAM installed for critical assets + service accounts",
+        "PAM (Privileged Access Management) installed for critical assets + service accounts",
         "Tiering of computer assets (Tier 0/1)",
         "Privileged Access Management as architecture pillar"
       ],
-      "modelAnswer": "Privileged Access Management (PAM) is deployed to handle critical assets and service accounts, with computer assets classified into tiers (Tier 0, Tier 1) so the most sensitive systems get the tightest controls. PAM is a distinct pillar of the IAM reference architecture for privileged/legacy access.",
+      "modelAnswer": "Privileged Access Management (PAM) is deployed to handle critical assets and service accounts, with computer assets classified into tiers (Tier 0, Tier 1) so the most sensitive systems get the tightest controls. PAM is a distinct pillar of the IAM (Identity and Access Management) reference architecture for privileged/legacy access.",
       "citation": "\"PAM is installed and ready to handled crtical assets and service accounts\" — IAM-Use-Case.txt, PAGE 25",
       "unverified": false,
       "diagram_only": false
@@ -91,14 +91,14 @@
       "anchorsExamQ": 5,
       "anchorsSubPart": "c",
       "type": "specific",
-      "question": "Regulators and auditors demand evidence that access is appropriate and compliant. How does centralizing identity data help meet GDPR/HIPAA-type requirements?",
+      "question": "Regulators and auditors demand evidence that access is appropriate and compliant. How does centralizing identity data help meet GDPR (General Data Protection Regulation)/HIPAA (Health Insurance Portability and Accountability Act)-type requirements?",
       "keyBeats": [
         "Centralized identity info = single integration point",
         "Provides data points for auditing & compliance",
-        "Ease of integration to SIEM",
+        "Ease of integration to SIEM (Security Information and Event Management)",
         "Threat/ransomware detection support"
       ],
-      "modelAnswer": "Centralizing all identity-related information gives a single point of integration and supplies the data points needed for auditing and compliance. It eases integration with SIEM systems to satisfy regulatory requirements like GDPR and HIPAA and to support threat, DDoS and ransomware detection.",
+      "modelAnswer": "Centralizing all identity-related information gives a single point of integration and supplies the data points needed for auditing and compliance. It eases integration with SIEM (Security Information and Event Management) systems to satisfy regulatory requirements like GDPR (General Data Protection Regulation) and HIPAA (Health Insurance Portability and Accountability Act) and to support threat, DDoS (Distributed Denial of Service) and ransomware detection.",
       "citation": "\"data points for Data-driven decision making, auditing & compliance\" — IAM-Use-Case.txt, PAGE 05",
       "unverified": false,
       "diagram_only": false
@@ -106,90 +106,95 @@
     {
       "id": "L9-5d-1",
       "anchorsExamQ": 5,
-      "anchorsSubPart": "d",
+      "anchorsSubPart": "supp",
       "type": "specific",
-      "question": "Leadership won't fund a full IAM platform up front. How do you sequence access-control/governance delivery to still earn ROI?",
+      "question": "Leadership won't fund a full IAM (Identity and Access Management) platform up front. How do you sequence access-control/governance delivery to still earn ROI (Return on Investment)?",
       "keyBeats": [
-        "Plan an MVP",
+        "Plan an MVP (Minimum Viable Product)",
         "Deliver value with small achievable goals",
         "Win sponsor confidence",
         "Scale platform maturity to company strategy"
       ],
-      "modelAnswer": "Plan an MVP and deliver value through small achievable goals to build sponsor confidence, realizing ROI incrementally. Use vendor SMEs/system integrators to lay the fundament, transfer knowledge to the internal team, then scale platform maturity in step with company strategy ('we build, we maintain').",
+      "modelAnswer": "Plan an MVP (Minimum Viable Product) and deliver value through small achievable goals to build sponsor confidence, realizing ROI (Return on Investment) incrementally. Use vendor SMEs (Subject Matter Experts)/system integrators to lay the fundament, transfer knowledge to the internal team, then scale platform maturity in step with company strategy ('we build, we maintain').",
       "citation": "\"Deliver value with small achievabel goals\" — IAM-Use-Case.txt, PAGE 23",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     },
     {
       "id": "L9-5d-2",
       "anchorsExamQ": 5,
-      "anchorsSubPart": "d",
+      "anchorsSubPart": "supp",
       "type": "specific",
-      "question": "Who decides IAM strategy, vendor choice and roadmap so access policy isn't set ad hoc by each team?",
+      "question": "Who decides IAM (Identity and Access Management) strategy, vendor choice and roadmap so access policy isn't set ad hoc by each team?",
       "keyBeats": [
-        "Centralized IAM governance body",
+        "Centralized IAM (Identity and Access Management) governance body",
         "Owns strategy + roadmap",
         "Runs vendor selection",
-        "Anchored in right IT department"
+        "Anchored in right IT (Information Technology) department"
       ],
-      "modelAnswer": "A centralized IAM governance body is set up to own IAM strategy and roadmap, run the vendor selection process, decide single-vs-multiple program structure, and anchor the program in the right IT department. This ensures access control and policy decisions are coordinated, not fragmented.",
+      "modelAnswer": "A centralized IAM (Identity and Access Management) governance body is set up to own IAM strategy and roadmap, run the vendor selection process, decide single-vs-multiple program structure, and anchor the program in the right IT (Information Technology) department. This ensures access control and policy decisions are coordinated, not fragmented.",
       "citation": "\"Setup a centralized IAM Governance body responsible for IAM strategy\" — IAM-Use-Case.txt, PAGE 21",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     },
     {
       "id": "L9-5e-1",
       "anchorsExamQ": 5,
-      "anchorsSubPart": "e",
+      "anchorsSubPart": "supp",
       "type": "specific",
       "question": "A consumer must reach many digital properties without re-authenticating, yet access must stay scoped. Which access-management features serve this?",
       "keyBeats": [
         "Single Sign-On across digital properties",
         "Fine-grained access",
-        "MFA / adaptive authentication",
+        "MFA (Multi-Factor Authentication) / adaptive authentication",
         "Delegated administration (family subscriptions)"
       ],
-      "modelAnswer": "Provide Single Sign-On across digital properties for a uniform experience, backed by MFA/adaptive authentication and fine-grained access so each session is appropriately scoped. Delegated administration handles cases like family subscriptions where one account manages others.",
+      "modelAnswer": "Provide Single Sign-On (SSO) across digital properties for a uniform experience, backed by MFA (Multi-Factor Authentication)/adaptive authentication and fine-grained access so each session is appropriately scoped. Delegated administration handles cases like family subscriptions where one account manages others.",
       "citation": "\"Single Sign-On across digital properties\" — IAM-Use-Case.txt, PAGE 17",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     },
     {
       "id": "L9-2a-1",
       "anchorsExamQ": 2,
-      "anchorsSubPart": "a",
+      "anchorsSubPart": "supp",
       "type": "specific",
-      "question": "Two merged companies each ran their own employee lifecycle. What identity-lifecycle problem must IAM solve, and how?",
+      "question": "Two merged companies each ran their own employee lifecycle. What identity-lifecycle problem must IAM (Identity and Access Management) solve, and how?",
       "keyBeats": [
         "Two separate employee life cycles",
         "Rationalize into single Joiner-Mover-Leaver process",
         "Simplification of enterprise user lifecycle"
       ],
-      "modelAnswer": "Each company had its own employee lifecycle, so IAM must rationalize them into a single Joiner-Mover-Leaver process. Unifying JML standardizes how identities are created, changed on role moves, and deprovisioned on exit, preventing orphaned or duplicated accounts after the merger.",
+      "modelAnswer": "Each company had its own employee lifecycle, so IAM (Identity and Access Management) must rationalize them into a single Joiner-Mover-Leaver process. Unifying JML (Joiner-Mover-Leaver) standardizes how identities are created, changed on role moves, and deprovisioned on exit, preventing orphaned or duplicated accounts after the merger.",
       "citation": "\"rationalization of Joiner-Mover-Leaver\" — IAM-Use-Case.txt, PAGE 06",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     },
     {
       "id": "L9-2b-1",
       "anchorsExamQ": 2,
-      "anchorsSubPart": "b",
+      "anchorsSubPart": "supp",
       "type": "specific",
-      "question": "Identity provisioning is only as good as its source data. Why is HRMS data quality central to the identity lifecycle?",
+      "question": "Identity provisioning is only as good as its source data. Why is HRMS (Human Resource Management System) data quality central to the identity lifecycle?",
       "keyBeats": [
-        "Improve data quality in source systems (HRMS)",
+        "Improve data quality in source systems (HRMS (Human Resource Management System))",
         "Right employee-to-org relationship",
         "Enables segregation of duties + org-based rights"
       ],
-      "modelAnswer": "Provisioning and authorization derive from source identity data, so improving HRMS data quality is foundational. Clean source data lets IAM establish the correct employee-to-organization relationship, which in turn enables segregation of duties and organization-based rights across the lifecycle.",
+      "modelAnswer": "Provisioning and authorization derive from source identity data, so improving HRMS (Human Resource Management System) data quality is foundational. Clean source data lets IAM (Identity and Access Management) establish the correct employee-to-organization relationship, which in turn enables segregation of duties and organization-based rights across the lifecycle.",
       "citation": "\"Improving data quality in source systems like HRMS\" — IAM-Use-Case.txt, PAGE 05",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     },
     {
       "id": "L9-2b-2",
       "anchorsExamQ": 2,
-      "anchorsSubPart": "b",
+      "anchorsSubPart": "supp",
       "type": "specific",
       "question": "A company split means one enterprise account must become two. What lifecycle/identity work does separation force?",
       "keyBeats": [
@@ -201,7 +206,8 @@
       "modelAnswer": "Separation requires splitting the single enterprise account, migrating user privileges to the new organization structure, and implementing the correct segregation of duties. All IT applications and their accesses must be carved out, effectively re-running identity lifecycle and provisioning for the new entity.",
       "citation": "\"Migration of user privileges according to the new organization structure\" — IAM-Use-Case.txt, PAGE 07",
       "unverified": false,
-      "diagram_only": false
+      "diagram_only": false,
+      "supplementary": true
     }
   ],
   "exercises": [],

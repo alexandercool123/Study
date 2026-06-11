@@ -1,0 +1,29 @@
+{
+  "lecture": 8,
+  "checked": 17,
+  "findings": [
+    {
+      "id": "L8-2a-2-incomplete",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "The drill asks which means combinations reach substantial vs high, but its substantial set omits 'Password + MitID chip', which the slide lists under Level Substantial (in addition to Level High).",
+      "evidence": "Source lists under 'Level Substantial': 'MitID App', 'MitID code display/code reader + Password', 'Password + MitID chip' — Presentation AAU April 2026.txt PAGE 09 (lines 217-224). The drill's keyBeats/modelAnswer place 'Password + MitID chip' only under High.",
+      "fix": "Add 'Password + MitID chip' to the substantial combination list (per PAGE 09) so the substantial set is complete; note the slide lists this combination under both substantial and high."
+    },
+    {
+      "id": "L8-7c-anchor-note",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "Not a content error: the six EUDI-Wallet drills anchor examQ 7 subPart c, which is NOT in _intent_8.txt (that file lists only Q2 a/b/c). Verified against _map.json: lecture 8 supports [2,7] and examQ7c is exactly the VC/SSI roles (issuer-holder-verifier) sub-part, so the mapping is valid and these drills are NOT orphans. _intent_8.txt is simply incomplete; no JSON change needed.",
+      "evidence": "_map.json: lecture 8 'supports':[2,7]; examQ7 subPart c = 'Describe how Verifiable Credentials (VCs) work... key roles (issuer, holder, verifier)...'. _intent_8.txt lists only Q2 (read to line 5). All L8-7c-* drills (issuer/holder/verifier, EUDI Wallet) map to this real sub-part.",
+      "fix": "No drill change. Optionally note in _intent_8.txt that lecture 8 also cross-supports examQ7c (VCs/SSI roles) so the mapping is documented; the drills themselves are correctly anchored."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover the supported sub-parts well: MitID drills (L8-2a/b/c-*) deliver national-eID purpose, assurance levels low/substantial/high, identity proofing via physical presence + passport-chip binding, brokers, and eIDAS notification (Q2 a/b/c); EUDI-Wallet drills (L8-7c-*) deliver the issuer-holder-verifier SSI roles, selective disclosure, feature set, and legal framework (Q7c). No exam-critical gap. Only nit: L8-2a-2's substantial combination set drops one valid combination.",
+  "_sources_read": [
+    "Presentation AAU April 2026.txt:856",
+    "study/context/lecture_8_context.txt:15",
+    "study/review/_intent_8.txt:5",
+    "study/_map.json (examQ2, examQ7, lecture-8 supports)"
+  ]
+}

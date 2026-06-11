@@ -1,0 +1,28 @@
+{
+  "lecture": 3,
+  "checked": 24,
+  "findings": [
+    {
+      "id": "L3-3b-3-tgt-target",
+      "severity": "wrong",
+      "kind": "wrong-vs-reality",
+      "what": "The drill states the TGT issued by the AS contains 'the target server details', implying the TGT is bound to a specific service; in real Kerberos the TGT is generic and the target service's identity appears only in the service ticket the TGS later issues.",
+      "evidence": "Drill L3-3b-3 modelAnswer: 'it issues a Ticket Granting Ticket containing the user's identity, network address, and target server details'. This faithfully repeats the slide (IAM Lecture-3.txt PAGE 43: 'Contains the user's identity, network address, and the target server's details'), but contradicts the standard Kerberos protocol (RFC 4120): the AS exchange returns a TGT encrypted under the TGS key that grants access to the TGS generally; the specific server/service identity is named only in the TGS exchange (service ticket). The slide itself is imprecise here.",
+      "fix": "Keep the source wording but add a one-line clarification that the TGT is presented to the TGS to obtain a *service-specific* ticket (PAGE 43: 'the TGS generates a service-specific ticket'), so it is the service ticket — not the TGT — that is bound to a particular target server. Cite RFC 4120 / standard Kerberos AS-exchange vs TGS-exchange distinction."
+    },
+    {
+      "id": "L3-3b-as-tgs-flow-set",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "Sub-part (b) is a SET question (AS exchange -> TGT, TGS exchange -> service ticket, client/server exchange). The drills explain the AS->TGT and TGT->TGS steps and the conceptual KDC ticket model, but no drill cleanly walks the third leg (client presenting the service ticket to the actual server) as a labelled stage of the three-exchange flow.",
+      "evidence": "IAM Lecture-3.txt PAGE 50 ('Alice talks to Bob ... Ticket: {A,kab,T}mkbs ... Alice and bob can now interact') shows the final client-to-server step, but the closest drill (L3-3b-4) ends at the KDC issuing the ticket and L3-3b-5 covers password handling; the explicit 'present service ticket to the target server, then communicate' stage is not anchored as a distinct step in any drill.",
+      "fix": "Add one beat (grounded in PAGE 49-50) making the three Kerberos exchanges explicit: (1) AS exchange returns TGT + session key; (2) TGS exchange: present TGT, get service ticket {A,Kab,T}mKbs for Bob; (3) client presents that service ticket to Bob, timestamp checked against replay, then Alice and Bob communicate."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all three owned sub-parts well (factors/authenticators + AAL1-3 + eIDAS LoA for a; Kerberos purpose/components/ticket-model/password-exposure/KDC weakness for b; certificate purpose/MITM/X.509 fields/chain-of-trust/browser verification for c). Most exam-critical gap is presentational, not factual: the Kerberos answer should explicitly frame the three exchanges as a labelled set and clarify that the TGT (vs the service ticket) is not bound to a specific target server.",
+  "_sources_read": [
+    "IAM Lecture-3.txt:1168",
+    "eIDAS Levels of Assurance.txt:107",
+    "Test Questions.txt:21"
+  ]
+}

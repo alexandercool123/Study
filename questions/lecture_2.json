@@ -1,6 +1,6 @@
 {
   "lecture": 2,
-  "lectureTitle": "Digital Identities and IAM",
+  "lectureTitle": "Digital Identities and IAM (Identity and Access Management)",
   "examQuestions": [
     {
       "examQ": 2,
@@ -75,14 +75,14 @@
       "anchorsExamQ": 2,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "The course distinguishes legal vs technical privacy concepts. What is Personal Data (GDPR) versus PII (NIST)?",
+      "question": "The course distinguishes legal vs technical privacy concepts. What is Personal Data (GDPR (General Data Protection Regulation)) versus PII (Personally Identifiable Information) (NIST (National Institute of Standards and Technology))?",
       "keyBeats": [
-        "Personal data (GDPR) = any info relating to identifiable natural person",
+        "Personal data (GDPR (General Data Protection Regulation)) = any info relating to identifiable natural person",
         "Identifiers: name, ID number, location, online identifier",
-        "PII (NIST) = info to distinguish/trace an individual",
+        "PII (Personally Identifiable Information) (NIST (National Institute of Standards and Technology)) = info to distinguish/trace an individual",
         "Privacy = control over collection/use/disclosure, not secrecy"
       ],
-      "modelAnswer": "Under EU GDPR, personal data is any information relating to an identified or identifiable natural person, who can be identified directly or indirectly by an identifier such as a name, ID number, location data or online identifier. NIST's PII is any information that can be used to distinguish or trace an individual's identity, plus any other information linked or linkable to that individual. Privacy itself is the claim or right of individuals to exercise control over the collection, use and disclosure of their personal information; it is about control, not secrecy.",
+      "modelAnswer": "Under EU GDPR (General Data Protection Regulation), personal data is any information relating to an identified or identifiable natural person, who can be identified directly or indirectly by an identifier such as a name, ID number, location data or online identifier. NIST's (National Institute of Standards and Technology's) PII (Personally Identifiable Information) is any information that can be used to distinguish or trace an individual's identity, plus any other information linked or linkable to that individual. Privacy itself is the claim or right of individuals to exercise control over the collection, use and disclosure of their personal information; it is about control, not secrecy.",
       "citation": "Any information relating to an identified or identifiable natural person — Lecture-2.txt, PAGE 36",
       "unverified": false,
       "diagram_only": false
@@ -94,12 +94,11 @@
       "type": "mechanism",
       "question": "Cameron argued identity systems fail without guiding principles. Name his 7 Laws of Identity and state what the first two require.",
       "keyBeats": [
-        "7 Laws: Control/Consent, Minimal Disclosure, Justifiable Parties",
-        "Directed Identity, Pluralism, Human Integration, Consistent Experience",
-        "Law 1: reveal info only with user consent, user in control",
-        "Law 2: disclose least identifying info, need-to-know"
+        "Cameron: identity systems fail without guiding principles",
+        "The 7 Laws, each at one-line depth",
+        "Together they define a user-centric identity metasystem"
       ],
-      "modelAnswer": "Kim Cameron's seven Laws of Identity are: User Control and Consent; Minimal Disclosure for a Constrained Use; Justifiable Parties; Directed Identity; Pluralism of Operators and Technologies; Human Integration; and Consistent Experience Across Contexts. The first law requires that technical identity systems only reveal information identifying a user with the user's consent, putting the user in control. The second states that the solution which discloses the least amount of identifying information and best limits its use is the most stable long-term solution.",
+      "modelAnswer": "Kim Cameron argued identity systems fail without guiding principles, and set out seven Laws of Identity: 1) User Control & Consent — only reveal identifying information with the user's consent; 2) Minimal Disclosure for a Constrained Use — disclose the least identifying information and limit its use; 3) Justifiable Parties — disclosure is limited to parties having a necessary and justifiable place in the relationship; 4) Directed Identity — support omni-directional identifiers for public entities and uni-directional ones for private entities, preventing unnecessary correlation handles; 5) Pluralism of Operators & Technologies — channel and enable the interworking of multiple identity technologies run by multiple providers; 6) Human Integration — make the human user a reliable component of the system (defend the human-machine channel against attacks like phishing); 7) Consistent Experience Across Contexts — guarantee a simple, consistent user experience while enabling separation of contexts. Together these define a user-centric, privacy-respecting identity metasystem.",
       "citation": "Technical identity systems must only reveal information identifying a user with the user's consent — TheLawsOfIdentity.txt, PAGE 06",
       "unverified": false,
       "diagram_only": false
@@ -109,14 +108,14 @@
       "anchorsExamQ": 2,
       "anchorsSubPart": "a",
       "type": "specific",
-      "question": "Christopher Allen traced identity toward user autonomy. Sketch his four evolution stages and a few of his 10 SSI principles.",
+      "question": "Christopher Allen traced identity toward user autonomy. Sketch his four evolution stages and a few of his 10 SSI (Self-Sovereign Identity) principles.",
       "keyBeats": [
         "Four stages: centralized, federated, user-centric, self-sovereign",
-        "SSI = users are rulers of their own identity",
+        "SSI (Self-Sovereign Identity) = users are rulers of their own identity",
         "Principles incl. Existence, Control, Consent, Minimalization",
-        "Compare to GDPR data minimization and Cameron's laws"
+        "Compare to GDPR (General Data Protection Regulation) data minimization and Cameron's laws"
       ],
-      "modelAnswer": "Allen describes online identity advancing through four stages: centralized, federated, user-centric, and self-sovereign identity, where the user moves from being locked to one authority to being the ruler of their own identity. His ten principles include Existence, Control, Access, Transparency, Persistence, Portability, Interoperability, Consent, Minimalization and Protection. These overlap with Cameron's laws and GDPR ideas such as consent and data minimization (e.g., disclosing a minimum age rather than the exact date of birth).",
+      "modelAnswer": "Allen describes online identity advancing through four stages: centralized, federated, user-centric, and self-sovereign identity, where the user moves from being locked to one authority to being the ruler of their own identity. His ten principles include Existence, Control, Access, Transparency, Persistence, Portability, Interoperability, Consent, Minimalization and Protection. These overlap with Cameron's laws and GDPR (General Data Protection Regulation) ideas such as consent and data minimization (e.g., disclosing a minimum age rather than the exact date of birth).",
       "citation": "centralized identity, federated identity, user-centric identity, and self-sovereign identity — Path to SSI - Alacrity.txt, line 51",
       "unverified": false,
       "diagram_only": false
@@ -143,14 +142,14 @@
       "anchorsExamQ": 2,
       "anchorsSubPart": "b",
       "type": "specific",
-      "question": "KYC services need to know the real person behind an account. What is identity proofing, and how does it differ from identification?",
+      "question": "KYC (Know Your Customer) services need to know the real person behind an account. What is identity proofing, and how does it differ from identification?",
       "keyBeats": [
         "Identity proofing = establish link to real-life person",
         "To some degree of certainty/assurance",
-        "NIST 800-63A; enrollment, ID evidence submitted",
+        "NIST (National Institute of Standards and Technology) 800-63A; enrollment, ID evidence submitted",
         "Differs: proofing binds account to real human, once at enrollment"
       ],
-      "modelAnswer": "Identity proofing is the process of establishing, to some degree of certainty or assurance, a relationship between a subject accessing online services and a real-life person, e.g. for Know Your Customer services like banking. It happens during enrollment, when the applicant submits ID evidence and attributes to a Credential Service Provider. Unlike plain identification (singling out one entity), proofing binds the digital identity to a verified real-world individual, measured by Identity Assurance Levels IAL1-IAL3.",
+      "modelAnswer": "Identity proofing is the process of establishing, to some degree of certainty or assurance, a relationship between a subject accessing online services and a real-life person, e.g. for Know Your Customer services like banking. It happens during enrollment, when the applicant submits ID evidence and attributes to a CSP (Credential Service Provider). Unlike plain identification (singling out one entity), proofing binds the digital identity to a verified real-world individual, measured by Identity Assurance Levels IAL1 (Identity Assurance Level 1)-IAL3 (Identity Assurance Level 3).",
       "citation": "the process of establishing, to some degree of certainty or assurance, a relationship — Lecture-2.txt, PAGE 23",
       "unverified": false,
       "diagram_only": false
@@ -160,15 +159,15 @@
       "anchorsExamQ": 2,
       "anchorsSubPart": "b",
       "type": "mechanism",
-      "question": "Assurance levels grade how strong the binding to a real person is. Summarize NIST IALs and eIDAS LOAs.",
+      "question": "Assurance levels grade how strong the binding to a real person is. Summarize NIST (National Institute of Standards and Technology) IALs (Identity Assurance Levels) and eIDAS (Electronic Identification, Authentication and Trust Services) LOAs (Levels of Assurance).",
       "keyBeats": [
-        "IAL1 self-asserted; IAL2 remote/in-person; IAL3 in-person physical docs",
-        "eIDAS LOA: Low, Substantial, High",
+        "IAL1 (Identity Assurance Level 1) self-asserted; IAL2 (Identity Assurance Level 2) remote/in-person; IAL3 (Identity Assurance Level 3) in-person physical docs",
+        "eIDAS (Electronic Identification, Authentication and Trust Services) LOA (Level of Assurance): Low, Substantial, High",
         "Higher level = more confidence in claimed identity",
         "Level chosen by sensitivity of information"
       ],
-      "modelAnswer": "NIST defines three Identity Assurance Levels: at IAL1 attributes are self-asserted, IAL2 requires remote or in-person identity proofing, and IAL3 requires in-person proofing with physical documentation checked by a CSP representative. eIDAS uses three Levels of Assurance, Low, Substantial and High, giving increasing degrees of confidence in the claimed identity. Service providers pick a level depending on the sensitivity of the information they manage.",
-      "citation": "At IAL3, in-person identity proofing is required — Lecture-2.txt, PAGE 23",
+      "modelAnswer": "NIST (National Institute of Standards and Technology) defines three Identity Assurance Levels: at IAL1 (Identity Assurance Level 1) attributes are self-asserted, IAL2 (Identity Assurance Level 2) requires remote or in-person identity proofing, and IAL3 (Identity Assurance Level 3) requires in-person proofing with physical documentation checked by a CSP (Credential Service Provider) representative. eIDAS (Electronic Identification, Authentication and Trust Services) uses three Levels of Assurance, Low, Substantial and High, giving increasing degrees of confidence in the claimed identity. Service providers pick a level depending on the sensitivity of the information they manage.",
+      "citation": "At IAL3 (Identity Assurance Level 3), in-person identity proofing is required — Lecture-2.txt, PAGE 23",
       "unverified": false,
       "diagram_only": false
     },
@@ -265,11 +264,11 @@
       "question": "There are several ways to present a claim with differing trust. What are the three ways shown, and how do they differ?",
       "keyBeats": [
         "Self-issued (unverified) claim",
-        "Claim with assertion from trusted IdP",
-        "SSI: Verifiable Presentation from Verifiable Credentials",
-        "VP can be verified against the Issuer"
+        "Claim with assertion from trusted IdP (Identity Provider)",
+        "SSI (Self-Sovereign Identity): Verifiable Presentation from Verifiable Credentials",
+        "VP (Verifiable Presentation) can be verified against the Issuer"
       ],
-      "modelAnswer": "The lecture shows three ways to present claims: self-issued and unverified; a claim accompanied by an assertion from a trusted Identity Provider; and self-sovereign identity using Verifiable Credentials from trusted issuers, presented as a Verifiable Presentation. They differ in trust: a self-issued claim carries no third-party backing, an IdP assertion adds credibility, and a Verifiable Presentation can be verified cryptographically against the Issuer.",
+      "modelAnswer": "The lecture shows three ways to present claims: self-issued and unverified; a claim accompanied by an assertion from a trusted Identity Provider; and self-sovereign identity using Verifiable Credentials from trusted issuers, presented as a Verifiable Presentation. They differ in trust: a self-issued claim carries no third-party backing, an IdP (Identity Provider) assertion adds credibility, and a Verifiable Presentation can be verified cryptographically against the Issuer.",
       "citation": "Self-sovereign identity Using Verifiable Credentials from trusted issuers — Lecture-2.txt, PAGE 29",
       "unverified": false,
       "diagram_only": false
@@ -279,14 +278,14 @@
       "anchorsExamQ": 2,
       "anchorsSubPart": "c",
       "type": "mechanism",
-      "question": "JWTs are a concrete carrier of claims. How does a JWT embody the claim/assertion idea?",
+      "question": "JWTs (JSON Web Tokens) are a concrete carrier of claims. How does a JWT embody the claim/assertion idea?",
       "keyBeats": [
-        "JWT structure: header, payload, signature",
+        "JWT (JSON Web Token) structure: header, payload, signature",
         "Payload carries the claims",
-        "Signature (HMAC-SHA256) = the assertion",
+        "Signature (HMAC (Hash-based Message Authentication Code)-SHA256) = the assertion",
         "Cameron's claims model in practice"
       ],
-      "modelAnswer": "A JSON Web Token is given as the example technology for claims and assertions. The token's payload carries the claims about the subject, and the signature, an HMAC-SHA256 over the encoded header and payload, acts as the assertion that backs those claims. This realizes Cameron's claims-based model: attributes are expressed as claims and a signature provides the credibility-adding assertion.",
+      "modelAnswer": "A JSON Web Token is given as the example technology for claims and assertions. The token's payload carries the claims about the subject, and the signature, an HMAC (Hash-based Message Authentication Code)-SHA256 over the encoded header and payload, acts as the assertion that backs those claims. This realizes Cameron's claims-based model: attributes are expressed as claims and a signature provides the credibility-adding assertion.",
       "citation": "Example: Using a JSON Web Token (JWT) — Lecture-2.txt, PAGE 26",
       "unverified": false,
       "diagram_only": false
@@ -298,12 +297,12 @@
       "type": "specific",
       "question": "Many standards bodies define these technologies. Which bodies own the key claim/credential standards mentioned?",
       "keyBeats": [
-        "W3C: Verifiable Credentials, Decentralized Identifiers, WebAuthN",
-        "IETF: OAuth 2.0, JSON Web Tokens",
-        "OASIS: SAML, XACML",
-        "FIDO Alliance: passkeys, CTAP, WebAuthN"
+        "W3C (World Wide Web Consortium): Verifiable Credentials, Decentralized Identifiers, WebAuthN",
+        "IETF (Internet Engineering Task Force): OAuth (Open Authorization) 2.0, JSON Web Tokens",
+        "OASIS: SAML (Security Assertion Markup Language), XACML (Extensible Access Control Markup Language)",
+        "FIDO (Fast IDentity Online) Alliance: passkeys, CTAP (Client to Authenticator Protocol), WebAuthN"
       ],
-      "modelAnswer": "Several standardization bodies own the technologies behind claims, assertions and credentials. The W3C defines Verifiable Credentials, Decentralized Identifiers and Web Authentication; the IETF defines OAuth 2.0 and JSON Web Tokens; OASIS defines the Security Assertion Markup Language (SAML) and XACML; and the FIDO Alliance works on passkeys, CTAP and WebAuthN for stronger authentication.",
+      "modelAnswer": "Several standardization bodies own the technologies behind claims, assertions and credentials. The W3C (World Wide Web Consortium) defines Verifiable Credentials, Decentralized Identifiers and Web Authentication; the IETF (Internet Engineering Task Force) defines OAuth (Open Authorization) 2.0 and JSON Web Tokens; OASIS defines the Security Assertion Markup Language (SAML) and XACML (Extensible Access Control Markup Language); and the FIDO (Fast IDentity Online) Alliance works on passkeys, CTAP (Client to Authenticator Protocol) and WebAuthN for stronger authentication.",
       "citation": "World Wide Web Consortium (W3C): ... Verifiable Credentials. Decentralized Identifiers — Lecture-2.txt, PAGE 32",
       "unverified": false,
       "diagram_only": false
@@ -363,16 +362,16 @@
       "id": "L2-EX-5",
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "What is Personal Data and Personally Identifiable Information (PII)?",
-      "whatItTests": "GDPR personal data vs NIST PII definitions.",
-      "answerSketch": "Personal data (GDPR) = any info relating to identified/identifiable natural person via identifiers (name, ID number, location, online identifier). PII (NIST 800-122) = info to distinguish/trace an individual plus any info linked or linkable to them.",
+      "whatItTests": "GDPR (General Data Protection Regulation) personal data vs NIST (National Institute of Standards and Technology) PII (Personally Identifiable Information) definitions.",
+      "answerSketch": "Personal data (GDPR (General Data Protection Regulation)) = any info relating to identified/identifiable natural person via identifiers (name, ID number, location, online identifier). PII (Personally Identifiable Information) (NIST (National Institute of Standards and Technology) 800-122) = info to distinguish/trace an individual plus any info linked or linkable to them.",
       "unverified": false
     },
     {
       "id": "L2-EX-6",
       "source": "Test Questions.txt, PAGE 1",
-      "promptVerbatim": "Discuss the “Laws of identity” and Christopher Allen’s “10 principles of self-sovereign identity” and compare with GDPR!",
-      "whatItTests": "Cameron's 7 laws, Allen's 10 SSI principles, GDPR alignment.",
-      "answerSketch": "Cameron 7 laws (control/consent, minimal disclosure, justifiable parties, directed identity, pluralism, human integration, consistent experience). Allen 10 SSI principles (existence, control, access, transparency, persistence, portability, interoperability, consent, minimalization, protection). Compare: consent, data minimization, purpose limitation echo GDPR (Art. 23/30).",
+      "promptVerbatim": "Discuss the “Laws of identity” and Christopher Allen’s “10 principles of self-sovereign identity” and compare with GDPR (General Data Protection Regulation)!",
+      "whatItTests": "Cameron's 7 laws, Allen's 10 SSI (Self-Sovereign Identity) principles, GDPR (General Data Protection Regulation) alignment.",
+      "answerSketch": "Cameron 7 laws (control/consent, minimal disclosure, justifiable parties, directed identity, pluralism, human integration, consistent experience). Allen 10 SSI (Self-Sovereign Identity) principles (existence, control, access, transparency, persistence, portability, interoperability, consent, minimalization, protection). Compare: consent, data minimization, purpose limitation echo GDPR (General Data Protection Regulation) (Art. 23/30). The 7 Laws (one-line each): 1) User Control & Consent — only reveal identifying information with the user's consent; 2) Minimal Disclosure for a Constrained Use — disclose the least identifying information and limit its use; 3) Justifiable Parties — disclosure is limited to parties having a necessary and justifiable place in the relationship; 4) Directed Identity — support omni-directional identifiers for public entities and uni-directional ones for private entities, preventing unnecessary correlation handles; 5) Pluralism of Operators & Technologies — channel and enable the interworking of multiple identity technologies run by multiple providers; 6) Human Integration — make the human user a reliable component of the system (defend the human-machine channel against attacks like phishing); 7) Consistent Experience Across Contexts — guarantee a simple, consistent user experience while enabling separation of contexts.",
       "unverified": false
     },
     {
@@ -388,7 +387,7 @@
       "source": "Test Questions.txt, PAGE 1",
       "promptVerbatim": "Discuss the differences between physical and online credentials! What do we mean by primary and secondary use of credentials? Is secondary use also a problem for online credentials?",
       "whatItTests": "Physical vs online credentials; primary/secondary use.",
-      "answerSketch": "Physical = paper/token issued by state/orgs (passport, CPR card), can be faked/stolen, harder to verify remotely; online = digital, verifiable cryptographically (e.g. Verifiable Credentials). Primary use = intended purpose; secondary use = other purposes than intended, raising aggregation/linking concerns. Yes, secondary use also affects online credentials.",
+      "answerSketch": "Physical = paper/token issued by state/orgs (passport, CPR (Civil Population Register) card), can be faked/stolen, harder to verify remotely; online = digital, verifiable cryptographically (e.g. Verifiable Credentials). Primary use = intended purpose; secondary use = other purposes than intended, raising aggregation/linking concerns. Yes, secondary use also affects online credentials.",
       "unverified": false
     }
   ],

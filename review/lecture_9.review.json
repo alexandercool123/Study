@@ -1,0 +1,39 @@
+{
+  "lecture": 9,
+  "checked": 12,
+  "findings": [
+    {
+      "id": "L9-5d-MAP",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "Two drills (L9-5d-1, L9-5d-2) anchor to exam sub-part '5d', but exam Q5 has only sub-parts a/b/c — there is no 5d, so these drills map to a non-existent exam sub-part.",
+      "evidence": "_map.json examQ 5 subParts = {a,b,c} only (a='difference between authentication and authorization...', b='key parts of XACML 3.0...', c='RBAC and ABAC approaches...'); _intent_9.txt lists Q5 (a)(b)(c) and nothing else. The drills' content (MVP sequencing / IAM governance body / vendor selection) is enterprise implementation strategy, not access control, and matches none of 5a/5b/5c.",
+      "fix": "Re-anchor L9-5d-1 and L9-5d-2 to a real sub-part or drop the sub-part claim. Their substance (incremental ROI, centralized governance body) most plausibly supports 5c (RBAC/ABAC governance challenges) at best, but it is implementation-strategy padding with no home in Q5's a/b/c; set anchorsSubPart to a valid letter (e.g. 'c') only if reframed around access-governance, otherwise treat as out-of-scope for the exam."
+    },
+    {
+      "id": "L9-5e-MAP",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "Drill L9-5e-1 anchors to exam sub-part '5e', which does not exist (Q5 stops at c).",
+      "evidence": "_map.json examQ 5 subParts has no 'e'; _intent_9.txt only enumerates (a)(b)(c). Drill content is SSO/MFA/delegated admin for consumers (CIAM), which belongs conceptually to Q6 SSO, not to any Q5 sub-part.",
+      "fix": "Drop the '5e' anchor. If retained for cross-support, anchor to Q6 (SSO) as a crossRef-style support drill, or re-anchor to 5a ('how can authorization be implemented') only if reframed around fine-grained/scoped access rather than SSO."
+    },
+    {
+      "id": "L9-Q2-MAP",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "Three drills (L9-2a-1, L9-2b-1, L9-2b-2) anchor to Q2 a/b, but (i) Q2's crossRefs in _map.json are [6,8] — lecture 9 is NOT a declared cross-ref for Q2, and (ii) Q2's actual sub-parts a/b are about 'what is a digital identity' and 'identification vs identity proofing vs authentication', which these JML/HRMS/merger-split drills do not address.",
+      "evidence": "_map.json examQ 2 subParts: a='What is a digital identity? Discuss important concepts, terms and principles.', b='Explain the difference between identification, identity proofing and authentication.'; crossRefs=[6,8]. The drills instead cover Joiner-Mover-Leaver rationalization, HRMS data quality, and enterprise account split — none of which is digital-identity definition or identification/proofing/authentication. Source quotes themselves are accurate (IAM-Use-Case.txt PAGE 06 'rationalization of Joiner-Mover-Leaver', PAGE 05 'Improving data quality in source systems like HRMS', PAGE 07 'Migration of user privileges according to the new organization structure'), but they do not answer Q2a/b.",
+      "fix": "Either remove the Q2 anchor (this guest lecture's intent file only commits it to Q5) or, if kept, re-anchor to Q2's lifecycle theme via lecture 2's own framing — but Q2a/b text does not cover JML, so the cleanest fix is to label these as Q5-supporting (identity provisioning under access governance) rather than Q2."
+    }
+  ],
+  "coverageVerdict": "All 12 drills are factually accurate vs source (every citation verified on the cited page). The lecture cross-supports Q5 (a/b/c) and the genuine Q5 material (provisioning/RBAC-ABAC-in-practice, centralized governance, PAM/tiering) is well covered; however the drill set's anchoring is broken: 3 drills point at non-existent sub-parts (5d x2, 5e) and 3 point at Q2 a/b whose actual text they do not answer (and lecture 9 is not a Q2 cross-ref). No factual WRONG findings; the exam-critical issue is mis-mapping, not content.",
+  "_sources_read": [
+    "IAM-Use-Case.txt:984",
+    "lecture_9.json:212",
+    "_intent_9.txt:4",
+    "_checker_prompt.md:107",
+    "_map.json:78",
+    "lecture_9_context.txt:15"
+  ]
+}

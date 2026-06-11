@@ -1,0 +1,16 @@
+OWNS — Exam Q9: OpenID Connect
+  (a) How does OpenID Connect relate to OAuth 2.0? What is it used for?
+  (b) Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.
+  (c) Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?
+CROSS-SUPPORTS — Exam Q6: Single Sign-On systems and SAML (anchor lecture 6)
+  (a) Explain the concept and principles of Single Sign-On. What are the pros and cons?
+  (b) Discuss the working principles of SAML, its architecture, and typical use cases.
+  (c) Discuss different types of SAML assertions and their content.
+CROSS-SUPPORTS — Exam Q7: JSON Web Tokens (JWT) (anchor lecture 10)
+  (a) How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?
+  (b) Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?
+  (c) Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?
+CROSS-SUPPORTS — Exam Q8: OAuth 2.0 (anchor lecture 7)
+  (a) What is the main idea of OAuth 2.0?
+  (b) Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.
+  (c) What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0.

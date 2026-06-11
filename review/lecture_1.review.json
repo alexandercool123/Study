@@ -1,0 +1,24 @@
+{
+  "lecture": 1,
+  "checked": 21,
+  "findings": [
+    {
+      "id": "L1-1b-3-keymath",
+      "severity": "wrong",
+      "kind": "wrong-vs-source",
+      "what": "The drill attributes the 561,750 figure to the n(n-1)/2 formula, but 561,750 = 750x749 = n(n-1) (the directed key count), while n(n-1)/2 for 750 users is 280,875 — so the modelAnswer ties the wrong formula to the number and is internally inconsistent (it gives 15 = n(n-1)/2 for 6 users but n(n-1) for 750).",
+      "evidence": "Slide says 'There are n (n-1) = n* keys in the system' and 'There are n (n-1)/2 key pairs' and '#750 x 749 = 561,/50 keys must be distributed securely' — IAM Lecture-1.txt PAGE 17, lines 386-412. Drill keyBeats list both 'n users need n(n-1)/2 keys' and '750 employees = 561,750 keys', and modelAnswer says 'n users need n(n-1)/2 key pairs ... 750 x 749, that is 561,750 keys' — lecture_1.json L1-1b-3.",
+      "fix": "Clarify per the slide: number of distinct pairwise KEYS = n(n-1)/2 (6 users -> 15; 750 users -> 280,875). The slide's 561,750 = 750x749 = n(n-1) counts directed key-ends / 'keys in the system', NOT key pairs. State both explicitly so the student does not present 561,750 as the n(n-1)/2 result. Same fix applies to L1-EX-2 which repeats '750 employees need 561,750 keys' under the key-pair framing."
+    },
+    {
+      "id": "L1-EX-2-keymath",
+      "severity": "wrong",
+      "kind": "wrong-vs-source",
+      "what": "Exercise answerSketch states 'each user pair needs an individual key, n(n-1)/2 total, e.g. 750 employees need 561,750 keys' — but 561,750 is n(n-1), not n(n-1)/2 (=280,875), so the formula and number contradict each other.",
+      "evidence": "Slide PAGE 17 (lines 386-412): 'n (n-1)/2 key pairs' vs '750 x 749 = 561,750 keys'. lecture_1.json L1-EX-2 answerSketch.",
+      "fix": "Use the slide's own split: n(n-1)/2 key pairs (280,875 for 750), and n(n-1)=561,750 as the total 'keys in the system'. Do not equate the n(n-1)/2 formula with 561,750."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all three owned sub-parts (1a security objectives + realizations, 1b symmetric key-distribution problem/advantages/limitations incl. KDC and asymmetric solution, 1c non-repudiation vs authenticity, why symmetric fails, digital signatures + certificates). No missing concept; only substantive issue is the n(n-1)/2-vs-561,750 key-count mislabeling carried from the slide into L1-1b-3 and L1-EX-2.",
+  "_sources_read": ["IAM Lecture-1.txt:1288", "Test Questions.txt:24"]
+}

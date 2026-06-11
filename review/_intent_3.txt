@@ -1,0 +1,4 @@
+OWNS — Exam Q3: Authentication
+  (a) What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems.
+  (b) What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?
+  (c) What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?

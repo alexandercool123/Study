@@ -1,0 +1,4 @@
+OWNS — Exam Q4: FIDO and WebAuthn
+  (a) Explain the steps in FIDO Registration and Login (including all challenge and response details).
+  (b) What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented.
+  (c) Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?

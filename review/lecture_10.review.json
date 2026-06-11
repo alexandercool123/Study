@@ -1,0 +1,29 @@
+{
+  "lecture": 10,
+  "checked": 22,
+  "findings": [
+    {
+      "id": "L10-7c-missing-VP",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "No drill covers the Verifiable Presentation — how the holder actually presents a VC to the verifier (signed with a verifier nonce for replay protection), which is the holder-side mechanism the owned sub-part 7c ('who are the key roles ... and what do they do') asks about.",
+      "evidence": "IAM - JWT.txt PAGE 43: 'Signed by the holder with a nonce from the verifier so that it can't be replayed. The holder can only present the entire credential as a verifiable presentation even if some data attributes are not needed for the verification.' Drills L10-7c-3/7c-4 stop at 'Holder ... stores the credential in a digital wallet' / 'presents it to a verifier' without naming the Verifiable Presentation or its anti-replay nonce. Absent from drills L10-7c-1..7c-7.",
+      "fix": "Add one drill: holder packages the VC into a Verifiable Presentation, signs it with a nonce supplied by the verifier so it cannot be replayed; this is the holder's active role and the last step of the trust triangle (issuer issues VC -> holder holds in wallet -> holder presents VP -> verifier checks issuer signature). Grounded in IAM - JWT.txt PAGE 43."
+    },
+    {
+      "id": "L10-7c-4-nuance-revocation",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "Drill 7c-4 asserts the verifier 'does not have to contact the issuer at verification time' as an unqualified rule; the lecture's own VC example shows a credentialStatus/revocation list, so for revocation the verifier may still consult an issuer-published status endpoint.",
+      "evidence": "IAM - JWT.txt PAGE 36: '\"credentialStatus\": { \"id\": \"https://socrates-university.authOlab.com/vcs/credential/status/14\", \"type\": \"CredentialStatusList2017\" }', and PAGE 33 lists 'the revocation mechanism' as credential metadata. The drill's modelAnswer omits revocation status checking entirely.",
+      "fix": "Qualify 7c-4: signature/authenticity verification is offline against the issuer's public key, but revocation/validity may require checking the issuer-published credentialStatus list (W3C status list shown on PAGE 36). Keeps the core 'trust flows from issuer signature' point while not overstating full offline verification."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all three owned sub-parts well: 7a (JWT vs session ID, statelessness, scaling, revocation) and 7b (header alg/typ, three claim classes, all seven registered claims iss/sub/aud/exp/nbf/iat/jti, signature computation and role, JWS/JWE, alg=none attack) are accurate against the slides and RFC 7519; 7c covers VC components, roles, encoding (JWT-VC vs JSON-LD), and JSON-LD. The most exam-critical gap is the missing Verifiable Presentation step (holder->verifier with replay-protecting nonce), the one holder-side mechanism shown on the deck's final VC diagram that no drill delivers.",
+  "_sources_read": [
+    "IAM - JWT.txt:1170",
+    "RFC 7519 JWT.txt:1765",
+    "IAM in the enterprise 20260421.txt:803",
+    "Info about exam exam questions 2026.txt:250"
+  ]
+}

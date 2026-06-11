@@ -1,0 +1,16 @@
+{
+  "lecture": 4,
+  "checked": 20,
+  "findings": [
+    {
+      "id": "L4-4c-4-note",
+      "severity": "incomplete",
+      "kind": "wrong-vs-reality",
+      "what": "The phishing-resistance drill says the authenticator 'will not produce a valid signature for that origin', which slightly mislocates the mechanism: in real WebAuthn the authenticator does sign (over clientDataHash, which embeds the browser-supplied origin/RP ID), and it is the RELYING PARTY that rejects the mismatched origin/RP ID; the browser also refuses to invoke a credential whose RP ID does not match the page's origin.",
+      "evidence": "Lecture 4.txt PAGE 51 line 801: 'CTAP2 Host/Platform ... responsible for securely reporting the origin of the request'; PAGE 46 lines 681-685: 'Verify stuff, Verify challenge, Verify counter, Save new counter' (server-side verification). Real-world standard: W3C WebAuthn Level 2, RP verifies origin in clientDataJSON.",
+      "fix": "Rephrase to: the browser binds the credential to the registered RP ID/origin so it won't release/sign for a non-matching origin, and the relying party verifies the origin/RP ID it receives — on a fake site this check fails, so no usable authentication results. (Mechanism still yields the same exam conclusion: phishing fails.) Source only poses the scenario on PAGE 27, so this refinement comes from the WebAuthn standard."
+    }
+  ],
+  "coverageVerdict": "Yes — the 20 drills/exercises collectively cover all three owned sub-parts at speakable depth: (a) registration and login ceremonies are correctly separated with challenge/response and counter detail; (b) FIDO2=WebAuthn+CTAP2, U2F-vs-FIDO2 table, and attestation-key implementation (manufacturing-time per-model key, cert chain to trusted root, AAGUID/AAID lookup in FIDO MDS); (c) passkey definition/advantages plus both replay (fresh challenge + signature counter) and phishing (origin/RP-ID binding, Spot-the-Phishing exercise). No wrong-vs-source errors found; the only nit is the slightly imprecise phrasing of WHERE origin binding is enforced in the phishing drill.",
+  "_sources_read": ["IAM Lecture 4.txt:1308", "IAM24-FIDO-testQuestions.txt:25"]
+}

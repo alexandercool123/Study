@@ -56,14 +56,6 @@
   .exrow .ans{margin-top:6px;font-size:13px;background:var(--bg3);padding:8px 10px;border-radius:6px;display:none}
   .exrow .ans.show{display:block}
   .grp{font-size:13px;color:var(--mut);margin:22px 0 6px;text-transform:uppercase;letter-spacing:.6px}
-  /* comments section */
-  .comment-section{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;position:relative}
-  .comment-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:0 0 6px;display:flex;align-items:center;gap:6px}
-  .comment-saved{font-size:11px;color:var(--ok);opacity:0;transition:opacity .2s;pointer-events:none}
-  .comment-saved.show{opacity:1}
-  .comment-input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--fg);padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px;box-sizing:border-box}
-  .comment-input:focus{outline:none;border-color:var(--acc)}
-  .comment-input.has-content{border-color:var(--acc2)}
   /* quiz */
   #quizArea{text-align:center}
   .drawbtn{background:var(--acc);color:#04101f;border:none;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
@@ -79,16 +71,6 @@
   .miss{color:var(--bad);font-size:13px}
   a{color:var(--acc)}
   .tip{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--mut);margin:6px 0 16px}
-  /* export modal */
-  .modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.6)}
-  .modal.show{display:flex;align-items:center;justify-content:center}
-  .modal-content{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:800px;max-height:80vh;overflow:auto;position:relative}
-  .modal-close{position:absolute;top:10px;right:14px;background:none;border:none;color:var(--fg);font-size:24px;cursor:pointer}
-  .modal-title{margin:0 0 14px;font-size:18px;font-weight:600}
-  .export-text{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-family:monospace;font-size:12px;max-height:400px;overflow:auto;color:var(--acc2);white-space:pre-wrap;word-break:break-word}
-  .modal-actions{margin-top:14px;display:flex;gap:8px}
-  .modal-actions button{flex:1;padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--bg3);color:var(--fg);cursor:pointer;font-weight:600}
-  .modal-actions button:hover{border-color:var(--acc)}
 </style>
 </head>
 <body>
@@ -99,18 +81,16 @@
     <button id="navHybrid" class="active" onclick="show('hybrid')">Questions</button>
     <button id="navExercises" onclick="show('exercises')">Exercises</button>
     <button id="navQuiz" onclick="show('quiz')">Quiz</button>
-    <button onclick="openExport()" style="background:var(--acc2);color:#04101f;font-weight:600">📥 Export</button>
-    <button onclick="clearAllComments()" style="background:var(--bad);opacity:.6" title="Clear all stored comments">🗑</button>
   </nav>
 </header>
 <main>
   <section id="view-hybrid">
-    <div class="tip">Each exam question expands into its a/b/c sub-parts and granular drill questions. Answer aloud first, then <b>Reveal</b>. Add <b>comments</b> to any drill — they persist. <b>Key beats</b> = the skeleton to say; <b>Model answer</b> = the spoken prose. Citations trace every fact to a slide/page.</div>
+    <div class="tip">Each exam question expands into its a/b/c sub-parts and granular drill questions. Answer aloud first, then <b>Reveal</b>. <b>Key beats</b> = the skeleton to say; <b>Model answer</b> = the spoken prose. Citations trace every fact to a slide/page.</div>
     <div id="hybridList"></div>
   </section>
 
   <section id="view-exercises" class="hidden">
-    <div class="tip">Every exercise prompt collected from the course material. The examiner may ask you to explain these (esp. OAuth &amp; OpenID Connect). Don't be surprised orally. Add comments to track your progress.</div>
+    <div class="tip">Every exercise prompt collected from the course material. The examiner may ask you to explain these (esp. OAuth &amp; OpenID Connect). Don't be surprised orally.</div>
     <div id="exerciseList"></div>
   </section>
 
@@ -123,19 +103,6 @@
     </div>
   </section>
 </main>
-
-<div id="exportModal" class="modal">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeExport()">✕</button>
-    <h2 class="modal-title">Export All Questions & Comments</h2>
-    <p style="color:var(--mut);font-size:13px;margin:0 0 12px">Copy this text and paste into Claude for AI improvements:</p>
-    <div class="export-text" id="exportText"></div>
-    <div class="modal-actions">
-      <button onclick="copyExportText()">📋 Copy to clipboard</button>
-      <button onclick="closeExport()">Close</button>
-    </div>
-  </div>
-</div>
 
 <script>
 // ---- The 9 known exam questions (verbatim from "Info about exam exam questions 2026.txt") ----
@@ -182,25 +149,6 @@ let DATA = {};        // lecture number -> json
 let DRILLS = [];      // flattened drills
 let EXS = [];         // flattened exercises
 
-// ---- localStorage helpers ----
-function getComment(key){return localStorage.getItem('iam_comment_'+key)||"";}
-function setComment(key,val){
-  if(val.trim()){localStorage.setItem('iam_comment_'+key,val);}
-  else{localStorage.removeItem('iam_comment_'+key);}
-}
-function clearAllComments(){
-  if(!confirm("Clear all stored comments? This cannot be undone."))return;
-  Object.keys(localStorage).filter(k=>k.startsWith('iam_comment_')).forEach(k=>localStorage.removeItem(k));
-  location.reload();
-}
-function getAllComments(){
-  const out={};
-  Object.keys(localStorage).filter(k=>k.startsWith('iam_comment_')).forEach(k=>{
-    out[k.replace('iam_comment_','')]=localStorage.getItem(k);
-  });
-  return out;
-}
-
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
 async function loadAll(){
@@ -208,7 +156,7 @@ async function loadAll(){
   await Promise.all(nums.map(async n=>{
     try{
       const r=await fetch(`questions/lecture_${n}.json`,{cache:"no-store"});
-      if(!r.ok) return;
+      if(!r.ok) return;                 // 404 gracefully
       const j=await r.json();
       DATA[n]=j;
       (j.drills||[]).forEach(d=>DRILLS.push({...d,lecture:n,lectureTitle:j.lectureTitle}));
@@ -218,29 +166,7 @@ async function loadAll(){
   renderHybrid(); renderExercises();
 }
 
-const _commentTimers={};
-function commentSection(key){
-  const stored=getComment(key);
-  return `<div class="comment-section">
-    <div class="comment-label">💭 Your notes <span class="comment-saved" id="saved_${key}">✓ saved</span></div>
-    <textarea class="comment-input ${stored?"has-content":""}" id="comment_${key}" placeholder="Add your notes, gaps to fix, or reminders..."
-      oninput="autoSaveComment('${key}')">${esc(stored)}</textarea>
-  </div>`;
-}
-function autoSaveComment(key){
-  clearTimeout(_commentTimers[key]);
-  _commentTimers[key]=setTimeout(()=>{
-    const el=document.getElementById('comment_'+key);
-    if(!el)return;
-    setComment(key,el.value);
-    el.classList.toggle('has-content',!!el.value.trim());
-    const tick=document.getElementById('saved_'+key);
-    if(tick){tick.classList.add('show');setTimeout(()=>tick.classList.remove('show'),1500);}
-  },600);
-}
-
-function drillCard(d,examQ){
-  const key=`q${examQ}_${d.id||Math.random()}`;
+function drillCard(d){
   const beats=(d.keyBeats||[]).map(b=>`<li>${esc(b)}</li>`).join("");
   let cite="";
   if(d.unverified){ cite=`<div class="cite">⚠ <span class="flag unv">UNVERIFIED</span> not found verbatim in source — double-check.</div>`; }
@@ -257,7 +183,6 @@ function drillCard(d,examQ){
       <div class="model">${esc(d.modelAnswer)}</div>
       ${cite}
     </div>
-    ${commentSection(key)}
   </div>`;
 }
 
@@ -267,7 +192,7 @@ function renderHybrid(){
     const lec=DATA[q.anchor];
     const subs=Object.keys(q.parts).map(sp=>{
       const ds=DRILLS.filter(d=>+d.anchorsExamQ===q.n && (d.anchorsSubPart||"").toLowerCase()===sp);
-      const cards = ds.length? ds.map(d=>drillCard(d,q.n)).join("") :
+      const cards = ds.length? ds.map(drillCard).join("") :
         `<div class="drill"><span class="miss">No drills loaded for this sub-part yet.</span></div>`;
       return `<div class="subpart">
         <div class="sublabel"><span class="subbadge">${sp}</span><span class="subprompt">${esc(q.parts[sp])}</span></div>
@@ -291,13 +216,13 @@ function renderHybrid(){
 function renderExercises(){
   const host=document.getElementById('exerciseList');
   if(!EXS.length){host.innerHTML=`<p class="miss">No exercises loaded yet. (Build the lecture JSON files in questions/.)</p>`;return;}
+  // group by lecture
   let html="";
   const byLec={};
   EXS.forEach(e=>{(byLec[e.lecture]=byLec[e.lecture]||[]).push(e);});
   Object.keys(byLec).sort((a,b)=>a-b).forEach(n=>{
     html+=`<div class="grp">Lecture ${n} — ${esc(byLec[n][0].lectureTitle||"")}</div>`;
     byLec[n].forEach(e=>{
-      const key=`ex_${e.id||n+"_"+Math.random()}`;
       const ans = e.answerSketch? `<div class="ans">${esc(e.answerSketch)}${e.unverified?' <span class="flag unv">UNVERIFIED</span>':''}</div>` :
         `<div class="ans"><span class="miss">No answer sketch in material.</span></div>`;
       html+=`<div class="exrow">
@@ -306,71 +231,10 @@ function renderExercises(){
         <div class="tst">Tests: ${esc(e.whatItTests||"")}</div>
         <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.nextElementSibling.classList.contains('show')?'Hide sketch':'Answer sketch'">Answer sketch</button>
         ${ans}
-        ${commentSection(key)}
       </div>`;
     });
   });
   host.innerHTML=html;
-}
-
-// -------- Export --------
-function openExport(){
-  const comments=getAllComments();
-  let text="=== IAM ORAL EXAM STUDY EXPORT ===\n\n";
-  
-  // Questions with comments
-  EXAM.forEach(q=>{
-    const lec=DATA[q.anchor];
-    text+=`\n## QUESTION ${q.n}: ${q.title}\n`;
-    text+=`Anchor: ${lec?lec.lectureTitle:"Lecture "+q.anchor}\n\n`;
-    Object.keys(q.parts).forEach(sp=>{
-      text+=`### Part ${sp.toUpperCase()}\n${q.parts[sp]}\n\n`;
-      const ds=DRILLS.filter(d=>+d.anchorsExamQ===q.n && (d.anchorsSubPart||"").toLowerCase()===sp);
-      ds.forEach(d=>{
-        const key=`q${q.n}_${d.id||Math.random()}`;
-        text+=`**${d.type||"Q"}:** ${d.question}\n`;
-        if(d.keyBeats&&d.keyBeats.length){text+=`Key beats: ${d.keyBeats.join(" | ")}\n`;}
-        text+=`Model answer: ${d.modelAnswer}\n`;
-        if(d.citation){text+=`Citation: ${d.citation}\n`;}
-        if(comments[key]){text+=`YOUR NOTE: ${comments[key]}\n`;}
-        text+="\n";
-      });
-    });
-  });
-  
-  // Exercises with comments
-  text+="\n\n=== EXERCISES ===\n";
-  const byLec={};
-  EXS.forEach(e=>{(byLec[e.lecture]=byLec[e.lecture]||[]).push(e);});
-  Object.keys(byLec).sort((a,b)=>a-b).forEach(n=>{
-    text+=`\n## Lecture ${n} — ${byLec[n][0].lectureTitle||""}\n\n`;
-    byLec[n].forEach(e=>{
-      const key=`ex_${e.id||n+"_"+Math.random()}`;
-      text+=`**${e.id||""}** [${e.source||""}]\n`;
-      text+=`Prompt: ${e.promptVerbatim}\n`;
-      text+=`Tests: ${e.whatItTests||""}\n`;
-      if(e.answerSketch){text+=`Answer: ${e.answerSketch}\n`;}
-      if(comments[key]){text+=`YOUR NOTE: ${comments[key]}\n`;}
-      text+="\n";
-    });
-  });
-  
-  document.getElementById('exportText').textContent=text;
-  document.getElementById('exportModal').classList.add('show');
-}
-
-function closeExport(){
-  document.getElementById('exportModal').classList.remove('show');
-}
-
-function copyExportText(){
-  const el=document.getElementById('exportText');
-  const text=el.textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    alert("Copied to clipboard!");
-  }).catch(()=>{
-    alert("Copy failed. Select and copy manually.");
-  });
 }
 
 // -------- Quiz mode --------
@@ -380,7 +244,7 @@ function drawQuestion(){
   const lec=DATA[q.anchor];
   const subs=Object.keys(q.parts).map(sp=>{
     const ds=DRILLS.filter(d=>+d.anchorsExamQ===q.n && (d.anchorsSubPart||"").toLowerCase()===sp);
-    const cards=ds.length?ds.map(d=>drillCard(d,q.n)).join(""):`<div class="drill"><span class="miss">No drills loaded.</span></div>`;
+    const cards=ds.length?ds.map(drillCard).join(""):`<div class="drill"><span class="miss">No drills loaded.</span></div>`;
     return `<div class="subpart"><div class="sublabel"><span class="subbadge">${sp}</span><span class="subprompt">${esc(q.parts[sp])}</span></div>${cards}</div>`;
   }).join("");
   remaining=900;
@@ -435,13 +299,3 @@ loadAll();
 </script>
 </body>
 </html>
-
-
-
-   cd ~/claude-code/workspace/study
-   git init
-   git add .
-   git commit -m "initial"
-   git remote add origin https://github.com/alexandercool123/study.git
-   git branch -M main
-   git push -u origin main

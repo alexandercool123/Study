@@ -1,0 +1,36 @@
+{
+  "lecture": 7,
+  "checked": 33,
+  "findings": [
+    {
+      "id": "L7-8b3-grantcount",
+      "severity": "incomplete",
+      "kind": "wrong-vs-reality",
+      "what": "Q8b says 'grants' and the OAuth canon is usually taught as 'four grant types'; the drill frames the set as Authorization Code, Auth-Code-with-PKCE, Client Credentials, Device Code plus two legacy, which is faithful to the slide but does not flag that PKCE is a variant of the Authorization Code grant (not a 5th independent grant) nor that the classic RFC 6749 four are Authorization Code / Implicit / ROPC / Client Credentials.",
+      "evidence": "Lecture 8, OAuth 2.0 300326.txt PAGE 18 lists 'Authorization Code', 'Authorization Code with PKCE', 'Client Credentials', 'Device Code (RFC 8628)', 'Legacy grants ... Implicit Grant, Resource Owner Password Credentials'. External: RFC 6749 §1.3 defines exactly four grant types (authorization code, implicit, resource owner password credentials, client credentials); Device Code is RFC 8628 and PKCE (RFC 7636) is an extension to the auth-code grant.",
+      "fix": "In L7-8b-3 add a one-line clarification that PKCE is an add-on to the Authorization Code grant rather than a separate grant, and that the four canonical RFC 6749 grants are Authorization Code, Implicit, ROPC and Client Credentials (Device Code being a later RFC 8628 addition) — so the student can answer either framing."
+    },
+    {
+      "id": "L7-8b6-endpointcite",
+      "severity": "incomplete",
+      "kind": "wrong-vs-source",
+      "what": "L7-8b-6 ('two OAuth endpoints') cites only PAGE 22, but PAGE 22 only shows the authorization request with scopes; the authorization-endpoint vs token-endpoint distinction and the front-channel/back-channel split it relies on are actually established on PAGE 17 (and PAGE 20-21/26). The content is correct but the single citation under-supports it.",
+      "evidence": "Lecture 8, OAuth 2.0 300326.txt PAGE 17 shows 'Authorization ... endpoint' and 'Token endpoint' with '(back-channel)' and '(front channel)' labels; PAGE 22 ('Authorization request with scopes (client -> AS)') does not itself name the token endpoint.",
+      "fix": "Broaden L7-8b-6's citation to 'PAGE 17 (+ 20-22, 26)' so the front-channel authorization endpoint / back-channel token endpoint claim is grounded where the slide actually draws it."
+    },
+    {
+      "id": "L7-8b5-refresh-neversenttoRS",
+      "severity": "incomplete",
+      "kind": "wrong-vs-source",
+      "what": "L7-8b-5 asserts as a key beat 'refresh tokens are never sent to the RS'. This is true in reality (RFC 6749 §1.5: refresh tokens are used only at the AS) but is NOT stated on cited PAGE 23, so it should be marked as a reality-grounded claim, not a source quote.",
+      "evidence": "Lecture 8, OAuth 2.0 300326.txt PAGE 23 says the refresh token is 'Long-lived token that a client can trade-in to an authorization server in order to obtain a new access token' and 'Can be re-used to get further access tokens' — it does not contain the phrase or claim that refresh tokens are never sent to the RS. External: RFC 6749 §1.5 / Fig 2, refresh tokens are presented only to the authorization server.",
+      "fix": "Keep the beat but attribute the 'never sent to the RS' point to RFC 6749 §1.5 rather than implying PAGE 23 states it; the slide supports only 'traded in at the AS'."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover every Q8 sub-part well: 8a main-idea/delegation + the not-authentication trap (8a-1..4); 8b roles/flow/grants/profiles/tokens/endpoints/scopes/2-vs-3-legged/registration (8b-1..10); 8c PKCE+DPoP problems, mechanisms, JWT anatomy and all three exercises (8c-1..11). No exam-critical gap. Only soft spots are citation precision on the endpoints drill and framing of the grant-type set vs the canonical RFC 6749 four.",
+  "_sources_read": [
+    "Lecture 8, OAuth 2.0 300326.txt:2479",
+    "3119-essential-oauth-primer (10.2016).txt:639",
+    "260330-OAUTH2.0 Exercise.txt:136"
+  ]
+}

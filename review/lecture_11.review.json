@@ -1,0 +1,28 @@
+{
+  "lecture": 11,
+  "checked": 31,
+  "findings": [
+    {
+      "id": "L11-9b-validation",
+      "severity": "missing",
+      "kind": "missing",
+      "what": "No drill states HOW the client validates the ID token, even though Q9b asks for the tokens' working principles. The flow drill (L11-9b-3) and token-structure drill (L11-9b-5) say the client 'validates the tokens' but never define validation (verify JWS signature against the OP's RSA/EC key; check iss, aud=client_id, exp, and nonce for replay).",
+      "evidence": "Lecture 9, OpenID Connect 210426.txt PAGE 15: 'Digitally signed with the OpenID Provider's RSA or EC key'; PAGE 16: iss/sub/aud/exp/iat REQUIRED, nonce 'used to associate a Client session with an ID Token, and to mitigate replay attacks. The Client MUST verify that the nonce Claim Value is equal to the value of the nonce parameter sent in the Authentication Request.' Validation is in source but no drill spells it out.",
+      "fix": "Add a beat to L11-9b-3 or L11-9b-5: the client validates the ID token by checking the JWS signature with the OP's public RSA/EC key and verifying iss, aud (its own client_id), exp, and the nonce (replay protection), per PAGE 15-16."
+    },
+    {
+      "id": "L11-9c-6-responsemode",
+      "severity": "incomplete",
+      "kind": "incomplete",
+      "what": "Drill L11-9c-6 (and exercise L11-EX-23, 'problem with query and id_token') answers only vaguely ('response type/mode must be set correctly'). The actual point — an id_token must NOT be returned via the query response_mode (it must go in the fragment / form_post) because a token in the query string leaks via browser history, Referer and server logs — is not stated, so a student cannot explain WHY there is a problem.",
+      "evidence": "Exercises.txt PAGE 3: 'What is the problem with query and id_token? Hint: If you do not have a problem, you are doing it wrong'. Slide deck does not explain response_mode; external standard: OIDC Core 1.0 + OAuth 2.0 Multiple Response Type / Form Post Response Mode (id_token disallowed in the query response_mode).",
+      "fix": "Make L11-9c-6 state: requesting a response_type containing id_token with response_mode=query is disallowed because an id_token in the query string would leak (history/Referer/logs); OIDC requires fragment or form_post. Name the standard (OIDC Core 1.0) as the basis."
+    }
+  ],
+  "coverageVerdict": "Drills collectively cover all of Q9 a/b/c well: relationship to OAuth2 and what OIDC adds (9a-1..5), tokens/endpoints/flow/scopes/claims/roles/discovery (9b-1..9), and the exercises incl. registering a client app and fetching user info with consent (9c-1..7, EX-1..24). All checked claims match the slides (ID token = JWT consumed by Client; access token = opaque OAuth2 token consumed by RS/used at UserInfo; openid scope required; iss/sub/aud/exp/iat required; sub <=255 ASCII; client auth at token endpoint prevents token leaks). Only minor gaps: no drill spells out concrete ID-token validation, and the 'query vs id_token' exercise point is left vague. Most exam-critical: the missing ID-token validation steps, since Q9b explicitly asks for the tokens' working principles.",
+  "_sources_read": [
+    "Lecture 9, OpenID Connect 210426.txt:2325",
+    "3127-openid-connect-101.txt:640",
+    "Exercises.txt:131"
+  ]
+}
