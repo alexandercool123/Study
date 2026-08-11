@@ -1,0 +1,134 @@
+{
+  "lecture": 1,
+  "lectureTitle": "Threat Modelling and What is Security",
+  "examQuestions": [
+    {
+      "examQ": 1,
+      "subPart": "a",
+      "promptVerbatim": "Define security formally, explain the CIA triad, STRIDE, and Lampson's Policy/Mechanism/Assurance triad."
+    },
+    {
+      "examQ": 1,
+      "subPart": "b",
+      "promptVerbatim": "Perform threat modelling on a small example system."
+    },
+    {
+      "examQ": 1,
+      "subPart": "c",
+      "promptVerbatim": "Discuss how general security definitions relate to specific topics like web security."
+    }
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L1-1a-1",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What is the formal definition of security and what are its three core objectives?",
+      "keyBeats": [
+        "Security = system withstands defined threats with defined policies",
+        "CIA triad: Confidentiality, Integrity, Availability",
+        "Formal definition from lecture01-sos-whatissecurity.pdf, SLIDE 5",
+        "All three must be satisfied for a system to be considered secure"
+      ],
+      "modelAnswer": "Security can be formally defined as the property that a system satisfies its security policy even when facing stated threats. The three core objectives are the CIA triad: Confidentiality (preventing unauthorized disclosure), Integrity (preventing unauthorized modification), and Availability (ensuring authorized access). All three must hold simultaneously for a system to be considered secure.",
+      "citation": "\"Security is the property that a system satisfies its security policy even when facing stated threats\" — lecture01-sos-whatissecurity.pdf, SLIDE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-2",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define each component of the CIA triad precisely.",
+      "keyBeats": [
+        "Confidentiality: information not disclosed to unauthorized individuals/processes",
+        "Integrity: information not modified except by authorized parties",
+        "Availability: information accessible to authorized parties when needed",
+        "All from lecture01-sos-whatissecurity.pdf, SLIDES 6-8"
+      ],
+      "modelAnswer": "Confidentiality means that information is not disclosed to any unauthorized individual, entity, or process. Integrity means that information is not modified in an unauthorized or undetected manner. Availability means that information and systems are accessible and usable by authorized parties when needed. These definitions come directly from the lecture slides on foundational security concepts.",
+      "citation": "\"CIA triad definitions\" — lecture01-sos-whatissecurity.pdf, SLIDES 6-8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-3",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is STRIDE and what does each letter represent?",
+      "keyBeats": [
+        "STRIDE = threat classification model for threat modelling",
+        "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege",
+        "From Threat Modelling- students.pptx, SLIDE 4"
+      ],
+      "modelAnswer": "STRIDE is a threat classification model used in threat modelling. It stands for: Spoofing (impersonating another user/entity), Tampering (modifying data or code), Repudiation (denying an action), Information Disclosure (exposing information to unauthorized parties), Denial of Service (making a service unavailable), and Elevation of Privilege (gaining higher privileges than authorized). This framework helps systematically identify potential threats to a system.",
+      "citation": "\"STRIDE model\" — Threat Modelling- students.pptx, SLIDE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-4",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Explain Lampson's Policy/Mechanism/Assurance triad.",
+      "keyBeats": [
+        "Policy: what the system should do (the rules)",
+        "Mechanism: how the system enforces the policy (the implementation)",
+        "Assurance: confidence that the mechanisms correctly implement the policy",
+        "From bsi-chap3.pdf, PAGE 45"
+      ],
+      "modelAnswer": "Lampson's triad consists of three distinct but related concepts: Policy defines WHAT the system should do - the security rules and objectives. Mechanism defines HOW the system enforces those policies - the technical implementations like access controls, encryption, etc. Assurance is the confidence or evidence that the mechanisms correctly and completely implement the stated policies. All three elements are necessary for effective security.",
+      "citation": "\"Policy, Mechanism, Assurance triad\" — bsi-chap3.pdf, PAGE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1b-1",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Describe the four phases of threat modelling as presented in the lecture.",
+      "keyBeats": [
+        "Phase 1: Model the system (create data flow diagrams)",
+        "Phase 2: Identify threats (using STRIDE per component)",
+        "Phase 3: Address threats (mitigation strategies)",
+        "Phase 4: Validate (verify mitigations work)",
+        "From Threat Modelling- students.pptx, SLIDE 7"
+      ],
+      "modelAnswer": "The four phases of threat modelling are: First, Model the system by creating architectural diagrams such as data flow diagrams that show how data moves through the system. Second, Identify threats by systematically applying frameworks like STRIDE to each component to discover potential vulnerabilities. Third, Address threats by designing and implementing appropriate mitigation strategies for each identified threat. Finally, Validate that the mitigations effectively reduce or eliminate the threats, often through testing and review.",
+      "citation": "\"The Four Phases\" — Threat Modelling- students.pptx, SLIDE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1c-1",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "c",
+      "type": "opener",
+      "question": "How does the CIA triad apply specifically to web security?",
+      "keyBeats": [
+        "Confidentiality: HTTPS encrypts data in transit",
+        "Integrity: digital signatures, HMAC for cookies/sessions",
+        "Availability: DDoS protection, redundant servers",
+        "Paraphrased from lecture01-sos-whatissecurity.pdf, SLIDE 12 and presentation.pdf"
+      ],
+      "modelAnswer": "The CIA triad applies to web security as follows: Confidentiality is achieved through HTTPS/TLS encryption which prevents eavesdropping on data in transit. Integrity is maintained using digital signatures and HMACs to ensure that session cookies and form submissions cannot be tampered with. Availability is addressed through DDoS protection mechanisms, load balancing, and redundant server infrastructure to ensure the web service remains accessible under attack or high load.",
+      "citation": "\"CIA in web context\" — paraphrased from lecture01-sos-whatissecurity.pdf, SLIDE 12 and 2. Web security/presentation.pdf, SLIDE 3",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "CYBER2-L1-E1",
+      "source": "Threat Modelling Workshop",
+      "promptVerbatim": "Create a threat model for a simple online banking login system. Identify at least 5 STRIDE threats and propose mitigations.",
+      "whatItTests": "Understanding of STRIDE framework, ability to apply threat modelling to real systems",
+      "answerSketch": "1. Spoofing: Attacker pretends to be legitimate user. Mitigation: Strong authentication (MFA). 2. Tampering: Attacker modifies login request. Mitigation: HTTPS + request validation. 3. Repudiation: User denies performing transaction. Mitigation: Audit logging. 4. Information Disclosure: Session tokens exposed. Mitigation: Encrypted cookies, short expiration. 5. Denial of Service: Flood login endpoint. Mitigation: Rate limiting. 6. Elevation of Privilege: Exploit admin endpoint. Mitigation: Proper authorization checks."
+    }
+  ]
+}
