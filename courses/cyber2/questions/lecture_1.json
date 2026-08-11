@@ -23,16 +23,16 @@
       "id": "CYBER2-L1-1a-1",
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
-      "type": "opener",
-      "question": "What is the formal definition of security and what are its three core objectives?",
+      "type": "definition",
+      "question": "What is the formal definition of security?",
       "keyBeats": [
-        "Security = system withstands defined threats with defined policies",
-        "CIA triad: Confidentiality, Integrity, Availability",
-        "Formal definition from lecture01-sos-whatissecurity.pdf, SLIDE 5",
-        "All three must be satisfied for a system to be considered secure"
+        "Security = ability of a system to satisfy its goals in the presence of an adversary",
+        "System must have defined goals",
+        "Adversary actively tries to prevent goal satisfaction",
+        "Definition applies to any system (software, hardware, process)"
       ],
-      "modelAnswer": "Security can be formally defined as the property that a system satisfies its security policy even when facing stated threats. The three core objectives are the CIA triad: Confidentiality (preventing unauthorized disclosure), Integrity (preventing unauthorized modification), and Availability (ensuring authorized access). All three must hold simultaneously for a system to be considered secure.",
-      "citation": "\"Security is the property that a system satisfies its security policy even when facing stated threats\" — lecture01-sos-whatissecurity.pdf, SLIDE 5",
+      "modelAnswer": "The formal definition of security from the lecture is: the ability of a system to satisfy its goals in the presence of an adversary. This means a system is secure if it can achieve its intended objectives even when facing active opposition from a threat actor. The definition emphasizes that security is not absolute but relative to specific goals and specific adversaries.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 12",
       "unverified": false,
       "diagram_only": false
     },
@@ -41,15 +41,14 @@
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
       "type": "definition",
-      "question": "Define each component of the CIA triad precisely.",
+      "question": "Define Confidentiality as part of the CIA triad.",
       "keyBeats": [
-        "Confidentiality: information not disclosed to unauthorized individuals/processes",
-        "Integrity: information not modified except by authorized parties",
-        "Availability: information accessible to authorized parties when needed",
-        "All from lecture01-sos-whatissecurity.pdf, SLIDES 6-8"
+        "Confidentiality = keeping secrets... secret",
+        "Prevents unauthorized disclosure",
+        "Examples: passwords, personal data"
       ],
-      "modelAnswer": "Confidentiality means that information is not disclosed to any unauthorized individual, entity, or process. Integrity means that information is not modified in an unauthorized or undetected manner. Availability means that information and systems are accessible and usable by authorized parties when needed. These definitions come directly from the lecture slides on foundational security concepts.",
-      "citation": "\"CIA triad definitions\" — lecture01-sos-whatissecurity.pdf, SLIDES 6-8",
+      "modelAnswer": "Confidentiality means keeping secrets secret - specifically, it is the property that information is not made available or disclosed to unauthorized individuals, entities, or processes. In practical terms, it prevents unauthorized disclosure of sensitive information. Common examples where confidentiality is critical include passwords, personal data, financial information, and proprietary business data.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
       "unverified": false,
       "diagram_only": false
     },
@@ -58,14 +57,15 @@
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
       "type": "definition",
-      "question": "What is STRIDE and what does each letter represent?",
+      "question": "Define Integrity as part of the CIA triad.",
       "keyBeats": [
-        "STRIDE = threat classification model for threat modelling",
-        "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege",
-        "From Threat Modelling- students.pptx, SLIDE 4"
+        "Integrity = ensuring/maintaining authenticity of data",
+        "Only authorized changes allowed",
+        "Prevents unauthorized modification",
+        "Examples: electronic medical records, bank accounts"
       ],
-      "modelAnswer": "STRIDE is a threat classification model used in threat modelling. It stands for: Spoofing (impersonating another user/entity), Tampering (modifying data or code), Repudiation (denying an action), Information Disclosure (exposing information to unauthorized parties), Denial of Service (making a service unavailable), and Elevation of Privilege (gaining higher privileges than authorized). This framework helps systematically identify potential threats to a system.",
-      "citation": "\"STRIDE model\" — Threat Modelling- students.pptx, SLIDE 4",
+      "modelAnswer": "Integrity means ensuring and maintaining the authenticity of data. It ensures that information and systems are only modified in authorized ways by authorized parties. Integrity prevents unauthorized modification, alteration, or tampering with data. Examples where integrity is crucial include electronic medical records (which must not be altered), bank account balances, and personal data that must remain accurate and unmodified.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
       "unverified": false,
       "diagram_only": false
     },
@@ -74,15 +74,146 @@
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
       "type": "definition",
-      "question": "Explain Lampson's Policy/Mechanism/Assurance triad.",
+      "question": "Define Availability as part of the CIA triad.",
       "keyBeats": [
-        "Policy: what the system should do (the rules)",
-        "Mechanism: how the system enforces the policy (the implementation)",
-        "Assurance: confidence that the mechanisms correctly implement the policy",
-        "From bsi-chap3.pdf, PAGE 45"
+        "Availability = ensuring timely access to data for authorized user",
+        "System/services must be accessible when needed",
+        "Examples: MitID, medical records, SCADA (ICS)"
       ],
-      "modelAnswer": "Lampson's triad consists of three distinct but related concepts: Policy defines WHAT the system should do - the security rules and objectives. Mechanism defines HOW the system enforces those policies - the technical implementations like access controls, encryption, etc. Assurance is the confidence or evidence that the mechanisms correctly and completely implement the stated policies. All three elements are necessary for effective security.",
-      "citation": "\"Policy, Mechanism, Assurance triad\" — bsi-chap3.pdf, PAGE 45",
+      "modelAnswer": "Availability means ensuring timely access to data for authorized users. It ensures that systems and information are accessible and usable by authorized parties when they need them. Availability is critical for systems where timely access is essential. Examples include MitID authentication services, medical records that doctors need to access quickly, and SCADA/ICS systems that control industrial processes and must remain operational.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-5",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are Security Policies in the Policies/Goals/Mechanisms/Assurance framework?",
+      "keyBeats": [
+        "High-level overarching (inspired by business risks)",
+        "Example: 'personal information must be secure'",
+        "Broken down into security goals (or properties)"
+      ],
+      "modelAnswer": "Security policies are high-level, overarching directives that are inspired by business risks and requirements. They provide the broadest level of security guidance for an organization. For example, a security policy might state that 'personal information must be secure' without specifying how this is achieved. These policies are then broken down into more specific security goals or properties that can be implemented and verified.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-6",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are Security Goals (security properties/objectives)?",
+      "keyBeats": [
+        "Less abstract than policies, more specific",
+        "Verifiable",
+        "Example: 'info in employee DB must be kept confidential'",
+        "Enforced by security mechanisms"
+      ],
+      "modelAnswer": "Security goals, also called security properties or objectives, are less abstract than policies and are verifiable. They provide specific, measurable targets for security. For example, a security goal might state that 'information in the employee database must be kept confidential' or that the system must maintain the integrity of financial transactions. These goals are enforced and guaranteed by security mechanisms. Common goal frameworks include the CIA model and secure information flow properties like non-interference.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-7",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are Security Mechanisms?",
+      "keyBeats": [
+        "Concrete implementation-level",
+        "Example: 'employee DB must only be accessed by authorized users'",
+        "Other examples: access control, login, process isolation (OS)"
+      ],
+      "modelAnswer": "Security mechanisms are concrete, implementation-level controls that enforce security goals. They are the specific technical measures put in place to achieve security objectives. For example, a security mechanism might state that 'the employee database must only be accessed by authorized users' and implement this through access control lists. Other examples of mechanisms include login systems, process isolation at the OS level, encryption, and authentication protocols.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-8",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is Assurance in the Policies/Goals/Mechanisms/Assurance framework?",
+      "keyBeats": [
+        "Verification that mechanisms work",
+        "Verification that mechanisms enforce goals",
+        "Examples: Secure Information Flow (formal methods), penetration testing"
+      ],
+      "modelAnswer": "Assurance is the verification that security mechanisms work correctly and effectively enforce the stated security goals. It provides confidence that the implementation actually achieves the intended security objectives. Assurance can be obtained through various means, including formal methods like Secure Information Flow analysis, penetration testing, code reviews, and design by contract.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-9",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the STRIDE model?",
+      "keyBeats": [
+        "Threat classification model",
+        "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege",
+        "Used for systematic threat identification"
+      ],
+      "modelAnswer": "STRIDE is a threat classification model used for systematically identifying potential threats to a system. It consists of six categories: Spoofing (impersonating another user or entity), Tampering (modifying data or code), Repudiation (denying an action was performed), Information Disclosure (exposing information to unauthorized parties), Denial of Service (making a service unavailable to legitimate users), and Elevation of Privilege (gaining higher privileges than authorized). STRIDE provides a structured approach to ensure all major threat categories are considered during threat modelling.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-10",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is Threat Modelling?",
+      "keyBeats": [
+        "Structured way of discovering what could go wrong",
+        "Before an attacker can exploit it",
+        "Systematic approach to security"
+      ],
+      "modelAnswer": "Threat modelling is a structured way of discovering what could go wrong in your system before an attacker can exploit it. It is a systematic approach to identifying, understanding, and addressing potential security threats during the design and development phases, rather than after deployment.",
+      "citation": "Threat Modelling- students.pptx, SLIDE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-11",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "How do Security Policies, Goals, Mechanisms, and Assurance relate to each other?",
+      "keyBeats": [
+        "Hierarchy: Policies -> Goals -> Mechanisms",
+        "Policies are high-level and abstract",
+        "Goals are specific and verifiable",
+        "Mechanisms are concrete implementations",
+        "Assurance verifies the whole chain works"
+      ],
+      "modelAnswer": "Security Policies, Goals, Mechanisms, and Assurance form a hierarchy. Policies are high-level, abstract directives inspired by business risks. These are broken down into Security Goals, which are less abstract and verifiable - specific properties the system must have. Security Mechanisms are the concrete implementations that enforce these goals. Finally, Assurance is the verification process that confirms the mechanisms correctly implement the goals, which in turn satisfy the policies.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDES 33-34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1a-12",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are the four phases of threat modelling?",
+      "keyBeats": [
+        "Phase 1: System Description",
+        "Phase 2: Threat Elicitation",
+        "Phase 3: Risk Assessment",
+        "Phase 4: Mitigation Suggestions"
+      ],
+      "modelAnswer": "The four phases of threat modelling are: System Description (defining and documenting the system architecture and components), Threat Elicitation (systematically identifying potential threats using frameworks like STRIDE), Risk Assessment (evaluating the likelihood and impact of identified threats), and Mitigation Suggestions (proposing and implementing controls to address the identified risks).",
+      "citation": "Threat Modelling- students.pptx, SLIDE 9",
       "unverified": false,
       "diagram_only": false
     },
@@ -91,16 +222,34 @@
       "anchorsExamQ": 1,
       "anchorsSubPart": "b",
       "type": "mechanism",
-      "question": "Describe the four phases of threat modelling as presented in the lecture.",
+      "question": "What questions should you ask when defining what it means for a system to be secure?",
       "keyBeats": [
-        "Phase 1: Model the system (create data flow diagrams)",
-        "Phase 2: Identify threats (using STRIDE per component)",
-        "Phase 3: Address threats (mitigation strategies)",
-        "Phase 4: Validate (verify mitigations work)",
-        "From Threat Modelling- students.pptx, SLIDE 7"
+        "What is a system?",
+        "What is a system context?",
+        "What goals does the system have?",
+        "What are the security goals?",
+        "Who/what is an adversary?",
+        "What can an adversary observe?",
+        "What can an adversary influence?"
       ],
-      "modelAnswer": "The four phases of threat modelling are: First, Model the system by creating architectural diagrams such as data flow diagrams that show how data moves through the system. Second, Identify threats by systematically applying frameworks like STRIDE to each component to discover potential vulnerabilities. Third, Address threats by designing and implementing appropriate mitigation strategies for each identified threat. Finally, Validate that the mitigations effectively reduce or eliminate the threats, often through testing and review.",
-      "citation": "\"The Four Phases\" — Threat Modelling- students.pptx, SLIDE 7",
+      "modelAnswer": "When defining what it means for a system to be secure, you should ask: What is the system (its components and boundaries)? What is the system context (the environment it operates in)? What are the system's goals (its functional objectives)? What are the specific security goals? Who or what constitutes an adversary? What can an adversary observe within the system? What can an adversary influence or control? And how should we describe and define an adversary in the context of this specific system?",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1b-2",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "What are the three adversary categories when threat modelling, and which is most dangerous?",
+      "keyBeats": [
+        "External: outside system context",
+        "In context: within OS/laptop, potential problem",
+        "In system: compromised the system, game over - most dangerous"
+      ],
+      "modelAnswer": "Adversaries can be categorized into three groups: External adversaries are outside the system context and typically pose less risk for well-designed local systems. Adversaries in context (within the OS or laptop environment) are a potential problem and require attention. Adversaries in system (those who have compromised the system itself) represent the most dangerous scenario - 'game over' - because they have bypassed all external defenses.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 47",
       "unverified": false,
       "diagram_only": false
     },
@@ -111,13 +260,28 @@
       "type": "opener",
       "question": "How does the CIA triad apply specifically to web security?",
       "keyBeats": [
-        "Confidentiality: HTTPS encrypts data in transit",
-        "Integrity: digital signatures, HMAC for cookies/sessions",
-        "Availability: DDoS protection, redundant servers",
-        "Paraphrased from lecture01-sos-whatissecurity.pdf, SLIDE 12 and presentation.pdf"
+        "Confidentiality: HTTPS/TLS encryption",
+        "Integrity: Digital signatures, HMACs",
+        "Availability: DDoS protection, load balancing"
       ],
-      "modelAnswer": "The CIA triad applies to web security as follows: Confidentiality is achieved through HTTPS/TLS encryption which prevents eavesdropping on data in transit. Integrity is maintained using digital signatures and HMACs to ensure that session cookies and form submissions cannot be tampered with. Availability is addressed through DDoS protection mechanisms, load balancing, and redundant server infrastructure to ensure the web service remains accessible under attack or high load.",
-      "citation": "\"CIA in web context\" — paraphrased from lecture01-sos-whatissecurity.pdf, SLIDE 12 and 2. Web security/presentation.pdf, SLIDE 3",
+      "modelAnswer": "The CIA triad applies to web security through: Confidentiality via HTTPS/TLS encryption preventing eavesdropping; Integrity via digital signatures and HMACs ensuring data cannot be tampered with; Availability via DDoS protection and load balancing ensuring services remain accessible.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-1c-2",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "c",
+      "type": "opener",
+      "question": "How do general security definitions relate to secure information flow?",
+      "keyBeats": [
+        "Secure information flow is a security goal",
+        "Non-interference is a formal definition",
+        "Connects to Confidentiality and Integrity from CIA"
+      ],
+      "modelAnswer": "Secure information flow is a security goal derived from the CIA triad. It relates to Confidentiality (preventing unauthorized disclosure) and Integrity (preventing unauthorized modification). Non-interference, a formal definition, states that high-security level actions should not affect low-security levels.",
+      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
       "unverified": false,
       "diagram_only": false
     }
@@ -125,10 +289,17 @@
   "exercises": [
     {
       "id": "CYBER2-L1-E1",
-      "source": "Threat Modelling Workshop",
-      "promptVerbatim": "Create a threat model for a simple online banking login system. Identify at least 5 STRIDE threats and propose mitigations.",
-      "whatItTests": "Understanding of STRIDE framework, ability to apply threat modelling to real systems",
-      "answerSketch": "1. Spoofing: Attacker pretends to be legitimate user. Mitigation: Strong authentication (MFA). 2. Tampering: Attacker modifies login request. Mitigation: HTTPS + request validation. 3. Repudiation: User denies performing transaction. Mitigation: Audit logging. 4. Information Disclosure: Session tokens exposed. Mitigation: Encrypted cookies, short expiration. 5. Denial of Service: Flood login endpoint. Mitigation: Rate limiting. 6. Elevation of Privilege: Exploit admin endpoint. Mitigation: Proper authorization checks."
+      "source": "Lecture 1 Workshop",
+      "promptVerbatim": "Define what security means for a password manager (as a local application) using the definition: 'The ability of a system to satisfy its goals in the presence of an adversary'.",
+      "whatItTests": "Application of formal security definition to concrete system",
+      "answerSketch": "System: password manager software. Goal: provide secure storage of passwords. Context: OS/laptop. Adversaries: External (minimal), In context (potential), In system (game over). Security means satisfying the goal despite these adversaries."
+    },
+    {
+      "id": "CYBER2-L1-E2",
+      "source": "Threat Modelling Exercise",
+      "promptVerbatim": "Using STRIDE, identify and categorize at least 3 threats to a password manager and propose mitigations.",
+      "whatItTests": "Application of STRIDE framework",
+      "answerSketch": "Spoofing: Impersonate user → MFA. Tampering: Modify passwords → Encryption + integrity checks. Information Disclosure: Read passwords → Strong encryption. DoS: Prevent access → Rate limiting + redundancy."
     }
   ]
 }
