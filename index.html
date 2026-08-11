@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IAM Oral Exam — Study</title>
+<title>Study — Oral Exam Trainer</title>
 <style>
   :root{
     --bg:#0e1116; --bg2:#161b22; --bg3:#1c2330; --line:#2a3340;
@@ -15,7 +15,12 @@
   header{position:sticky;top:0;z-index:10;background:var(--bg2);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
   header h1{font-size:16px;margin:0;font-weight:600;letter-spacing:.2px}
   header .sub{color:var(--mut);font-size:12px}
-  nav{margin-left:auto;display:flex;gap:6px}
+  .course-selector{display:flex;gap:8px;align-items:center;margin-left:auto;}
+  .course-selector select{background:var(--bg3);color:var(--fg);border:1px solid var(--line);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px;min-width:180px;}
+  .course-selector select:focus{outline:none;border-color:var(--acc)}
+  .course-info{color:var(--mut);font-size:12px;display:flex;gap:12px;align-items:center;}
+  .course-badge{background:var(--bg3);border:1px solid var(--line);padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;}
+  nav{margin-left:8px;display:flex;gap:6px}
   nav button{background:var(--bg3);color:var(--fg);border:1px solid var(--line);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:13px}
   nav button.active{background:var(--acc);color:#04101f;border-color:var(--acc);font-weight:600}
   main{max-width:1000px;margin:0 auto;padding:18px 16px 80px}
@@ -56,7 +61,6 @@
   .exrow .ans{margin-top:6px;font-size:13px;background:var(--bg3);padding:8px 10px;border-radius:6px;display:none}
   .exrow .ans.show{display:block}
   .grp{font-size:13px;color:var(--mut);margin:22px 0 6px;text-transform:uppercase;letter-spacing:.6px}
-  /* comments section */
   .comment-section{background:var(--bg3);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;position:relative}
   .comment-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:0 0 6px;display:flex;align-items:center;gap:6px}
   .comment-saved{font-size:11px;color:var(--ok);opacity:0;transition:opacity .2s;pointer-events:none}
@@ -64,11 +68,10 @@
   .comment-input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--fg);padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;min-height:60px;box-sizing:border-box}
   .comment-input:focus{outline:none;border-color:var(--acc)}
   .comment-input.has-content{border-color:var(--acc2)}
-  /* quiz */
   #quizArea{text-align:center}
   .drawbtn{background:var(--acc);color:#04101f;border:none;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer}
   .timer{font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;margin:10px 0}
-  .timer.warn{color:var(--warn)} .timer.over{color:var(--bad)}
+  .timer.warn{color:var(--warn)}.timer.over{color:var(--bad)}
   .tctrl button{margin:0 4px}
   .grade button{padding:10px 18px;border-radius:8px;border:1px solid var(--line);cursor:pointer;font-weight:600;margin:0 5px}
   .grade .pass{background:rgba(63,185,80,.18);color:var(--ok);border-color:var(--ok)}
@@ -79,7 +82,6 @@
   .miss{color:var(--bad);font-size:13px}
   a{color:var(--acc)}
   .tip{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--mut);margin:6px 0 16px}
-  /* export modal */
   .modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.6)}
   .modal.show{display:flex;align-items:center;justify-content:center}
   .modal-content{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:800px;max-height:80vh;overflow:auto;position:relative}
@@ -89,12 +91,21 @@
   .modal-actions{margin-top:14px;display:flex;gap:8px}
   .modal-actions button{flex:1;padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:var(--bg3);color:var(--fg);cursor:pointer;font-weight:600}
   .modal-actions button:hover{border-color:var(--acc)}
+  .loading{color:var(--mut);font-style:italic;padding:20px;text-align:center}
 </style>
 </head>
 <body>
 <header>
-  <h1>IAM Oral Exam Trainer</h1>
-  <span class="sub">9 known questions · draw 2 · 15 min talk · no notes</span>
+  <h1 id="courseTitle">Study — Oral Exam Trainer</h1>
+  <span class="sub" id="courseSubtitle">Select a course below</span>
+  <div class="course-selector">
+    <select id="courseSelect" onchange="switchCourse()">
+      <option value="">— Select Course —</option>
+      <option value="iam">IAM Oral Exam</option>
+      <option value="cyber2">Software Security (CYBER2)</option>
+    </select>
+    <div class="course-info" id="courseInfo"></div>
+  </div>
   <nav>
     <button id="navHybrid" class="active" onclick="show('hybrid')">Questions</button>
     <button id="navExercises" onclick="show('exercises')">Exercises</button>
@@ -104,13 +115,15 @@
   </nav>
 </header>
 <main>
-  <section id="view-hybrid">
+  <div id="loading" class="loading">Loading course data...</div>
+  
+  <section id="view-hybrid" class="hidden">
     <div class="tip">Each exam question expands into its a/b/c sub-parts and granular drill questions. Answer aloud first, then <b>Reveal</b>. Add <b>comments</b> to any drill — they persist. <b>Key beats</b> = the skeleton to say; <b>Model answer</b> = the spoken prose. Citations trace every fact to a slide/page.</div>
     <div id="hybridList"></div>
   </section>
 
   <section id="view-exercises" class="hidden">
-    <div class="tip">Every exercise prompt collected from the course material. The examiner may ask you to explain these (esp. OAuth &amp; OpenID Connect). Don't be surprised orally. Add comments to track your progress.</div>
+    <div class="tip">Every exercise prompt collected from the course material. The examiner may ask you to explain these. Don't be surprised orally. Add comments to track your progress.</div>
     <div id="exerciseList"></div>
   </section>
 
@@ -138,51 +151,183 @@
 </div>
 
 <script>
-// ---- The 9 known exam questions (verbatim from "Info about exam exam questions 2026.txt") ----
-const EXAM = [
- {n:1,title:"Essential Concepts for IAM",anchor:1,parts:{
-   a:"Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized.",
-   b:"Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?",
-   c:"Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"}},
- {n:2,title:"Digital identities and credentials",anchor:2,parts:{
-   a:"What is a digital identity? Discuss important concepts, terms and principles.",
-   b:"Explain the difference between identification, identity proofing and authentication.",
-   c:"Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these."}},
- {n:3,title:"Authentication",anchor:3,parts:{
-   a:"What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems.",
-   b:"What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?",
-   c:"What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?"}},
- {n:4,title:"FIDO and WebAuthn",anchor:4,parts:{
-   a:"Explain the steps in FIDO Registration and Login (including all challenge and response details).",
-   b:"What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented.",
-   c:"Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys (exercise from slide on Spot the Phishing Attempt)?"}},
- {n:5,title:"Access control and policies",anchor:5,parts:{
-   a:"Explain the difference between authentication and authorization. How can authorization be implemented?",
-   b:"Explain the key parts of XACML 3.0 and its policy architecture.",
-   c:"Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."}},
- {n:6,title:"Single Sign-On systems and SAML",anchor:6,parts:{
-   a:"Explain the concept and principles of Single Sign-On. What are the pros and cons?",
-   b:"Discuss the working principles of SAML, its architecture, and typical use cases.",
-   c:"Discuss different types of SAML assertions and their content."}},
- {n:7,title:"JSON Web Tokens (JWT)",anchor:10,parts:{
-   a:"How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?",
-   b:"Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?",
-   c:"Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier), and what do they do?"}},
- {n:8,title:"OAuth 2.0",anchor:7,parts:{
-   a:"What is the main idea of OAuth 2.0?",
-   b:"Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.",
-   c:"What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."}},
- {n:9,title:"OpenID Connect",anchor:11,parts:{
-   a:"How does OpenID Connect relate to OAuth 2.0? What is it used for?",
-   b:"Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.",
-   c:"Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?"}}
-];
+// ============================================
+// COURSE CONFIGURATION
+// ============================================
 
-let DATA = {};        // lecture number -> json
-let DRILLS = [];      // flattened drills
-let EXS = [];         // flattened exercises
+const COURSES = {
+  iam: {
+    name: "IAM Oral Exam",
+    subtitle: "9 known questions · draw 2 · 15 min talk · no notes",
+    dataPath: "questions/",
+    exam: [
+      {n:1,title:"Essential Concepts for IAM",anchor:1,parts:{
+        a:"Discuss the main security objectives in IAM (confidentiality, integrity, authenticity, ...) and give examples of how they can be realized.",
+        b:"Why is secure key distribution a problem in symmetric key cryptography? What are the advantages and limitations of symmetric key cryptography?",
+        c:"Explain the concept of non-repudiation. How is it different from authenticity? Why can't symmetric encryption alone provide non-repudiation? What role do digital signatures play in IAM systems?"
+      }},
+      {n:2,title:"Digital identities and credentials",anchor:2,parts:{
+        a:"What is a digital identity? Discuss important concepts, terms and principles.",
+        b:"Explain the difference between identification, identity proofing and authentication.",
+        c:"Explain the relationship between claims, assertions, and credentials, and discuss the key technologies that are used in these."
+      }},
+      {n:3,title:"Authentication",anchor:3,parts:{
+        a:"What are authentication factors and authenticators? Discuss how different assurance levels can be achieved in IAM systems.",
+        b:"What is Kerberos and why was it developed? What problem does Kerberos solve in IAM systems? How does it reduce password exposure risks?",
+        c:"What is the purpose of a digital certificate in secure communication? What information is typically included in an X.509 certificate? How does the certificate ensure trust between two parties?"
+      }},
+      {n:4,title:"FIDO and WebAuthn",anchor:4,parts:{
+        a:"Explain the steps in FIDO Registration and Login (including all challenge and response details).",
+        b:"What is FIDO2? Explain the difference between U2F and FIDO2. Explain the purpose of FIDO attestation keys and how they are implemented.",
+        c:"Explain the purpose and advantages of Passkeys. Can replay attack and phishing attacks be avoided by passkeys?"
+      }},
+      {n:5,title:"Access control and policies",anchor:5,parts:{
+        a:"Explain the difference between authentication and authorization. How can authorization be implemented?",
+        b:"Explain the key parts of XACML 3.0 and its policy architecture.",
+        c:"Discuss the RBAC and ABAC approaches to access control, and the benefits and challenges associated with each of them."
+      }},
+      {n:6,title:"Single Sign-On systems and SAML",anchor:6,parts:{
+        a:"Explain the concept and principles of Single Sign-On. What are the pros and cons?",
+        b:"Discuss the working principles of SAML, its architecture, and typical use cases.",
+        c:"Discuss different types of SAML assertions and their content."
+      }},
+      {n:7,title:"JSON Web Tokens (JWT)",anchor:10,parts:{
+        a:"How is a JWT different from a session ID? In what scenarios would you prefer using JWT over traditional session management?",
+        b:"Explain the structure of a JWT. What does the header typically contain? What types of claims can be found in the payload? How is the signature generated and what role does it play?",
+        c:"Describe how Verifiable Credentials (VCs) work. What are the components of a VC? Who are the key roles (issuer, holder, verifier)?"
+      }},
+      {n:8,title:"OAuth 2.0",anchor:7,parts:{
+        a:"What is the main idea of OAuth 2.0?",
+        b:"Discuss the working principles of OAuth 2.0 in detail, including roles, grants, client profiles, tokens, endpoints, information flow and the use of scopes.",
+        c:"What problems do PKCE and DPoP solve? Explain the exercises with OAuth 2.0."
+      }},
+      {n:9,title:"OpenID Connect",anchor:11,parts:{
+        a:"How does OpenID Connect relate to OAuth 2.0? What is it used for?",
+        b:"Discuss the working principles of OpenID Connect, including tokens, endpoints, information flow and the use of scopes.",
+        c:"Explain the exercises with OpenID Connect. How can an application be set up to fetch user information (with the user's consent)?"
+      }}
+    ]
+  },
+  cyber2: {
+    name: "Software Security (CYBER2)",
+    subtitle: "Oral exam: 5-10 min presentation + Q&A on ANY topic · 1 page of notes",
+    dataPath: "courses/cyber2/questions/",
+    exam: [
+      {n:1,title:"Threat Modelling and What is Security",anchor:1,parts:{
+        a:"Define security formally, explain the CIA triad, STRIDE, and Lampson's Policy/Mechanism/Assurance triad.",
+        b:"Perform threat modelling on a small example system.",
+        c:"Discuss how general security definitions relate to specific topics like web security."
+      }},
+      {n:2,title:"Web Security",anchor:2,parts:{
+        a:"Explain the general security model for web-based systems.",
+        b:"Describe common attack modes and corresponding mitigation strategies.",
+        c:"Discuss OWASP ASVS and its relevance."
+      }},
+      {n:3,title:"Injection Attacks and Taint Analysis",anchor:3,parts:{
+        a:"Define injection attacks with examples (SQL injection, etc.).",
+        b:"Explain what taint analysis is and how it can mitigate injection attacks.",
+        c:"Describe control flow graphs (CFGs), in/out equations, and static taint analysis rules."
+      }},
+      {n:4,title:"Symbolic Execution",anchor:4,parts:{
+        a:"Explain what symbolic execution is and its underlying formalism.",
+        b:"Describe what symbolic execution is useful for.",
+        c:"Explain how symbolic execution is used in Angr."
+      }},
+      {n:5,title:"Secure C",anchor:5,parts:{
+        a:"Discuss general security weaknesses of C.",
+        b:"Explain common attacks: buffer overflow, integer under/overflow, format strings.",
+        c:"Describe mitigation techniques for C vulnerabilities."
+      }},
+      {n:6,title:"Secure Java",anchor:6,parts:{
+        a:"Explain Java's security model: type safety, sandboxing, bytecode verification.",
+        b:"Discuss the consequences of Java's security mechanisms for program security.",
+        c:"Describe vulnerabilities covered in lectures and their mitigations."
+      }},
+      {n:7,title:"Types for Secure Information Flow",anchor:7,parts:{
+        a:"Define non-interference formally and explain what it guarantees.",
+        b:"Discuss why non-interference is too strong for most practical uses.",
+        c:"Explain how type systems can guarantee non-interference."
+      }}
+    ]
+  }
+};
 
-// ---- localStorage helpers ----
+// ============================================
+// GLOBAL STATE
+// ============================================
+
+let CURRENT_COURSE = null;
+let DATA = {};
+let DRILLS = [];
+let EXS = [];
+let EXAM = [];
+
+// ============================================
+// COURSE SWITCHING
+// ============================================
+
+function switchCourse() {
+  const selectEl = document.getElementById('courseSelect');
+  const courseKey = selectEl.value;
+  
+  if (!courseKey) {
+    CURRENT_COURSE = null;
+    EXAM = [];
+    document.getElementById('courseTitle').textContent = 'Study — Oral Exam Trainer';
+    document.getElementById('courseSubtitle').textContent = 'Select a course below';
+    document.getElementById('courseInfo').innerHTML = '';
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('view-hybrid').classList.add('hidden');
+    document.getElementById('view-exercises').classList.add('hidden');
+    document.getElementById('view-quiz').classList.add('hidden');
+    return;
+  }
+  
+  const course = COURSES[courseKey];
+  CURRENT_COURSE = course;
+  EXAM = course.exam;
+  
+  document.getElementById('courseTitle').textContent = course.name + ' — Study';
+  document.getElementById('courseSubtitle').textContent = course.subtitle;
+  document.getElementById('courseInfo').innerHTML = `<span class="course-badge">${courseKey.toUpperCase()}</span>`;
+  
+  document.getElementById('loading').classList.remove('hidden');
+  document.getElementById('view-hybrid').classList.add('hidden');
+  document.getElementById('view-exercises').classList.add('hidden');
+  document.getElementById('view-quiz').classList.add('hidden');
+  
+  loadCourseData(course);
+}
+
+async function loadCourseData(course) {
+  DATA = {};
+  DRILLS = [];
+  EXS = [];
+  
+  const nums = Array.from({length: 11}, (_, i) => i + 1);
+  await Promise.all(nums.map(async n => {
+    try {
+      const r = await fetch(course.dataPath + `lecture_${n}.json`, {cache: "no-store"});
+      if (!r.ok) return;
+      const j = await r.json();
+      DATA[n] = j;
+      (j.drills || []).forEach(d => DRILLS.push({...d, lecture: n, lectureTitle: j.lectureTitle}));
+      (j.exercises || []).forEach(e => EXS.push({...e, lecture: n, lectureTitle: j.lectureTitle}));
+    } catch (e) {}
+  }));
+  
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('view-hybrid').classList.remove('hidden');
+  
+  renderHybrid();
+  renderExercises();
+  show('hybrid');
+}
+
+// ============================================
+// ORIGINAL FUNCTIONS
+// ============================================
+
 function getComment(key){return localStorage.getItem('iam_comment_'+key)||"";}
 function setComment(key,val){
   if(val.trim()){localStorage.setItem('iam_comment_'+key,val);}
@@ -202,42 +347,6 @@ function getAllComments(){
 }
 
 function esc(s){return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-
-async function loadAll(){
-  const nums=[1,2,3,4,5,6,7,8,9,10,11];
-  await Promise.all(nums.map(async n=>{
-    try{
-      const r=await fetch(`questions/lecture_${n}.json`,{cache:"no-store"});
-      if(!r.ok) return;
-      const j=await r.json();
-      DATA[n]=j;
-      (j.drills||[]).forEach(d=>DRILLS.push({...d,lecture:n,lectureTitle:j.lectureTitle}));
-      (j.exercises||[]).forEach(e=>EXS.push({...e,lecture:n,lectureTitle:j.lectureTitle}));
-    }catch(e){/* malformed / missing -> skip */}
-  }));
-  renderHybrid(); renderExercises();
-}
-
-const _commentTimers={};
-function commentSection(key){
-  const stored=getComment(key);
-  return `<div class="comment-section">
-    <div class="comment-label">💭 Your notes <span class="comment-saved" id="saved_${key}">✓ saved</span></div>
-    <textarea class="comment-input ${stored?"has-content":""}" id="comment_${key}" placeholder="Add your notes, gaps to fix, or reminders..."
-      oninput="autoSaveComment('${key}')">${esc(stored)}</textarea>
-  </div>`;
-}
-function autoSaveComment(key){
-  clearTimeout(_commentTimers[key]);
-  _commentTimers[key]=setTimeout(()=>{
-    const el=document.getElementById('comment_'+key);
-    if(!el)return;
-    setComment(key,el.value);
-    el.classList.toggle('has-content',!!el.value.trim());
-    const tick=document.getElementById('saved_'+key);
-    if(tick){tick.classList.add('show');setTimeout(()=>tick.classList.remove('show'),1500);}
-  },600);
-}
 
 function drillCard(d,examQ){
   const key=`q${examQ}_${d.id||Math.random()}`;
@@ -263,6 +372,7 @@ function drillCard(d,examQ){
 
 function renderHybrid(){
   const host=document.getElementById('hybridList');
+  if(!EXAM.length){host.innerHTML=`<p class="miss">No exam questions loaded. Select a course first.</p>`;return;}
   host.innerHTML = EXAM.map(q=>{
     const lec=DATA[q.anchor];
     const subs=Object.keys(q.parts).map(sp=>{
@@ -290,7 +400,7 @@ function renderHybrid(){
 
 function renderExercises(){
   const host=document.getElementById('exerciseList');
-  if(!EXS.length){host.innerHTML=`<p class="miss">No exercises loaded yet. (Build the lecture JSON files in questions/.)</p>`;return;}
+  if(!EXS.length){host.innerHTML=`<p class="miss">No exercises loaded yet. (Build the lecture JSON files in ${CURRENT_COURSE ? CURRENT_COURSE.dataPath : 'questions/'}.)</p>`;return;}
   let html="";
   const byLec={};
   EXS.forEach(e=>{(byLec[e.lecture]=byLec[e.lecture]||[]).push(e);});
@@ -313,12 +423,40 @@ function renderExercises(){
   host.innerHTML=html;
 }
 
-// -------- Export --------
+// ============================================
+// COMMENT SYSTEM
+// ============================================
+
+const _commentTimers={};
+function commentSection(key){
+  const stored=getComment(key);
+  return `<div class="comment-section">
+    <div class="comment-label">💭 Your notes <span class="comment-saved" id="saved_${key}">✓ saved</span></div>
+    <textarea class="comment-input ${stored?"has-content":""}" id="comment_${key}" placeholder="Add your notes, gaps to fix, or reminders..."
+      oninput="autoSaveComment('${key}')">${esc(stored)}</textarea>
+  </div>`;
+}
+function autoSaveComment(key){
+  clearTimeout(_commentTimers[key]);
+  _commentTimers[key]=setTimeout(()=>{
+    const el=document.getElementById('comment_'+key);
+    if(!el)return;
+    setComment(key,el.value);
+    el.classList.toggle('has-content',!!el.value.trim());
+    const tick=document.getElementById('saved_'+key);
+    if(tick){tick.classList.add('show');setTimeout(()=>tick.classList.remove('show'),1500);}
+  },600);
+}
+
+// ============================================
+// EXPORT
+// ============================================
+
 function openExport(){
   const comments=getAllComments();
-  let text="=== IAM ORAL EXAM STUDY EXPORT ===\n\n";
+  const courseName = CURRENT_COURSE ? CURRENT_COURSE.name : "STUDY";
+  let text="=== " + courseName + " EXAM STUDY EXPORT ===\n\n";
   
-  // Questions with comments
   EXAM.forEach(q=>{
     const lec=DATA[q.anchor];
     text+=`\n## QUESTION ${q.n}: ${q.title}\n`;
@@ -338,7 +476,6 @@ function openExport(){
     });
   });
   
-  // Exercises with comments
   text+="\n\n=== EXERCISES ===\n";
   const byLec={};
   EXS.forEach(e=>{(byLec[e.lecture]=byLec[e.lecture]||[]).push(e);});
@@ -373,9 +510,13 @@ function copyExportText(){
   });
 }
 
-// -------- Quiz mode --------
+// ============================================
+// QUIZ MODE
+// ============================================
+
 let timerId=null, remaining=900, stats={pass:0,unsure:0,fail:0};
 function drawQuestion(){
+  if(!EXAM.length){alert("No questions loaded. Select a course first.");return;}
   const q=EXAM[Math.floor(Math.random()*EXAM.length)];
   const lec=DATA[q.anchor];
   const subs=Object.keys(q.parts).map(sp=>{
@@ -424,6 +565,10 @@ function grade(g){stats[g]++;pauseTimer();
   drawQuestion();
 }
 
+// ============================================
+// NAVIGATION
+// ============================================
+
 function show(v){
   ['hybrid','exercises','quiz'].forEach(x=>{
     document.getElementById('view-'+x).classList.toggle('hidden',x!==v);
@@ -431,17 +576,15 @@ function show(v){
   });
   if(v!=='quiz')pauseTimer();
 }
-loadAll();
+
+// ============================================
+// INITIALIZE
+// ============================================
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('courseSelect').value = 'iam';
+  switchCourse();
+});
 </script>
 </body>
 </html>
-
-
-
-   cd ~/claude-code/workspace/study
-   git init
-   git add .
-   git commit -m "initial"
-   git remote add origin https://github.com/alexandercool123/study.git
-   git branch -M main
-   git push -u origin main

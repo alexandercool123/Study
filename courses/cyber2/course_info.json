@@ -1,0 +1,16 @@
+{
+  "courseName": "Software Security (CYBER2)",
+  "courseCode": "CYBER2",
+  "examFormat": "Oral exam: 5-10 min presentation + Q&A on ANY topic",
+  "notesAllowed": "1 page of notes",
+  "numLectures": 7,
+  "topics": [
+    "Threat Modelling and What is Security",
+    "Web Security",
+    "Injection Attacks and Taint Analysis",
+    "Symbolic Execution",
+    "Secure C",
+    "Secure Java",
+    "Types for Secure Information Flow"
+  ]
+}
