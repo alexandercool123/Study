@@ -1,0 +1,438 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 4,
+  "lectureTitle": "Symbolic Execution",
+  "examQuestions": [
+    {"examQ": 4, "subPart": "a", "promptVerbatim": "Explain what symbolic execution is and its underlying formalism."},
+    {"examQ": 4, "subPart": "b", "promptVerbatim": "Describe what symbolic execution is useful for."},
+    {"examQ": 4, "subPart": "c", "promptVerbatim": "Explain how symbolic execution is used in Angr."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L4-01-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "In one or two sentences, what is symbolic execution?",
+      "keyBeats": [
+        "Executes the program with symbolic (unknown) values instead of concrete inputs",
+        "Explores program behaviour/paths for whole classes of inputs at once rather than one fixed input",
+        "Originally proposed in the 70s, reappeared late 90s/early 2000s",
+        "Fairly simple idea in principle, hard to implement well in practice"
+      ],
+      "modelAnswer": "Symbolic execution is a program analysis technique that examines a program's behaviour by running it with symbolic values in place of concrete input values, so that instead of tracing a single execution for one specific input, the analysis can reason about entire classes of inputs and the different execution paths they would trigger. The idea was originally proposed in the 1970s, largely disappeared, and then reappeared in the late 1990s/early 2000s as tools and solvers became powerful enough to make it practical. It is conceptually a fairly simple idea, but is notoriously hard to get right in practice.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-02-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In symbolic execution, what replaces a concrete input value, and what is a 'symbolic store'?",
+      "keyBeats": [
+        "Concrete inputs are replaced with fresh symbols (e.g., α) standing for 'any possible value'",
+        "The symbolic store σ maps program variables to symbolic expressions/values instead of concrete numbers",
+        "A program counter (PC) still tracks which statement is being executed, exactly as in concrete execution",
+        "Assignments and arithmetic manipulate symbolic expressions rather than producing a single number"
+      ],
+      "modelAnswer": "In concrete execution a variable is bound to one actual value (e.g., x=5); in symbolic execution, whenever an input's value is not statically known (a function parameter, data read from the environment, etc.) it is instead given a fresh symbol α that stands for 'any value of the right type'. The engine keeps a symbolic store that maps each program variable to either a concrete value or a symbolic expression built from these symbols (e.g., x ↦ α, or after x = α+1, x ↦ α+1). A program counter/next-statement pointer still tracks where execution currently is, exactly as in ordinary execution; the difference is only in what is stored for the variables' values, and in the fact that a single symbolic run implicitly represents many concrete runs at once.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 26-30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-03-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a 'path constraint', and how does it fit into the formal notion of a symbolic execution state?",
+      "keyBeats": [
+        "A symbolic execution state can be seen as a triple (PC/stmt, symbolic store σ, path constraint π)",
+        "π is a boolean formula recording the branch conditions taken so far to reach this state",
+        "Starts as true (tt) and gets conjoined with a (negated) branch condition at every conditional",
+        "π defines exactly the class of concrete inputs that would follow this particular path"
+      ],
+      "modelAnswer": "Formally, a symbolic execution state can be described as a triple (stmt, σ, π): stmt (or the program counter) is the next statement to execute, σ is the symbolic store mapping variables to symbolic expressions, and π is the path constraint — a boolean formula over the input symbols that captures every branch decision made so far to reach that state. π starts as 'true' at the program's entry. Each time the engine evaluates a conditional, it forks the state in two: one continues with π ∧ e (the branch was taken) and the other with π ∧ ¬e (the branch was not taken). π therefore exactly characterizes the class of concrete inputs that would drive execution down this specific path; solving π with a constraint solver yields a concrete input that actually realizes the path.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 27-33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-04-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through what happens, mechanically, when the symbolic execution engine reaches an if-statement whose condition depends on a symbolic value.",
+      "keyBeats": [
+        "Condition e is evaluated symbolically into a boolean expression over symbols",
+        "Execution forks into two independent states, one per branch",
+        "True-branch state gets π ∧ e; false-branch state gets π ∧ ¬e",
+        "Both states continue execution independently from that point, producing a tree"
+      ],
+      "modelAnswer": "When the engine hits a conditional whose guard e involves a symbolic value, it cannot decide which branch is taken (there is no single concrete value to check). Instead it evaluates e to a symbolic boolean expression and forks the current state into two independent successor states: one that takes the true branch, whose path constraint becomes the old constraint conjoined with e (π ∧ e), and one that takes the false branch, whose path constraint becomes π ∧ ¬e. From that point on the two states are executed independently, each carrying its own symbolic store and path constraint, and each may itself fork again at later branches — this is exactly what produces the branching 'symbolic execution tree'. On the lecture's example, after 'if (x <= z)' the two resulting states carry constraints 'tt ∧ α ≤ 5' and 'tt ∧ α > 5' respectively.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 31-33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-05-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The lecture first shows 'explicit-state model checking' on an example program before introducing symbolic execution. What is the fundamental problem with that explicit-state approach that symbolic execution addresses?",
+      "keyBeats": [
+        "Explicit-state model checking enumerates every reachable concrete state individually (passed/waiting worklist algorithm)",
+        "Every possible concrete value an unconstrained variable (x = ??) can take must be explored as a separate state",
+        "Way too many states in practice — the reachable state space can even be infinite",
+        "Symbolic execution instead represents a whole class of concrete states at once using a symbol, avoiding per-value enumeration"
+      ],
+      "modelAnswer": "In the explicit-state model checking example, whenever the program assigns a nondeterministic/unknown value to a variable (x = ?? si8), the model checker must explore one successor state per possible concrete value that variable could take, tracking a 'passed'/'waiting' worklist of concrete states ([PC, x, y, z] tuples) until no new states are produced. The problem the lecture highlights is that this blows up: there are simply way too many concrete states to enumerate, and the reachable state space can even be infinite. Symbolic execution's response to exactly this problem is to keep the unknown value as a single symbol α rather than enumerating every value it could take, so one symbolic state implicitly stands for the entire class of concrete states sharing the same control-flow path, dramatically cutting down the number of states that must be tracked.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 21-22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-06-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What role does an SMT solver play in symbolic execution, and what does 'SMT' stand for?",
+      "keyBeats": [
+        "SMT = Satisfiability Modulo Theories",
+        "It is the constraint solver at the end of the pipeline: Code → (symbolic) Exploration → Path Constraints → Constraint Solver → Result",
+        "Takes the accumulated path constraint and finds a satisfying assignment for the symbols",
+        "Output is concrete values for the symbolic inputs that realize a given path (or proves it infeasible if unsatisfiable)"
+      ],
+      "modelAnswer": "SMT stands for Satisfiability Modulo Theories. In the symbolic execution pipeline shown in the lecture (Code → symbolic Exploration → Path Constraints → Constraint Solver → Result), once exploration has produced a path constraint (a boolean formula built from comparisons and arithmetic over the symbolic inputs), an SMT solver is invoked to decide whether that formula is satisfiable and, if so, to produce a concrete satisfying assignment. That assignment gives concrete values for the originally symbolic inputs that are guaranteed to actually drive a real (concrete) execution down the same path — e.g., an input that reaches an assert(0) and violates it. If the constraint is unsatisfiable, the corresponding path is infeasible and can be discarded.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 39-40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-07-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Sketch the symbolic execution tree for the lecture's small example program (z=5; x=??; if (x<=z) { if (x > z+10) { assert(0); } }), labelling each branch/leaf with its path constraint.",
+      "keyBeats": [
+        "Root: entry state where x and z are both still unassigned",
+        "After z=5 and x=α: a single line down to the first branch, constraint still tt",
+        "Branch 1 (x<=z) splits into α≤5 (continues into inner if) and α>5 (exits, skipping inner if)",
+        "Branch 2 (inner if, only reached when α≤5) splits into α≤5∧α>15 (reaches assert(0)) and α≤5∧α≤15 (skips it)"
+      ],
+      "modelAnswer": "The symbolic execution tree starts at the entry with x and z unconstrained, becomes a single line after the two assignments z=5 and x=α (path constraint still 'tt'), and then branches at 'if (x<=z)': the left child continues with constraint α ≤ 5, the right child terminates the outer block with constraint α > 5 (since z=5, the condition 'x<=z' becomes α≤5). Only the left child (α≤5) reaches the inner 'if (x > z+10)', i.e. 'if (x > 15)', which itself branches into a child with constraint α≤5 ∧ α>15 that reaches the assert(0) statement, and a child with constraint α≤5 ∧ α≤15 that skips it and exits normally. Because 5 and 15 don't overlap in a way that makes 'α≤5 ∧ α>15' satisfiable (α cannot be both ≤5 and >15), the assert(0) branch is actually infeasible — solving its path constraint with the SMT solver would report unsatisfiable, so no concrete input triggers that assertion violation in this particular program.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 41",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L4-08-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In the formal treatment of symbolic execution, what do 'soundness' and 'completeness' mean for an exhaustive symbolic execution, and why does this matter in practice?",
+      "keyBeats": [
+        "Soundness: no false negatives — every possible property-violating input is guaranteed to be found",
+        "Completeness: no false positives — every input flagged as unsafe genuinely is unsafe",
+        "Exhaustive symbolic execution is, in theory, sound and complete for decidable properties",
+        "In practice it does not scale, so real tools trade soundness/completeness for performance"
+      ],
+      "modelAnswer": "Exhaustive symbolic execution is, from a theoretical standpoint, both sound and complete for decidable properties: soundness means it produces no false negatives, i.e., if there exists any concrete input that violates the property being checked, exhaustive exploration is guaranteed to eventually find it; completeness means no false positives, i.e., any input the analysis flags as violating the property genuinely does. This is stronger than concrete testing, which only ever under-approximates behaviour by checking one input/path at a time. In practice, however, exhaustive symbolic execution does not scale beyond small programs (mainly due to path explosion, loops, and complex memory/environment interactions), so practical tools deliberately trade away soundness or completeness — e.g., concretizing some values or bounding loop unrolling — in exchange for tractable performance.",
+      "citation": "survey_of_symbolic_execution.pdf.extracted.txt, PAGE 4",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-09-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Broadly, what is symbolic execution useful for?",
+      "keyBeats": [
+        "Finding bugs / property violations (division by zero, assertion violations, buffer overreads, etc.) without needing to guess inputs",
+        "Automatic test/test-data generation that achieves high branch/statement coverage",
+        "Reachability analysis: deciding whether a specific program point can be reached at all, and under what input",
+        "Security use cases: locating backdoors/authentication bypasses, generating exploits, analysing binaries"
+      ],
+      "modelAnswer": "Symbolic execution is useful wherever one needs to reason about a program's behaviour across a whole class of inputs rather than one input at a time. Concretely it supports: (1) bug finding — systematically discovering inputs that trigger division-by-zero, out-of-bounds access, or assertion/property violations, which is exactly what tools like Klee use it for, having found real bugs in GNU coreutils; (2) automatic test case / test data generation — the technique was originally proposed in the 1970s as a way to symbolically compute path constraints and then solve them to obtain concrete test inputs that exercise a chosen program path, improving on ad-hoc/manual test data selection; and (3) reachability and security analysis — determining whether a particular program location (e.g., a 'trusted' branch, an assert, a crash site) is reachable at all and, if so, generating a concrete input (backdoor password, magic byte sequence) that reaches it, which is central to vulnerability discovery.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 71",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-10-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "The lecture opens with several real-world software disasters (Ariane 5, Patriot missile, USS Yorktown, Heartbleed/GHOST). What point is this making about why techniques like symbolic execution matter?",
+      "keyBeats": [
+        "Ariane 5: reused Ariane 4 software; an unhandled numeric error caused the rocket to veer off course and self-destruct, destroying $500M of satellites",
+        "Patriot: floating-point timestamp truncation error caused it to miss an incoming Scud missile",
+        "USS Yorktown: a zero entered into a database field caused division by zero → buffer overflow → propulsion failure",
+        "Heartbleed/GHOST show these are also security bugs (buffer overread / heap overflow → remote code execution)",
+        "Punchline: 'if you can make a system crash, then you can probably attack it' — motivates automated bug-finding like symbolic execution"
+      ],
+      "modelAnswer": "These examples (a $500M Ariane 5 rocket destroyed by an unhandled numeric conversion error, a Patriot missile battery that failed to intercept a Scud due to floating point timestamp truncation, and a US Navy ship whose propulsion system failed because a crew member's zero input caused a division-by-zero that overflowed a buffer) are used to motivate why finding this class of bug matters: they show that innocuous-looking bugs (numeric overflow, truncation, division by zero, buffer overflow) can have catastrophic real-world consequences. The lecture then draws the security connection explicitly via Heartbleed (a buffer overread) and GHOST (a heap buffer overflow in glibc enabling remote code execution), summarised as 'if you can make a system crash, then you can probably attack it.' This sets up the motivation for symbolic execution: it is a technique for systematically and automatically finding the inputs that trigger exactly these kinds of crashing/erroneous conditions, rather than relying on luck or manual testing.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 2-6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-11-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "According to the original 'A Program Testing System' work referenced in the slides, how does symbolic execution turn into concrete test data?",
+      "keyBeats": [
+        "The system symbolically executes a chosen program path, representing inputs as symbolic variables instead of concrete data",
+        "Conditional branches along the path are represented as a set of inequalities over the symbols",
+        "The inequalities are solved to find concrete input data that would actually cause that path to execute",
+        "If the inequalities are inconsistent, the path is nonexecutable/infeasible",
+        "The same machinery is reused to hunt for errors, e.g. by adding an artificial constraint that a divisor equals zero and checking satisfiability"
+      ],
+      "modelAnswer": "The system symbolically executes a selected program path, substituting symbolic variables for the input data instead of concrete values, so that the path's computations are represented as algebraic expressions over those symbols. Each conditional branch taken along the path contributes an inequality over the symbols (e.g. the true branch of IF (A.GT.B) becomes S(A) > S(B)); the conjunction of these inequalities is the path constraint. An inequality/constraint solver then attempts to find concrete values for the symbols that satisfy the whole set of inequalities — such a solution is exactly test data that will cause execution of that path. If the inequalities are inconsistent, the path is proven nonexecutable/infeasible. The same idea is reused for automatic error detection: to check for e.g. division by zero, the system temporarily adds an artificial inequality forcing the divisor's symbolic expression to equal zero, and if the augmented constraint set is still solvable, that solution is a concrete test input that provokes the division-by-zero error.",
+      "citation": "symb.pdf.extracted.txt, PAGE 1-2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-12-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "What is the 'path explosion' problem in symbolic execution, and why does it arise so easily?",
+      "keyBeats": [
+        "Symbolic exploration can produce exponentially many distinct paths as branches accumulate",
+        "Each independent if-statement roughly doubles the number of paths through the code (up to 2^n paths for n independent branches)",
+        "Demonstrated with process(): each additional 'if (input[i]==c) counter++' check doubles the number of tree leaves",
+        "Exploring a program symbolically can therefore become intractable even for small, simple-looking programs"
+      ],
+      "modelAnswer": "Path explosion is the practical problem that exploring a program symbolically can result in exponentially many distinct execution paths, because the execution tree branches at every conditional whose guard depends on symbolic data, and these branches compound. The lecture illustrates this with a tiny function process() that checks input[0]=='a', then input[1]=='b', then input[2]=='c': with one such independent check there are already multiple paths through the code, and adding a second and third check roughly doubles the number of leaves each time (yielding up to 2^n paths for n independent conditions on n input bytes), even though the program itself is trivially small. In real programs with many branches and loops, this exponential blow-up quickly makes fully exhaustive symbolic exploration infeasible within any reasonable time or memory budget.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 47-52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-13-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "The lecture lists several ways to mitigate path explosion. Name and briefly describe at least three.",
+      "keyBeats": [
+        "Search heuristics: random path selection, coverage-guided search (favour paths reaching uncovered code), prioritise paths close to interesting points such as asserts",
+        "Path merging: merge branches back into one state (e.g., encode a variable as an if-then-else expression) at the cost of a more complex path condition",
+        "Call the SMT solver at branch points to prune infeasible paths early",
+        "(related, for loops/recursion specifically) unroll loops or inline functions a priori to bound otherwise-infinite trees"
+      ],
+      "modelAnswer": "The lecture lists four complementary mitigations. (1) Search heuristics: instead of exploring every path, prioritise which path to expand next — e.g., randomly, by code coverage (favouring paths that reach previously-uncovered parts of the program), or by proximity to points of interest such as assert statements. (2) Path merging: rather than keeping the two branches of an if as separate states, merge them back into a single state after the branch, e.g. representing a variable as an if-then-else expression '(α>5)?10:20' instead of forking into two states; this makes the job of symbolic execution simpler (fewer states) at the cost of a more complex path condition/store. (3) Calling the SMT solver at branch points to detect and discard infeasible paths early, before wasting effort continuing to explore them. (4) For loops/recursion specifically (which otherwise cause an infinite execution tree), unrolling loops or inlining function calls a priori bounds the tree to a finite size.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 68",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-14-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Walk through the path-merging example on the lecture's test() function (z=5; x=read; if(x<=z) y=10; else y=20; assert(y!=10);) and explain what gets merged.",
+      "keyBeats": [
+        "Without merging, the if/else forks into two separate states: one with y=10 and constraint α≤5, one with y=20 and constraint α>5",
+        "Path merging recombines these two states at the join point after the if/else into a single state",
+        "The merged state's store maps y to the if-then-else expression (α>5)?10:20 instead of a concrete number",
+        "The merged path constraint becomes the disjunction of the two original constraints: (tt∧α>5) ∨ (tt∧α≤5)"
+      ],
+      "modelAnswer": "Executed without merging, the branch 'if (x<=z)' forks into two states after 'x=read': one taking the true branch with y assigned 10 and path constraint tt ∧ α≤5, and one taking the false branch with y assigned 20 and path constraint tt ∧ α>5. Path merging recombines these two states at the join point right after the if/else (before the assert), producing a single merged state. In that merged state, y is no longer a concrete number but the symbolic if-then-else expression '(α>5) ? 10 : 20', and the merged path constraint is the disjunction of the two original ones, '(tt ∧ α>5) ∨ (tt ∧ α≤5)'. This means only one state (instead of two) needs to be carried forward through the rest of the program, at the price of both the store and the path condition becoming more complex expressions rather than simple constants — illustrating the general trade-off the lecture calls out: merging makes 'the job of symbolic execution simpler, but the path condition more complex.'",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 54-66",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-15-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Why do loops and recursion pose a fundamental problem for symbolic execution, and what two 'a priori' fixes does the lecture suggest?",
+      "keyBeats": [
+        "A loop/recursive call whose iteration count depends on symbolic data can, in principle, be unrolled indefinitely",
+        "This produces an infinite symbolic execution tree that cannot be exhaustively explored",
+        "Suggested mitigation 1: unroll loops a priori (up to some bound) before/while exploring",
+        "Suggested mitigation 2: inline functions a priori"
+      ],
+      "modelAnswer": "A loop (or recursive function) whose termination depends on symbolic values cannot, in general, be bounded statically: the engine could keep unrolling the loop body forever, each iteration adding new branches, so loops and recursion result in an infinite execution tree that cannot be exhaustively explored in finite time. The lecture suggests two practical ('a priori') mitigations: unrolling loops up to some fixed bound before exploration, and inlining function calls a priori — both trade completeness (some behaviours beyond the bound are missed) for tractability.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 44-45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-16-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Symbolic execution engines struggle with 'the environment' (system calls, file reads, etc.). What is the problem, and what two solutions does the lecture mention?",
+      "keyBeats": [
+        "Programs rarely run in isolation: they read config files, perform system calls, talk on the network — hard to model symbolically",
+        "Solution 1: if parameters to the environment call are concrete, just execute the call for real on the host system",
+        "Solution 2: provide stub functions modelling the relevant behaviour of the call instead of really executing it",
+        "Example given: fopen/fscanf/fclose on a file — must decide how to represent file contents/reads"
+      ],
+      "modelAnswer": "Real programs interact heavily with their host system — reading configuration files, making system calls, talking on the network — and a symbolic engine has to decide how to handle these interactions since it typically cannot symbolically model an entire OS/library stack. The lecture mentions two pragmatic solutions: if the parameters passed to an environment call are fully concrete, the engine can simply execute the call for real against the actual host system and use its concrete result; alternatively, the engine can provide stub functions that approximate/model the relevant behaviour of the call (e.g., a fake file system) without truly performing it. The lecture illustrates this with a small example reading from a file with fopen/fscanf/fclose, where the engine must decide how to represent the (possibly symbolic) contents being read.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 70",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-17-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "What is 'concolic execution' (as distinct from pure/classical symbolic execution), and why was it introduced?",
+      "keyBeats": [
+        "Portmanteau of 'concrete' + 'symbolic'",
+        "Mixes a real concrete execution with a symbolic execution running alongside it",
+        "The concrete run picks the branch actually taken, so the symbolic engine never has to guess/solve feasibility at that point",
+        "New paths are explored by negating a prior branch's constraint and asking the SMT solver for a new concrete input taking the opposite branch",
+        "Addresses classical symbolic execution's difficulty with code that produces path constraints it cannot handle (e.g., unmodeled external calls)"
+      ],
+      "modelAnswer": "Concolic execution (a portmanteau of 'concrete' and 'symbolic') is a way of mixing concrete and symbolic execution, most commonly as dynamic symbolic execution (DSE): the engine runs the program on one concrete input while simultaneously updating a symbolic store and path constraint alongside the concrete run. Because the concrete execution actually takes a real branch at each conditional, the symbolic engine never has to guess or solve which branch is feasible there — it simply follows the concrete run and records the corresponding constraint. To explore a different path, the engine takes the path constraint recorded so far, negates one of its branch conditions, and asks an SMT solver for a new concrete input satisfying the modified constraint, then reruns the program concretely on that new input. This approach was introduced to cope with classical (purely symbolic) execution's difficulty in handling code whose behaviour is hard to model symbolically, e.g. calls to external/unmodeled functions or expressions the solver can't efficiently reason about — the concrete execution 'fills in the gaps' where symbolic modelling would fail or be too expensive.",
+      "citation": "survey_of_symbolic_execution.pdf.extracted.txt, PAGE 5-6",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-18-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "opener",
+      "question": "What is Angr, at a high level, and what does it use symbolic execution for?",
+      "keyBeats": [
+        "A multi-architecture binary analysis toolkit/framework",
+        "Capable of dynamic symbolic execution (like Klee/Mayhem) as well as static analyses on binaries",
+        "Analyses binaries directly rather than source code",
+        "Framework rather than a single fixed tool — provides building blocks the user assembles to write custom analyses"
+      ],
+      "modelAnswer": "Angr is a multi-architecture binary analysis toolkit that can perform dynamic symbolic execution (in the same category as tools like Klee) as well as various static analyses, working directly on compiled binaries rather than source code. Its symbolic execution capability is used to symbolically explore a program's state space — driving execution with symbolic inputs and forking/following paths exactly like the general symbolic execution technique covered earlier in the lecture, but applied at the binary/instruction level. Angr is described as more of a framework than a single tool: it gives the user the building blocks (loading, IR translation, symbolic execution engine, solver) needed to write a custom binary analysis, rather than a single fixed pushbutton analysis.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 71",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-19-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Describe, at a conceptual level, the pipeline Angr uses to go from a binary to a symbolically-explored state space.",
+      "keyBeats": [
+        "CLE loader loads the binary (and its dependencies) into the analysis environment",
+        "The machine code is lifted/translated into VEX IR (via pyvex), an architecture-independent intermediate representation",
+        "A symbolic execution engine operates over this IR, paired with a constraint solving engine (SMT) to track/check path constraints",
+        "A simulation manager coordinates exploring many of these symbolic states (stepping, forking, filtering) over the resulting state space"
+      ],
+      "modelAnswer": "Conceptually, Angr's pipeline mirrors the general challenges of binary analysis: first a loader component (CLE) loads the target binary — and its libraries — into memory for analysis; the raw machine code is then lifted into VEX IR, an architecture-independent intermediate representation (produced via pyvex, built on Valgrind's IR), so that Angr's higher-level analyses can work uniformly regardless of whether the binary is x86, ARM, MIPS, etc. On top of this IR, Angr runs a symbolic execution engine that steps through instructions maintaining symbolic state, paired with a constraint solving engine that handles satisfiability queries on the accumulated path constraints (an SMT solver, as in the general symbolic execution pipeline). Finally, a simulation manager is the component that orchestrates exploring many of these symbolic states at once — stepping them forward, forking them at branches, and letting the user apply exploration strategies/filters over the resulting collection of states — which is Angr's realization of the generic 'exploration' step in the symbolic-execution pipeline.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 73",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-20-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "The lecture says Angr is 'more a framework than a tool.' What does that mean in practice?",
+      "keyBeats": [
+        "Rather than offering one fixed built-in analysis, Angr exposes its components (loader, IR, symbolic engine, solver, simulation manager) as building blocks",
+        "The user writes code assembling these pieces to define a custom analysis/exploration for a specific binary/question",
+        "This flexibility is why it is used both for research and for CTF-style reverse engineering / exploit-finding tasks"
+      ],
+      "modelAnswer": "Calling Angr 'more a framework than a tool' means it does not simply take a binary and spit out a fixed report; instead it exposes its underlying components — the CLE loader, the VEX IR lifter, the symbolic execution engine, the constraint solving engine, and the simulation manager — as an API that a user composes themselves to answer a specific question about a specific binary (e.g., 'what input reaches this line', 'what input decrypts this file'). This means using Angr effectively requires writing a small script that sets up a state, decides what should be symbolic, and drives exploration/solves constraints for that particular task, rather than invoking a single push-button tool — the toolkit gives you the pieces to build your own binary analysis.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 71",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-21-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The lecture presents 'fauxware', 'narnia0', and an 'encryption' binary as Angr exercises. What kind of security question is Angr's symbolic execution being applied to answer in each case, in general terms?",
+      "keyBeats": [
+        "fauxware: prompts for username/password — question is 'what input reaches the trusted branch' (authentication-bypass reachability)",
+        "narnia0: replies 'nope' to almost all inputs — question is 'what input makes it print Yessir instead' (finding a rare output-triggering input)",
+        "encryption: applies an unknown transformation to file contents — question is 'what plaintext, when transformed by the binary, yields this known ciphertext' (inverting a black-box function)",
+        "In every case Angr searches for a concrete input satisfying a target condition instead of the analyst manually reasoning about the binary's logic"
+      ],
+      "modelAnswer": "All three are variations on the same underlying use of symbolic execution: finding a concrete input that satisfies some target condition without the analyst having to manually reverse-engineer the exact logic by hand. In fauxware, the goal is to find a username/password (or discover a hidden backdoor condition) that drives execution to the 'trusted' branch of the program — a reachability/authentication-bypass question. In narnia0, the program prints 'nope' for almost every input but 'Yessir' for some specific one; the goal is to have Angr search the input space and find that rare input, i.e., find a concrete value satisfying an equality deep in the program's logic. In the encryption example, the binary applies an unknown (but deterministic) transformation to file data; because the transformation's logic is embedded in the binary itself, Angr can run it symbolically on partly-known, partly-symbolic input bytes and then use the constraint solver to find the plaintext bytes that, once transformed by the binary's own logic, match a known ciphertext — effectively inverting the transformation without manually decoding the algorithm. In each case symbolic execution turns 'what input causes X to happen' into a constraint-solving problem.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 77-79",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-22-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "In conceptual terms (not API syntax), how does one use Angr's symbolic execution to recover a concrete value that would produce a desired outcome, such as a hidden magic input?",
+      "keyBeats": [
+        "Mark the relevant unknown input bytes as symbolic rather than concrete values",
+        "Step the binary via Angr's simulation manager, which explores/forks states following Angr's symbolic execution engine over the lifted IR",
+        "Optionally guide exploration towards or away from specific target program locations",
+        "Once a state matching the desired outcome is reached, query the constraint solving engine to evaluate the symbolic input under that state's path constraint, yielding a concrete satisfying input"
+      ],
+      "modelAnswer": "Conceptually, the workflow mirrors classic symbolic execution applied to a binary: instead of giving the program a specific concrete input, the relevant unknown bytes (e.g., a password, or unread parts of a file) are represented as symbolic values. The simulation manager then explores the resulting state space by stepping the binary's lifted instructions, forking a new symbolic state at every conditional that depends on those symbolic bytes and accumulating a path constraint per state, exactly like the general symbolic execution technique from earlier in the lecture — just now operating over VEX IR instead of high-level pseudocode. Exploration can be steered toward states that reach a desired program location (or away from ones to avoid). Once a state is reached whose behaviour matches the desired outcome (e.g., it printed 'Yessir', or reached the trusted branch), the constraint solving engine is queried to evaluate the originally-symbolic input under that state's accumulated path constraint, producing concrete bytes that are guaranteed to reproduce the desired behaviour when actually run.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 73",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-23-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "Beyond classroom exercises, what large-scale real-world context has driven the development and visibility of tools like Angr?",
+      "keyBeats": [
+        "DARPA's Cyber Grand Challenge (2016) — a competition for fully automatic systems detecting and fixing vulnerabilities in unknown software with no human intervention",
+        "Angr (and Mayhem) were among the systems built for/around this challenge, competing for a large prize pool",
+        "Situates Angr's symbolic execution as part of state-of-the-art automated vulnerability discovery/exploitation research, not just a teaching tool"
+      ],
+      "modelAnswer": "Angr's development is tied to DARPA's 2016 Cyber Grand Challenge, a competition that sought fully automatic systems capable of detecting and fixing vulnerabilities in unknown software with no human intervention, with teams competing for several million dollars in prize money. Angr (alongside tools such as Mayhem) grew out of this line of security research into automated vulnerability discovery and exploit generation. This underlines that Angr's symbolic execution capability is used for exactly the same underlying purpose emphasised throughout the lecture — automatically finding inputs that reach/trigger particular (often security-relevant) program behaviours — but scaled up to real, unknown binaries in a fully automated setting rather than hand-picked classroom exercises.",
+      "citation": "survey_of_symbolic_execution.pdf.extracted.txt, PAGE 32",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L4-24-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "How does Angr represent memory accesses through a symbolic pointer/address, as opposed to forking a new state per possible address?",
+      "keyBeats": [
+        "Rather than forking a state per possible concrete address value, Angr generally encodes the uncertainty using if-then-else (ite) formulas in the symbolic store",
+        "Reading from a symbolic address α that could be a1, a2, ... yields ite(α=a1, value_at_a1, ite(α=a2, value_at_a2, ...))",
+        "Writing updates every possibly-referenced cell's stored expression with an ite guarded by whether α equals that cell's address",
+        "Keeps the number of live states down at the cost of more complex expressions the solver must reason about — the same trade-off idea as path merging, applied to memory"
+      ],
+      "modelAnswer": "When a memory access uses a symbolic (unknown) address rather than a fixed one, one option is to fork a separate execution state per possible concrete address value; Angr instead generally follows the if-then-else (ite) formula approach: uncertainty about a symbolic address α is encoded directly inside the expressions kept in the symbolic memory store, without creating new states. Reading from address α (which could concretely be a1, a2, …) yields an expression like ite(α=a1, value-at-a1, ite(α=a2, value-at-a2, …)); writing a value at address α updates the stored expression at every candidate cell ai to ite(α=ai, new-value, old-value-at-ai). This keeps the state count low compared to naive state-forking, at the cost of the symbolic store and path constraints becoming more complex ite-laden expressions that the SMT solver must reason about — conceptually the same fully-symbolic-memory-vs-forking trade-off as the path-merging idea discussed earlier for control flow, just applied to memory addresses.",
+      "citation": "survey_of_symbolic_execution.pdf.extracted.txt, PAGE 12",
+      "unverified": true,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "CYBER2-L4-E1",
+      "source": "presentation.pdf.extracted.txt, SLIDE 77 (Fauxware exercise)",
+      "promptVerbatim": "The binary ‘fauxware‘ prompts you for a username and password, but you have no idea what either of those two are. Figure out a way to get access to the \"trusted\" part of the program.",
+      "whatItTests": "Tests the ability to apply Angr's symbolic execution to find inputs (username/password, or an underlying logic flaw) that drive execution to a target ('trusted') code path — i.e., using a symbolic entry state plus the simulation manager's exploration (targeting the desired address and avoiding the rejecting one) and extracting concrete values via the constraint solver, illustrating authentication-bypass discovery via reachability analysis rather than manual guessing.",
+      "answerSketch": "Load the binary with an Angr project, create an entry state with symbolic stdin input, and use the simulation manager to explore toward the address of the 'trusted'/success branch while avoiding the address of the rejection branch. Once a matching state is found, evaluate the symbolic input under that state's solver (e.g. dumping stdin) to recover concrete username/password bytes — or discover a hardcoded backdoor comparison in the binary's logic — that reaches the trusted branch."
+    },
+    {
+      "id": "CYBER2-L4-E2",
+      "source": "presentation.pdf.extracted.txt, SLIDE 79 (Encryption exercise); answer informed by solution.py",
+      "promptVerbatim": "This binary ‘encrypt‘ performs a *very* basic encryption of the data contained in the file given to it. We have gotten hold of an encrypted message and suspect it starts with \"Weather Report:\". Also, we suspect the length of encrypted and decrypted message is the same.",
+      "whatItTests": "Tests understanding of using Angr to symbolically model unknown file contents (mixing a known plaintext prefix as concrete bytes with unconstrained symbolic bytes), running the binary's own encryption routine symbolically over a simulated input file, exploring to a terminated ('deadended') state, and then adding a solver constraint that the symbolic output equals the known ciphertext before asking the solver to evaluate the plaintext — i.e., using symbolic execution/constraint solving to invert a black-box transformation instead of reimplementing the algorithm.",
+      "answerSketch": "Build a symbolic input buffer equal to the concrete known prefix ('Weather Report:') concatenated with fresh symbolic bytes for the remaining unknown plaintext (matching the captured ciphertext's length), wrap it in a simulated input file registered as the program's input, run the simulation manager's explore() until a state deadends (the program finished running), then add a constraint that the resulting output file's symbolic content equals the captured encrypted bytes, and finally evaluate the input buffer under the solver to recover the concrete decrypted message — exactly what solution.py implements using angr.Project, claripy symbolic/concrete byte vectors, a SimFile, and simgr.explore()."
+    }
+  ]
+}

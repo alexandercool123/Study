@@ -1,0 +1,440 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 6,
+  "lectureTitle": "Secure Java",
+  "examQuestions": [
+    {"examQ": 6, "subPart": "a", "promptVerbatim": "Explain Java's security model: type safety, sandboxing, bytecode verification."},
+    {"examQ": 6, "subPart": "b", "promptVerbatim": "Discuss the consequences of Java's security mechanisms for program security."},
+    {"examQ": 6, "subPart": "c", "promptVerbatim": "Describe vulnerabilities covered in lectures and their mitigations."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L6-01-o",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The lecture opens by asking 'Why Java?' from a security perspective. What language- and VM-level mechanisms does it credit for making Java an 'early adopter' of language-based security, and how do they combine to create a 'sandbox'?",
+      "keyBeats": [
+        "Java code runs on a virtual machine (JVM) that mediates all execution",
+        "Strong, static typing prevents arbitrary reinterpretation of memory/objects",
+        "Bytecode verification checks loaded code before it is allowed to execute",
+        "Secure class loading and built-in security APIs (crypto, SSL/TLS, authentication) round out the platform",
+        "Automatic memory management (garbage collection) removes a whole class of manual memory bugs",
+        "Together language + VM define a 'sandbox' that is distinct from OS-level sandboxing"
+      ],
+      "modelAnswer": "The lecture credits Java's security reputation to a combination of language and virtual-machine features rather than any single mechanism. Because Java code runs inside the JVM, the VM can mediate every operation the code performs, rather than trusting the code to behave once loaded. On top of that, Java has strong, static typing, which lets many safety properties be checked before code runs; automatic memory management (garbage collection) removes manual memory-management bugs such as use-after-free; bytecode verification inspects class files when they are loaded to ensure they respect the JVM's typing and structural rules, guarding against maliciously or incorrectly produced bytecode; and secure class loading controls where classes come from and isolates them into protection domains. Java also ships built-in security APIs for cryptography, SSL/TLS and authentication, reducing the need for developers to build these primitives themselves. All of this combines into what the lecture calls a 'sandbox': a security boundary created jointly by the language semantics and the VM's runtime checks, letting mutually distrusting code coexist and letting many security properties be reasoned about statically, at compile time.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-02-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does 'type safety' mean in the Java security model, and what specifically does it protect against?",
+      "keyBeats": [
+        "Guarantees a reference/variable of a declared type can only be used according to that type's operations and memory layout",
+        "Protects against unintended/unauthorised access to (critical) memory",
+        "Explicitly listed targets: the class loader, the security manager, other objects holding sensitive data",
+        "Enforced jointly by the compiler, the bytecode verifier, and runtime checks (casts, array bounds)"
+      ],
+      "modelAnswer": "Type safety means that at every point during execution, a reference or variable of a given declared type can only be used the way that type permits: its fields can only be accessed as that type's layout defines, and it cannot be silently reinterpreted as a different, incompatible type to read or write memory outside what the type's own semantics allow. The lecture states the direct security purpose of this: type safety protects against unintended or unauthorised access to (critical) memory, and it explicitly names concrete things this protects: the class loader, the security manager, and other objects that may hold sensitive data. If type safety holds, untrusted code cannot forge a reference to, say, the security manager object and tamper with it directly, because doing so would require treating some other object's memory as if it had the security manager's type. Type safety is not enforced by any single component; it results from the combination of the compiler's static type checking, the bytecode verifier's checks at class-loading time, and runtime checks such as array-bounds checking and checked casts.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-03-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does Java's security model fundamentally differ from C's, and what is meant by 'language + VM defines the sandbox'?",
+      "keyBeats": [
+        "C has essentially no built-in security model: memory/type safety are the programmer's responsibility",
+        "Java pushes guarantees into the language and the runtime executing it",
+        "The sandbox is created by language semantics plus JVM checks, not by an OS-level jail",
+        "Consequence: many security properties can be argued about/verified statically instead of relying solely on runtime OS protection"
+      ],
+      "modelAnswer": "The lecture frames Java's model as 'very different from C's security model'. In C, there is essentially no language- or runtime-enforced security: memory safety, type safety, and bounds checking are entirely the programmer's responsibility, and whatever protection exists typically comes from the operating system or hardware (e.g. process isolation, ASLR) rather than the language itself. Java instead builds strong properties directly into the language and the virtual machine that executes it: strong static typing, automatic memory management, bytecode verification and secure class loading, and built-in security APIs. The phrase 'language + VM defines the sandbox' captures that Java's isolation boundary is not an OS-level container around a whole process, but a boundary created by what the language allows code to express and by the checks the JVM performs on all code before and while it runs, including code from untrusted sources. A direct consequence is that many security-relevant properties (e.g. that code cannot forge arbitrary pointers) can be verified statically, at compile time, rather than needing to be checked only at runtime by external mechanisms.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-04-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What role does bytecode verification play in Java's security model, and why is it needed alongside secure class loading?",
+      "keyBeats": [
+        "Class files can come from untrusted sources and could be crafted by a non-standard/malicious compiler",
+        "The bytecode verifier checks well-formedness and type/structural rules at class-loading time before execution",
+        "Secure class loading controls where classes come from and isolates them into protection domains",
+        "Together they close the gap between 'compiler produced safe code' and 'the code that actually executes is safe'"
+      ],
+      "modelAnswer": "Java's safety guarantees are normally argued about at the source-code level via the compiler's type checker, but what actually executes is compiled bytecode, which can arrive from disk, over a network, or be produced by a tool other than the standard, trusted Java compiler, and could therefore violate the typing and structural rules a well-behaved compiler would respect. Bytecode verification closes this gap: when a class is loaded, the JVM's bytecode verifier inspects the class file to confirm it is well-formed and obeys the JVM's rules (e.g. consistent types on the operand stack, no illegal jumps or dangling references) before the class is permitted to run. Secure class loading complements verification: it governs where classes are loaded from, prevents untrusted code from spoofing or replacing trusted system classes, and can assign loaded code to different protection domains with different privileges. Together, bytecode verification and secure class loading ensure that the code the JVM actually executes is checked to be type-safe regardless of its origin, closing the gap between 'the compiler produced safe code' and 'the code running right now is safe'.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-05-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the roles of the class loader and the security manager in enforcing Java's sandbox?",
+      "keyBeats": [
+        "Class loader: controls where/how classes are loaded, isolates namespaces, prevents spoofing of core system classes",
+        "Security manager: runtime policy-enforcement point mediating access to sensitive operations/resources",
+        "Both rely on type safety holding to remain trustworthy",
+        "The lecture explicitly names both as examples of the 'critical memory' type safety protects"
+      ],
+      "modelAnswer": "The class loader is responsible for how and from where classes are brought into the running JVM; it can keep the namespaces of code from different sources separate, prevent untrusted code from replacing or spoofing core system classes, and assign loaded code to a protection domain that determines what it is allowed to do. The security manager is a runtime policy-enforcement point: when code attempts a sensitive operation (file access, network access, reflection, etc.), the security manager can be consulted to decide, based on the caller's origin/permissions, whether that operation is allowed. Both mechanisms are themselves objects living in the same JVM memory as the rest of the program, so their integrity depends on type safety holding: if an attacker could break type safety, they could potentially forge a reference into the class loader or security manager and tamper with them directly, bypassing the sandbox entirely. This is exactly why the lecture explicitly lists the class loader and the security manager as concrete examples of the 'critical memory' that type safety is meant to protect.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-06-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "The lecture notes that Java's model involves a 'closer coupling: trusted and untrusted code executed in the same address space.' What is the security consequence of this design choice?",
+      "keyBeats": [
+        "Trusted (system) and untrusted (application) code share one JVM process and address space",
+        "Isolation between them is purely logical/software-enforced, not hardware-enforced",
+        "If the software enforcement (type safety, class loader, security manager) is subverted, untrusted code gets full access to trusted memory",
+        "This trade-off is exactly what the later type-confusion/Rowhammer attacks exploit"
+      ],
+      "modelAnswer": "Unlike operating-system process isolation, where separate processes get separate address spaces enforced by the hardware's memory management unit, Java runs trusted code (e.g. the standard library, the class loader, the security manager) and untrusted code (e.g. downloaded applications, plugins) inside the very same JVM process and address space. The isolation between them is therefore purely logical, provided entirely by software mechanisms: type safety, the class loader, the security manager, and access checks. The direct security consequence is that this isolation has no hardware backstop; it holds only as long as those software mechanisms are not subverted. If type safety can be broken by any means, the untrusted code obtains the same unrestricted access to memory that trusted code has, because there is no OS-level wall between them to fall back on. This is precisely the assumption the lecture later shows can be attacked: once a memory-corruption error breaks type safety, the sandbox's software-only isolation collapses entirely, which is exactly what the type-confusion and Rowhammer attacks exploit.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-07-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "The lecture claims that in Java 'security can be verified statically (at compile-time).' In what sense is this true, and what does the later TOCTTOU discussion show about its limits?",
+      "keyBeats": [
+        "Strong static typing lets many safety properties be proven before the program runs",
+        "But 'code is only checked at link time', not guaranteed once and for all by a trusted compiler",
+        "This opens a Time-Of-Check-To-Time-Of-Use (TOCTTOU) gap between verification and execution",
+        "Static verification is strong for the code as checked, but does not by itself guarantee the running system stays consistent with what was checked"
+      ],
+      "modelAnswer": "Java's strong static typing means that a large class of safety properties -- for example, that a variable of type A can never be treated as an unrelated type B -- can be proven by the compiler and the bytecode verifier before or as the code is loaded, rather than only discovered through runtime testing. This is what the lecture means when it says security can be verified statically, at compile-time. However, the lecture immediately flags a subtlety: the bytecode verifier's checks actually happen at link time, when a class is loaded, not once by a single trusted compiler that then guarantees the property forever. This creates a potential Time-Of-Check-To-Time-Of-Use (TOCTTOU) gap: what was verified when a class was linked is not necessarily identical to what ends up executing, if the class file, the classpath, or the runtime environment can change between the check and its use, opening the door to a race-condition-style attack against the security model itself. The takeaway is that static verification is a strong guarantee about the artifact as it was checked, but it does not by itself guarantee that the artifact which actually executes later is the same one, or remains in the same state, as what was checked.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-08-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Despite Java's strong language-level security model, the lecture lists several recurring 'problem areas' (concurrency, input validation, injection, leaked references, misunderstood scope rules, serialisation). Why do these still occur in a 'type-safe, verified' language, and what does that imply about what Java's security model actually guarantees?",
+      "keyBeats": [
+        "Type safety, bytecode verification and sandboxing guarantee memory-level properties only",
+        "They say nothing about program logic: input validation, synchronization discipline, reference exposure, use of scope modifiers",
+        "Consequence: Java shifts the attack surface from memory-corruption exploits (as in C) toward logic-level/API-misuse vulnerabilities",
+        "Mitigation route: disciplined secure programming and coding standards (e.g. CERT Secure Coding: Java), since the language/VM cannot enforce these automatically"
+      ],
+      "modelAnswer": "Type safety, bytecode verification and the sandbox guarantee memory-level properties: that code cannot forge a reference, cannot read or write outside the fields its declared type defines, and cannot execute bytecode that was not checked. None of that says anything about whether the program's logic is correct or safe: whether external input is validated before use, whether concurrent access to shared state is properly synchronized, whether a public method inadvertently exposes a reference to supposedly private internal state, or whether a scope modifier like private is (mistakenly) relied upon as an access-control mechanism. This is exactly why the lecture's list of 'problem areas' -- concurrency/race conditions, input validation, injection, leaked references, misunderstood scope rules, and serialisation -- exists in Java despite its strong type-safety guarantees: those areas sit above the level that type safety operates on. The implication is that Java's security model shifts the attacker's usual entry point away from classic memory-corruption exploits (which dominate in languages like C) toward logic-level and API-misuse vulnerabilities. Because the language and VM cannot automatically enforce correctness at this level, the lecture's recommended mitigation is disciplined secure programming practice guided by coding standards such as 'CERT Secure Programming: Java'.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-09-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "The lecture states that 'scope modifiers (e.g. private) [are] typically not security features.' What does this mean, and what is the consequence for programmers who treat access modifiers as a security boundary?",
+      "keyBeats": [
+        "private/protected control compile-time visibility of members to other source code, structuring the API",
+        "They are not an isolation/access-control mechanism against determined code in the same JVM",
+        "A public accessor can leak a direct reference to a private mutable object, letting outside code mutate 'protected' state",
+        "Consequence: private protects design intent, not security -- true protection needs defensive copies/immutability, not just the modifier"
+      ],
+      "modelAnswer": "Access modifiers such as private, protected and package-private control which other pieces of Java source code are allowed to name/reference a member directly; they exist primarily to structure an API and prevent accidental misuse, enforced by the compiler at compile time. They are not an isolation or access-control mechanism against determined code running in the same JVM: reflection can often bypass the modifier outright, and, more subtly, a class can expose a public accessor method that hands back the actual reference to a private mutable object (as opposed to a copy), letting any external caller freely mutate that 'protected' internal state despite the field being marked private. The consequence for programmers is that private enforces design intent and encapsulation discipline, not a security boundary; treating it as one is a mistake. Genuine protection of internal state requires deliberately never exposing a live mutable reference to it -- for example returning defensive copies or immutable views -- rather than relying on the access modifier alone to keep the state safe.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-10-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The lecture's temp-file example creates a file in /tmp, writes to it, then calls setReadOnly(). Why is this insecure, and how should secure temporary file creation be done in Java?",
+      "keyBeats": [
+        "/tmp is world-writable and the filename/path is predictable, not exclusively owned by the program",
+        "Window between file creation/write and the later setReadOnly() call is a TOCTOU race, real example: CVE-2020-8908",
+        "An attacker can race to pre-create/symlink the path, redirecting writes or reading contents before protection is applied",
+        "Mitigation: create the temp file atomically with safe permissions set at creation time (e.g. secure createTempFile / nio Files.createTempFile with POSIX permissions), never set permissions after the fact"
+      ],
+      "modelAnswer": "The example builds a File pointing into /tmp, writes a message to it via a FileWriter, and only afterwards calls f.setReadOnly(). Because /tmp is a shared, world-writable directory and the filename is predictable, there is a window between the file being created/written and the permission being restricted during which any other local process can interact with the same path -- a classic Time-Of-Check-To-Time-Of-Use race condition, whose real-world consequences the lecture illustrates with CVE-2020-8908. An attacker who wins the race could, for instance, pre-create a file or symlink at that path (potentially redirecting the write to a sensitive location, or making the file readable/owned in a way the program did not intend) before setReadOnly() ever takes effect, or simply read the plaintext contents of the file during the window it was still world-accessible. The lecture's suggested fix is to use an API that creates the temp file atomically with the desired restrictive permissions already in place at creation time -- rather than creating a file with default permissions and hardening it afterwards -- for example java.nio.file.Files.createTempFile with an explicit set of POSIX file permissions supplied at creation, so there is never a window where the file exists in a weaker state.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-11-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The loop `while ((data = (byte) in.read()) != -1)` is meant to read a stream until end-of-file. Why is it broken, and why does 'just use char instead of byte' make it worse rather than better?",
+      "keyBeats": [
+        "read() returns an int: 0-255 for a real byte, or -1 for EOF; casting to byte makes the byte 0xFF indistinguishable from -1",
+        "Effect: loop can terminate prematurely on a legitimate 0xFF data byte, silently truncating processing",
+        "Switching the variable to char doesn't help: char is an unsigned 16-bit type, so -1 (0xFFFFFFFF) never equals any char value -- loop can fail to terminate at all",
+        "Correct fix: store read()'s result in an int and compare that int to -1 before any narrowing"
+      ],
+      "modelAnswer": "InputStream.read() returns an int: a value in 0-255 representing a real byte of data, or the special value -1 to signal end-of-stream. Casting that result to byte forces it into an 8-bit signed representation, and the legitimate data byte 0xFF (255) has the exact same bit pattern as the -1 sentinel once cast to byte and later widened back for comparison, so a real data byte can be misread as end-of-file. The practical effect is that the loop can terminate prematurely as soon as the stream happens to contain a 0xFF byte, silently truncating whatever processing the loop was doing -- a correctness bug with potential security consequences if it causes partial validation or partial writes. The lecture then shows that 'fixing' this by declaring data as char makes things worse, not better: char in Java is an unsigned 16-bit type, so read()'s int return value of -1 (0xFFFFFFFF) truncated/widened into a char never equals -1 when compared as an int again, meaning the loop's termination condition can never become true for a real end-of-file -- causing non-termination instead. The correct fix is to store the raw result of read() in an int variable and compare that int directly against -1 to detect end-of-file, only narrowing to byte afterwards, once the EOF check has already passed.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-12-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Why does `Math.abs(x1 - x2)` in the cost() example fail to guarantee a non-negative distance, and what CERT-style principle does this illustrate?",
+      "keyBeats": [
+        "Java int is 32-bit two's complement; Integer.MIN_VALUE has no positive counterpart representable in 32 bits",
+        "Math.abs(Integer.MIN_VALUE) overflows and returns Integer.MIN_VALUE itself (still negative)",
+        "If x1 - x2 can equal Integer.MIN_VALUE, the assumed 'distance >= 0' invariant silently fails",
+        "Illustrates 'never trust, always validate': integer overflow is well-defined wraparound in Java, not an error, so the type system does not flag it"
+      ],
+      "modelAnswer": "Java's int type is a 32-bit two's-complement value, whose range is asymmetric: Integer.MIN_VALUE (-2^31) has no corresponding positive value representable in 32 bits, since +2^31 is out of range. Because of this, Math.abs(Integer.MIN_VALUE) cannot correctly negate its input; it overflows and simply returns Integer.MIN_VALUE again, which is still negative. In the cost() example, if x1 - x2 can evaluate to Integer.MIN_VALUE (for instance through subtraction that itself overflows), the code's implicit assumption that distance is always non-negative silently fails, and the subsequent unitCost * distance computation can produce a nonsensical or exploitable result. This illustrates the CERT-style principle 'never trust, always validate': arithmetic performed on externally influenced integers can overflow in ways that are entirely legal Java semantics (integer overflow wraps around silently rather than throwing), so the type system provides no protection here, and a library function like Math.abs cannot be assumed to restore an expected mathematical invariant without an explicit check.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-13-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The next fix for the Math.abs bug adds `assert (x1 - x2) != Integer.MIN_VALUE;`. Why does the lecture reject this as a real fix?",
+      "keyBeats": [
+        "Java assertions are disabled by default at runtime; must be explicitly enabled with -ea",
+        "An assert is a debugging/documentation aid, not an enforced runtime security control",
+        "If disabled, the check silently vanishes and the overflow bug is exploitable exactly as before",
+        "Correct mitigation: unconditional explicit if-check that throws an appropriate exception"
+      ],
+      "modelAnswer": "Java assertions are disabled by default at runtime; they only take effect if the JVM is explicitly launched with the -ea (enable assertions) flag, which production deployments frequently omit for performance or simply do not set. An assert statement is meant as a debugging and documentation aid during development and testing, showing what the programmer believes must hold, not an enforced runtime security control. If assertions are disabled (the common default in production), the check silently vanishes, and the Math.abs overflow bug remains exactly as exploitable as it was before the 'fix' was added -- the code looks protected in the source but is not protected at runtime. The correct mitigation is to replace the assert with unconditional real control flow, such as an explicit if-check that throws an appropriate exception (e.g. IllegalArgumentException) when the dangerous input is detected, so the guard is always present regardless of how the JVM is configured.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-14-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "In the BankAccount example, `balance` is a private `long` updated by updateBalance() and read by printBalance(). Why is this not thread-safe even though balance is only ever read/written as a whole?",
+      "keyBeats": [
+        "JLS does not guarantee atomicity of reads/writes of non-volatile long/double fields; can be two 32-bit operations on some platforms",
+        "Concurrent updateBalance() and printBalance() can interleave to observe a 'torn' value that was never the real balance at any instant",
+        "private alone limits who can name the field, not concurrent access ordering",
+        "Mitigation: volatile for atomic field access, or proper synchronization / AtomicLong, since the read-modify-write in updateBalance() must also be atomic as a whole"
+      ],
+      "modelAnswer": "Although balance is only ever assigned or read as a single value in the source code, the Java Language Specification does not guarantee that reads and writes of a non-volatile 64-bit long (or double) field are atomic; on some platforms the JVM can implement a 64-bit access as two separate 32-bit operations. This means a concurrent call to updateBalance() (which reads the old value, adds upd, and writes the new value) can interleave with a concurrent call to printBalance() such that printBalance() observes a 'torn' value -- half from the old balance and half from the new one -- a value the account never actually held at any single instant, which is a genuine data race, not just a control-flow race. The field being private does not help here: private only restricts which source code is allowed to name the field, it says nothing about the ordering or atomicity of concurrent accesses to it. The lecture's fix direction is to make the field's individual reads/writes atomic and visible, e.g. by declaring balance volatile, or, better, to use proper synchronization (synchronized methods/blocks) or a dedicated atomic type such as java.util.concurrent.atomic.AtomicLong, since updateBalance() also performs a compound read-modify-write that needs to be atomic as a whole, not merely have atomic individual loads and stores.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-15-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The Foo.Bar() example builds a file path as `new File(\"/tmp\", System.getenv(\"FOOFILERS\"))` and writes to it. What is the vulnerability, and how should it be mitigated?",
+      "keyBeats": [
+        "Filename component comes directly from an attacker-controllable environment variable with no validation",
+        "Path/filename injection can make the resulting File point outside /tmp, overwriting an arbitrary file the process can write",
+        "Classic 'lacking input validation'; CERT reference given is FIO16-J (canonicalize path names)",
+        "Mitigation: validate/whitelist rather than blacklist, canonicalize and confirm the path stays within the intended directory"
+      ],
+      "modelAnswer": "In this example, the filename component of the File is taken directly from the environment variable FOOFILERS, which is fully controlled by whoever can set the process's environment, and it is used with no validation whatsoever. An attacker able to influence that environment variable can supply a value that is an absolute path, or that contains directory-traversal segments such as '..', causing the resulting File to point outside /tmp entirely and letting the program overwrite an arbitrary file that its process has write access to. This is the lecture's example of the 'lacking input validation' problem area, and it points to CERT rule FIO16-J (canonicalize path names before validating them) as the relevant guidance. The recommended mitigation, repeated emphatically in the lecture ('validate, validate, validate'), is to never trust external input -- including environment variables, not just user-facing form fields -- and to prefer whitelisting known-good values or characters over blacklisting known-bad ones. Concretely, the resulting path should be canonicalized and then checked to confirm it still resides within the intended directory before it is used to open or create a file.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-16-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Foo has a `private int[] baz` and a public method `getBaz()` that returns it directly. Why is this insecure, and what is the fix?",
+      "keyBeats": [
+        "getBaz() returns the actual internal reference, not a copy; any caller can mutate baz's contents from outside",
+        "Information-disclosure and integrity vulnerability: 'protected' state is both readable and writable externally",
+        "Confirms scope modifiers like private restrict source-level naming, not what happens to a reference once handed out",
+        "Mitigation: return a defensive copy (e.g. clone()/Arrays.copyOf) or an immutable/unmodifiable view"
+      ],
+      "modelAnswer": "getBaz() returns baz itself -- the actual reference to Foo's internal array -- rather than a copy of its contents. Because arrays in Java are mutable objects accessed by reference, any code that calls getBaz() now holds a live handle to Foo's internal state and can freely mutate it from outside the class, for example with baz[0] = 999, completely bypassing whatever the private modifier was intended to protect. This is both an information-disclosure vulnerability (internal state is exposed) and an integrity vulnerability (internal state can be altered by code that never should have been able to touch it). It reinforces the point that scope modifiers such as private are not, by themselves, a security feature: they restrict which source code may name a member directly, but they do nothing to prevent misuse of a reference to that member once it has been legitimately handed out through a public method. The fix is to never leak the live internal reference: getBaz() should instead return a defensive copy of the array (e.g. via clone() or Arrays.copyOf(...)) or, where appropriate, an unmodifiable/immutable view, so external callers can observe the data without being able to alter Foo's internal state.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-17-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Why is a method like `public void performSecurityCheck()` dangerous if it is meant to enforce a security decision, and how does the lecture say to fix it?",
+      "keyBeats": [
+        "If not final (and class/method not private), any subclass can override the method and replace it, e.g. with a no-op",
+        "Dangerous especially when other code calls the method polymorphically, trusting that the base-class check ran",
+        "Mitigation: declare the method final, or private/static, to remove it from the overridable virtual-dispatch surface"
+      ],
+      "modelAnswer": "As written, performSecurityCheck() is a normal, overridable instance method. Because it is neither final nor private, any subclass of the declaring class can override it and supply a different implementation -- for example a no-op that always 'succeeds' -- while still satisfying the same method signature that other code expects to call. This is especially dangerous when other parts of the program invoke the method polymorphically through a reference of the base type, trusting that 'the' security check has actually run, when in fact a subclass instance may have silently replaced that logic with something attacker-favorable. The lecture's fix is to remove the method from Java's overridable, virtually-dispatched surface: declaring it final prevents any subclass from overriding it while still allowing normal visibility, and declaring it private (or static) removes it from virtual dispatch entirely, since private methods are not inherited or overridden at all. Either approach ensures the security-critical logic cannot be silently swapped out by a subclass.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-18-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "`Program` is declared final, but has a `public String filename` field that is not final. What is the risk, and what principle does the lecture attach to it?",
+      "keyBeats": [
+        "Public non-final field can be read and directly overwritten by any code holding a reference, with no validation or auditing",
+        "Declaring the class final only prevents subclassing; it does not protect a mutable public field",
+        "Illustrates 'don't trust anyone -- not even the language/compiler'",
+        "Mitigation: make the field private with controlled accessors, or make it truly immutable"
+      ],
+      "modelAnswer": "The class Program is declared final, but this only prevents other code from subclassing it; it does nothing to protect the mutable public field filename. Because filename is public and not final, any code holding a reference to a Program object can both read it and directly overwrite it at any time, with no validation, no encapsulation, and no opportunity for the class itself to react to or audit the change -- the field is effectively part of the object's freely mutable public surface. The lecture attaches this example to the principle 'don't trust anyone -- not even the language/compiler': a developer might assume that a final class implies a well-controlled or effectively immutable object, but that assumption is false here, since finality of the class says nothing about the mutability of its fields. The mitigation is to make the field private and expose it, if needed, only through controlled accessor methods (with validation on any setter), or to make it genuinely immutable by declaring it final and never exposing a way to change it after construction.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-19-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "`cmd.trim()` on a String obtained from `System.getProperty(\"cmd\")` can throw a NullPointerException if the property is unset. The lecture says wrapping this in a try/catch is not really a fix. Explain both the vulnerability and why 'catch it' is inadequate.",
+      "keyBeats": [
+        "getProperty() returns null if unset; calling .trim() on null throws NPE -- a null-dereference from not validating an external value",
+        "Normally 'just' an availability/DoS issue, but Mark Dowd's Adobe Flash exploit shows an NPE can be leveraged into real memory corruption",
+        "Catching the NPE handles the symptom, not the root cause: the invalid value was still used, and whatever produced the missing property is unaddressed",
+        "Correct mitigation: validate/check for null before use, failing fast with an intended error path"
+      ],
+      "modelAnswer": "System.getProperty(\"cmd\") returns null if that system property was never set, and calling .trim() on that null reference throws a NullPointerException -- a classic null-dereference bug caused by not validating a value obtained from an external/untrusted source (the system properties, which can be influenced via command-line -D flags or configuration) before using it. Normally an uncaught NullPointerException is 'just' a reliability/availability problem: the current operation or thread aborts. But the lecture explicitly cites Mark Dowd's real-world exploit against Adobe Flash as a case where a null-pointer condition was turned into genuine, exploitable memory corruption, showing that NPEs cannot always be dismissed as merely benign crashes. The lecture then shows wrapping the call in try/catch (NullPointerException e) { ... } and explicitly rejects this as a real fix: catching the exception suppresses the symptom -- the exception no longer propagates -- but the code still attempted to operate on an invalid value it should never have reached, and whatever actually caused the property to be missing or unset in the first place remains completely unaddressed, meaning the same underlying flaw can resurface through a different path. The correct mitigation is to validate for null before use and fail fast through an intended, explicit error path (e.g. throwing a meaningful exception or supplying a safe default), rather than reactively catching the exception the invalid use produced.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-20-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Generating a 'secret token' with `new Random().nextInt()` is insecure. Why, what is the recommended fix, and does the fix fully solve the problem?",
+      "keyBeats": [
+        "java.util.Random is a statistical PRNG (LCG), not cryptographically unpredictable -- outputs let an attacker recover seed/state and predict values",
+        "Recommended fix: java.security.SecureRandom, a cryptographically secure RNG seeded from OS entropy",
+        "Residual problem: the token is built from a single 32-bit int, so the total token space is at most 2^32, too small against brute force",
+        "Full mitigation needs both a CSPRNG and sufficient output length/entropy, not just swapping the class"
+      ],
+      "modelAnswer": "java.util.Random is a pseudo-random number generator (a linear congruential generator) designed for good statistical distribution and speed, not for unpredictability against an adversary; given a limited number of its outputs, an attacker can often reconstruct its internal seed/state and then predict past or future values, which makes any 'secret' token derived from it guessable. The lecture's recommended fix is to use java.security.SecureRandom instead, which is designed to be cryptographically unpredictable, typically seeded from an operating-system entropy source and implemented as a cryptographically secure PRNG. However, the lecture then points out that switching classes does not fully solve the problem: the token is still built by hex-encoding a single Java int returned by nextInt(), and an int is only 32 bits wide, so the entire possible token space is at most 2^32 values -- far too small to resist brute-force guessing or enumeration for a genuine security token, regardless of how strong the underlying random source is. A complete mitigation therefore needs both a cryptographically secure source (SecureRandom) and sufficient output length/entropy, e.g. generating and encoding a byte array of adequate size, rather than a single 32-bit int.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-21-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The lecture's 'kill Java security with a lightbulb' example defines two classes A and B whose fields are almost, but not exactly, laid out the same, with B containing one extra reference field. What is the point of this construction, and what capability does it aim to give an attacker?",
+      "keyBeats": [
+        "A and B are deliberately given near-identical field layouts except B has one extra field, shifting later field offsets",
+        "Goal: if a runtime memory error causes a reference to A to be treated as B (or vice versa), fields no longer line up as expected",
+        "Because the offset relationship is attacker-chosen, one memory corruption can be turned into a controlled, repeatable read/write primitive",
+        "Shows type safety only holds as long as the underlying hardware never corrupts a reference/pointer value"
+      ],
+      "modelAnswer": "The two classes A and B are constructed so that most of their fields (a1, a2, a4, a5, a7, ...) line up in the same order, but B contains one extra reference field, b, inserted partway through, which shifts the memory offset of every field declared after it in B relative to the corresponding field in A. The point of this careful construction is to prepare for the case where a runtime memory error causes a reference that the program believes points to an object of type A to actually point to (be aliased with) an object of type B, or vice versa -- i.e. a violation of type safety at the level of object identity. Because the field layouts were deliberately chosen so that specific fields of A and B overlap at attacker-known offsets, once such a type confusion occurs, reading or writing a field through the 'wrong' type's view accesses a precise, predictable location in memory rather than an arbitrary or useless one. This lets the attacker turn what might otherwise be a single, low-value memory corruption into a controlled, repeatable primitive for reading or writing chosen locations in memory, completely defeating the type-safety guarantee the JVM sandbox depends on. It demonstrates that type safety, as enforced purely in software by the JVM, is only as strong as the assumption that the underlying hardware never silently corrupts a reference or pointer value -- an assumption that does not always hold.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-22-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Once objects p (type A) and q (type B) are made to alias the same memory due to a type-confusion error, the lecture shows `p.i = address - offset; q.a6.i = value;` achieving an arbitrary write. Walk through why this two-line sequence writes `value` to `address` (the lecture illustrates this with a step-by-step memory-layout diagram).",
+      "keyBeats": [
+        "offset is fixed as the byte offset of field i within the shared layout, i.e. offset = 6*4",
+        "p.i = address - offset writes into the memory word at that offset, which in q's (type B) view is field a6, a reference/pointer field",
+        "q.a6 is now (mis)interpreted as pointing to (address - offset); writing q.a6.i adds i's own offset (6*4) again",
+        "Effective address written: (address - offset) + offset = address, giving a write(address, value) primitive built from ordinary field assignments"
+      ],
+      "modelAnswer": "The construction relies on p (declared type A) and q (declared type B) being aliased to the same underlying block of memory due to a type-confusion error, and on offset being fixed as the byte offset of field i within the two classes' shared layout -- 6*4, since i sits after six pointer-sized fields in A. The diagrammed steps show: first, p.i = address - offset performs a normal field write, but because it is writing into the shared memory at position 'offset' from the start of the object, and that same position in q's (type B) layout corresponds to the reference field a6, this write actually plants the value (address - offset) into what B's view interprets as the a6 pointer. Second, evaluating q.a6.i dereferences that (forged) pointer -- i.e. treats (address - offset) as the address of another A-typed object -- and then accesses field i within it, which again lies at offset 6*4 from the start of that object; so the final memory location touched is (address - offset) + offset, which is exactly address, and writing value there stores value at address. The net effect of these two ordinary-looking Java statements is therefore a fully general write(address, value) primitive: arbitrary-address memory write, built entirely out of legal field assignments once type confusion between A and B has been established.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 56",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L6-23-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "A type-confusion attack requires an actual memory error (a corrupted reference) to exist. How does the lecture describe both a passive and an active way to obtain one, and what were the reported real-world success rates?",
+      "keyBeats": [
+        "Passive: wait for naturally occurring memory errors (e.g. cosmic radiation) -- low probability, impractically long wait",
+        "Improve odds without special hardware: fill memory with one A object and as many B objects as possible; 'cousin number' analysis estimates exploitable-bit-flip probability",
+        "Active: deliberately induce the error via a hardware side channel (leads into Rowhammer)",
+        "Reported results: IBM JVM 70% and 33% success on two machines; Sun JVM 38% success"
+      ],
+      "modelAnswer": "The type-confusion write primitive only becomes usable once an actual memory error corrupts a reference so that p and q really do alias the same object. The lecture first describes a passive route: simply wait for a naturally occurring memory error, such as a bit flip caused by cosmic radiation; this is possible in principle but has very low probability and an impractically long expected wait time to occur in an exploitable location. To improve the odds without any special hardware trick, an 'attack program' can be designed to maximise exposure: fill memory with one object of class A and as many objects of class B as possible, so that if a spontaneous bit flip does happen, it has a higher chance of landing inside a reference field that produces the desired A/B confusion; the lecture introduces a 'cousin number' analysis -- the count of addresses that differ from a target address in only a single bit -- to estimate, given the number of objects placed in memory, how many bits of a pointer can realistically be exploited this way. Since even this optimisation still amounts to a long wait, the lecture pivots to an active route: deliberately inducing the memory error via a hardware side channel, which is where Rowhammer is introduced next. To underline that this is a practical, not merely theoretical, attack, the lecture reports concrete experimental results: attacking IBM's JVM succeeded in 70% and 33% of attempts on two different machines, and attacking Sun's JVM succeeded in 38% of attempts.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 59",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-24-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "What is the Rowhammer attack, and how does the 'double-sided' variant physically induce the bit-flips the type-confusion exploit needs?",
+      "keyBeats": [
+        "DRAM stores bits as charge in capacitor cells organized in rows; cells must be periodically refreshed (e.g. every 64ms) or lose their value",
+        "Rowhammer rapidly, repeatedly activates ('hammers') a row; electrical disturbance leaks into adjacent rows and can flip bits before the next refresh",
+        "Double-sided Rowhammer hammers both rows adjacent to a target row simultaneously, increasing flip likelihood and giving easier isolation/predictability",
+        "Turns a purely software-driven access pattern into a hardware-level memory-corruption primitive, with no physical access required"
+      ],
+      "modelAnswer": "DRAM stores each bit as an electrical charge in a tiny capacitor cell, and cells are organized into rows that must be periodically refreshed -- the lecture states roughly once every 64ms -- or they lose their charge and their stored value. Rowhammer exploits the fact that repeatedly and rapidly activating ('hammering') a given row causes electrical disturbance that leaks into physically adjacent rows; if a row is hammered enough times within a single refresh interval, the disturbance can be enough to flip a bit in a neighbouring row before it is next refreshed, corrupting data the attacker never had direct write access to. The double-sided variant hammers the two rows immediately adjacent to a chosen target row simultaneously (rather than just one neighbour), which the lecture notes increases the likelihood of a flip in the row sandwiched between them, and also gives the attacker easier isolation and predictability of which cell flips. The key significance for Java's security model is that this technique turns memory corruption -- previously something the attacker had to passively wait for (e.g. cosmic radiation) -- into something induced purely through a software-controlled memory access pattern, with no physical access to the machine required, giving a practical way to actively trigger the reference corruption the type-confusion attack depends on.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 68",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L6-25-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "What does the existence of the type-confusion/Rowhammer attack chain reveal about the actual limits of Java's security guarantees, and why does the lecture say common defenses (ECC, DDR4/DDR5) don't solve the problem?",
+      "keyBeats": [
+        "Type safety is enforced purely in software by the JVM, on the assumption that the underlying hardware never silently corrupts a reference",
+        "Rowhammer shows that assumption can be actively violated via software alone, with no physical access -- undermining the 'closer coupling, same address space' trust model",
+        "ECC only corrects a limited number of bit errors, so it 'does not help (very much)' against a targeted, repeatable attack",
+        "DDR4/DDR5 generational changes also do not solve it; follow-on techniques (RAMBleed, Mayhem) show the attack family keeps improving"
+      ],
+      "modelAnswer": "The type-confusion/Rowhammer chain reveals that Java's type-safety guarantee, however carefully enforced by the compiler, bytecode verifier and runtime, is ultimately a software-level guarantee that implicitly assumes the underlying hardware faithfully preserves the bit patterns of references and object data. As long as that assumption holds, the JVM's checks are sufficient to keep untrusted and trusted code, sharing the same address space, properly isolated from each other. Rowhammer breaks exactly this assumption: it shows that an attacker, using nothing but ordinary memory access patterns from software, can induce real bit flips in DRAM and thereby corrupt a reference in a controlled, repeatable way, defeating type safety at its root without ever violating any Java-level rule. This means the 'closer coupling: trusted and untrusted code executed in the same address space' design choice discussed earlier is only as safe as the hardware beneath it, and no amount of language-level or JVM-level checking can fully compensate for a hardware assumption that turns out to be false. The lecture also explains why the obvious hardware-level defenses are insufficient: error-correcting code (ECC) memory can only detect and correct a limited number of bit errors per memory word, so it 'does not help (very much)' against a targeted attack engineered to fit within what ECC can silently tolerate or to occur in a way ECC does not catch, and successive DRAM generations (DDR4, DDR5) have also not solved the underlying physical vulnerability. The lecture underscores that this is an evolving attack family, not a one-off flaw, citing follow-on techniques such as RAMBleed and 'Mayhem' as evidence that these hardware-rooted attacks against language-level security guarantees keep improving over time.",
+      "citation": "lecture08a-sos-securejava.pdf.extracted.txt, SLIDE 71",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": []
+}

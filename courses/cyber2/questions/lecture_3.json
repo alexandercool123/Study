@@ -1,0 +1,439 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 3,
+  "lectureTitle": "Injection Attacks and Taint Analysis",
+  "examQuestions": [
+    {"examQ": 3, "subPart": "a", "promptVerbatim": "Define injection attacks with examples (SQL injection, etc.)."},
+    {"examQ": 3, "subPart": "b", "promptVerbatim": "Explain what taint analysis is and how it can mitigate injection attacks."},
+    {"examQ": 3, "subPart": "c", "promptVerbatim": "Describe control flow graphs (CFGs), in/out equations, and static taint analysis rules."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L3-01-o",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "In general terms, what is an injection attack, and what underlying weakness in an application does it exploit?",
+      "keyBeats": [
+        "Attacker-controlled input flows through the program to a point where it is interpreted (by the app or another interpreter such as a browser, DB, or shell)",
+        "Occurs when input is insufficiently validated/sanitised before reaching that interpretation point",
+        "Illustrated with $choice/echo example: user-controlled input, no validation, propagated via variable, no sanitisation, sent to output",
+        "General fix: prevent tainted (user-controlled) input from reaching output unsanitised"
+      ],
+      "modelAnswer": "An injection attack occurs when an attacker manages to get data that they control into an application, and that data flows, unfiltered, into a point where it gets interpreted as code or as part of a command/query rather than as plain data. For example, on slides 2-6, the PHP snippet takes $_REQUEST['choice'] directly into an echo statement; because the input is never validated or sanitised, an attacker can supply a URL such as .../?choice=<script>alert(\"D'oh!\")</script> and have arbitrary JavaScript executed in the victim's browser (cross-site scripting). The underlying weakness is always the same: (1) input is under user control, (2) it is not validated, (3) it propagates through the program via variables without being cleaned/sanitised, and (4) it eventually reaches an output/interpretation point (a 'sink'). The fix the lecture proposes is to prevent such 'tainted' (user-controlled) input from ever reaching an output sink un-sanitised - this is exactly the motivation for taint analysis.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-02-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Give a precise definition of an injection attack and illustrate it with the concrete SQL injection example from the lecture.",
+      "keyBeats": [
+        "User-controlled input reaches an interpreter (DB, shell, browser) without validation/sanitisation",
+        "SQL injection example: $_POST username/password concatenated directly into a SQL query string",
+        "Attacker can inject SQL syntax to change the query's meaning (e.g. bypass authentication)",
+        "SQL injection is one variety of the general injection-attack class"
+      ],
+      "modelAnswer": "An injection attack is an attack in which attacker-controlled input is passed, without proper validation or sanitisation, into an interpreter (such as a database engine, an OS shell, or a browser), causing the interpreter to execute attacker-chosen commands/code instead of only treating the input as inert data. The lecture's canonical example (slides 7-9) is SQL injection: $sql = mysqli->query(\"SELECT * FROM users WHERE username='\" . $_POST[\"username\"] . \"' AND password='\" . $_POST[\"password\"] . \"'\");. Here $_POST[\"username\"] and $_POST[\"password\"] are taken directly from user input and concatenated straight into the SQL query string with no validation. Because the query is built by string concatenation, an attacker can supply a username such as ' OR '1'='1 to change the meaning of the WHERE clause and bypass authentication, or otherwise manipulate/extract data from the users table. The root causes are the same as for injection attacks generally: (1) input under user control, (2) no input validation, (3) input sent directly to an interpreter/output.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-03-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through the reflected XSS example from the start of the lecture (the $choice / echo snippet): what makes it vulnerable and what does a malicious URL look like?",
+      "keyBeats": [
+        "Code: $choice = $_REQUEST['choice']; echo 'your choice was: ' . $choice;",
+        "Evil URL: ?choice=<script>alert(\"D'oh!\")</script>",
+        "Problems: user-controlled input, no validation, propagated via variable, no sanitisation, sent to output",
+        "Stated solution: prevent tainted input from reaching output"
+      ],
+      "modelAnswer": "The example (slides 2-6) is: $choice = $_REQUEST['choice']; echo 'your choice was: ' . $choice;. Because $choice is taken directly from the request and echoed back into the HTML page without any validation or escaping, an attacker can browse to http://example.org/?choice=<script>alert(\"D'oh!\")</script> and have the <script> tag injected into and executed by the victim's browser - a reflected cross-site-scripting (XSS) attack. The slides enumerate the exact chain of problems: the input is under user control, there is no input validation, the input is propagated through the program via a variable, there is no sanitisation/scrubbing of that variable, and finally the (still tainted) variable's content is sent directly to output. The proposed solution is general: prevent user-controlled (tainted) input from ever reaching output.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-04-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What exactly makes the SQL example (mysqli->query(...)) on the slides vulnerable, and what is proposed as the general solution?",
+      "keyBeats": [
+        "User-controlled $_POST fields concatenated directly into the query string",
+        "No validation performed on the input",
+        "Tainted data sent directly to the database (the interpreter/sink)",
+        "Solution proposed: taint analysis - mark input as tainted, follow the trace, stop the program if tainted data reaches output"
+      ],
+      "modelAnswer": "In the SQL example (slides 7-9), $_POST[\"username\"] and $_POST[\"password\"] are user-controlled, are not validated, and are concatenated directly into the SQL query string that is sent to the database (the 'output'/interpreter in this case). The slides explicitly name this general fix: 'Solution: Taint analysis - Mark/annotate data from input as tainted; follow the taint trace through program execution and stop the program if tainted data is sent to output.' In other words, rather than manually auditing every string concatenation for missing sanitisation, the analysis systematically tracks which variables might carry unsanitised user input and flags/blocks any case where such a variable reaches a sink (output/query).",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-05-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Besides SQL injection, what other variety of injection attack does the supplementary reading mention, and how widespread is this class of vulnerability said to be?",
+      "keyBeats": [
+        "Command injection is mentioned alongside SQL injection as another variety",
+        "Both follow the same pattern: unsanitised input reaches an interpreter (DB vs OS shell)",
+        "Injection attacks described as widespread",
+        "Ranked the top spot on the OWASP Top 10 application security risks list in 2017"
+      ],
+      "modelAnswer": "The supplementary note states that 'injection attacks come in many varieties, such as SQL injection and command injection.' Command injection follows the same underlying pattern as SQL injection except that the interpreter that ends up executing the attacker's payload is an OS command shell rather than a database engine: unsanitised, user-controlled input is concatenated into a string that is passed to a shell command, letting the attacker append or substitute their own shell commands. The note also observes that injection attacks (as a class) are widespread and were ranked the top risk on the OWASP Top 10 list of application security risks in 2017. This detail is not stated in the primary lecture slides, which only work through SQL injection and XSS/echo examples explicitly.",
+      "citation": "intro-static-taint-rrh-JAN2021.pdf.extracted.txt, PAGE 1",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-06-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "What is taint analysis, in general terms, and what problem is it designed to solve?",
+      "keyBeats": [
+        "Program analysis that tracks unsanitised/user-controlled ('tainted') data as it flows through a program",
+        "Goal: detect (and prevent) tainted data reaching a dangerous sink before it has been sanitised",
+        "Can be done dynamically (during execution) or statically (without running the program)",
+        "Automates otherwise painstaking, time-consuming manual code auditing"
+      ],
+      "modelAnswer": "Taint analysis is a program analysis technique that marks/annotates data coming from untrusted sources (e.g. user input) as 'tainted', then tracks how that taint propagates through the program's variables and computations as the program (conceptually or actually) executes. The purpose is to automatically detect - and, when integrated into a checking mechanism, prevent - situations where tainted data reaches a sensitive 'sink' (typically an output point or an interpreter such as a database, shell, or browser) without first being sanitised/validated. As the lecture puts it for the SQL example: 'Mark/annotate data from input as tainted; follow the taint trace through program execution and stop the program if tainted data is sent to output.' The supplementary note frames the motivation explicitly: manually auditing a large application for missing validation is painstaking and time-consuming, so taint analysis automates the search for potential injection vulnerabilities, and doing it statically means the check can run at compile time / during development, before the program is ever deployed or run.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-07-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Define the terms source, sink, and propagation rule as used in taint analysis, per the lecture's stated learning goals.",
+      "keyBeats": [
+        "Source: a program construct where tainted data enters (e.g. input(), $_REQUEST/$_POST)",
+        "Sink: a program construct where data leaves to be interpreted/output (e.g. output(), echo, DB query)",
+        "Propagation rule: rule describing how taint spreads (or is removed) through a statement",
+        "These three concepts are the explicit first learning goal of the lecture"
+      ],
+      "modelAnswer": "The lecture's first learning goal is to be able to define source, sink, and propagation rules for static taint analysis. A source is a program construct where untrusted/user-controlled data enters the program - e.g. input() in the toy language, or $_REQUEST[...]/$_POST[...] in the PHP examples; whatever a source produces must be marked tainted. A sink is a program construct where data leaves the program to be interpreted or displayed - e.g. output(...), PHP's echo, or a database query call; the analysis's whole purpose is to check whether tainted data can reach a sink. A propagation rule describes how taint spreads (or is removed) as execution passes through each kind of instruction - e.g. on an assignment x = y, does x inherit y's taint; on x = e where e involves an operator like string concatenation '.', does the result inherit taint from its operands; and (later) how a sanitise(x) instruction removes taint from x.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-08-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "State the three core rules used for manual/dynamic taint-tracking during program execution, as developed in the lecture's worked example.",
+      "keyBeats": [
+        "Rule 1: sources (input) must be annotated as tainted",
+        "Rule 2: on assignment x = y, left-hand side inherits annotation of right-hand side (extended to operators like '.')",
+        "Rule 3: sinks (output) may not receive tainted values -> error if violated",
+        "Illustrated on the $choice/$greet/echo example, ending in ERROR when the tainted $greet is echoed"
+      ],
+      "modelAnswer": "Working through the $choice/$greet/echo example line by line (slides 14-21), the lecture derives three rules for annotated ('dynamic') program execution: (1) Sources (i.e., input, such as $_REQUEST[...]) must be annotated as tainted the moment the value is read. (2) On an assignment x = y the left-hand side inherits the taint annotation of the right-hand side; this is extended to cover operators such as string concatenation '.', so $greet = 'your choice was: ' . $choice becomes tainted because $choice is tainted, even though a constant string was also involved. (3) Sinks - outputting a value with an operation like echo - are not allowed to receive a tainted value; when the trace reaches echo $greet; with $greet tainted, the rule flags this as an ERROR. Together these three rules let you manually annotate/trace exactly how taint flows from source to sink for one concrete run of the program.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-09-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "How does static taint analysis differ from the dynamic/manual taint tracking described earlier in the lecture, even though it uses the 'same' rules?",
+      "keyBeats": [
+        "Same three rules (source annotate, assignment inherit, sink forbidden) are reused",
+        "Must be applied on ALL execution paths of the program, not just one concrete run",
+        "There is no concrete input value, so taint must be tracked symbolically/abstractly",
+        "Static means at compile time, without running the program"
+      ],
+      "modelAnswer": "Slide 23 makes the comparison explicit. Dynamic/manual taint analysis traces one concrete execution with concrete input values (e.g. $_REQUEST['choice'] = \"42\"), following exactly the sequence of statements actually executed. Static taint analysis reuses the exact same three rules (sources annotated, assignment propagates taint, sinks must not receive tainted values), but with two crucial differences: (1) the rules must be applied along all possible execution paths through the program (e.g. both branches of an if, and the loop body of a while, not just one path), because a static analysis has to reason about the program without actually running it; and (2) there is no concrete input value available, so taint has to be tracked symbolically/abstractly - we don't know if $choice is \"42\" or something else, only that it is (or is not) tainted. As the supplementary note adds, 'static' here specifically means the analysis works at compile-time, without ever running the program, so it can flag potential vulnerabilities during development before deployment.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-10-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Concretely, once a static taint analysis has been run over a program, how is its result used to check for/prevent injection-attack vulnerabilities?",
+      "keyBeats": [
+        "Step 1: define which program points are sources (input) and which are sinks (output)",
+        "Step 2: perform/run the static taint analysis to compute IN/OUT sets for every label",
+        "Step 3: for every output statement output(x), check that x is NOT a member of IN(l)",
+        "A violation (x in IN(l)) flags a possible injection vulnerability"
+      ],
+      "modelAnswer": "Slide 42 lays out the procedure in three steps: (1) Define input operations as sources and output operations as sinks in the program under analysis. (2) Perform the static taint analysis over the whole control flow graph, computing the IN and OUT sets of tainted variables for every program point/label. (3) For every output statement of the form l: output(x), check that x is not a member of IN(l) - i.e. that the variable being output is not in the set of variables known to possibly be tainted at that point. If x is a member of IN(l) for some output statement, that statement is a potential injection vulnerability, since a tainted (unsanitised, user-controlled) value could reach that sink. This turns the abstract taint-flow computation into a concrete, automatable check that can be run over an entire codebase.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-11-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "How can taint be removed once it has been added, and what is the analysis rule for the relevant instruction?",
+      "keyBeats": [
+        "Introduce a sanitise(x) instruction representing validation/escaping/cleaning of x",
+        "Rule: OUT(l) = IN(l) \\ {x} - sanitise removes x from the tainted set unconditionally",
+        "Contrasts with the assignment rule, which can add taint; sanitise explicitly subtracts it",
+        "Motivates a follow-up 'definitely sanitised variables' analysis exercise"
+      ],
+      "modelAnswer": "Exercise 14 (slides 44-45) asks how taint, which so far has only ever been added, can be removed - the answer is to introduce an explicit sanitise(x) instruction representing validation/escaping of the variable x (e.g. running it through an escaping function or a prepared-statement parameter binder). Its analysis rule is: for l: sanitise(x), IN(l) = JOIN(l) and OUT(l) = IN(l) \\ {x} - that is, x is unconditionally removed from the set of tainted variables flowing out of that program point, regardless of whether it was tainted coming in. This is the mechanism by which a program can legitimately become 'safe' to output a variable that originated from an untrusted source: it must pass through a sanitisation step whose effect the analysis models as removing it from the tainted set.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-12-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Why can a static taint analysis only ever say a program 'may' be vulnerable to injection, rather than definitively 'is' or 'is not' vulnerable?",
+      "keyBeats": [
+        "Static analyses over-approximate to remain sound (catch all real problems, possibly at the cost of false positives)",
+        "Explained via a deep mathematical result related to the halting problem (Turing)",
+        "No non-trivial static analysis can be perfectly exact for all programs",
+        "This is why a flagged result is a 'potential' vulnerability requiring human review, not a certainty"
+      ],
+      "modelAnswer": "The supplementary reading notes explicitly that a static analysis can only report that a program 'may' be vulnerable, never that it definitely is (or is not): 'static analyses can never be exact, at least not for non-trivial analyses of non-trivial programs/programming languages. This is a deep mathematical result related to the so-called halting problem discovered by Alan Turing.' In practice this manifests as the analysis over-approximating: it deliberately marks variables as tainted whenever there is any possibility they could carry unsanitised input along some path (e.g. the naive assignment rule taints the left-hand side of every assignment), which can produce false positives, but guarantees it never misses a real vulnerability (no false negatives). This trade-off - soundness over precision - is why the primary lecture's slide 42 procedure is phrased as 'check that x is not in IN(l)' (a check, producing a flag/warning) rather than a guarantee of insecurity. This reasoning about undecidability is drawn from the supplementary note; the primary slides do not spell out the halting-problem justification.",
+      "citation": "intro-static-taint-rrh-JAN2021.pdf.extracted.txt, PAGE 8",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-13-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What does 'CFG' stand for, and how is a control flow graph formally defined?",
+      "keyBeats": [
+        "CFG = Control-Flow Graph",
+        "Formal definition: oriented/directed graph G = (V, E), nodes are program points (instructions), edges are control flow",
+        "Entry point (circle) and exit point (filled circle) mark the start and end of the program"
+      ],
+      "modelAnswer": "CFG stands for Control-Flow Graph. The lecture defines it formally as: 'Oriented graph G = (V, E) with program points as nodes and control flow as edges' (slide 27). The supplementary note phrases the same idea slightly more fully: a control flow graph is a directed graph in which the nodes are the program's instructions (each labelled with a program point, e.g. l1, l2, l3) and the edges represent the possible flow of control from one instruction to the next. A designated entry node (o) and exit node (filled dot) mark where execution of the program begins and ends respectively.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-14-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Why do static analyses (like taint analysis) represent the program as a CFG in the first place, and what do the PRED and SUCC functions give you?",
+      "keyBeats": [
+        "CFG formalises 'flow' through the program independent of surface syntax",
+        "Makes it easy to ask which instructions can run immediately before/after a given one",
+        "PRED(l) = {l' | (l',l) is an edge}: set of immediate predecessors of label l",
+        "SUCC(l) = {l' | (l,l') is an edge}: set of immediate successors of label l",
+        "IN/OUT dataflow equations are defined directly via PRED (through JOIN), so CFG structure drives the analysis"
+      ],
+      "modelAnswer": "The CFG gives a formal, language/syntax-independent way to talk about 'flow' through a program - i.e., in what order instructions can possibly be executed - which is exactly what a dataflow-style analysis like taint analysis needs. Concretely, once the program is a graph, the lecture defines two functions directly from the edge set: PRED(l) = {l' | (l', l) is an edge}, the set of program points that may execute immediately before l, and SUCC(l) = {l' | (l, l') is an edge}, the set of program points that may execute immediately after l. These are used constantly: the taint analysis's incoming-taint set at a node is defined as the union (JOIN) of the outgoing-taint sets of all its PRED nodes, and the worklist algorithm re-queues all of a node's SUCC nodes whenever that node's OUT set changes. Without the CFG (and PRED/SUCC), there would be no formal way to express 'what flows into this instruction' for programs with branches and loops.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-15-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Taint analysis is framed as a 'dataflow problem'. What is being computed at every program point, and what are the mathematical domains/types of IN and OUT?",
+      "keyBeats": [
+        "Goal: determine which variables may be tainted before (IN) and after (OUT) each instruction",
+        "TaintedVars = P(Vars), the powerset of all program variables",
+        "IN : Lab -> TaintedVars and OUT : Lab -> TaintedVars, functions from labels to sets of possibly-tainted variables",
+        "Requires a CFG with labelled program points as the underlying structure"
+      ],
+      "modelAnswer": "The lecture frames taint analysis as a dataflow problem (slides 25-26): for every instruction/program point in the CFG we want to know the set of variables that may be tainted flowing into that instruction and the set that may be tainted flowing out of it. Formally, the domain of possible taint-sets is TaintedVars = P(Vars), i.e. the powerset of the set of all program variables (any subset of variables could, in principle, be the 'currently tainted' set). Two functions are then defined over the labels (program points) of the CFG: IN : Lab -> TaintedVars and OUT : Lab -> TaintedVars, giving, respectively, the set of tainted variables just before and just after each labelled instruction executes. The whole analysis reduces to computing, for every label l in the CFG, its IN(l) and OUT(l) values according to instruction-specific propagation rules.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-16-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "What is the JOIN operator in this analysis, and what is the static taint analysis rule for a skip statement?",
+      "keyBeats": [
+        "JOIN(l) = union of OUT(l') for all l' in PRED(l): combines taint flowing in from every predecessor",
+        "For skip: IN(l) = JOIN(l); OUT(l) = IN(l)",
+        "Skip does not add or remove any taint, it just passes through whatever flows in",
+        "JOIN is used generically for the IN(l) of essentially every instruction type"
+      ],
+      "modelAnswer": "JOIN(l) is defined as the union of the OUT sets of all immediate predecessors of l: JOIN(l) = union over l' in PRED(l) of OUT(l') (slide 30). Intuitively, whatever might be tainted flowing into a program point must be the union of everything that could be tainted flowing out of every instruction that could execute right before it - this handles merge points where multiple branches join back together, since we must (soundly) assume a variable is tainted if it is tainted along any incoming path. For the skip instruction (a no-op), the rule is simply IN(l) = JOIN(l) and OUT(l) = IN(l): since skip does nothing, it neither adds nor removes any variable from the tainted set - whatever flows in flows straight out unchanged.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-17-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the exact static taint-analysis rule for an input statement l: x = input().",
+      "keyBeats": [
+        "IN(l) = JOIN(l)",
+        "OUT(l) = IN(l) union {x}",
+        "Directly reflects rule 1 (sources must be marked tainted): x is unconditionally added because it just received unvalidated external input"
+      ],
+      "modelAnswer": "For an input instruction l: x = input(), the rule (slide 31) is: IN(l) = JOIN(l), and OUT(l) = IN(l) union {x}. This directly encodes the 'sources must be annotated' rule: regardless of what was tainted before this instruction (captured by IN(l)), the variable x receiving the result of input() is unconditionally added to the set of tainted variables flowing out, since it now holds unvalidated, user-controlled data.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-18-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the static taint-analysis rule for an output statement l: output(e), and explain why the rule itself does not halt/flag the analysis when e is tainted.",
+      "keyBeats": [
+        "IN(l) = JOIN(l)",
+        "OUT(l) = IN(l): output does not change the set of tainted variables",
+        "Static analysis does not run the program, so it cannot interrupt execution at output time",
+        "The tainted-output check happens as a separate post-analysis step (x not in IN(l)) after the full analysis/fixed point is computed"
+      ],
+      "modelAnswer": "For l: output(e), the rule (slide 33) is IN(l) = JOIN(l), and OUT(l) = IN(l) - i.e. the set of tainted variables is unaffected by an output statement. This might seem surprising given that output is exactly where we want to prevent tainted data - but as the slide explains, static taint analysis does not run the program, so it cannot 'stop' execution at the point tainted data would be output the way the dynamic/manual version could. Instead, the analysis is run to completion first (computing IN/OUT everywhere), and only afterward do we separately check, for every output statement output(x), whether x is a member of IN(l) - this is the checking step described on slide 42, kept deliberately distinct from the propagation rules themselves.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-19-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "State the static taint-analysis rules for if(e) S1 else S2 and while(e) S. Why do they look identical to the skip rule?",
+      "keyBeats": [
+        "if: IN(l) = JOIN(l), OUT(l) = IN(l)",
+        "while: IN(l) = JOIN(l), OUT(l) = IN(l)",
+        "The condition test itself does not assign to/taint any variable, so it just passes through the taint set unchanged, same as skip",
+        "Actual taint effects come from statements S1/S2/S inside the branches/loop body, which are separate CFG nodes feeding back into JOIN"
+      ],
+      "modelAnswer": "Both control-flow constructs get the same simple rule as skip (slides 36-37): for l: if(e) S1 else S2, IN(l) = JOIN(l) and OUT(l) = IN(l); for l: while(e) S, IN(l) = JOIN(l) and OUT(l) = IN(l). This looks identical to skip because the guard/condition node itself (the if(e) or while(e) test) does not assign to any variable - it just decides which branch(es) of the CFG execution may follow, so no taint is added or removed at that specific node. All of the actual taint effects come from the statements inside the branches (S1, S2) or the loop body (S), which are their own labelled CFG nodes with their own propagation rules (e.g. assignment); their OUT sets then feed back via JOIN into whichever node follows the branch or loop (e.g. the merge point after an if, or back into the while guard itself for iteration).",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-20-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "What was the first ('naive') static taint-analysis rule proposed for assignment l: x = e, and what problem does the lecture identify with it?",
+      "keyBeats": [
+        "Naive rule: OUT(l) = IN(l) union {x} - x is always added regardless of what e is",
+        "Problem: unnecessary over-approximation",
+        "Example: x = 42 (a constant, no tainted operands) would still incorrectly mark x as tainted",
+        "x should only become tainted if e itself contains a tainted variable"
+      ],
+      "modelAnswer": "The first rule proposed for assignment (slides 38-39) is l: x = e: IN(l) = JOIN(l), OUT(l) = IN(l) union {x} - i.e., x is unconditionally added to the outgoing tainted set on every assignment, no matter what the right-hand side expression e is. The lecture immediately flags this as an unnecessarily 'large' over-approximation: x should only be marked tainted if the expression e actually involves a tainted variable. For example, an assignment like x = 42 (a plain constant) clearly should not taint x, yet the naive rule would still add x to OUT(l) regardless. Exercise 12 explicitly asks students to discuss/define a more precise propagation rule for assignment to fix this.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-21-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the refined ('re-visited') assignment rule for l: x = e, including the definition of the vars function it relies on.",
+      "keyBeats": [
+        "Refined rule: OUT(l) = IN(l) \\ {x} if vars(e) intersect IN(l) is empty (e's variables are not tainted)",
+        "Otherwise: OUT(l) = IN(l) union {x} (e contains at least one tainted variable)",
+        "vars: Expr -> P(Var): vars(n) = empty set for constants n, vars(x) = {x} for a variable, vars(e1 bop e2) = vars(e1) union vars(e2)",
+        "x becomes tainted only if what it is assigned from is tainted; otherwise x is actively un-tainted"
+      ],
+      "modelAnswer": "The refined rule (slide 40) is: for l: x = e, IN(l) = JOIN(l), and OUT(l) = IN(l) \\ {x} if vars(e) intersect IN(l) = empty set, or OUT(l) = IN(l) union {x} otherwise. In words: if none of the variables occurring in the right-hand-side expression e are currently tainted, then x is removed from (or kept out of) the tainted set - the assignment overwrites x with something we know is untainted. Otherwise (e mentions at least one currently-tainted variable), x is added to the tainted set as before. This relies on an auxiliary function vars : Expr -> P(Var) that collects the variables occurring in an expression: vars(n) = empty set for a constant/number n, vars(x) = {x} for a single variable x, and vars(e1 bop e2) = vars(e1) union vars(e2) for a binary operation. This fixes the naive rule's imprecision: e.g. for x = 42, vars(42) = empty set, so the intersection with IN(l) is trivially empty, and x is correctly removed from the tainted set.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-22-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "What are the boundary equations for the entry and exit nodes of a CFG in this analysis?",
+      "keyBeats": [
+        "IN(entry) = empty set; OUT(entry) = IN(entry) - nothing is tainted before the program starts",
+        "IN(exit) = JOIN(exit); OUT(exit) = IN(exit) - exit node receives whatever is tainted via JOIN and passes it through",
+        "These boundary conditions anchor the recursive IN/OUT equations with a well-defined starting point"
+      ],
+      "modelAnswer": "Slide 41 gives the 'formalities' for the special entry (o) and exit (filled dot) nodes of the CFG: IN(entry) = empty set and OUT(entry) = IN(entry) - the entry node has no incoming taint by definition (nothing has executed yet, so the tainted set is empty), and it simply passes that empty set through. IN(exit) = JOIN(exit) and OUT(exit) = IN(exit) - the exit node collects (via the usual JOIN over its predecessors) whatever variables are tainted from all possible paths that reach the end of the program, and outputs that same set unchanged. These two boundary definitions are essential because the whole system of IN/OUT equations for the 'real' instructions is recursively defined in terms of predecessors' OUT sets; the entry node's fixed empty IN value is what 'grounds' the recursion.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-23-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Construct the control flow graph for the following program, labelling each program point and drawing PRED/SUCC edges including entry/exit nodes: '1: choice = input(); 2: tmp = \"your choice was: \" . choice; 3: output(tmp);'",
+      "keyBeats": [
+        "Three sequential nodes l1, l2, l3 for the three statements",
+        "Single entry node before l1 and single exit node after l3",
+        "Edges: entry->l1, l1->l2, l2->l3, l3->exit",
+        "PRED(l1)={entry}, PRED(l2)={l1}, PRED(l3)={l2}, PRED(exit)={l3}; SUCC is symmetric",
+        "Each node has exactly one in-edge and one out-edge since there is no branching/looping"
+      ],
+      "modelAnswer": "This is a straight-line (no branches, no loops) three-statement program, so its CFG is a simple chain: entry -> l1: choice = input() -> l2: tmp = \"your choice was: \" . choice -> l3: output(tmp) -> exit. Each node has exactly one incoming and one outgoing edge: PRED(l1) = {entry}, PRED(l2) = {l1}, PRED(l3) = {l2}, PRED(exit) = {l3}; correspondingly SUCC(entry) = {l1}, SUCC(l1) = {l2}, SUCC(l2) = {l3}, SUCC(l3) = {exit}. Drawn out, it is a linear chain of five boxes (entry, l1, l2, l3, exit) connected top to bottom by single directed arrows - there is no branching because the program has no if/while constructs.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 27",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L3-24-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "The system of IN/OUT equations for a program with a loop can be recursive (e.g. OUT(l2) = OUT(l2) union {x,y}). How does the lecture justify that such equations have a well-defined, computable solution?",
+      "keyBeats": [
+        "Rewrite the equation as a function F(X) = X union {x,y}; a solution is exactly a fixed point of F, i.e. X such that F(X)=X",
+        "F is monotone over a complete lattice (powerset of variables, ordered by subset), so Tarski's/Kleene's fixed-point theorem guarantees a least fixed point exists",
+        "lfp(F) = union over i of F^i(bottom), computed by iterating F from the empty set and unioning all iterates",
+        "Terminates because the domain (TaintedVars) is finite, so the ascending chain must stabilize"
+      ],
+      "modelAnswer": "When a program contains a loop, the resulting IN/OUT equations can be self-referential, e.g. OUT(l2) = OUT(l2) union {x, y} (slide 52). The lecture's approach is to view the right-hand side as a function F(X) = X union {x, y}; a value satisfying the original equation is then exactly a fixed point of F, i.e. some X with F(X) = X. Because the domain here (TaintedVars = P(Var), ordered by set inclusion) is a complete lattice and F is a monotone function (X subset-of Y implies F(X) subset-of F(Y)), the Tarski/Kleene fixed-point theorem guarantees that a (least) fixed point exists and can be computed as lfp(F) = union over i of F^i(bottom), where F^0(bottom) = bottom (here bottom = empty set) and F^(i+1)(bottom) = F(F^i(bottom)); concretely this means iterating F(empty set) union F(F(empty set)) union ... until the result stops changing. Because the set of variables (and hence the lattice) is finite, this iterative process is guaranteed to terminate after finitely many steps, yielding a computable solution - for the example, FIX(F) = {x, y}, so OUT(l2) = {x, y}.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L3-25-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Describe the worklist algorithm used to actually compute the IN/OUT solution for a whole program automatically.",
+      "keyBeats": [
+        "Initialize IN[entry]=empty set, OUT[l]=empty set for all other labels l; worklist WL starts as the set of all labels",
+        "Repeat: pick a label l from WL, compute IN[l] as JOIN (union) of OUT[l'] for l' in PRED(l)",
+        "Compute OUT[l] via the transfer function for l's instruction type (case split: x=input(), x=e, output(x))",
+        "If OUT[l] changed, add all of l's SUCC labels back onto WL",
+        "Repeat until WL is empty (fixed point reached) - this automates the manual fixed-point substitution process"
+      ],
+      "modelAnswer": "The worklist algorithm (slides 58-59) automates fixed-point computation. It initializes IN[entry] = empty set and OUT[l] = empty set for every other label l, and sets the worklist WL to contain every label in the program. It then repeats: pick (any) label l from WL; recompute IN[l] as the union of OUT[l'] over all l' in PRED(l) (this is the JOIN); recompute OUT[l] using the transfer function appropriate to l's instruction - e.g. for 'x = input()': union(IN[l], {x}); for 'x = e': if vars(e) intersect IN[l] is empty, subtract x from IN[l], otherwise union IN[l] with {x}; for 'output(x)': leave IN[l] unchanged. If the newly computed OUT[l] differs from its previous value, all of l's successors (SUCC(l)) are added back onto the worklist, since their inputs may now need to be recomputed too. The loop terminates once the worklist is empty, at which point IN/OUT have reached a fixed point and represent the final, correct solution to the taint-analysis dataflow equations - this is exactly the automatable version of the manual substitution process shown for solving the equations by hand.",
+      "citation": "lecture06-07-sos-taint.pdf.extracted.txt, SLIDE 59",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": []
+}

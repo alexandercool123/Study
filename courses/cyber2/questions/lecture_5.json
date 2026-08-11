@@ -1,0 +1,462 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 5,
+  "lectureTitle": "Secure C",
+  "examQuestions": [
+    {"examQ": 5, "subPart": "a", "promptVerbatim": "Discuss general security weaknesses of C."},
+    {"examQ": 5, "subPart": "b", "promptVerbatim": "Explain common attacks: buffer overflow, integer under/overflow, format strings."},
+    {"examQ": 5, "subPart": "c", "promptVerbatim": "Describe mitigation techniques for C vulnerabilities."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L5-01-o",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Why is C fundamentally more prone to security vulnerabilities than a memory-safe, garbage-collected language like Python?",
+      "keyBeats": [
+        "Manual memory management (malloc/free) shifts safety burden to the programmer",
+        "No automatic bounds checking on arrays/buffers",
+        "Raw pointers allow arbitrary memory access and arithmetic",
+        "Mistakes cause undefined behaviour / memory corruption instead of caught exceptions",
+        "Python is garbage-collected and memory-safe, so buffer overflows can't happen there"
+      ],
+      "modelAnswer": "C gives the programmer direct, unchecked control over memory: pointers can be dereferenced, cast and arithmetic'd freely, arrays do not carry runtime bounds information, and memory must be manually allocated and freed with malloc()/free(). None of this is checked at compile- or run-time by default, so mistakes (writing past the end of a buffer, forgetting to free, freeing twice, dereferencing NULL) become memory-corruption bugs rather than caught exceptions. Python, in contrast, is garbage collected and memory-safe: it never lets code write outside an object's allocated bounds, so classic buffer overflows are not possible in Python. This gives C very high performance and portability, but every access is an opportunity for the programmer to shoot themselves in the foot, and mistakes are often directly exploitable rather than merely crashing.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-02-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "According to the learning goals of this lecture, what are the four broad categories of common C vulnerabilities you should be able to recognise?",
+      "keyBeats": [
+        "Buffer overflow",
+        "String manipulation",
+        "Integer overflow",
+        "Information disclosure",
+        "Also expected: explain how/why they occur and can be exploited, and identify OS/platform and compiler-based mitigations"
+      ],
+      "modelAnswer": "The lecture's learning goals list four broad categories of classic C vulnerabilities: (1) buffer overflow — writing past the bounds of an allocated buffer; (2) string manipulation errors — misuse of C string functions (e.g. unchecked format strings, unsafe copy functions); (3) integer overflow (and underflow/sign errors) — arithmetic on fixed-width integers wrapping around or being interpreted incorrectly; and (4) information disclosure — leaking sensitive data (e.g. uninitialized memory or freed data) to an attacker. For each the course also expects you to be able to explain how/why they occur and can be exploited, and to identify OS/platform-based mitigations (non-exec stack, ASLR) and compiler-based mitigations (stack canaries, compiler flags, formal methods).",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-03-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Given its well-known security weaknesses, why does C remain one of the most widely used programming languages, especially in certain domains?",
+      "keyBeats": [
+        "Low-level, high-performance code with minimal runtime overhead",
+        "Still dominant in embedded / IoT systems",
+        "Almost universally supported / portable across platforms",
+        "Vast ecosystem of fast, portable libraries",
+        "Trade-off summarised as 'plenty of opportunities for foot-shooting'"
+      ],
+      "modelAnswer": "C is kept alive by exactly the properties that also make it dangerous: it compiles to very efficient, low-level code with minimal runtime overhead, which makes it the natural choice for embedded and IoT systems with tight resource constraints, operating-system kernels and performance-critical libraries. It is also almost universally supported — essentially every platform has a C compiler — which makes C code highly portable, and a vast ecosystem of mature, fast libraries exists that other languages bind to. The lecture summarizes this trade-off as C offering 'unique and plenty of opportunities for foot-shooting' in exchange for that performance and ubiquity.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-04-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What does CVE-2022-37454 illustrate about buffer overflows, and how was it triggered in the example shown on the slides?",
+      "keyBeats": [
+        "Real-world buffer overflow in the Keccak/SHA-3 reference implementation",
+        "Triggered by an extremely long input (h.update(b\"\\x00\" * 4294967295))",
+        "32-bit length computation overflowed, mis-sizing an internal buffer",
+        "Shows even a widely used cryptographic library's C internals can have memory-safety bugs",
+        "Calling code (Python) being memory-safe does not protect against bugs in underlying C code"
+      ],
+      "modelAnswer": "CVE-2022-37454 is a real buffer overflow in the (XKCP-derived) Keccak/SHA-3 reference implementation, referenced via a Python snippet that calls hashlib.sha3_224() and then feeds it an update of 4294967295 (2^32-1) zero bytes. Under the hood, the C implementation used a 32-bit length computation that overflowed for very large input lengths, causing an internal buffer to be sized incorrectly and subsequently overrun. The example makes the point that even though the calling code here is Python (memory-safe), the underlying cryptographic primitive is implemented in C, and a length-related bug there was directly exploitable — reinforcing that 'secure' high-level use of a library does not protect against memory-unsafety bugs deeper in its C internals.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-05-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the password-handling example (malloc, check, use, free), what security weakness remains even though the pointer is NULL-checked and correctly freed?",
+      "keyBeats": [
+        "free() only marks memory as reusable — it does not clear its contents",
+        "Cleartext password bytes remain in memory after free()",
+        "Could be recovered via core dump, reused allocation, or another memory-disclosure bug",
+        "First proposed fix: memset(password, 0, PASSWORD_SIZE) before free()"
+      ],
+      "modelAnswer": "The code allocates a buffer with malloc(), checks for allocation failure, reads/checks a password into it, and finally calls free(password). free() only returns the memory to the allocator's free list — it does not zero or otherwise scrub its contents. So after free(), the cleartext password bytes are still sitting in memory, in a chunk that could be reused by a later allocation, dumped in a core file, or read via some other memory-disclosure bug, letting an attacker recover the plaintext password long after the code 'finished' with it. The proposed first fix is to call memset(password, 0, PASSWORD_SIZE) to scrub the buffer immediately before freeing it (a CERT-style sensitive-data-handling rule).",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-06-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The lecture revisits the password memset()-then-free() fix and says 'Yes! ... but no!'. Why can even that fix fail to protect the password in memory?",
+      "keyBeats": [
+        "Optimizing compilers can perform 'dead store elimination'",
+        "The memset() write is never read afterward (buffer is about to be freed)",
+        "Compiler may conclude the memset() has no observable effect and remove it",
+        "Referenced research: 'Dead Store Elimination (Still) Considered Harmful' (USENIX Security 2017)",
+        "Fix requires defeating the optimizer, e.g. memset_s(), explicit_bzero(), volatile, or compiler barriers"
+      ],
+      "modelAnswer": "Adding memset(password, 0, PASSWORD_SIZE) before free() looks correct, but from the compiler's point of view that write to `password` is a 'dead store': nothing in the program subsequently reads the buffer (it's about to be freed), so the memset() has no effect on the program's observable behaviour as defined by the C standard. An optimizing compiler is therefore permitted to — and in practice sometimes does — eliminate the memset() call entirely as dead code, silently undoing the intended security fix and leaving the cleartext password in memory after all. This exact problem is documented in the paper 'Dead Store Elimination (Still) Considered Harmful' (USENIX Security 2017), cited on the slide. The lesson is that 'secure' code has to defend against the compiler too, e.g. by using memset_s(), explicit_bzero(), a volatile-qualified pointer, or compiler barriers rather than a plain memset().",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 53",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-07-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What is a double-free vulnerability, and how does the `foo()` example on the slides create one?",
+      "keyBeats": [
+        "Double free = calling free() twice on the same pointer without an intervening allocation",
+        "ptr is freed inside the error branch when validate(ptr) fails",
+        "No return/else skips the rest of the function, so the final free(ptr) also runs",
+        "Corrupts heap allocator metadata, can be escalated to arbitrary write / code execution"
+      ],
+      "modelAnswer": "A double free happens when free() is called twice on the same pointer value without the memory being reallocated in between. In the example, `ptr` is malloc'd and checked for NULL; if validate(ptr) fails, the error branch prints an error and calls free(ptr) — but there is no return or else that skips the rest of the function, so control falls through to the free(ptr) at the end of foo() regardless, freeing the same block a second time. Double frees corrupt the heap allocator's internal bookkeeping (free-list / chunk metadata), and on many allocators this corruption can be turned into an arbitrary write primitive, which attackers have historically exploited to redirect control flow — so it's a serious vulnerability, not just a crash bug.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-08-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Explain the use-after-free bug in the second `foo()` example, and why the lecture notes it is 'still a problem' by citing a CVE.",
+      "keyBeats": [
+        "foo is freed inside the if-branch when validate(foo) fails",
+        "Execution continues, and printf(\"FOO = %s\\n\", foo) dereferences foo after it was freed",
+        "Freed memory may already be reused/overwritten, so the read is undefined behaviour",
+        "Can leak stale/attacker data, crash, or be escalated further",
+        "Lecture cites CVE-2026-2441 to show this bug class is still found in real code"
+      ],
+      "modelAnswer": "In this example, `foo` is allocated and, if validate(foo) fails, the error branch calls free(foo) — but again there's no early return, so execution continues to printf(\"FOO = %s\\n\", foo), which reads through `foo` after it has already been freed. This is a classic use-after-free: the memory foo points to may already have been handed back out by the allocator and overwritten with unrelated data (or reused as a different, differently-typed object), so the read is undefined behaviour that can leak stale/attacker-controlled data, crash the program, or be escalated into a more serious exploit if the reused memory is attacker-influenced. The lecture points out this is not just historical: it references CVE-2026-2441 to show that use-after-free bugs of exactly this shape are still being found and fixed in real software today.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-09-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The kernel function `atalk_getname()` is shown as an information-disclosure vulnerability. What exactly leaks, and to whom?",
+      "keyBeats": [
+        "Local struct sockaddr_at sat is only partially initialised (family, port, address fields)",
+        "sat_zero[8] padding field is never explicitly set",
+        "memcpy(uaddr, &sat, sizeof(sat)) copies the whole struct, including uninitialised bytes, to user space",
+        "Runs in kernel space, so the leaked bytes are stale kernel-stack memory",
+        "Discloses kernel data to an unprivileged user-space caller"
+      ],
+      "modelAnswer": "atalk_getname() declares a local struct sockaddr_at sat on the stack and only explicitly assigns some of its fields (family, port, network address); it never touches sat_zero[8] (padding/reserved bytes). It then does memcpy(uaddr, &sat, sizeof(sat)) to copy the whole structure — including the untouched padding bytes — out to uaddr, a buffer supplied by (and returned to) user space. Because this function executes in kernel space, those uninitialised bytes are just whatever was previously left on the kernel stack, which could include fragments of other kernel data such as pointers or other processes' information. The result is a kernel information-disclosure vulnerability: an unprivileged user-space program calling this socket API leaks a few bytes of otherwise-inaccessible kernel memory, which can be valuable for defeating mitigations like kernel ASLR.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-10-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the `tun_chr_poll()` example, why is checking `if (!tun) return POLLERR;` in the given order still insecure?",
+      "keyBeats": [
+        "tun comes from __tun_get(tfile), which may return NULL",
+        "The very next line does sk = tun->sk, dereferencing tun before any check",
+        "The NULL check happens afterward, too late to prevent the dereference",
+        "If __tun_get() can legitimately return NULL, this is a NULL-pointer dereference"
+      ],
+      "modelAnswer": "The function obtains `tun` from __tun_get(tfile), and immediately afterward computes sk = tun->sk — dereferencing `tun` before checking whether it is NULL. Only after that dereference does the code test if (!tun) return POLLERR;. If __tun_get() can return NULL under some legitimate condition, the dereference on the line above has already happened, causing a NULL-pointer dereference. The mistake is purely one of ordering: the validity check exists in the code, but it comes after the pointer has already been used, so it can never actually prevent the fault it appears to guard against. In kernel code this class of bug is a common CERT-flagged vulnerability and can range from a denial-of-service crash to a more serious issue depending on what else can be influenced at that address.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-11-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why is the `dst = malloc(...); strcpy(dst, argv[1]);` pattern insecure even though the buffer is sized exactly to fit the input, and what real-world attack does the lecture reference?",
+      "keyBeats": [
+        "malloc() can fail and return NULL",
+        "Code never checks dst for NULL before calling strcpy",
+        "strcpy writes attacker-controlled data through a NULL pointer, i.e. to address 0",
+        "Referenced: Mark Dowd's 2008 attack on the ActionScript Virtual Machine"
+      ],
+      "modelAnswer": "Even though `dst` is sized dynamically to exactly fit argv[1] (strlen(argv[1]) + 1), the code never checks whether malloc() actually succeeded. malloc() can return NULL (e.g. under memory pressure, or if an attacker can influence the requested size to something absurd), and if it does, the following strcpy(dst, argv[1]) will dereference and write through a NULL pointer — effectively writing attacker-supplied bytes starting at address 0. On platforms/configurations where the zero page is mapped and at least partially controllable, this has historically been exploitable, as in Mark Dowd's 2008 attack against Adobe's ActionScript Virtual Machine, which abused exactly this kind of unchecked-allocation write-to-low-memory bug to gain code execution. The fix is the same basic rule violated repeatedly across these slides: always check the return value of malloc() before using the pointer.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-12-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Describe the classic 'stack smashing' mechanism used to exploit a stack buffer overflow like the one in narnia2.c (`strcpy(buf, argv[1])` into a 128-byte stack buffer).",
+      "keyBeats": [
+        "buf[128] lives on the stack, below the saved frame pointer and the return address",
+        "strcpy() has no bounds check; a long argv[1] overwrites past buf into adjacent stack data",
+        "Overflow can overwrite the saved return address",
+        "Classic technique: inject shellcode plus overwrite return address to point back at it",
+        "On function return, CPU jumps into attacker's code on the stack -> arbitrary code execution"
+      ],
+      "modelAnswer": "In the stack layout, a local array like char buf[128] is allocated below the saved frame pointer and the return address on the call stack. strcpy(buf, argv[1]) copies bytes from argv[1] into buf with no bounds checking at all, so if argv[1] is longer than 128 bytes, the extra bytes keep being written past the end of buf, overwriting adjacent stack data — first any padding/saved registers, then the saved frame pointer, then critically the return address that tells the CPU where to resume execution when the function returns. The classic 'stack smashing' attack crafts the overflow so that (a) the early part of the injected data is executable shellcode placed on the stack, and (b) the bytes landing exactly on the return-address slot are overwritten with the address of that shellcode. When the vulnerable function executes 'return', the CPU pops the corrupted return address off the stack and jumps to it — i.e. it jumps straight into the attacker's injected code sitting on the stack, giving the attacker arbitrary code execution with the privileges of the vulnerable process.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 14",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L5-13-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Walk through how the narnia0.c example (`scanf(\"%24s\", &buf)` into `char buf[20]`) leads to a buffer overflow, and what the intended exploit outcome is.",
+      "keyBeats": [
+        "buf is 20 bytes but scanf(\"%24s\", &buf) accepts up to 24 characters",
+        "Adjacent variable on the stack: long val, initialised to 0x41414141",
+        "Overflow overwrites val's bytes with attacker-chosen data",
+        "If val is made to equal 0xdeadbeef, the program spawns a shell via system(\"/bin/sh\")",
+        "Fix: match the scanf width to the real buffer size (\"%20s\")"
+      ],
+      "modelAnswer": "buf is declared as char buf[20], but the read is done with scanf(\"%24s\", &buf), which will happily write up to 24 characters (plus a NUL terminator) into that 20-byte buffer — 4+ bytes too many, corrupting whatever is adjacent to buf on the stack. In this program that adjacent variable is long val, initialised to 0x41414141. Because val sits right after buf in memory, an attacker who supplies a carefully crafted input can overflow past the end of buf and land specific bytes on top of val. If the attacker manages to make the overwritten val equal exactly 0xdeadbeef, the program's if (val == 0xdeadbeef) branch is taken, which calls setreuid(geteuid(), geteuid()) and system(\"/bin/sh\") — spawning a privileged shell. The suggested mitigation is simply to make the scanf width match the real buffer capacity, i.e. use \"%20s\" (19 chars + NUL) instead of \"%24s\", so the read can never write past the end of buf.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-14-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "How can a stack buffer overflow be used to hijack a function pointer, as shown in the `fun_ptr` example, even though the code uses `strncpy()`?",
+      "keyBeats": [
+        "buffer[42] and fun_ptr (initialised to &foo) are adjacent local/static variables",
+        "strncpy(buffer, argv[1], strlen(argv[1])) uses the attacker-controlled input length as the bound, not sizeof(buffer)",
+        "Long argv[1] overflows past buffer and overwrites fun_ptr",
+        "(*fun_ptr)(argv[2]) then jumps to the attacker-chosen address",
+        "Control-flow hijack without touching the return address"
+      ],
+      "modelAnswer": "The code declares a 42-byte buffer and a function pointer fun_ptr initialised to &foo. It copies user input with strncpy(buffer, argv[1], strlen(argv[1])) — but the length argument passed to strncpy is strlen(argv[1]), i.e. the length of the attacker's own input, not sizeof(buffer). So strncpy will happily copy as many bytes as the attacker supplies, regardless of buffer's actual 42-byte capacity, meaning the 'bounded' copy provides no real bound at all. If argv[1] is long enough, the write overflows past buffer and overwrites adjacent memory — including fun_ptr. Since fun_ptr now holds attacker-controlled bytes, the subsequent call (*fun_ptr)(argv[2]) transfers control to whatever address the attacker wrote there. This hijacks control flow just as effectively as overwriting a return address, but via a data (function) pointer instead of the stack return address — and it happened despite the programmer explicitly trying to use the 'safer' strncpy().",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-15-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "In the `authorised` example, how does overflowing `buffer[42]` let an attacker perform an arbitrary memory write via `*ptr = x`?",
+      "keyBeats": [
+        "x (long int) and ptr (long int *) sit adjacent to buffer[42] in the stack frame",
+        "strncpy(buffer, argv[1], strlen(argv[1])) again uses attacker-supplied length as the bound",
+        "Overflow can overwrite both x and ptr with attacker-chosen values",
+        "*ptr = x then writes the attacker-chosen value to the attacker-chosen address",
+        "Bypasses the later if(!authorised) exit(-1) check entirely"
+      ],
+      "modelAnswer": "In this example buffer[42], x, and ptr all live in the same stack frame, with x and ptr positioned adjacent to buffer. The copy into buffer again uses strncpy(buffer, argv[1], strlen(argv[1])), so — exactly as in the function-pointer example — the copy length is controlled by the attacker's own input rather than the true size of buffer, allowing an overflow. That overflow can overwrite the bytes making up both x and ptr with values the attacker chooses. Immediately afterward the code executes *ptr = x, which dereferences ptr and writes the value x to that address. Since both ptr and x can be attacker-controlled via the overflow, this becomes a fully arbitrary write primitive — the attacker can write any value to any address — which is far more powerful than a simple crash, and it completely bypasses the later if (!authorised) exit(-1) check since the memory corruption already happened before that check runs.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-16-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "The lecture proposes `strncpy(buf, argv[1], 128)` as a fix for the narnia2.c overflow, then says it's 'susceptible to buffer overread'. What does that mean, and why isn't strncpy() a silver-bullet fix?",
+      "keyBeats": [
+        "strncpy(dst, src, n) never writes past n bytes, preventing the original overflow",
+        "But strncpy does not NUL-terminate dst if src is n bytes or longer",
+        "A later printf(\"%s\", buf) then reads past the end of buf looking for a terminator -> buffer overread",
+        "Can leak adjacent memory or crash",
+        "Lesson: safe string handling is subtle; swapping strcpy for strncpy alone is not automatically secure"
+      ],
+      "modelAnswer": "strncpy(buf, argv[1], 128) does stop writing after at most 128 bytes, so it prevents the original write-past-the-buffer overflow. However, the C standard specifies that strncpy() only NUL-terminates the destination if the source string is shorter than the given length; if argv[1] is 128 bytes or longer, strncpy fills all 128 bytes of buf with source data and does not add a trailing NUL. The following printf(\"%s\", buf) assumes buf is a NUL-terminated C string, so it will keep reading memory past the end of buf looking for a terminator byte that may not appear for a while — a buffer overread that can leak adjacent stack/heap memory contents or crash the program. The lecture's point ('it's complicated!') is that naively swapping in a 'safer' function like strncpy() does not automatically make code secure — you also have to guarantee NUL-termination yourself (e.g. explicitly setting buf[127] = '\\0') or use a different, better-specified API.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-17-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Explain the integer overflow in `getComment()` (`size = len - 2; malloc(size+1); memcpy(comment, src, size)`) that made it exploitable, using `getComment(1, \"Comment\")` as the trigger.",
+      "keyBeats": [
+        "len and size are declared unsigned int",
+        "size = len - 2 with len=1 underflows to a huge unsigned value (0xFFFFFFFF), not negative",
+        "malloc(size + 1) wraps back around to malloc(0), a tiny/zero-byte heap allocation",
+        "memcpy(comment, src, size) still uses the huge, un-wrapped size as the copy length",
+        "Result: large heap buffer overflow from a two-line length computation; was real Netscape JPEG-comment-parsing code"
+      ],
+      "modelAnswer": "len and size are both unsigned int, so arithmetic on them wraps modulo 2^32 rather than going negative. Calling getComment(1, \"Comment\") computes size = len - 2 = 1 - 2, which underflows to 0xFFFFFFFF (UINT_MAX) instead of -1, because unsigned subtraction can't represent negative numbers. The code then calls malloc(size + 1); adding 1 to 0xFFFFFFFF wraps back around to 0, so malloc is asked to allocate essentially zero bytes and returns a very small (or minimal) heap chunk. Critically, the subsequent memcpy(comment, src, size) still uses the original huge size value (0xFFFFFFFF) as the number of bytes to copy — not the (wrapped) allocation size — so it copies a massive amount of data from src into the tiny comment buffer, massively overrunning it. This turns a two-line, seemingly harmless length computation into a triggerable heap buffer overflow; it was real code used for parsing JPEG comment fields in an old version of Netscape.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-18-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Explain the signed/unsigned 'sign error' in the `len = atoi(argv[1]); if (len < BUFSIZE) memcpy(buf, argv[2], len);` example, and why the bounds check fails to prevent an overflow.",
+      "keyBeats": [
+        "len is a plain (signed) int; atoi() can return a negative number",
+        "if (len < BUFSIZE) is true for any negative len, so the check appears to pass",
+        "memcpy()'s length parameter is size_t (unsigned)",
+        "Passing negative len causes implicit conversion to a huge unsigned value",
+        "memcpy() copies an enormous number of bytes into the fixed-size buf, causing overflow"
+      ],
+      "modelAnswer": "len is declared as a plain (signed) int, and its value comes from atoi(argv[1]), which will happily return a negative number if the attacker passes a string like \"-1\". The guard if (len < BUFSIZE) is evaluated using signed comparison, and any negative value is trivially less than BUFSIZE (42), so the check passes exactly as intended by the attacker — the code believes the size is safely small. The problem surfaces at the memcpy() call: memcpy()'s length parameter has type size_t, which is unsigned, so passing the negative len there forces an implicit signed-to-unsigned conversion, turning e.g. -1 into a value close to UINT_MAX (or SIZE_MAX). memcpy() then tries to copy an enormous number of bytes into the fixed 42-byte buf, causing a severe buffer overflow — even though there was an explicit bounds check right above it. The bug is purely a type/sign mismatch between the check (signed int comparison) and the use (unsigned size_t argument).",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-19-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "What is a format string vulnerability, and how does the `sprintf(outbuf, buffer)` call (where `buffer` was built from `argv[1]`) enable one?",
+      "keyBeats": [
+        "printf-family functions treat their format-string argument as containing % directives",
+        "Here the format-string argument is `buffer`, built directly from unsanitised argv[1]",
+        "Attacker controls the format string itself, not just data being formatted",
+        "%x-style directives leak stack values; %n can write memory; width specifiers control offsets",
+        "Exploit sketch %508d\\xAA\\xAA\\xAA\\xAA<nops><shellcode> plants an address plus a NOP-sled/shellcode payload"
+      ],
+      "modelAnswer": "printf-family functions (printf, sprintf, fprintf, ...) interpret their format-string argument, scanning for % directives and consuming a corresponding argument from the variadic argument list for each one. A format string vulnerability occurs when attacker-controlled data is passed as that format-string argument itself, rather than only as a %s-style data argument. In this example, buffer was built with sprintf(buffer, \"FOO %s\", argv[1]), so buffer's contents directly embed the attacker's raw input; the following call sprintf(outbuf, buffer) then uses that attacker-influenced buffer as the format string, not as data. An attacker can put arbitrary % directives in argv[1]: %x will pop and print whatever happens to be next on the stack (leaking memory contents), and %n can write the number of characters printed so far to an address taken from the stack — turning the bug into an arbitrary read or write primitive. The slide's exploit sketch, %508d\\xAA\\xAA\\xAA\\xAA<nops><shellcode>, uses a large width specifier (%508d) to consume output-length padding so a subsequent stack value lines up correctly, \\xAA\\xAA\\xAA\\xAA supplies a target address, and a NOP sled plus shellcode gives something to jump to — turning an uncontrolled-format-string bug into code execution, much like classic stack smashing but reached through printf() rather than a raw memcpy/strcpy overflow.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-20-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "How do stack canaries protect against stack-smashing buffer overflows, and what is their limitation?",
+      "keyBeats": [
+        "Special value placed on the stack between local buffers and saved frame pointer/return address",
+        "Written on function entry, checked just before return",
+        "A contiguous overflow reaching the return address must first overwrite the canary",
+        "Mismatch detected -> program aborts before using the corrupted return address",
+        "Limitation: does not catch attacks that overwrite other data without touching the canary/return address"
+      ],
+      "modelAnswer": "A stack canary is a special value placed on the stack right before (i.e. at a lower address than) the saved frame pointer and return address, next to local buffers. When a function is entered, the canary value is written onto the stack; just before the function returns, the compiler-inserted check code re-reads that stack slot and compares it against the expected canary value. A classic linear stack-smashing overflow writes contiguous bytes forward through memory, so in order to reach and corrupt the return address it must first overwrite the canary's slot. If the canary no longer matches, the runtime detects the corruption and aborts the program instead of executing the 'return' into attacker-controlled shellcode. The important limitation is that canaries only guard the linear-overflow-into-return-address pattern: attacks that overwrite other data (a nearby function pointer, a nearby data pointer as in the *ptr = x example) without ever touching the canary or return address are completely unaffected by stack canaries.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-21-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What is the point of marking the stack non-executable (NX/DEP), and how do attackers get around it using Return-Oriented Programming (ROP) / return-to-libc?",
+      "keyBeats": [
+        "NX marks stack pages non-executable so injected shellcode on the stack cannot be run",
+        "Can be problematic with legitimate trampolines",
+        "ROP/return-to-libc reuses existing executable code instead of injecting new code",
+        "Gadgets = short instruction sequences ending in ret, chained via controlled stack contents",
+        "Uses the stack pointer as a substitute instruction pointer; Turing complete, defeats NX"
+      ],
+      "modelAnswer": "A non-executable stack (NX/DEP) is an OS/hardware feature that marks the memory pages used for the stack as not executable, so even if an attacker successfully overflows a buffer and plants raw shellcode bytes on the stack, the CPU will refuse to fetch and execute instructions from that page (it can be problematic for legitimate uses like trampolines, but it defeats the 'jump directly to injected shellcode' version of stack smashing). Attackers get around this with Return-Oriented Programming (or the simpler return-to-libc): rather than injecting new executable code, they reuse code that is already present and executable in the process image — e.g., calling an existing libc function directly (return-to-libc), or, more generally, chaining together short existing instruction sequences that each end in a ret instruction ('gadgets', found anywhere in libc, kernel32.dll, etc.). Because the attacker still controls stack contents via the original overflow, they can lay out a sequence of gadget addresses on the stack; each gadget's ret pops the next address off the stack and jumps to it, effectively using the stack pointer as a substitute instruction pointer that steps through the attacker's chosen sequence of borrowed code. With enough gadgets available, this technique is Turing-complete, giving the attacker full arbitrary computation and control-flow hijacking without ever needing to execute injected code — thereby defeating a non-executable stack.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-22-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What is ASLR, what does it randomise, and why did CVE-2022-34918 (the 'Leaky Linux Firewall' example) undermine it?",
+      "keyBeats": [
+        "ASLR = Address Space Layout Randomisation: OS assigns randomised base addresses per run",
+        "Randomises stack, heap, libraries, etc.",
+        "Effectiveness depends on what can be moved and the entropy of the randomiser",
+        "CVE-2022-34918: Netfilter firewall bug leaked the kernel ASLR base",
+        "Leaked base address enabled a separate buffer-overflow exploit, defeating ASLR"
+      ],
+      "modelAnswer": "Address Space Layout Randomisation (ASLR) is a mitigation where the operating system assigns randomised base addresses (each run/boot) to memory regions such as the stack, the heap, and loaded shared libraries. The idea is that exploits which depend on knowing an absolute address — e.g. the address of injected shellcode, or of a libc function/gadget for return-to-libc/ROP — become unreliable, since the attacker can no longer predict where anything actually lives in memory. How effective ASLR is in practice depends on two things: what regions can actually be randomised at all, and how much entropy the randomiser provides (a small randomisation range can simply be brute-forced or guessed). CVE-2022-34918 illustrates a way ASLR gets defeated in practice: a vulnerability in the Linux kernel's Netfilter firewall code allowed an attacker to leak the kernel's ASLR base address directly. Once that base address is known, the attacker can compute the real addresses needed to carry out a completely separate buffer-overflow exploit, so the information leak effectively nullifies ASLR's protection for that attack chain.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-23-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What kinds of protections do the compiler-hardening flag sets shown in the lecture (OpenSSF / Airbus Security Labs GCC recommendations) provide?",
+      "keyBeats": [
+        "-D_FORTIFY_SOURCE=3: adds checks to buffer-handling library calls",
+        "-fstack-protector-strong / -fstack-clash-protection: canaries and stack-clash defence",
+        "-Wl,-z,relro -Wl,-z,now: RELRO, makes GOT read-only to block GOT-overwrite exploits",
+        "-Wl,-z,noexecstack: enforces non-executable stack at link time",
+        "-fPIE: enables ASLR for the executable's own code",
+        "Warning flags (-Wformat=2, -Wconversion, -Warray-bounds) catch bug classes at compile time"
+      ],
+      "modelAnswer": "These GCC flag sets bundle together several independent hardening mechanisms that map directly onto the vulnerability classes covered earlier in the lecture. -D_FORTIFY_SOURCE=3 inserts extra compile-time/run-time checks into calls to common libc buffer functions (memcpy, strcpy, sprintf, etc.) so that overflows can be detected when the buffer size is statically or dynamically knowable. -fstack-protector-strong enables stack canaries and -fstack-clash-protection defends against a related 'stack clash' technique for jumping over guard pages. -Wl,-z,relro combined with -Wl,-z,now enables 'full RELRO', making the ELF Global Offset Table read-only after program start so it can't be overwritten to redirect function calls. -Wl,-z,noexecstack enforces the non-executable stack (NX) at the linker level. -fPIE builds the executable itself as position-independent so ASLR can randomise its own code layout, not just shared libraries. On top of these run-time/link-time protections, many -W flags (-Wformat=2, -Wformat-security, -Wconversion, -Warray-bounds=2, etc.) turn on compiler warnings that catch format-string misuse, dangerous integer conversions, and out-of-bounds accesses — exactly the bug classes shown earlier — at compile time, before the code ever ships.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 55",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-24-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What does Checked C add to the C language, and how does it help prevent bugs like out-of-bounds writes in functions such as `append()`?",
+      "keyBeats": [
+        "Adds specialised, bounds-annotated pointer types, e.g. _Array_ptr<char> dst : count(dst_count)",
+        "Bounds attached to the pointer type itself, not tracked separately by the programmer",
+        "_Dynamic_check(...) inserts an explicit runtime assertion before a risky operation",
+        "Catches out-of-bounds conditions before memory is corrupted",
+        "Keeps C's low-level style but adds opt-in static/dynamic bounds checking"
+      ],
+      "modelAnswer": "Checked C is a research extension to C that adds specialised pointer types which carry bounds information as part of the type itself. In the append() example, the plain char *dst parameter becomes _Array_ptr<char> dst : count(dst_count), meaning the pointer's declared type now states explicitly that it points to an array of dst_count elements. This lets the compiler reason about (and, where necessary, runtime-check) accesses through that pointer against its declared bound, rather than relying entirely on the programmer to manually track and correctly compare sizes, as in plain C. The example also adds _Dynamic_check(src_count <= dst_count), an explicit assertion inserted before the copy loop that checks at run time that the source won't overflow the destination — if the check fails, the program is stopped before any out-of-bounds write occurs, rather than silently corrupting memory. The overall philosophy is to keep C's syntax, performance characteristics and general programming style, but let bounds information be attached to pointers and checked (statically where possible, dynamically otherwise), incrementally hardening existing C code against exactly the buffer-overflow-style bugs shown earlier in the lecture.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 58",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L5-25-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What does the Frama-C / ACSL example with `abs(int i)` demonstrate about formal verification and undefined behaviour in C?",
+      "keyBeats": [
+        "Frama-C uses ACSL annotations (requires/ensures/assigns) as structured comments specifying contracts",
+        "Naive abs() claims ensures \\result >= 0, but this fails for abs(INT_MIN)",
+        "-INT_MIN cannot be represented as a signed int -> signed overflow -> undefined behaviour",
+        "Fix: add requires no_int_min: i > INT_MIN, excluding the problematic input",
+        "assigns \\nothing documents no side effects; contract reused/composed by a caller function",
+        "Shows formal methods catch subtle UB edge cases easy to miss by inspection"
+      ],
+      "modelAnswer": "The abs(int i) example is used to introduce Frama-C, a formal verification/static-analysis tool for C that lets developers attach ACSL annotations — structured comments starting with /*@ ... */ — specifying a function's contract: preconditions (requires), postconditions (ensures), and side-effect information (assigns). The naive implementation return (i < 0) ? -i : i; looks obviously correct, and a first postcondition is written claiming \\result >= 0 always holds. But this is actually false in C: when i == INT_MIN, the 'positive' value -INT_MIN cannot be represented as a signed int (its magnitude is one more than INT_MAX), so computing -i in that case is signed-integer overflow, which is undefined behaviour in C — the implementation does not actually satisfy its stated postcondition for that one input. The fix is to add a precondition requires no_int_min: i > INT_MIN;, explicitly excluding the one input for which the function's contract cannot be guaranteed, along with assigns \\nothing; documenting that abs() has no side effects. A later slide shows this contract being reused by a caller (foo()), whose own contract can then be proven correct in terms of abs()'s specification. The broader lesson is that formal verification tools like Frama-C can catch exactly the kind of subtle, easy-to-overlook undefined-behaviour bug (signed overflow at INT_MIN) that simple code review or testing is likely to miss, and they force implicit assumptions about valid inputs to be made explicit, checkable, and composable across function boundaries.",
+      "citation": "lecture02-sos-twb-secc.pdf.extracted.txt, SLIDE 63",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": []
+}

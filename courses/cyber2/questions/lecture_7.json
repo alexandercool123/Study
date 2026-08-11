@@ -1,0 +1,443 @@
+{
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
+  "lecture": 7,
+  "lectureTitle": "Types for Secure Information Flow",
+  "examQuestions": [
+    {"examQ": 7, "subPart": "a", "promptVerbatim": "Define non-interference formally and explain what it guarantees."},
+    {"examQ": 7, "subPart": "b", "promptVerbatim": "Discuss why non-interference is too strong for most practical uses."},
+    {"examQ": 7, "subPart": "c", "promptVerbatim": "Explain how type systems can guarantee non-interference."}
+  ],
+  "drills": [
+    {
+      "id": "CYBER2-L7-01-o",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The lecture opens with three tiny programs: (1) h = 42; l = h; (2) l = 42; h = l; (3) h = 42; if(h) l = 1; else l = 0;. Before any formal machinery is introduced, what informal question determines whether each is 'secure', and what security property is ultimately at stake?",
+      "keyBeats": [
+        "Security first requires classifying variables/data into security levels (e.g. High-secret vs Low-public)",
+        "The question is whether secret (H) data can influence what a low-level observer sees (L)",
+        "Program (1) directly copies H into L; program (2) copies L into H; program (3) only indirectly (via control flow) lets L depend on H",
+        "This informal 'does H influence L' question is later made precise as non-interference, the confidentiality property for programs"
+      ],
+      "modelAnswer": "Deciding whether a program is 'secure' first requires classifying its variables into security levels, typically High (secret) and Low (public/observable). Given that classification, the real question is not about functional correctness but about information flow: can the value of a high-security variable influence what ends up in a low-security variable (which a low-level/public observer can see)? In program (1), h=42; l=h directly copies the secret into the public variable, an explicit leak. In program (2), l=42; h=l copies public data into a secret variable, which is harmless (secrets are allowed to depend on public data, just not vice versa). In program (3), h=42; if(h) l=1; else l=0;, there is no direct assignment from h to l, yet l still ends up encoding whether h is zero or not -- an implicit (control-flow) leak. The lecture uses these examples to motivate that 'secure' here specifically means confidentiality with respect to information flow, and that this notion has to be made precise -- which the lecture later does via the formal definition of non-interference: informally, whatever a low-level observer sees must not depend on the value of the high-security inputs.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-02-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does the lecture classify program variables for confidentiality purposes, and which direction of information flow between security levels is permitted?",
+      "keyBeats": [
+        "Variables are classified into security levels, e.g. high-security (H) and low-security (L)",
+        "Flow from low to high is allowed: L ⊑ H",
+        "Flow from high to low is NOT allowed: H not⊑ L",
+        "Intuition: it's fine for secret data to depend on public data, but public data must never depend on secret data"
+      ],
+      "modelAnswer": "The lecture classifies every program variable into a security level -- in the simplest case a two-point lattice with High-security (H) and Low-security (L). An environment (later written Γ: Var → Level) records the security level of every variable. Information is then allowed to flow only from a lower or equal level up to a higher or equal level: L ⊑ H (a low/public value may safely be used to compute or be stored in a high/secret variable), but the reverse is forbidden: H not⊑ L (a high/secret value must never end up influencing a low/public variable). This 'no flow from high to low' rule is the core confidentiality requirement that all later machinery (certification conditions, security lattices, and the type system) is built to enforce.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-03-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Besides classifying variables, the lecture asks 'what about the program itself?'. What assumption does it say we must make about the program/system when reasoning about confidentiality, and which two principles justify it?",
+      "keyBeats": [
+        "We must assume the worst: the attacker knows the program/system itself, only the actual secret data (the variable values) is assumed hidden",
+        "Justified by Kerckhoffs' principle: a cryptosystem should stay secure even if everything about the system except the key is public knowledge",
+        "Justified by Shannon's maxim: 'the enemy knows the system'",
+        "Consequence: security analysis cannot rely on the program's logic being secret; only the classified high-security data is protected"
+      ],
+      "modelAnswer": "The lecture argues that when reasoning about confidentiality we must 'assume the worst' about the program itself: the analysis cannot rely on the attacker being ignorant of the program's source code or logic. This is justified by two classical principles quoted directly in the slides: Kerckhoffs' principle -- 'a cryptosystem should be secure even if everything about the system, except the key, is public knowledge' -- and Shannon's maxim -- 'the enemy knows the system'. Applied to secure information flow, this means only the values classified as High-security (the data itself) are treated as secret; the structure of the program (which variables it reads, its control flow, etc.) is assumed to be fully known to any observer. All later reasoning (non-interference, the type system) is therefore built to guarantee confidentiality of the data under the assumption that the program's code is public.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-04-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Given h is High-security and l is Low-security, explain why the lecture annotates h = 42; l = h; as insecure while l = 42; h = l; is fine.",
+      "keyBeats": [
+        "h = 42; l = h: l is assigned from h, so information flows H -> L, i.e. requires H ⊑ L, which is false (H not⊑ L) -> insecure/rejected",
+        "l = 42; h = l: h is assigned from l, so information flows L -> H, i.e. requires L ⊑ H, which holds -> secure/accepted",
+        "General rule applied: an assignment x = e is only allowed if the security level of everything read in e is ⊑ the level of x"
+      ],
+      "modelAnswer": "The lecture annotates each assignment with the flow-constraint it induces. For h = 42; l = h, the second statement assigns the (now high) value of h into the low variable l; this requires the flow H ⊑ L to be valid, but by definition H not⊑ L, so the constraint is violated and the program is flagged insecure -- it leaks the secret h into the public variable l. For l = 42; h = l, the assignment instead moves a low value into a high variable, requiring L ⊑ H, which holds by definition (low is always allowed to flow into high). Hence this program is secure: no secret information is exposed to a low observer, it is merely the case that a high variable now happens to hold a value that was already public.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-05-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The program h = 42; if(h) l = 1; else l = 0; contains no assignment of the form l = h. Why does the lecture still flag it as insecure?",
+      "keyBeats": [
+        "This is an implicit (control-flow) information flow, not a direct/explicit one",
+        "l is assigned inside a branch whose guard reads h, so the value finally stored in l depends on h (whether h is zero or not)",
+        "A low observer who only sees l can infer something about h (e.g. h != 0) even though l was never directly assigned from h",
+        "The lecture's annotation flags the same underlying violation as the direct case: an H-classified value is influencing an L variable, i.e. H not⊑ L, just via control flow (the program counter) rather than a direct assignment"
+      ],
+      "modelAnswer": "Even though no statement literally writes l = h, the value of l after the program ends is fully determined by whether h is truthy or not: l = 1 if h != 0, l = 0 otherwise. This is an implicit flow: information about the secret h leaks through the control-flow path taken, and hence through which branch performs the assignment to l, rather than through a direct data assignment. A low-security observer who can only see l can perfectly reconstruct one bit of h's value (whether it is zero). The lecture's annotation on this example marks it with the same violated constraint, H not⊑ L, because the assignments to l happen 'under' a branch guarded by an H-level condition -- i.e., the effective (program-counter) security level guarding the assignment is H, but l is only L. This example is the reason the later type system must track not just explicit dataflow but also an implicit-flow context (the program counter level, pc).",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-06-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Describe the 'box diagram' the lecture uses to introduce non-interference: what are its components and what relationship between them captures confidentiality?",
+      "keyBeats": [
+        "Picture a System (running inside some Context) that is fed both an H-Input and an L-Input, and produces an H-Output and an L-Output",
+        "Non-interference is stated by imagining TWO runs of the same system, side by side, sharing the same L-Input but possibly different H-Input",
+        "The requirement: the L-Output must be identical (indistinguishable) in both runs, regardless of what the (possibly different) H-Input was",
+        "The H-Output is unconstrained -- it may differ freely between the two runs; only the low, observable part matters",
+        "Intuition: a low-level observer, seeing only L-Input and L-Output, cannot tell which H-Input was used, so cannot learn anything about the secret"
+      ],
+      "modelAnswer": "This is fundamentally a diagram, described here in words. Draw a box labelled System, sitting in some Context, with two input arrows (H-Input, L-Input) going in and two output arrows (H-Output, L-Output) coming out. Non-interference is then illustrated by considering two side-by-side copies (two runs) of this exact same System: both copies receive the identical L-Input, but each copy may receive a different H-Input (H-Input1 vs H-Input2). Each run produces its own H-Output and L-Output. The non-interference property requires that, no matter how the two H-Inputs differ, the two L-Outputs must come out identical. The H-Outputs are allowed to be completely different between the two runs -- confidentiality only constrains what a low-level observer, who can see L-Input and L-Output but not H-Input/H-Output, is able to notice. Since the L-Output never changes when only the H-Input changes, such an observer gains zero information about the secret H-Input from watching the system run. This picture is exactly what the later formal (two-state) definition of non-interference makes precise.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 37",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L7-07-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Give the formal, state-based definition of non-interference for a statement S with respect to a security environment Γ (and observation level ℓ), as stated on the slides.",
+      "keyBeats": [
+        "A statement S is non-interfering if for any two runs ⟨S, s1⟩ → s1' and ⟨S, s2⟩ → s2'",
+        "Precondition: dom(s1) = dom(s2) = dom(Γ) (both starting states define the same variables), and s1(x) = s2(x) for all x with Γ(x) ⊑ ℓ (the two starting states agree on all variables at or below the observer's level ℓ, i.e. all 'low' variables) -- H-inputs may still differ freely",
+        "Conclusion required: s1'(x) = s2'(x) for all x with Γ(x) ⊑ ℓ (the two final states must still agree on all low variables)",
+        "Instantiated with ℓ = L (Low) and two levels {L,H}, this exactly matches: two executions of the same program with equal low inputs but arbitrary/possibly-different high inputs must produce equal low outputs",
+        "Equivalently phrased earlier on the slides as a semantic equivalence: S1;S2;S3 ≡ S1;S2';S3 for any S2, S2' that only modify H-variables -- substituting any high-only computation for another must not change observable (low) behaviour"
+      ],
+      "modelAnswer": "Formally: a statement S is non-interfering (with respect to environment Γ and level ℓ) if, whenever two executions ⟨S, s1⟩ → s1' and ⟨S, s2⟩ → s2' start from states s1 and s2 that (i) both define exactly the variables in dom(Γ), i.e. dom(s1) = dom(s2) = dom(Γ), and (ii) agree on every variable x whose security level is at or below ℓ, i.e. s1(x) = s2(x) for all x with Γ(x) ⊑ ℓ -- then the resulting states must also agree on every such variable: s1'(x) = s2'(x) for all x with Γ(x) ⊑ ℓ. In the standard two-level instantiation (ℓ = L, levels {L,H}), this says exactly: any two runs of the same program that start with identical values of all Low-security variables (but arbitrary, possibly different, values of the High-security variables) must end with identical values of all Low-security variables. The high-security input is therefore never observable, directly or indirectly, in the low-security output -- this is precisely the 'box diagram' picture made formal. The lecture also gives an equivalent semantic-equivalence phrasing: for any two statements S2 and S2' that only modify H-variables, S1;S2;S3 must behave observably the same as S1;S2';S3 -- swapping out any purely-high computation for another does not change what a low observer can see.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-08-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Right after presenting the non-interference box diagram, the lecture comments 'Very strong! ... too strong?'. In your own words, what makes non-interference such a strong requirement?",
+      "keyBeats": [
+        "Non-interference is an all-or-nothing property: it forbids ANY observable influence of high-security data on low-security output, however small",
+        "It applies to every possible pair of runs / every possible high input, i.e. it must hold universally, not just for the actual secrets that occur in practice",
+        "It leaves no room for a program to intentionally release even a single controlled bit of information derived from a secret",
+        "This sets up the lecture's later point: most real, useful programs actually need to reveal some function of secret data (e.g. a yes/no decision), and plain non-interference rejects all of them"
+      ],
+      "modelAnswer": "Non-interference is 'very strong' because it is an absolute, universally-quantified guarantee: for a program to satisfy it, changing the high-security input must never change the low-security output, no matter what the high input is, and no matter how small or seemingly harmless the resulting difference would be. There is no notion of 'a little bit of leakage is fine' -- any dependency at all between H and the observable L output, even one that would only let an observer learn a single bit under very contrived circumstances, is enough to violate the property. This is precisely what the lecture flags with 'too strong?': real programs very often need to legitimately reveal something that depends on secret data (e.g., whether a submitted password matches a secret one), and plain non-interference forbids this outright, which is why it turns out to be impractical for most real software as discussed on the following slides.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-09-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "Revisit h = 42; if(h) l = 1; else l = 0; (the implicit-flow example). Use it to argue concretely why strict non-interference is too strong for practical software design.",
+      "keyBeats": [
+        "This kind of pattern -- a low-security output depending on a yes/no test over a secret -- is exactly the shape of many legitimate features (e.g. 'does this password match the secret?', 'is this user authorized?')",
+        "Non-interference forbids this pattern entirely, because l ends up depending on h",
+        "But a real authentication/authorization system MUST leak that one bit (accept/reject) to be useful at all -- refusing to ever reveal it would make the system useless",
+        "This shows non-interference has no notion of intentional, controlled declassification of a limited/derived piece of secret information -- it treats all leakage as equally forbidden",
+        "Hence, taken literally, non-interference would reject essentially every password check, statistic release, or decision procedure over secret data -- programs that are considered acceptably secure in practice"
+      ],
+      "modelAnswer": "The example h = 42; if(h) l = 1; else l = 0; is structurally identical to a huge class of legitimate real-world code: any program that tests a secret and reports a derived Boolean or small result, such as 'does the entered password match the stored one?' or 'is this transaction authorized?'. Strict non-interference forbids this pattern outright, because the low-security output (l, or 'access granted') provably depends on the high-security input (h, or the secret password/authorization state). Yet a login system that never reveals whether authentication succeeded is useless -- some information about the secret necessarily has to be released for the system to serve its purpose. This illustrates concretely why non-interference is too strong for most practical uses: it has no built-in concept of intentional, controlled declassification (releasing a specific, limited piece of information derived from a secret on purpose); it treats every dependency of L on H as an equally forbidden leak, with no way to say 'this one bit of leakage is acceptable, but nothing more'. Practical systems therefore need a weaker or refined notion (declassification policies, quantitative information flow, etc.) that plain non-interference as presented does not provide.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-10-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "In Exercise 3, l = 17; h = 87; while(h > 0) { l = l + 1; h = h - 1; } l = 0; the security type system rejects the program because l is assigned inside a loop whose guard reads h. But the final value of l is always 0, regardless of h. What does this reveal about non-interference-style enforcement being too strong in practice?",
+      "keyBeats": [
+        "Because the loop guard h > 0 reads a High variable, the program counter (pc) inside the loop body becomes High",
+        "Assigning to l (a Low variable) while pc is High is forbidden by the confinement/typing rule, so the type system rejects the whole program",
+        "Yet the very last statement, l = 0, overwrites l unconditionally, so the final observable value of l never actually depends on h",
+        "This is a false positive: a syntactically conservative enforcement mechanism rejects a program whose final low-observable state is genuinely independent of the secret",
+        "Shows that enforcing (an approximation of) non-interference via simple typing rules is overly conservative / too strong: it can reject secure programs, not just insecure ones"
+      ],
+      "modelAnswer": "In this program, the while loop's guard reads h (High), so under the typing rules the program-counter level inside the loop body becomes High; since the loop body assigns to l (Low) under a High program counter, the confinement rule (which forbids writing to a Low variable while pc is High) rejects the program. Yet semantically, the very last line l = 0 unconditionally overwrites l after the loop finishes, so the final value that a low observer ever sees is always 0, completely independent of h -- the program is, in that specific sense, actually secure/non-interfering on its final low-observable state. This is a concrete example of the type system (and non-interference-style reasoning enforced syntactically) being overly conservative: it is sound (nothing insecure slips through) but not complete (it also rejects some genuinely secure programs), producing a false positive. This is part of why non-interference, and simple syntactic enforcement of it, is considered too strong/impractical: legitimate, secure programs can get flagged as violations purely because of how they are written, not because they actually leak anything.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-11-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "In Exercise 4, l = 17; h = 87; while(h > 0) skip; l = 0; the security type system happily accepts the program (the loop body, skip, writes nothing). Yet h's value clearly still affects the program's behaviour. What does this example show about the limits of non-interference (and its type-based enforcement)?",
+      "keyBeats": [
+        "The while loop's body is skip, which writes to no variables at all, so the confinement rule is never violated regardless of pc being High -- the program typechecks",
+        "But the number of loop iterations equals h, so the RUNNING TIME (and, in a variant, TERMINATION) of the program depends on h",
+        "This is a timing / termination covert channel: an observer who can measure how long the program takes to reach l = 0 can infer the value of h, even though no Low variable's final value differs",
+        "The formal state-based non-interference definition (and the type system built from it) only compares final states after termination -- it says nothing about timing, so this leak is invisible to both",
+        "Shows non-interference (as formalised here) is 'too strong' in some places (Exercise 3) yet simultaneously fails to catch real leaks in others (Exercise 4) -- i.e. the simple state-based notion and its syntactic enforcement are a blunt approximation of real security"
+      ],
+      "modelAnswer": "Here the loop body is just skip, which assigns to no variable, so the confinement rule is trivially satisfied no matter what the program-counter level is -- the program typechecks and is judged 'secure' by the type system. However, the loop runs exactly h times, so the program's execution time (how long it takes to reach the final l = 0) directly depends on the secret h. An attacker who can measure elapsed time (a timing side channel) can recover h's value even though no Low-security variable ever holds a different final value. This slips through because the formal definition of non-interference used in the lecture is purely state-based and considers only the states before and after termination -- it says nothing about how long execution takes, so a timing/termination channel is entirely outside what it (and the type system built to enforce it) can detect. Read together with Exercise 3, this pair of examples shows both sides of why the theory is impractical as-is: the type-based enforcement can be too strong (rejecting a genuinely secure program in Exercise 3) while the underlying non-interference definition itself can simultaneously be too weak/incomplete against covert channels like timing (missing a real leak in Exercise 4).",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-12-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "What does Exercise 5 explicitly ask students to do with Exercises 3 and 4, and why is this a telling indicator about non-interference's practicality?",
+      "keyBeats": [
+        "Exercise 5: 'Discuss if you think the type system correctly captures security in Exercise 3 and 4. Why, why not? If not, can you explain how to improve the type system?'",
+        "The lecture itself invites students to critique the type-based enforcement of non-interference rather than presenting it as a finished, fully adequate solution",
+        "This is a direct acknowledgment that the plain approach (as taught) has known gaps/over-restrictiveness (over-conservative rejections, missed timing channels)",
+        "Signals that in practice, non-interference/its type-system enforcement is a starting point that needs refinement (e.g. more permissive analyses, or channel-aware/quantitative extensions) for real use"
+      ],
+      "modelAnswer": "Exercise 5 asks students to 'discuss if you think the type system correctly captures security in Exercise 3 and 4. Why, why not? If not, can you explain how to improve the type system?'. This is the lecture explicitly building in a critical reflection step: rather than presenting the type system as a complete, final answer to secure information flow, it deliberately points students at the two counterexamples (the over-conservative rejection in Exercise 3, and the missed timing leak in Exercise 4) and asks them to identify the shortcomings themselves and propose improvements. This is telling because it is the lecture's own acknowledgment that non-interference, and this simple syntactic way of enforcing it, is not a finished, fully adequate notion of 'secure' for practical software -- it is a first, strong but flawed, approximation that motivates further work (more refined type systems, taint analysis, or explicit declassification mechanisms).",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-13-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Summarise, in a few sentences, the main reasons the lecture gives (directly or via its examples) for why non-interference is too strong for most practical uses.",
+      "keyBeats": [
+        "It is an absolute, all-or-nothing property: ANY observable dependency of low output on high input counts as a violation ('very strong ... too strong?')",
+        "No notion of legitimate declassification: programs that must intentionally reveal a controlled piece of derived secret information (e.g. password/authorization checks) are always rejected",
+        "Syntactic/type-based enforcement of it is conservative: it can reject genuinely secure programs (false positives), as in the loop example where the final low state never actually depends on h",
+        "The (state-based) definition itself doesn't reason about timing or termination behaviour, so real covert channels (e.g. loop iteration count leaking a secret) can slip through undetected even when the type system says 'accepted'",
+        "Combined with the Kerckhoffs/Shannon worst-case assumption (the program logic is public), essentially any conditional behaviour that depends on a secret is flagged, which matches almost no useful real program"
+      ],
+      "modelAnswer": "The lecture gives several intertwined reasons why non-interference, taken at face value, is too strong for practical use. First, it is an absolute property (as flagged by 'Very strong! ... too strong?'): it forbids any observable influence whatsoever of high-security data on low-security output, with no allowance for intentionally releasing a controlled piece of information -- so it has no notion of legitimate declassification, meaning programs like password or authorization checks (which must reveal a yes/no result derived from a secret) are always rejected. Second, enforcing it syntactically via a type system is conservative and can reject programs that are actually secure in practice, as shown by the loop exercise where l is reassigned inside a High-guarded loop but is unconditionally reset to 0 afterward -- the type system rejects it even though the final low-observable state never depends on the secret. Third, the formal (state-based) definition of non-interference only compares the states before and after termination, so it has nothing to say about timing or termination-based covert channels; the companion loop exercise (while(h>0) skip;) typechecks perfectly yet leaks the secret's value through how long the program takes to run. Together, these show that plain non-interference and its simplest type-based enforcement are simultaneously overly restrictive in places and still incomplete against certain real channels, which is why practical systems need refinements (declassification policies, quantitative or timing-aware analyses) beyond what was presented.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-14-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "The lecture generalises a manual 'certification condition' check to arbitrary code shapes: for x = y + z, and for if(x) y = 1; else z = 0;, what conditions on the security levels does it derive, and what is the intuition behind each?",
+      "keyBeats": [
+        "For x = y + z: requires max(y, z) ⊑ x -- the target's level must be at least as high as the highest level among everything read on the right-hand side",
+        "For if(x) y = 1; else z = 0;: requires x ⊑ min(y, z) -- the guard's level must be at most as low as the lowest level of every variable assigned inside either branch",
+        "Intuition for assignment: an expression's information is only as secret as its most secret ingredient, so the target must be able to 'absorb' at least that level",
+        "Intuition for branching: since which branch executes reveals something about the guard, every variable written in either branch must be at least as secret as the guard (otherwise the branch choice, which depends on x, would leak into a variable less secret than x)"
+      ],
+      "modelAnswer": "For an assignment x = y + z, the lecture derives the certification condition max(y, z) ⊑ x: the security level of x must be at least as high as the highest level among the variables read on the right-hand side. The intuition is that the value computed for x can carry information from either y or z, so x cannot be classified any lower than the more secret of the two -- otherwise information would flow from a more secret variable into a less secret one. For if(x) y = 1; else z = 0;, the derived condition is x ⊑ min(y, z): the security level of the guard x must be at most as low as the lowest level among all variables assigned in either branch. The intuition is an implicit-flow argument: which branch executes depends on x, so any variable written inside a branch necessarily has its value influenced by x (even if not directly copied from x); to avoid a high guard leaking into a lower-classified assigned variable, every variable assigned under the guard must be at least as secret as the guard itself. These two conditions ('write-target at least as high as everything read' / 'guard at most as low as everything written under it') are exactly the intuitions later formalised in the type system's typing rules for expressions (⊔ over what is read) and commands (raising the program-counter level pc to the guard's level ⊔ pc for the branches).",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-15-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "What is a 'security lattice' in this context, and what two examples does the lecture give?",
+      "keyBeats": [
+        "A security lattice is a lattice (SC, ⊑) of security classes: a set of security levels with an ordering ⊑, plus join (⊔, least upper bound) and meet (⊓, greatest lower bound) operations",
+        "Example 1: the simple two-point lattice ({L, H}, ⊑) with L ⊔ H = H and L ⊓ H = L",
+        "Example 2: need-to-know categories, e.g. NC = (P({Stuxnet, Nuclear, Ultra}), ⊆) -- the powerset of a set of compartments/categories ordered by subset, so that 'more categories known' = 'higher'",
+        "These can also be combined into a richer, product-style lattice (Exercise 2 asks students to define/illustrate combining {L,H} with the need-to-know categories)"
+      ],
+      "modelAnswer": "A security lattice generalises the simple High/Low distinction into a full lattice (SC, ⊑) of security classes, equipped with a join operation ⊔ (least upper bound, needed e.g. to combine the levels of several variables read in an expression) and a meet operation ⊓ (greatest lower bound). The lecture gives two concrete instances: the familiar two-point lattice ({L, H}, ⊑) where L ⊑ H, with L ⊔ H = H and L ⊓ H = L; and a need-to-know / compartment-style lattice NC = (P({Stuxnet, Nuclear, Ultra}), ⊆), i.e. the powerset of a set of named categories ordered by subset inclusion -- knowing more categories is 'higher' in the lattice. Real systems often need to combine both dimensions (a linear high/low ordering plus need-to-know compartments), and the lecture sets this as an exercise (Exercise 2): define and illustrate the combination of ({L,H},⊑) and NC into a single, richer security lattice.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-16-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "State the mathematical definitions of a partial order and of a lattice as given on the 'Sidetrack: Lattice' slide.",
+      "keyBeats": [
+        "A partial order (S, ⊑) is a relation that is reflexive (s ⊑ s for all s), anti-symmetric (s1⊑s2 and s2⊑s1 implies s1=s2), and transitive (s1⊑s2 and s2⊑s3 implies s1⊑s3)",
+        "The least upper bound s1 ⊔ s2 of s1, s2 ∈ S satisfies: si ⊑ (s1⊔s2) for i=1,2, and for any s with s1⊑s and s2⊑s, (s1⊔s2) ⊑ s",
+        "The greatest lower bound (⊓) is defined dually",
+        "A lattice (S, ⊑) is a partial order such that s1⊔s2 ∈ S and s1⊓s2 ∈ S for all s1, s2 ∈ S -- i.e. joins and meets always exist within the set"
+      ],
+      "modelAnswer": "A partial order (S, ⊑) is a relation satisfying three properties: reflexivity (∀s ∈ S: s ⊑ s), anti-symmetry (∀s1,s2 ∈ S: if s1 ⊑ s2 and s2 ⊑ s1 then s1 = s2), and transitivity (∀s1,s2,s3 ∈ S: if s1 ⊑ s2 and s2 ⊑ s3 then s1 ⊑ s3). Within such a partial order, the least upper bound s1 ⊔ s2 of two elements s1, s2 ∈ S is an element such that both si ⊑ (s1 ⊔ s2) (it is an upper bound), and for any other s that is also an upper bound of both (s1 ⊑ s and s2 ⊑ s), we have (s1⊔s2) ⊑ s (it is the LEAST such upper bound). The greatest lower bound (⊓) is defined dually, as the greatest element that is a lower bound of both. Finally, a lattice (S, ⊑) is a partial order in which the least upper bound s1⊔s2 and the greatest lower bound s1⊓s2 both exist and lie within S for every pair s1, s2 ∈ S. This is exactly the structure needed for the type system, since the typing rule for a binary operation e1 bop e2 needs a well-defined join (⊔) of the security levels of e1 and e2.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-17-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "At an intuitive level, what is a type system, and why is 'use types' presented as a better strategy for security than manually checking certification conditions after the fact?",
+      "keyBeats": [
+        "A type system is a set of syntax-directed rules that assign each expression/statement a 'type', checkable automatically before/without running the program",
+        "Here, the 'types' are literally security levels (ℓ ∈ Level, ordered by ⊑): every variable gets a security level via an environment Γ: Var → Level",
+        "Judgement Γ ⊢ e : ℓ means: every variable read in e has a level ⊑ ℓ (so ℓ safely bounds what e's value could depend on)",
+        "Judgement Γ, pc ⊢ S means: every variable written in S has a level ⊒ ℓ",
+        "Being built into the language/compiler forces/helps the programmer write secure code (or the compiler rejects insecure code) systematically and automatically, rather than relying on ad-hoc manual reasoning about each program"
+      ],
+      "modelAnswer": "A type system is a set of syntax-directed rules that assign a 'type' to every expression and statement, and can check whether a program is well-typed automatically, without running it. The lecture's key idea is to make the types literally be security levels: every variable is assigned a level via an environment Γ: Var → Level, where levels ℓ ∈ Level are ordered by ⊑ (a lattice, as defined earlier). Two judgement forms are used: Γ ⊢ e : ℓ, meaning expression e has been typed at level ℓ, with the guarantee that every variable read in e has a level ⊑ ℓ (so ℓ is a safe upper bound on what e's value could depend on); and Γ, pc ⊢ S, meaning statement S typechecks under program-counter level pc, with the guarantee that every variable written in S has a level ⊒ ℓ. The advantage over manually deriving certification conditions for each program (as done earlier by hand) is that a type system gives a fixed, compositional, syntax-directed procedure -- one rule per language construct -- that can be applied automatically/mechanically to any program, and, crucially, can be built directly into the compiler so that the programmer is forced (or at least strongly guided) to write only programs the type checker accepts, systematically preventing information-flow violations rather than relying on someone manually re-deriving and checking conditions for every new program.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-18-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "The lecture immediately follows the type-system judgements with a slide on Bell-LaPadula's 'Simple Security' and '⋆-property'. What is the analogy being drawn, and what does each Bell-LaPadula property say?",
+      "keyBeats": [
+        "The analogy: the type system's read/write constraints mirror the classical Bell-LaPadula access-control model",
+        "Simple Security ('no read up'): a subject may only read objects at or below its own level -- read access a requires fobj(o) ⊑ fmax(s)",
+        "⋆-property ('no write down'): a subject may only write to objects at or above the level of what it has read -- write access requires fcurr(s) ⊑ fobj(o), and any prior read object's level must be ⊑ the object being written to",
+        "The type system's rule 'Γ ⊢ e : ℓ, every variable read in e is ⊑ ℓ' mirrors no-read-up, and 'Γ,pc ⊢ S, every variable written in S is ⊒ ℓ' mirrors no-write-down"
+      ],
+      "modelAnswer": "The lecture draws a direct analogy between the type system's read/write discipline and the classical Bell-LaPadula access-control model, prompting the rhetorical question 'Remind you of something?'. Bell-LaPadula's Simple Security property (no read up) says a subject s may only read (or execute) an object o if the object's classification is at or below the subject's maximum clearance: fobj(o) ⊑ fmax(s). Its ⋆-property (no write down) says a subject may only write to (or append to) an object o if the subject's current level is at or below that object's classification, fcurr(s) ⊑ fobj(o), and additionally that any object the subject has read is not more classified than any object it writes to. The security type system mirrors exactly this shape: the rule for expressions, Γ ⊢ e : ℓ (every variable read in e is ⊑ ℓ), is the analogue of 'no read up' -- you cannot read something more secret than the level you're currently typed at; and the rule for statements, Γ, pc ⊢ S (every variable written in S is ⊒ ℓ), is the analogue of 'no write down' -- you cannot write to something less secret than what influenced the write. This is confirmed explicitly later on the Soundness slide, which states the type system's guarantees are 'similar to Bell/LaPadula (no-read-up/no-write-down)'.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-19-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the complete set of typing rules for expressions (literal, variable, binary operation) that the lecture builds up, and explain the intuition behind each.",
+      "keyBeats": [
+        "Literal: Γ ⊢ n : ℓ for any ℓ -- a constant carries no secret information, so it can be typed at whatever level is needed (freely, at any level in the lattice)",
+        "Variable: Γ ⊢ x : ℓ where ℓ = Γ(x) -- reading a variable yields exactly its declared security level",
+        "Binary operation: Γ ⊢ e1 bop e2 : ℓ where ℓ = ℓ1 ⊔ ℓ2 (with Γ ⊢ e1 : ℓ1 and Γ ⊢ e2 : ℓ2) -- combining two sub-expressions' values can leak information from either, so the result must be classified at least as high as both, hence the join (least upper bound)"
+      ],
+      "modelAnswer": "The lecture builds up three typing rules for expressions, progressively. First, a numeric literal: Γ ⊢ n : ℓ, and this holds for any ℓ, because a constant carries no secret information at all, so it can be typed at whatever level the surrounding context requires (it is compatible with every level). Second, a variable: Γ ⊢ x : ℓ where ℓ = Γ(x) -- reading a variable simply yields the security level that was declared for it in the environment Γ. Third, a binary operation: given Γ ⊢ e1 : ℓ1 and Γ ⊢ e2 : ℓ2, the combined expression types as Γ ⊢ e1 bop e2 : ℓ where ℓ = ℓ1 ⊔ ℓ2, the least upper bound (join) of the two operand levels. The intuition is that the result of combining e1 and e2 can carry information from either operand, so its security level must be at least as high as both -- the join is exactly the smallest level that safely 'covers' information from both sources.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-20-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the typing rule for assignment, Γ, pc ⊢ x = e, and explain precisely why the program-counter level pc appears in the side condition alongside the expression's level.",
+      "keyBeats": [
+        "Rule: given Γ ⊢ e : ℓ, the assignment Γ, pc ⊢ x = e is valid iff ℓ ⊔ pc ⊑ Γ(x)",
+        "ℓ (the level of what's read on the right-hand side) must not exceed x's level -- this is the direct/explicit-flow constraint",
+        "pc (the program-counter level, i.e. the join of the levels of all guards controlling whether this assignment executes) must ALSO not exceed x's level -- this is the implicit-flow constraint",
+        "Combining both via ⊔ means: x must be at least as secret as everything that could have influenced whether/how this assignment happened, both directly (via e) and indirectly (via the control-flow context pc)"
+      ],
+      "modelAnswer": "The assignment rule states: given Γ ⊢ e : ℓ (the right-hand side expression types at level ℓ), the judgement Γ, pc ⊢ x = e holds provided ℓ ⊔ pc ⊑ Γ(x). Here pc is the 'program counter' security level -- the join of the levels of all conditions (if/while guards) currently controlling whether this statement executes at all. The rule combines two constraints via join: ℓ ⊑ Γ(x) ensures no explicit/direct flow violation (x must be at least as secret as the value it's being assigned, exactly like the simple assignment examples earlier); and pc ⊑ Γ(x) ensures no implicit flow violation -- if this assignment is only reached because some high-level condition was true or false, then x must also be at least as secret as that condition, otherwise the mere fact that x got assigned (or the value it got) would leak information about the guard. This is exactly the mechanism that correctly flags h = 42; if(h) l = 1; else l = 0; as insecure: inside the branches, pc becomes H (because the guard h has level H), so assigning to l (level L) requires H ⊑ L, which fails.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-21-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Give the typing rules for if(e) S1 else S2 and while(e) S, and explain why both rules raise the program-counter level for the branch/loop body.",
+      "keyBeats": [
+        "If-rule: given Γ ⊢ e : ℓ, need Γ, ℓ ⊔ pc ⊢ S1 and Γ, ℓ ⊔ pc ⊢ S2, to conclude Γ, pc ⊢ if(e) S1 else S2",
+        "While-rule: given Γ ⊢ e : ℓ, need Γ, ℓ ⊔ pc ⊢ S, to conclude Γ, pc ⊢ while(e) S",
+        "In both cases, the body/branches are typechecked under a RAISED program-counter level, ℓ ⊔ pc, where ℓ is the guard's own level",
+        "Reason: entering the branch/loop body at all is a decision that depends on e (level ℓ); so any assignment happening inside must be treated as if it were 'guarded' by a condition of level ℓ, on top of whatever pc already was -- this is exactly what blocks implicit flows like assigning to a Low variable inside a High-guarded if/while"
+      ],
+      "modelAnswer": "For if(e) S1 else S2: given Γ ⊢ e : ℓ, both branches must typecheck under a raised program-counter level: Γ, ℓ ⊔ pc ⊢ S1 and Γ, ℓ ⊔ pc ⊢ S2, and only then does Γ, pc ⊢ if(e) S1 else S2 hold. For while(e) S: given Γ ⊢ e : ℓ, the loop body must typecheck as Γ, ℓ ⊔ pc ⊢ S, giving Γ, pc ⊢ while(e) S. In both rules, the key move is the same: the branches/body are checked not under the original pc, but under ℓ ⊔ pc, the join of the guard's own level ℓ with the ambient pc. The reasoning is that simply reaching (or repeating) the branch/loop body is itself a decision controlled by e, so whatever gets assigned inside must, from that point on, be treated as being influenced by a condition of level ℓ -- exactly as if pc had been raised to at least ℓ. This is precisely the mechanism that makes assigning to a Low variable inside a branch or loop guarded by a High condition illegal (as it must be, since the assignment implicitly reveals information about the guard), and it is exactly why the earlier example h = 42; if(h) l = 1; else l = 0; and Exercise 3's loop both fail to typecheck.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-22-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "Walk through the lecture's two worked type derivations: (1) l = 42; h = l; and (2) h = 42; l = h; (both starting with pc = L). Show why one typechecks and the other doesn't.",
+      "keyBeats": [
+        "(1) l = 42; h = l: 42 types as L; assigning l requires L ⊔ L ⊑ Γ(l)=L, holds -> l=42 OK. Then Γ(l)=L so l types as L; assigning h requires L ⊔ L ⊑ Γ(h)=H, holds (L⊑H) -> h=l OK. Whole sequence typechecks: SECURE",
+        "(2) h = 42; l = h: 42 types as L; assigning h requires L ⊔ L ⊑ Γ(h)=H, holds -> h=42 OK. Then Γ(h)=H so h types as H; assigning l requires H ⊔ L ⊑ Γ(l)=L, i.e. H ⊑ L, which FAILS -> l=h REJECTED. Whole sequence does NOT typecheck: INSECURE",
+        "The failure point is exactly where the informal annotation earlier flagged H not⊑ L"
+      ],
+      "modelAnswer": "Both derivations start with pc = L. (1) For l = 42; h = l: the literal 42 can be typed at level L (Γ ⊢ 42 : L); the assignment rule then requires L ⊔ L ⊑ Γ(l) = L, which holds (L ⊑ L), so Γ, L ⊢ l = 42 typechecks. Next, since Γ(l) = L, reading l gives Γ ⊢ l : L; assigning to h requires L ⊔ L ⊑ Γ(h) = H, which holds because L ⊑ H, so Γ, L ⊢ h = l typechecks. The whole sequence Γ, L ⊢ l = 42; h = l is therefore well-typed: SECURE. (2) For h = 42; l = h: again Γ ⊢ 42 : L, and assigning to h requires L ⊔ L ⊑ Γ(h) = H, which holds, so Γ, L ⊢ h = 42 typechecks. But now, since Γ(h) = H, reading h gives Γ ⊢ h : H; assigning to l requires H ⊔ L ⊑ Γ(l) = L, i.e. it requires H ⊑ L, which is FALSE. This side condition fails, so Γ, L ⊢ l = h does NOT typecheck, and therefore neither does the sequence h = 42; l = h: it is correctly REJECTED as insecure. This is exactly the mechanized version of the earlier informal annotation H not⊑ L on this same program.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-23-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "The lecture extends the type system with rules for input(ch) and output(e, ch) channels. State both rules and explain the intuition.",
+      "keyBeats": [
+        "Input rule: Γ, pc ⊢ x = input(ch) is valid iff Γ(ch) ⊑ Γ(x) -- reading from a channel into x requires x to be at least as secret as the channel",
+        "Output rule: given Γ ⊢ e : ℓ, Γ, pc ⊢ output(e, ch) is valid iff ℓ ⊑ Γ(ch) -- writing e to a channel requires the channel to be at least as secret as e",
+        "Both are the same 'source level ⊑ target level' pattern as ordinary assignment, just applied to channels instead of variables",
+        "Intuition: a channel is treated like a variable/object with its own security level -- you can't read a secret channel into a public variable, and you can't output secret data onto a public channel"
+      ],
+      "modelAnswer": "The lecture adds two rules to handle I/O channels, each treating the channel's declared level Γ(ch) just like a variable's level. For input: Γ, pc ⊢ x = input(ch) is valid iff Γ(ch) ⊑ Γ(x) -- reading from channel ch into variable x requires x to be at least as secret as the channel, exactly mirroring ordinary assignment (the 'source' Γ(ch) must flow into the at-least-as-secret 'target' Γ(x)). For output: given Γ ⊢ e : ℓ, the judgement Γ, pc ⊢ output(e, ch) is valid iff ℓ ⊑ Γ(ch) -- sending the value of e out over channel ch requires the channel to be at least as secret as e is, i.e. you cannot write high-security data out onto a low-security (public) channel. Both rules follow the exact same 'no write down / no read up' pattern as the rest of the type system: information may only flow from a source into a destination that is at least as secret, whether the destination is an ordinary variable or an I/O channel.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-24-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "State the two syntactic soundness properties (Simple Security and Confinement) that the lecture proves hold for any well-typed expression/statement.",
+      "keyBeats": [
+        "Simple Security: if Γ ⊢ e : ℓ then for every variable x occurring in e, Γ(x) ⊑ ℓ -- i.e. a well-typed expression can only 'read up to' level ℓ",
+        "Confinement: if Γ, pc ⊢ S then for every variable x assigned to in S, Γ(x) ⊒ ℓ (where Γ ⊢ e : ℓ is the level associated with the assignment/guard) -- i.e. a well-typed statement can only 'write down to' level ℓ",
+        "These directly mirror Bell-LaPadula's no-read-up / no-write-down",
+        "The slide poses the open question 'Does this capture confidentiality?' -- syntactic soundness alone is not yet a proof of the semantic property (non-interference); that connection is made on the next slide"
+      ],
+      "modelAnswer": "The lecture states two syntactic soundness properties that hold for every well-typed program. Simple Security: if Γ ⊢ e : ℓ, then for every variable x occurring in e, Γ(x) ⊑ ℓ -- meaning a well-typed expression can only read variables up to level ℓ (it cannot silently read something more secret than its own assigned type). Confinement: if Γ, pc ⊢ S, then for every variable x assigned to in S, Γ(x) ⊒ ℓ -- meaning a well-typed statement can only write down to level ℓ, i.e. it cannot assign to a variable less secret than the level of what could have influenced the assignment. These two properties are explicitly noted to be 'similar to Bell/LaPadula (no-read-up/no-write-down)'. However, the slide ends by posing the crucial open question 'Does this capture confidentiality?' -- these are purely syntactic guarantees about individual reads and writes; they are not yet, by themselves, a proof that a well-typed program satisfies the actual semantic security property (non-interference). That gap is closed on the following 'Soundness re-visited' slide.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L7-25-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "c",
+      "type": "definition",
+      "question": "State the 'Soundness re-visited' theorem that connects the type system to non-interference, and explain what it means for the claim 'type systems can guarantee non-interference'.",
+      "keyBeats": [
+        "Theorem: assume Γ, pc ⊢ S (S is well-typed). Then for any two runs ⟨S, s1⟩ → s1' and ⟨S, s2⟩ → s2' with dom(s1)=dom(s2)=dom(Γ) and s1(x)=s2(x) for all x with Γ(x) ⊑ ℓ, it follows that s1'(x)=s2'(x) for all x with Γ(x) ⊑ ℓ",
+        "This is exactly the definition of non-interference (from SLIDE 41), now derived as a CONSEQUENCE of typechecking, rather than assumed",
+        "In other words: well-typedness (Γ, pc ⊢ S) implies non-interference -- this is precisely the soundness theorem of the type system",
+        "This is how the lecture cashes out 'type systems can guarantee non-interference': instead of directly proving the semantic (two-run) property for each program by hand, one only needs to check the syntactic, mechanical, compositional typing rules; if the program typechecks, non-interference is guaranteed to hold by this theorem"
+      ],
+      "modelAnswer": "The lecture's 'Soundness re-visited' slide states the theorem that ties everything together: assume Γ, pc ⊢ S, i.e. S is well-typed under Γ and pc. Then, for any two executions ⟨S, s1⟩ → s1' and ⟨S, s2⟩ → s2' such that dom(s1) = dom(s2) = dom(Γ) and s1(x) = s2(x) for all x with Γ(x) ⊑ ℓ, it is guaranteed that s1'(x) = s2'(x) for all x with Γ(x) ⊑ ℓ. This conclusion is exactly the formal definition of non-interference stated earlier -- the theorem's premise is purely syntactic (S typechecks), and its conclusion is purely semantic (S is non-interfering). This is precisely what it means for 'type systems to guarantee non-interference': the type system is proven sound with respect to the semantic security property, so that checking well-typedness -- a simple, mechanical, compositional, syntax-directed procedure that can run without executing the program -- is sufficient to guarantee the much harder-to-check semantic property of non-interference holds for all possible inputs. Programmers (or compilers) therefore never need to reason about non-interference directly; they only need the type checker to accept the program.",
+      "citation": "lecture09-sos-typesif.pdf.extracted.txt, SLIDE 42",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": []
+}

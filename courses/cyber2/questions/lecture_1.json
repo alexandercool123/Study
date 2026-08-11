@@ -1,287 +1,429 @@
 {
+  "courseCode": "CYBER2",
+  "courseName": "Software Security",
   "lecture": 1,
   "lectureTitle": "Threat Modelling and What is Security",
   "examQuestions": [
-    {
-      "examQ": 1,
-      "subPart": "a",
-      "promptVerbatim": "Define security formally, explain the CIA triad, STRIDE, and Lampson's Policy/Mechanism/Assurance triad."
-    },
-    {
-      "examQ": 1,
-      "subPart": "b",
-      "promptVerbatim": "Perform threat modelling on a small example system."
-    },
-    {
-      "examQ": 1,
-      "subPart": "c",
-      "promptVerbatim": "Discuss how general security definitions relate to specific topics like web security."
-    }
+    {"examQ": 1, "subPart": "a", "promptVerbatim": "Define security formally, explain the CIA triad, STRIDE, and Lampson's Policy/Mechanism/Assurance triad."},
+    {"examQ": 1, "subPart": "b", "promptVerbatim": "Perform threat modelling on a small example system."},
+    {"examQ": 1, "subPart": "c", "promptVerbatim": "Discuss how general security definitions relate to specific topics like web security."}
   ],
   "drills": [
     {
-      "id": "CYBER2-L1-1a-1",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What is the formal definition of security?",
-      "keyBeats": [
-        "Security = ability of a system to satisfy its goals in the presence of an adversary",
-        "System must have defined goals",
-        "Adversary actively tries to prevent goal satisfaction",
-        "Definition applies to any system (software, hardware, process)"
-      ],
-      "modelAnswer": "The formal definition of security from the lecture is: the ability of a system to satisfy its goals in the presence of an adversary. This means a system is secure if it can achieve its intended objectives even when facing active opposition from a threat actor. The definition emphasizes that security is not absolute but relative to specific goals and specific adversaries.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 12",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-2",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "Define Confidentiality as part of the CIA triad.",
-      "keyBeats": [
-        "Confidentiality = keeping secrets... secret",
-        "Prevents unauthorized disclosure",
-        "Examples: passwords, personal data"
-      ],
-      "modelAnswer": "Confidentiality means keeping secrets secret - specifically, it is the property that information is not made available or disclosed to unauthorized individuals, entities, or processes. In practical terms, it prevents unauthorized disclosure of sensitive information. Common examples where confidentiality is critical include passwords, personal data, financial information, and proprietary business data.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-3",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "Define Integrity as part of the CIA triad.",
-      "keyBeats": [
-        "Integrity = ensuring/maintaining authenticity of data",
-        "Only authorized changes allowed",
-        "Prevents unauthorized modification",
-        "Examples: electronic medical records, bank accounts"
-      ],
-      "modelAnswer": "Integrity means ensuring and maintaining the authenticity of data. It ensures that information and systems are only modified in authorized ways by authorized parties. Integrity prevents unauthorized modification, alteration, or tampering with data. Examples where integrity is crucial include electronic medical records (which must not be altered), bank account balances, and personal data that must remain accurate and unmodified.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-4",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "Define Availability as part of the CIA triad.",
-      "keyBeats": [
-        "Availability = ensuring timely access to data for authorized user",
-        "System/services must be accessible when needed",
-        "Examples: MitID, medical records, SCADA (ICS)"
-      ],
-      "modelAnswer": "Availability means ensuring timely access to data for authorized users. It ensures that systems and information are accessible and usable by authorized parties when they need them. Availability is critical for systems where timely access is essential. Examples include MitID authentication services, medical records that doctors need to access quickly, and SCADA/ICS systems that control industrial processes and must remain operational.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-5",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What are Security Policies in the Policies/Goals/Mechanisms/Assurance framework?",
-      "keyBeats": [
-        "High-level overarching (inspired by business risks)",
-        "Example: 'personal information must be secure'",
-        "Broken down into security goals (or properties)"
-      ],
-      "modelAnswer": "Security policies are high-level, overarching directives that are inspired by business risks and requirements. They provide the broadest level of security guidance for an organization. For example, a security policy might state that 'personal information must be secure' without specifying how this is achieved. These policies are then broken down into more specific security goals or properties that can be implemented and verified.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-6",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What are Security Goals (security properties/objectives)?",
-      "keyBeats": [
-        "Less abstract than policies, more specific",
-        "Verifiable",
-        "Example: 'info in employee DB must be kept confidential'",
-        "Enforced by security mechanisms"
-      ],
-      "modelAnswer": "Security goals, also called security properties or objectives, are less abstract than policies and are verifiable. They provide specific, measurable targets for security. For example, a security goal might state that 'information in the employee database must be kept confidential' or that the system must maintain the integrity of financial transactions. These goals are enforced and guaranteed by security mechanisms. Common goal frameworks include the CIA model and secure information flow properties like non-interference.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-7",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What are Security Mechanisms?",
-      "keyBeats": [
-        "Concrete implementation-level",
-        "Example: 'employee DB must only be accessed by authorized users'",
-        "Other examples: access control, login, process isolation (OS)"
-      ],
-      "modelAnswer": "Security mechanisms are concrete, implementation-level controls that enforce security goals. They are the specific technical measures put in place to achieve security objectives. For example, a security mechanism might state that 'the employee database must only be accessed by authorized users' and implement this through access control lists. Other examples of mechanisms include login systems, process isolation at the OS level, encryption, and authentication protocols.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-8",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What is Assurance in the Policies/Goals/Mechanisms/Assurance framework?",
-      "keyBeats": [
-        "Verification that mechanisms work",
-        "Verification that mechanisms enforce goals",
-        "Examples: Secure Information Flow (formal methods), penetration testing"
-      ],
-      "modelAnswer": "Assurance is the verification that security mechanisms work correctly and effectively enforce the stated security goals. It provides confidence that the implementation actually achieves the intended security objectives. Assurance can be obtained through various means, including formal methods like Secure Information Flow analysis, penetration testing, code reviews, and design by contract.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 34",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-9",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What is the STRIDE model?",
-      "keyBeats": [
-        "Threat classification model",
-        "Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, Elevation of privilege",
-        "Used for systematic threat identification"
-      ],
-      "modelAnswer": "STRIDE is a threat classification model used for systematically identifying potential threats to a system. It consists of six categories: Spoofing (impersonating another user or entity), Tampering (modifying data or code), Repudiation (denying an action was performed), Information Disclosure (exposing information to unauthorized parties), Denial of Service (making a service unavailable to legitimate users), and Elevation of Privilege (gaining higher privileges than authorized). STRIDE provides a structured approach to ensure all major threat categories are considered during threat modelling.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 39",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-10",
-      "anchorsExamQ": 1,
-      "anchorsSubPart": "a",
-      "type": "definition",
-      "question": "What is Threat Modelling?",
-      "keyBeats": [
-        "Structured way of discovering what could go wrong",
-        "Before an attacker can exploit it",
-        "Systematic approach to security"
-      ],
-      "modelAnswer": "Threat modelling is a structured way of discovering what could go wrong in your system before an attacker can exploit it. It is a systematic approach to identifying, understanding, and addressing potential security threats during the design and development phases, rather than after deployment.",
-      "citation": "Threat Modelling- students.pptx, SLIDE 3",
-      "unverified": false,
-      "diagram_only": false
-    },
-    {
-      "id": "CYBER2-L1-1a-11",
+      "id": "CYBER2-L1-01-o",
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
       "type": "opener",
-      "question": "How do Security Policies, Goals, Mechanisms, and Assurance relate to each other?",
+      "question": "Give the lecture's formal definition of security, and explain what is meant by 'system', 'context', 'goals' and 'adversary' in that definition.",
       "keyBeats": [
-        "Hierarchy: Policies -> Goals -> Mechanisms",
-        "Policies are high-level and abstract",
-        "Goals are specific and verifiable",
-        "Mechanisms are concrete implementations",
-        "Assurance verifies the whole chain works"
+        "Definition: 'The ability of a system to satisfy its goals in the presence of an adversary'",
+        "System: must be explicitly scoped/bounded, has inputs/outputs, sits inside a context",
+        "Context: the environment the system operates in (e.g. OS/laptop for an application); context is where the system's input/output boundary is drawn",
+        "Goals: system goals (what it is meant to do) vs security goals specifically",
+        "Adversary: who/what it is, what it can observe and influence, and how it is described/modelled; where the adversary sits (outside, in context, or in system) changes the severity"
       ],
-      "modelAnswer": "Security Policies, Goals, Mechanisms, and Assurance form a hierarchy. Policies are high-level, abstract directives inspired by business risks. These are broken down into Security Goals, which are less abstract and verifiable - specific properties the system must have. Security Mechanisms are the concrete implementations that enforce these goals. Finally, Assurance is the verification process that confirms the mechanisms correctly implement the goals, which in turn satisfy the policies.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDES 33-34",
+      "modelAnswer": "Security is defined as 'the ability of a system to satisfy its goals in the presence of an adversary'. This definition has four components that must be made explicit before it is useful. The system is whatever is being analysed and must be scoped clearly, sitting in a context (its environment) with defined inputs and outputs; the boundary between system and context is a modelling choice. The goals are what the system should achieve; these can be general system goals or narrower security goals. The adversary is the entity that threatens those goals, and to reason about it you need to know what it can observe, what it can influence, and how to model it formally. Crucially, where the adversary is positioned relative to the system/context boundary matters a lot for how dangerous it is: an adversary purely external to the context is less of a problem than one already inside the system boundary.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 18",
       "unverified": false,
       "diagram_only": false
     },
     {
-      "id": "CYBER2-L1-1a-12",
+      "id": "CYBER2-L1-02-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "State the lecture's formal definition of 'security' verbatim.",
+      "keyBeats": [
+        "'The ability of a system to satisfy its goals in the presence of an adversary'",
+        "It is intentionally abstract/general and applies to any system, not just software",
+        "It becomes actionable only once system, context, goals and adversary are made concrete"
+      ],
+      "modelAnswer": "The lecture defines security as: 'The ability of a system to satisfy its goals in the presence of an adversary.' This definition is deliberately abstract and system-agnostic - it can be applied to a piece of software, an organisation, or any other system - but on its own it gives no concrete guidance; it only becomes useful once you instantiate what the system, its goals, its context, and the adversary actually are for the case at hand.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-03-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define the CIA triad and give one concrete example for each of the three properties.",
+      "keyBeats": [
+        "Confidentiality: keeping secrets secret - e.g. passwords, personal data",
+        "Integrity: ensuring/maintaining authenticity of data, only authorised changes allowed - e.g. electronic medical records, bank accounts",
+        "Availability: ensuring timely access to data for authorised users - e.g. MitID, medical records, SCADA/ICS systems",
+        "CIA is one concrete way of operationalising the abstract 'goals' part of the security definition"
+      ],
+      "modelAnswer": "The CIA model gives three core security goals. Confidentiality means keeping secrets secret, i.e. preventing unauthorised disclosure of information - examples are passwords and personal data. Integrity means ensuring and maintaining the authenticity of data so that only authorised changes are allowed - examples are electronic medical records and bank account balances. Availability means ensuring timely access to data/services for authorised users - examples are systems like MitID, medical records, or industrial control (SCADA) systems where a delay can itself be a security failure. CIA is one of the standard ways of turning the abstract notion of 'security goals' into something concrete and (somewhat) verifiable.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-04-m",
       "anchorsExamQ": 1,
       "anchorsSubPart": "a",
       "type": "mechanism",
-      "question": "What are the four phases of threat modelling?",
+      "question": "The lecture argues the CIA triad is not the whole story ('CIA++'). What additional goals are typically added, and what is the difference in focus between CIA and something like non-repudiation or authorisation?",
       "keyBeats": [
-        "Phase 1: System Description",
-        "Phase 2: Threat Elicitation",
-        "Phase 3: Risk Assessment",
-        "Phase 4: Mitigation Suggestions"
+        "Typical additions: (non-)repudiation, authorisation, accountability, fault-tolerance, etc.",
+        "Accountability is often decomposed into non-repudiation, authorisation, authentication",
+        "The CIA model (and its extensions) focuses on policies/goals, not mechanisms",
+        "[BSS] chap.1 example list: prevention, traceability/auditing, monitoring, privacy/confidentiality, multilevel security, anonymity, authentication, integrity"
       ],
-      "modelAnswer": "The four phases of threat modelling are: System Description (defining and documenting the system architecture and components), Threat Elicitation (systematically identifying potential threats using frameworks like STRIDE), Risk Assessment (evaluating the likelihood and impact of identified threats), and Mitigation Suggestions (proposing and implementing controls to address the identified risks).",
-      "citation": "Threat Modelling- students.pptx, SLIDE 9",
+      "modelAnswer": "The lecture notes that real systems usually need more than confidentiality, integrity and availability - this extended set is called 'CIA++'. Typical additions are (non-)repudiation, authorisation, accountability and fault-tolerance. Accountability itself is often broken down further into non-repudiation, authorisation and authentication. The key point stressed in the lecture is that CIA and CIA++ are all still security goals/policies, not mechanisms - they describe what should hold, not how it is enforced. A supplementary example list (from Building Secure Software ch.1) of such goals includes prevention, traceability and auditing, monitoring, privacy and confidentiality, multilevel security, anonymity, authentication, and integrity.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 32",
       "unverified": false,
       "diagram_only": false
     },
     {
-      "id": "CYBER2-L1-1b-1",
+      "id": "CYBER2-L1-05-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Explain the Policy/Mechanism/Assurance triad: define security policies, security goals, and security mechanisms, and describe how they relate to each other.",
+      "keyBeats": [
+        "Security policies: high-level, overarching, inspired by business risk, e.g. 'personal information must be secure'; broken down into security goals",
+        "Security goals/properties/objectives: less abstract, verifiable, e.g. 'info in employee DB must be kept confidential', the CIA model, secure information flow; enforced/guaranteed by security mechanisms",
+        "Security mechanisms: concrete implementations, e.g. 'employee DB must only be accessed by authorised users' realised via access control, login, process isolation",
+        "The relationship is a refinement chain: policy -> goals -> mechanisms, each level more concrete than the last",
+        "In practice goals vs. policies are often mixed/merged/confused"
+      ],
+      "modelAnswer": "This triad describes how abstract security requirements are turned into working software. Security policies are high-level, business-driven statements, e.g. 'personal information must be secure' - abstract and not directly verifiable. These are broken down into security goals (also called security properties or objectives), which are less abstract and verifiable, e.g. 'information in the employee database must be kept confidential'; the CIA model and properties like non-interference are examples of security goals. Goals are in turn enforced or guaranteed by security mechanisms, which are concrete implementation choices, e.g. 'the employee DB must only be accessed by authorised users', realised through access control, login systems, or OS-level process isolation. So the chain runs from abstract policy, through verifiable goals, down to concrete enforcing mechanisms - each step making the requirement more specific and closer to implementation. In practice, the lecture notes, the distinction between policy and goal is often blurred or merged.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-06-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Using the lecture's banking application example, illustrate all four parts of the Policy/Mechanism/Assurance framework: system goal, security goal, security mechanism, and assurance.",
+      "keyBeats": [
+        "System: a banking application processing sensitive personal data",
+        "System goal: to provide dependable and secure banking operations",
+        "Security goal: integrity (of personal data)",
+        "Security mechanism: security levels and access control",
+        "Assurance: verification that the mechanism actually enforces the goal, e.g. (sound) taint analysis, design by contract, testing"
+      ],
+      "modelAnswer": "The lecture's worked example is a banking application processing sensitive personal data. Its system goal is to provide dependable and secure banking operations. From that, a concrete security goal is derived: integrity of personal data. This goal is enforced by a security mechanism: security levels combined with access control. Finally, assurance is the activity that verifies the mechanism actually achieves the goal - the lecture gives examples such as (sound) taint analysis or design by contract, i.e. formal or semi-formal techniques (and testing) that give confidence the access control really does protect integrity rather than just being assumed to.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-07-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Instantiate the abstract security definition (system, goal, context, adversary) for a local password manager application, as done in the lecture's Exercise 3, and explain why 'secure storage' alone is judged too abstract.",
+      "keyBeats": [
+        "System: the password manager (software)",
+        "System goal: 'to provide secure storage of passwords'",
+        "Context: the OS/laptop it runs on",
+        "Adversary: external attacker = not really a problem; attacker who compromises the OS/laptop context = potential problem; attacker who compromises the password manager itself = 'game over'",
+        "Critique: 'secure storage' gives no guidance and no specifics -> need security policies/goals and threat modelling to make it actionable"
+      ],
+      "modelAnswer": "Applying the definition to a local password manager: the system is the password-manager software itself; the system goal is 'to provide secure storage of passwords'; the context is the OS/laptop it runs on. For the adversary, the lecture distinguishes three positions: an attacker fully external to the machine is not really a threat; an attacker who has a foothold in the context (the OS/laptop) is a potential problem; and an attacker already inside the system (the password manager process itself) is 'game over'. The exercise then critiques the phrase 'secure storage of passwords' as too abstract: it gives no guidance and no specifics about what mechanisms or policies would achieve it. This motivates the next step - deriving concrete security policies/goals and doing threat modelling to turn the abstract goal into something actionable.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-08-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the five steps of the Risk Management Framework (RMF) presented in the lecture, and explain why risk management is described as 'the foundation for good (software) security'.",
+      "keyBeats": [
+        "1. Understand the business context",
+        "2. Identify the business and technical risks",
+        "3. Synthesize and prioritize the risks",
+        "4. Define risk mitigation strategy",
+        "5. Carry out required fixes and validate",
+        "Risk management defines the relation between business goals and security requirements, identifies/prioritises risks, and should be performed throughout the project lifetime (and for sub-projects)"
+      ],
+      "modelAnswer": "Risk management defines the relationship between business goals and security requirements, and the lecture presents it as the foundation for good software security because it is what identifies and prioritises risks and goals, and lets you assess residual risk and the effect of defensive measures - it should be carried out repeatedly across the whole project lifetime, including for sub-projects, not just once. The Risk Management Framework given has five steps: (1) understand the business context, (2) identify the business and technical risks, (3) synthesize and prioritize the risks, (4) define a risk mitigation strategy, and (5) carry out the required fixes and validate them. This gives a repeatable process for turning a vague notion of 'we should be secure' into ranked, actionable work.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-09-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain the lecture's 'simpler way' of doing risk/vulnerability analysis using a difficulty x impact grid, and name two other, more formal frameworks for risk/vulnerability assessment mentioned in the lecture.",
+      "keyBeats": [
+        "Estimate difficulty of an attack: easy / modest / difficult",
+        "Estimate potential impact of a successful attack: low / medium / high",
+        "An easy attack with high impact = high risk -> triage: start from the high-risk threats",
+        "Other named frameworks: DREAD, OCTAVE, Common Vulnerability Scoring System (CVSS)"
+      ],
+      "modelAnswer": "The lecture's simplified risk/vulnerability analysis method scores each potential attack along two axes: how difficult it is to carry out (easy, modest, difficult) and how much impact it would have if successful (low, medium, high). Plotting threats on this difficulty-by-impact grid lets you triage: an easy attack with high impact is high risk and should be addressed first, while difficult/low-impact attacks can wait. This is presented as a lightweight alternative to more elaborate frameworks; the lecture names DREAD, OCTAVE, and the Common Vulnerability Scoring System (CVSS) as other, more formal risk/vulnerability assessment frameworks.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 44",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L1-10-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Spell out the STRIDE model: what does each letter stand for, and give one short example of each category.",
+      "keyBeats": [
+        "Spoofing Identity - impersonating another user to gain unauthorized access, e.g. accessing another user's account",
+        "Tampering with Data - unauthorized alteration of data to disrupt or deceive, e.g. unauthorised changes to persistent data",
+        "Repudiation - the ability to deny actions taken, complicating accountability, e.g. a malicious admin denying actions because they aren't tracked",
+        "Information Disclosure - unauthorized access to confidential information, e.g. an attacker reading data transmitted between two computers",
+        "Denial of Service - disrupting access to services/resources, e.g. spamming an API until the server shuts down",
+        "Elevation of Privilege - gaining higher access rights than intended, e.g. an attacker with no permissions gets write access to files"
+      ],
+      "modelAnswer": "STRIDE is a mnemonic for six categories of threat used in threat modelling. Spoofing identity is impersonating another user to gain unauthorized access, e.g. logging in as someone else. Tampering with data is unauthorised alteration of data to disrupt or deceive, e.g. changing persisted records without permission. Repudiation is the ability to deny having taken an action, which undermines accountability, e.g. a malicious admin denies making a change because actions aren't logged. Information Disclosure is unauthorized access to confidential information, e.g. an attacker reading data as it is transmitted between two machines. Denial of Service is disrupting access to services or resources, e.g. flooding an API until the server crashes. Elevation of Privilege is gaining more access than intended, e.g. an attacker with no permissions obtaining write access to files.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-11-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is a Dolev/Yao attacker, and how does this model relate to threat modelling of a communicating system?",
+      "keyBeats": [
+        "Dolev/Yao attacker models an adversary controlling the communication channel",
+        "Capabilities: snoop (read), modify, and spoof messages",
+        "Positioned conceptually as sitting on the input/output between system and context",
+        "Used alongside STRIDE and attack trees as one of the standard threat-modelling tools introduced in the lecture"
+      ],
+      "modelAnswer": "The Dolev/Yao attacker is a standard model of an adversary that sits on the communication channel of a system: it can snoop on (read), modify, and spoof messages flowing between the system and its context/environment. It is a way of formalising 'what can the adversary observe and influence' from the general security definition, specifically for the communication input/output of a system. The lecture introduces it alongside STRIDE and attack trees as one of the tools used to systematically enumerate threats during threat modelling.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 53",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-12-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are attack trees, and what purpose do they serve in threat modelling?",
+      "keyBeats": [
+        "A structured way to brainstorm attacks against a system, decomposing a top-level attack goal into sub-goals/steps",
+        "Used as a knowledge-transfer tool between analysts",
+        "Can be refined into quantitative models (e.g. to compute likelihood/cost of an attack path)"
+      ],
+      "modelAnswer": "Attack trees are one of the threat-modelling tools presented alongside STRIDE and the Dolev/Yao attacker model. They provide a structured way of brainstorming how an attacker could achieve a goal, by breaking a top-level attack objective down into a tree of sub-goals and concrete steps. Besides supporting systematic brainstorming, attack trees are useful for knowledge transfer - they make an analyst's reasoning explicit and shareable - and they can be refined into quantitative models, for example to estimate the likelihood or cost of a particular attack path.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 53",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-13-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "List the four questions of the Threat Modelling Manifesto referenced in the lecture, and explain the lecture's caveat about 'catching all attacks'.",
+      "keyBeats": [
+        "1. What are we working on?",
+        "2. What can go wrong?",
+        "3. What are we going to do about it?",
+        "4. Did we do a good enough job?",
+        "Caveat: analysis of a (comprehensive) system model can only find attacks that are present in that model - you cannot find what you haven't modelled"
+      ],
+      "modelAnswer": "The lecture references the Threat Modelling Manifesto's four guiding questions: (1) What are we working on? (2) What can go wrong? (3) What are we going to do about it? and (4) Did we do a good enough job? It then adds an important caveat about completeness: however comprehensive your system model is, systematic analysis of that model can only ever find attacks that are actually represented in it - if a possible attack vector was never modelled, no amount of analysis of the model will surface it, so out-of-the-box thinking and continual re-assessment of the model itself remain necessary.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 54",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-14-o",
       "anchorsExamQ": 1,
       "anchorsSubPart": "b",
-      "type": "mechanism",
-      "question": "What questions should you ask when defining what it means for a system to be secure?",
+      "type": "opener",
+      "question": "What are the four phases of threat modelling used in the worked example, and briefly what happens in each?",
       "keyBeats": [
-        "What is a system?",
-        "What is a system context?",
-        "What goals does the system have?",
-        "What are the security goals?",
-        "Who/what is an adversary?",
-        "What can an adversary observe?",
-        "What can an adversary influence?"
+        "System Description: describe the system, its components and data flows (e.g. a diagram/textual description)",
+        "Threat Elicitation: use a framework (attacker-, software-, or asset-centric, e.g. STRIDE on a data-flow diagram) to discover concrete threats",
+        "Risk Assessment: score identified threats, typically by likelihood and severity, to prioritise them",
+        "Mitigation Suggestions: propose concrete countermeasures for the highest-priority threats"
       ],
-      "modelAnswer": "When defining what it means for a system to be secure, you should ask: What is the system (its components and boundaries)? What is the system context (the environment it operates in)? What are the system's goals (its functional objectives)? What are the specific security goals? Who or what constitutes an adversary? What can an adversary observe within the system? What can an adversary influence or control? And how should we describe and define an adversary in the context of this specific system?",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 26",
+      "modelAnswer": "The threat-modelling process taught in the exercise runs through four phases. First, System Description: produce a clear description (often a diagram) of the system's components, actors, and data flows. Second, Threat Elicitation: apply a framework - attacker-centric, software-centric, or asset-centric, e.g. tracing a data-flow diagram with STRIDE - to systematically discover concrete threats against the system. Third, Risk Assessment: score each identified threat, typically along likelihood and severity, so threats can be ranked and prioritised. Fourth, Mitigation Suggestions: propose concrete countermeasures addressing the highest-priority threats found.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 9",
       "unverified": false,
       "diagram_only": false
     },
     {
-      "id": "CYBER2-L1-1b-2",
+      "id": "CYBER2-L1-15-s",
       "anchorsExamQ": 1,
       "anchorsSubPart": "b",
       "type": "specific",
-      "question": "What are the three adversary categories when threat modelling, and which is most dangerous?",
+      "question": "Describe the digital banking platform used as the worked example: what does the system do, how is it hosted, who are the actors, and where are the trust boundaries?",
       "keyBeats": [
-        "External: outside system context",
-        "In context: within OS/laptop, potential problem",
-        "In system: compromised the system, game over - most dangerous"
+        "Functionality: customers view balances, transfer money, pay bills via a web interface",
+        "Hosting: AWS public cloud with a Snowflake database",
+        "Authentication: username/password only, no MFA",
+        "Actors: customers (via web UI), admins (access backend/server/DB with username+password to manage accounts and monitor transactions), inter-payment network (external, for cross-bank transactions)",
+        "Communication: client-server over HTTPS; backend-to-database/external services over the public cloud network",
+        "Trust boundaries separate customers, administrators, and the inter-payment network from internal systems"
       ],
-      "modelAnswer": "Adversaries can be categorized into three groups: External adversaries are outside the system context and typically pose less risk for well-designed local systems. Adversaries in context (within the OS or laptop environment) are a potential problem and require attention. Adversaries in system (those who have compromised the system itself) represent the most dangerous scenario - 'game over' - because they have bypassed all external defenses.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 47",
+      "modelAnswer": "The worked example is a digital banking platform that lets customers view account balances, transfer money, and pay bills through a web interface; it is hosted on AWS public cloud with a Snowflake database. Customers authenticate with just a username and password (no multi-factor authentication) and, once logged in, can transfer money or pay bills, with their data moving between the web UI and the AWS backend. A separate set of admins can access the backend server and database (also via username/password) to manage accounts and monitor customer transactions; those transactions are relayed through an external inter-payment system connecting to banks worldwide. All client-server traffic runs over HTTPS, while backend-to-database and backend-to-external-service traffic runs over the public cloud network. The three external entities - customers, administrators, and the inter-payment network - are each separated from the internal system by explicit trust boundaries, which is exactly the kind of boundary information threat elicitation (e.g. STRIDE) is later traced across.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 13",
       "unverified": false,
       "diagram_only": false
     },
     {
-      "id": "CYBER2-L1-1c-1",
+      "id": "CYBER2-L1-16-d",
       "anchorsExamQ": 1,
-      "anchorsSubPart": "c",
-      "type": "opener",
-      "question": "How does the CIA triad apply specifically to web security?",
+      "anchorsSubPart": "b",
+      "type": "definition",
+      "question": "Define the core threat-modelling terms Asset, Vulnerability, Threat, and Impact, and give an example of each for the digital banking platform.",
       "keyBeats": [
-        "Confidentiality: HTTPS/TLS encryption",
-        "Integrity: Digital signatures, HMACs",
-        "Availability: DDoS protection, load balancing"
+        "Asset: any informational resource in the system - components, data stores, reputation; example: databases, web servers, user personal information",
+        "Vulnerability: a weakness an adversary exploits to break a security requirement; example: weak passwords, default admin credentials, cloud misconfiguration",
+        "Threat: a potential event that can adversely affect infrastructure/apps/data with negative consequences; example: ransomware, SQL injection, man-in-the-middle, phishing, insiders",
+        "Impact: measures the effect a threat has on business goals, tied to the affected asset; scored as low-to-high likelihood and low-to-high severity"
       ],
-      "modelAnswer": "The CIA triad applies to web security through: Confidentiality via HTTPS/TLS encryption preventing eavesdropping; Integrity via digital signatures and HMACs ensuring data cannot be tampered with; Availability via DDoS protection and load balancing ensuring services remain accessible.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 30",
+      "modelAnswer": "An asset is any informational resource in a system - ranging from components and data stores to the reputation of the provider; for the banking platform this includes the PostgreSQL/Snowflake databases, the web service, and customers' personal/financial data. A vulnerability is a weakness that an adversary can exploit to break a security requirement of an asset - e.g. the lack of multi-factor authentication, weak passwords, or a cloud misconfiguration. A threat is a potential event that can adversely affect infrastructure, applications or data, with negative consequences for individuals or the organisation - e.g. credential stuffing, SQL injection, man-in-the-middle interception, or phishing against bank customers. Impact measures the effect a realised threat has on the system provider's business goals, and is tied to the affected asset; it is typically scored on a low-to-high likelihood and low-to-high severity scale, e.g. full compromise of a customer's account and PII would be a high-severity impact.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 7",
       "unverified": false,
       "diagram_only": false
     },
     {
-      "id": "CYBER2-L1-1c-2",
+      "id": "CYBER2-L1-17-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "The threat elicitation phase can start from different frameworks: attacker-centric, software-centric, and asset-centric. What distinguishes these, and which approach does the STRIDE data-flow-diagram method used on the banking system exemplify?",
+      "keyBeats": [
+        "Attacker-centric: start from adversary profiles/motivations and work out what they'd target",
+        "Software-centric: start from the system/software architecture (e.g. a data-flow diagram) and trace threats across components and trust boundaries - this is the STRIDE approach used in the exercise",
+        "Asset-centric: start from the valuable assets and work out how they could be attacked",
+        "'It all starts with a framework' - the choice of framework changes what threats you are likely to surface first"
+      ],
+      "modelAnswer": "The lecture distinguishes three ways to start threat elicitation. An attacker-centric approach begins from adversary profiles and motivations and asks what such an attacker would go after. A software-centric approach begins from the system's own architecture - typically a data-flow diagram - and traces threats over its components and trust boundaries; this is exactly what the STRIDE walkthrough on the banking platform does. An asset-centric approach instead starts from the valuable assets (data, reputation, etc.) and works backwards to how they could be compromised. The lecture stresses that 'it all starts with a framework': whichever one you pick shapes which threats you are likely to notice first, so the choice matters.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-18-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "Give two of the concrete STRIDE-style threats the exercise identifies against the digital banking platform's Web Service/Web UI, and name the STRIDE category each belongs to.",
+      "keyBeats": [
+        "Spoofing: the Web Service could be spoofed by an attacker intercepting the SSL/TLS handshake to perform a man-in-the-middle attack, especially if client-side certificate validation is not strict",
+        "Information Disclosure-type risk: the jQuery-based Web UI might expose session tokens or sensitive data via client-side storage (local storage, URL parameters)",
+        "Also identified: a phishing site mimicking the Web UI to steal credentials (spoofing/social engineering), and weak session management letting a stolen regular-user token be manipulated for privilege escalation",
+        "These are found by tracing the system's data-flow diagram (browser <-> web service <-> database) across trust boundaries"
+      ],
+      "modelAnswer": "Tracing the banking platform's data-flow diagram (browser, web service, database) across trust boundaries, the exercise identifies threats such as: (Spoofing) the Web Service could be spoofed by an attacker intercepting the SSL/TLS handshake to run a man-in-the-middle attack, especially if the client doesn't strictly validate certificates; and a related risk that the jQuery-based Web UI might inadvertently expose session tokens or sensitive data through client-side storage mechanisms like local storage or URL parameters, which is an information-disclosure-style risk. Two further examples raised were a phishing site cloning the Web UI to capture user credentials, and weak session management that could let an attacker who has stolen a normal user's session token manipulate it to escalate privileges.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-19-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "mechanism",
+      "question": "In the risk-assessment phase, how are 'likelihood' and 'severity' defined, and how does the exercise classify a tsunami flooding the server room versus a brute-force login attempt versus a privilege-escalation attack?",
+      "keyBeats": [
+        "Likelihood: the probability of the threat being realised by an adversary",
+        "Severity: a measure of the repercussions if the threat is realised",
+        "Tsunami flooding the Copenhagen server room: low likelihood, high severity",
+        "Brute-forcing user login details: high likelihood, low severity",
+        "A user elevating privileges to gain admin access to the web server: high likelihood, high severity"
+      ],
+      "modelAnswer": "Risk assessment scores each identified threat on two axes: likelihood - the probability that an adversary actually realises the threat - and severity - a measure of the repercussions if it is realised. The exercise gives three contrasting examples for the banking system: a tsunami flooding the Copenhagen server room is low likelihood but high severity (rare, catastrophic); an adversary brute-forcing users' login credentials is high likelihood but low severity (common, but usually caught/limited in impact); and a user elevating their privileges to gain admin access to the web server is both high likelihood and high severity, making it the most urgent risk to mitigate.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 30",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "CYBER2-L1-20-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "What mitigations does the exercise propose for the spoofing threats identified against the banking platform's Web Service and Web UI?",
+      "keyBeats": [
+        "MITM/TLS spoofing: enforce certificate pinning, TLS 1.3 with mutual TLS (mTLS) for service-to-service comms, strict hostname verification",
+        "Token exposure via client storage: prohibit token storage in URL/localStorage, use HttpOnly/Secure/SameSite=Strict cookies, auto-destroy session on browser close, enforce a Content Security Policy (CSP)",
+        "Phishing: implement MFA (most effective single control), run user security-awareness training, deploy DMARC/DKIM/SPF to stop domain spoofing in phishing emails"
+      ],
+      "modelAnswer": "For the man-in-the-middle/TLS spoofing threat against the Web Service, the exercise suggests enforcing certificate pinning, using TLS 1.3 with mutual TLS (mTLS) for service-to-service communication, and strict hostname verification of server certificates on all clients. For the risk that the jQuery Web UI exposes session tokens via client-side storage, it suggests prohibiting token storage in the URL or localStorage in favour of HttpOnly, Secure, SameSite=Strict cookies, automatically destroying session tokens on browser close, and enforcing a Content Security Policy (CSP) to block insecure script behaviour. For the phishing threat, the single most effective control suggested is multi-factor authentication (so a stolen password alone is insufficient), backed up by regular user security-awareness training and DMARC/DKIM/SPF email-authentication configuration to stop attackers spoofing the bank's domain in phishing emails.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-21-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "b",
+      "type": "specific",
+      "question": "The lecture discusses the real-world Snowflake customer-account breach as a threat-modelling lesson. What was the root cause, how many customers were affected, and what mitigation did Snowflake recommend afterwards?",
+      "keyBeats": [
+        "Root cause: credential theft (stolen customer credentials used to access Snowflake-hosted customer accounts)",
+        "165 Snowflake customers were affected, including major companies (e.g. Santander, Ticketmaster)",
+        "Prevention/mitigation Snowflake urged: enforce multi-factor authentication (MFA) on all accounts and restrict traffic to authorised users/locations",
+        "Illustrates that missing a basic control (MFA) - exactly like the banking platform's own lack of MFA - is a realistic high-impact threat"
+      ],
+      "modelAnswer": "The lecture uses the 2024 Snowflake customer-account breach as a real-world case: the root cause was credential theft - attackers used stolen customer credentials to access accounts hosted on Snowflake, without needing to break Snowflake's own infrastructure. In total 165 Snowflake customers were affected, including large organisations such as Santander and Ticketmaster. In response, Snowflake urged all customers to enforce multi-factor authentication (MFA) on every account and to restrict traffic to authorised users or locations. The lecture connects this directly back to the digital banking platform exercise, which itself lacks MFA - underlining that a threat like credential theft is not hypothetical and that a missing basic control can have very large real-world impact.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-22-o",
       "anchorsExamQ": 1,
       "anchorsSubPart": "c",
       "type": "opener",
-      "question": "How do general security definitions relate to secure information flow?",
+      "question": "How does the lecture ask you to specialise the general definition of security ('the ability of a system to satisfy its goals in the presence of an adversary') to the specific topic of software security?",
       "keyBeats": [
-        "Secure information flow is a security goal",
-        "Non-interference is a formal definition",
-        "Connects to Confidentiality and Integrity from CIA"
+        "Same definition applies, but 'system', 'goals' and 'threat(s)' must now be interpreted specifically for software",
+        "System becomes the software artifact/program (and its execution environment)",
+        "Goals become software-specific security properties (e.g. correctness under attack, protecting data the software handles)",
+        "Threats become adversaries capable of interacting with/attacking the software specifically (malicious input, code-level exploits, etc.)",
+        "This is a general pattern: any specific security subfield (software security, web security, etc.) is obtained by instantiating the same abstract definition with domain-specific system/goals/adversary"
       ],
-      "modelAnswer": "Secure information flow is a security goal derived from the CIA triad. It relates to Confidentiality (preventing unauthorized disclosure) and Integrity (preventing unauthorized modification). Non-interference, a formal definition, states that high-security level actions should not affect low-security levels.",
-      "citation": "lecture01-sos-whatissecurity.pdf, SLIDE 33",
+      "modelAnswer": "The lecture explicitly revisits the general definition - 'the ability of a system to satisfy its goals in the presence of an adversary' - and asks how to apply/interpret/specialise it for software security specifically. The definition itself does not change; what changes is how each component is instantiated: the system becomes a piece of software (running in some environment), the goals become software-specific security properties (e.g. the program continuing to behave correctly and protecting the data it handles even under attack), and the adversary/threat becomes an entity capable of interacting with or attacking that software (through malicious input, exploiting implementation bugs, etc.). This is presented as the general pattern for connecting the abstract security definition to any narrower subfield: you get 'software security', 'web security', or any other specific flavour of security by plugging domain-appropriate system/goals/adversary into the same abstract template.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 59",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-23-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "c",
+      "type": "mechanism",
+      "question": "The lecture's timing-side-channel code example is used to argue 'it's not enough to look at the software alone'. Explain the argument using that example.",
+      "keyBeats": [
+        "Code example: a function reads a secret-influenced branch (x>42), then times a memory access to an unrelated buffer via get_cycles(), printing the timing delta",
+        "The code itself looks unremarkable / functionally correct - nothing 'wrong' in isolation",
+        "But depending on system and context (e.g. shared cache/timing side channels, who can observe the printed timing, what counts as 'secret'), the same code can leak a secret bit through a timing channel",
+        "Conclusion: software security cannot be judged by staring at code alone; you must also consider the system and system context (execution environment, what an adversary can observe) - directly reflecting the 'system/context' part of the general security definition applied to software"
+      ],
+      "modelAnswer": "The lecture's running code example (readNumber() into a branch on secret > 42, followed by timing a load from an unrelated buffer with get_cycles() and printing the timing delta) looks functionally unremarkable in isolation - nothing about the code alone screams 'insecure'. The point of re-showing it (relabelled as 'attack()') is that whether this constitutes a security problem depends entirely on system and system context: if the timing output is observable by an adversary and the branch depends on a secret value, the timing difference leaks information about that secret through a side channel - exactly the kind of thing the general definition's 'adversary can observe X' component is meant to capture. The lecture's conclusion is explicit: it is not enough to look at the software in isolation; you must think about the system and its context (what can be observed/influenced from outside) to judge whether software is actually secure - i.e. software security is only meaningful once you've specialised the general system/context/goal/adversary definition to the concrete execution environment.",
+      "citation": "lecture01-sos-whatissecurity.pdf.extracted.txt, SLIDE 61",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "CYBER2-L1-24-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "c",
+      "type": "specific",
+      "question": "Using the STRIDE threats found for the banking platform's web front end (TLS handshake spoofing, jQuery client-side token exposure, phishing of the web UI), explain how these are an instance of the general security definition specialised to the web security domain.",
+      "keyBeats": [
+        "System: specifically the web-facing components (browser, Web UI, TLS channel, Web Service API), a specific kind of software system with HTTP/TLS as its context",
+        "Goals: web-appropriate versions of CIA - confidentiality of session tokens/credentials, integrity of the TLS channel and page content, availability of the login endpoint",
+        "Adversary: a web-specific adversary model - can intercept/tamper with network traffic (MITM on TLS handshake), can host a look-alike site (phishing), can read client-side browser storage",
+        "Same abstract definition, but system/context/adversary are all instantiated with web-specific technology (browsers, HTTPS, cookies/localStorage, DNS/hosting) rather than left generic"
+      ],
+      "modelAnswer": "The banking exercise's web-focused threats are a good illustration of specialising the general definition to 'web security'. The system here is specifically the web-facing part of the platform - the browser, the Web UI (built with jQuery), and the Web Service API - operating in a context defined by HTTP/HTTPS/TLS and browser storage mechanisms. The goals are web-flavoured instances of CIA: confidentiality of session tokens and credentials, integrity of the TLS-protected channel and of the page served to the user, and availability of the login endpoint. The adversary is likewise given a web-specific capability set: it can intercept and tamper with the TLS handshake (man-in-the-middle), stand up a look-alike phishing site, or read data an unwary client stores in localStorage or URL parameters. None of this changes the abstract definition ('ability of a system to satisfy its goals in the presence of an adversary') - it simply instantiates system, goals and adversary with web-specific technology and threats, exactly the move the lecture asks you to make when relating the general definition to any specific security subfield.",
+      "citation": "Threat Modelling- students.pptx.extracted.txt, SLIDE 25",
       "unverified": false,
       "diagram_only": false
     }
@@ -289,17 +431,17 @@
   "exercises": [
     {
       "id": "CYBER2-L1-E1",
-      "source": "Lecture 1 Workshop",
-      "promptVerbatim": "Define what security means for a password manager (as a local application) using the definition: 'The ability of a system to satisfy its goals in the presence of an adversary'.",
-      "whatItTests": "Application of formal security definition to concrete system",
-      "answerSketch": "System: password manager software. Goal: provide secure storage of passwords. Context: OS/laptop. Adversaries: External (minimal), In context (potential), In system (game over). Security means satisfying the goal despite these adversaries."
+      "source": "digital_banking_platform_threat_modeling.pdf.extracted.txt, PAGE 1 (also worked through in Threat Modelling- students.pptx.extracted.txt, SLIDE 13 onward)",
+      "promptVerbatim": "Our System: The system is a digital banking platform that allows customers to view account balances, transfer money, and pay bills through a web interface. The system is hosted on AWS public cloud with a Snowflake database. Customers have a username and password for authentication, but no multi-factor authentication. After login, they see their account balances, and they can then choose to transfer money to another person's account or pay a bill to a firm. For all user operations, user data is transferred between the UI and the backend on AWS. Furthermore, a set of admins can access the backend to manage accounts and monitor transactions performed by the customers. The transactions are done through communication with an inter-payment system, for all banks around the world. The admins can access both the server and database with a username and password. All client-server communication occurs over HTTPS, while backend servers communicate with databases and external services over the public cloud network. External entities include customers, administrators, and the inter-payment network, each separated from internal systems by trust boundaries.",
+      "whatItTests": "subPart b: performing threat modelling (system description + STRIDE-based threat elicitation) on a small-ish example system.",
+      "answerSketch": "Draw the data-flow diagram: Customer(browser) <-HTTPS-> Web UI/Web Service (AWS) <-> PostgreSQL/Snowflake DB; Admin <-username/password-> backend/server/DB; backend <-> Inter-Payment network. Identify trust boundaries around customers, admins, and the inter-payment network. Apply STRIDE per component/flow: Spoofing - MITM on the TLS handshake to the Web Service, or phishing site mimicking the Web UI to capture credentials (worsened by no MFA); Tampering - unauthorised modification of a transaction in transit or of a stored balance at rest; Repudiation - an admin denies changing transaction logs because actions aren't audited; Information Disclosure - session tokens/PII leaked via client-side storage (jQuery UI) or misconfigured cloud storage; Denial of Service - flooding the login endpoint; Elevation of Privilege - a customer performing horizontal privilege escalation to another customer's account, or an attacker performing vertical escalation to admin rights. Rank threats by likelihood x severity (e.g. weak-password credential stuffing = high likelihood; vertical privilege escalation to admin = high likelihood, high severity, so top priority) and propose mitigations such as MFA, certificate pinning/mTLS, HttpOnly/SameSite cookies, and audit logging for admin actions."
     },
     {
       "id": "CYBER2-L1-E2",
-      "source": "Threat Modelling Exercise",
-      "promptVerbatim": "Using STRIDE, identify and categorize at least 3 threats to a password manager and propose mitigations.",
-      "whatItTests": "Application of STRIDE framework",
-      "answerSketch": "Spoofing: Impersonate user → MFA. Tampering: Modify passwords → Encryption + integrity checks. Information Disclosure: Read passwords → Strong encryption. DoS: Prevent access → Rate limiting + redundancy."
+      "source": "Threat Modelling- students.pptx.extracted.txt, SLIDE 30 and SLIDE 34 (worked risk-assessment step for the digital banking platform)",
+      "promptVerbatim": "For the digital banking platform, classify the following threats by likelihood (low/high) and severity (low/high), and justify the ranking: (1) a tsunami flooding the server room; (2) an adversary brute-forcing customer login credentials; (3) a user escalating privileges to gain admin access to the web server; (4) credential stuffing of customer accounts; (5) an admin denying they changed the transaction logs.",
+      "whatItTests": "subPart b: the risk-assessment phase of threat modelling - reasoning about likelihood and severity to prioritise identified threats on a concrete system.",
+      "answerSketch": "Tsunami flooding the server room: low likelihood, high severity (rare physical/environmental event, but catastrophic - total loss of availability). Brute-forcing customer logins: high likelihood (common, automatable, no MFA in this system), low-to-medium severity per single account but scales up. Privilege escalation to admin access: high likelihood and high severity - flagged in the lecture as the top-priority risk, since gaining admin rights compromises confidentiality and integrity of all customer data and transactions. Credential stuffing of customer accounts: high likelihood (reused passwords, no MFA), severity depends on account value but generally medium-high given this is a bank. Admin denying they changed transaction logs (repudiation): likelihood depends on whether admin actions are logged/audited (the system as described lacks robust audit trails, making this plausible); severity is high because it undermines accountability and could hide fraud. Overall ranking should put the two 'high likelihood, high severity' items (privilege escalation, and by extension MFA-less credential attacks) at the top of the mitigation backlog, consistent with the lecture's 'easy attack + high impact = high risk, start there' rule."
     }
   ]
 }
