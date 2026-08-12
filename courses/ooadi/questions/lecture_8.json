@@ -1,0 +1,864 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 8,
+  "lectureTitle": "Dynamic Interactions and Sequences",
+  "examQuestions": [
+    {"examQ": 7, "subPart": "a", "promptVerbatim": "Multi-threading"},
+    {"examQ": 8, "subPart": "a", "promptVerbatim": "Asynchronous communication"}
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L8-001-o",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "So far your class designs have been developed for a rather static environment. Why does that stop being enough, and what tool does the lecture bring back in to deal with it?",
+      "keyBeats": [
+        "Real systems must adapt to environment: what happened, what is happening now, what will happen next",
+        "You cannot code for absolutely everything, but careful consideration helps",
+        "This means revisiting message sequence diagrams",
+        "Sequence diagrams describe sequences of actions in time, not static structure"
+      ],
+      "modelAnswer": "Class and static design diagrams describe structure, but real programs run in a dynamic, changing environment where things happen concurrently, in sequence, or with delay. Writing code to handle every possible situation isn't realistic, but careful design consideration goes a long way, and that's exactly what message sequence diagrams are for: they let us describe sequences of actions over time, with a vertical timeline and horizontal messages, so we can prevalidate a design before writing code.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-002-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the basic structural rules of a UML message sequence diagram, and what participant stereotypes did the slides list?",
+      "keyBeats": [
+        "Timeline goes vertical, messages go horizontal",
+        "Any action has a starting point (assumptions/conditions) and a stopping point (something achieved or not)",
+        "Specific notation is part of UML",
+        "Participant stereotypes shown: Object, Actor, Entity, Boundary, Control"
+      ],
+      "modelAnswer": "A sequence diagram is read with time flowing down the page and messages flowing across it between participant lifelines. Every action needs a clear starting point, the assumptions and conditions under which it begins, and a clear stopping point, whether something was achieved or not. This is a formal part of UML, and participants can be typed with stereotypes such as Object, Actor, Entity, Boundary, or Control depending on their role in the interaction.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-003-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is an activation bar in a sequence diagram, and how is information exchange between objects shown?",
+      "keyBeats": [
+        "Activation bars indicate an object is active for a period of time",
+        "A note on the activity is often added",
+        "Exchange of information is shown as an arrow with text indicating the direction of flow",
+        "A timed event can be directly related to a method call"
+      ],
+      "modelAnswer": "An activation bar is the narrow rectangle drawn on a lifeline that shows an object is actively doing something for a stretch of time, often annotated with a short note describing that activity. Information exchange between two objects is drawn as an arrow with a text label showing the direction of the flow, and that labelled arrow typically corresponds directly to a method call in the code.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-004-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How do sequence diagrams visually distinguish a synchronous interaction from an asynchronous one?",
+      "keyBeats": [
+        "Synchronous message: thick/solid arrow-head",
+        "Asynchronous message: thin arrow-head",
+        "For asynchronous messaging specifically, the diagram shown is only one example of a realization (there isn't one fixed way to draw it)",
+        "The caller in a synchronous call typically blocks/waits; in async it does not"
+      ],
+      "modelAnswer": "The notation difference is the arrowhead: a synchronous message uses a thick, solid arrowhead, while an asynchronous message uses a thin arrowhead. The lecture explicitly flags that, for asynchronous messaging in particular, the diagram shown is just one possible realization of the idea, not a rigid standard everyone follows identically. Conceptually, synchronous means the caller waits for the call to return before continuing, whereas asynchronous means the caller carries on without waiting.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-005-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are the conventions around return messages in a sequence diagram, and what mistake should you never make with the arrows?",
+      "keyBeats": [
+        "Return messages keep tabs on things and confirm execution is going as planned",
+        "Return messages are optional; dotted lines are often used to indicate this",
+        "Overusing return messages clutters the diagram",
+        "Never use a double-headed arrow — if you can't tell which way the main message flows, the diagram loses its point"
+      ],
+      "modelAnswer": "Return messages are drawn to show a call completed and to keep track of the flow, and because they're often optional they're usually drawn as dashed rather than solid arrows so they read as secondary to the main call. You shouldn't overuse them since too many return arrows clutter a diagram, and you should never draw a double-headed arrow for a message — if a reader can't immediately tell which direction the primary flow goes, the entire diagram has failed at its job.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-006-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How is the creation of a new participant shown on a sequence diagram, and why does this matter especially for threads?",
+      "keyBeats": [
+        "Creating a participant on the fly is shown by dropping its lifeline further down the timeline, marking when the 'add' happens",
+        "Often paired with a <<create>> stereotype on the message",
+        "Very often used together with a Thread being created and/or destroyed",
+        "Keeping track of timing matters especially in multi-thread scenarios"
+      ],
+      "modelAnswer": "When a participant doesn't exist from the start, its lifeline is drawn starting lower down the page, at the exact point in time where it gets created, usually via a message tagged with a create stereotype. This notation is used a lot together with thread creation, because knowing exactly when in the sequence a thread comes into existence is especially important once you're reasoning about multi-threaded scenarios.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-007-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How is destruction of a participant shown, and what kind of bug does this notation help you spot before it happens?",
+      "keyBeats": [
+        "Destruction is shown by a large cross on the lifeline, signifying termination",
+        "Helps identify problems if the destroyed object is a Thread",
+        "Example danger: destroying a thread while another thread is still waiting for it — hard to spot without the diagram",
+        "Overall goal: establish an overview of tasks and events involved"
+      ],
+      "modelAnswer": "Destruction of a participant is marked with a large cross where its lifeline ends, showing the timeline is over for that object. This is particularly valuable when the participant is a Thread, because a diagram makes it visible if you're about to destroy a thread while some other thread is still waiting on it — a bug that's genuinely hard to spot just by reading code, but jumps out once you draw the timing.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-008-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a reflexive (self) message in UML, and what does it correspond to in Java?",
+      "keyBeats": [
+        "A reflexive message is a message an object sends to itself",
+        "In Java this corresponds to a method in a class calling another method of the same class",
+        "Or a method calling itself recursively"
+      ],
+      "modelAnswer": "A reflexive, or self, message is a message an object sends back to itself, drawn as an arrow that loops from a lifeline back onto itself. In Java terms that's simply a method calling another method on the same object, or a method recursively calling itself.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-009-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does the lecture insist that comments in sequence diagrams are extremely useful?",
+      "keyBeats": [
+        "Diagrams may need to be stored for say 6 months — will you still remember your 'genius' reasoning then?",
+        "Others cannot read your mind about why an object needs to do something specific",
+        "Comments preserve the rationale, not just the mechanics"
+      ],
+      "modelAnswer": "Comments matter because a diagram often has to sit unread for months before anyone looks at it again, and by then even you may not remember why you made a particular design choice. Other people definitely can't read your mind about why some object needs to do a specific thing, so annotating the diagram with the reasoning is what actually keeps it useful over time.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-010-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a sequence fragment in UML, and what kinds of control logic can it express?",
+      "keyBeats": [
+        "A sequence fragment is a structured UML block that adds control logic",
+        "Used to divide and structure diagrams",
+        "Can express branching, loops, exceptions, parallel flow, etc.",
+        "Not all things happen as planned — fragments let us model alternatives"
+      ],
+      "modelAnswer": "A sequence fragment is a structured block drawn around part of a diagram that adds real control logic — branching, loops, exception handling, or parallel execution — on top of the plain linear flow. It exists precisely because not everything happens exactly as planned, so fragments let us divide and structure a diagram to capture alternatives cleanly instead of drawing separate diagrams for every path.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-011-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What does an alt fragment represent, what is its Java equivalent, and what kinds of scenarios is it used to model?",
+      "keyBeats": [
+        "alt represents mutually exclusive paths of execution",
+        "Just like Java's if/else structure",
+        "Only one operand executes at runtime, depending on some set of parameters",
+        "Used for control-flow conditions, choices, loops, optional steps, multiple outcomes (e.g. successful vs failed login), auth rules, validation, state-dependent behaviour"
+      ],
+      "modelAnswer": "An alt fragment models mutually exclusive branches — exactly like an if/else in Java — where only one of the labelled operands actually runs at runtime, chosen based on some guard condition. It's the natural tool for things like a successful-versus-failed login, authentication and validation rules, or any state-dependent behaviour where the diagram needs to show more than one possible outcome.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-012-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why and how do you use reference fragments in a complex sequence diagram?",
+      "keyBeats": [
+        "MSDs easily get too complex to use",
+        "Reference fragments divide a complex diagram into several less complex ones",
+        "You can reuse a sequence across multiple diagrams by referencing it",
+        "Goal is shared understanding, not the 'most interesting' diagram"
+      ],
+      "modelAnswer": "Once a message sequence diagram gets too complex to follow, you pull a chunk of it out into its own diagram and reference it by name from wherever it's used, similar to extracting a helper method. This keeps each diagram readable and lets you reuse the same sub-sequence, like an authentication flow, in several higher-level diagrams. The point isn't to draw the most impressive diagram, it's that everyone actually understands the scenario.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-013-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is the recommended starting point for creating a useful sequence diagram, and what has to be identified first?",
+      "keyBeats": [
+        "Step back to your use-case diagram",
+        "A use-case description is already close to the descriptive form of an MSD",
+        "Before proceeding, identify the useful objects involved",
+        "Library example objects: Librarian, Online Library Management system, User credentials database, Email system"
+      ],
+      "modelAnswer": "The lecture recommends starting from an existing use-case diagram, because a use-case description is already written in a form very close to a sequence diagram's narrative. Before drawing anything you first need to identify the relevant objects that will participate — in the library example that meant things like the Librarian, the Online Library Management system, the user credentials database, and the email system.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-014-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the 'how-to' worked example, what use case was chosen to demonstrate going from a use-case to a sequence diagram?",
+      "keyBeats": [
+        "Example: creating a new library-user account",
+        "Follows directly from the previously identified objects (Librarian, Library User, Account, Online Library Management system, credentials DB, Email system)",
+        "Demonstrates the how-to process concretely"
+      ],
+      "modelAnswer": "The worked example used was creating a new library-user account. It builds directly on the object list identified just before it — Librarian, Library User, Account and the supporting systems — showing concretely how a use-case description turns into the message flow of a sequence diagram.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-015-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is the 'too many details' pitfall in sequence diagrams, and how do you avoid it?",
+      "keyBeats": [
+        "Easy to fall into modelling every if-statement",
+        "Not every if-statement needs to be modelled in the diagram",
+        "Try to simplify message exchanges to provide clarity",
+        "Abstraction is usually more useful than complexity, but too much abstraction is also bad — aim for balance"
+      ],
+      "modelAnswer": "It's easy to fall into the trap of trying to model every single if-statement and conditional path in a sequence diagram, which quickly turns it into an unreadable mess. Instead you simplify the message exchanges down to what actually matters for understanding, favouring abstraction over completeness — but not so much abstraction that the diagram stops telling you anything useful. It's a balance.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-016-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why should messages in a sequence diagram generally run left to right, and how critical is this rule?",
+      "keyBeats": [
+        "Consistency helps: messages should more often than not run left to right",
+        "Matches western left-to-right reading style",
+        "Not critical by itself, but may prevent readers from understanding the flow",
+        "Could otherwise lead to misinterpretation, which should be avoided"
+      ],
+      "modelAnswer": "Keeping messages flowing left to right matches the way western readers naturally scan a page, which makes the diagram easier to follow at a glance. It's not a hard technical rule — nothing breaks if you don't — but ignoring it risks confusing the reader about the actual flow, or worse, leading them to misread the sequence entirely, so it's worth following for consistency.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-017-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why are obsolete sequence diagrams described as dangerous, and where does the risk fundamentally come from?",
+      "keyBeats": [
+        "Obsolete diagrams should be avoided at almost any cost — can lead to misunderstandings",
+        "Obsolete = code has changed but an early diagram no longer matches the implementation",
+        "Which is correct then, the code or the diagram? Often you have to dig through the code to find out — time consuming",
+        "Any documentation or diagram that lives separately from the code carries this risk"
+      ],
+      "modelAnswer": "A diagram becomes obsolete when the code has moved on but the diagram was never updated, and at that point you genuinely don't know which one is right — the actual code, or the stale diagram — without going and checking, which wastes time. The lecture frames this as a fundamental risk of any documentation that lives separately from the code: it can silently drift out of sync and then actively mislead people instead of helping them.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-018-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What two opposite pitfalls does the lecture warn about regarding readability and complexity of diagrams?",
+      "keyBeats": [
+        "Provide a visual trace between text and message arrows — unreadable text ruins the diagram",
+        "Avoid sequence diagrams for simple logic — things can get 'too simple' too",
+        "Risk of small/simple diagrams: nobody bothers to maintain them, so they get obsolete",
+        "You risk ending up with 100+ diagrams to update against a deadline"
+      ],
+      "modelAnswer": "One failure mode is making the diagram unreadable — if you can't visually trace which text belongs to which arrow, the diagram is painful to use. The opposite failure is drawing a sequence diagram for logic that's genuinely too simple to need one; small trivial diagrams tend to get neglected and go stale, and before you know it you're maintaining a hundred-plus low-value diagrams under deadline pressure.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-019-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What does the lecture mean by 'do not plumb your sequence diagram', and what should you do instead?",
+      "keyBeats": [
+        "Do not map every single method call and low-level detail",
+        "Draw a recurring special case (e.g. authentication) once and reference it by name elsewhere",
+        "Consider behaviour allocation — which object is responsible for which action",
+        "Diagrams are 'thinking tools', not contracts — don't get hung up on early decisions, but keep diagrams updated"
+      ],
+      "modelAnswer": "'Plumbing' a diagram means trying to trace every single low-level method call like it's a wiring diagram, which buries the useful information in noise. Instead you draw a recurring block, like authentication, once and reference it by name wherever it's needed, and you use the process to deliberately think about behaviour allocation, which object should own which action. Diagrams are thinking tools to help design, not binding contracts you must never deviate from — but once decided, they still need to be kept up to date.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-020-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does supporting text in a sequence diagram need to follow the actual sequence of messages?",
+      "keyBeats": [
+        "Adding text to support the case is useful",
+        "But the text must follow the sequence order",
+        "Not doing this can really mess up understanding of the diagram",
+        "Diagrams help us (and our future selves) understand the code over time, not confuse the 'enemy'"
+      ],
+      "modelAnswer": "Supporting text is valuable, but only if it's laid out to follow the same order as the messages it describes — if the prose jumps around relative to the arrows, readers lose the thread and the annotation actively hurts rather than helps. Remember the point of these diagrams is to help you and your future self (or teammates) understand how the code behaves over time, not to obscure or trip up whoever reads it later.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-021-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is responsibility-driven design as applied to sequence diagrams, and why is the diagram phase called the 'cheapest opportunity to make mistakes'?",
+      "keyBeats": [
+        "Keep it basic — always consider whether a method is suitable for that particular object",
+        "Resist temptation to over-engineer",
+        "Responsibility-driven design: every method should logically belong to the object it sits on",
+        "You're still in a design phase — changes cost literally nothing now, but could be very costly a month later once code has been written",
+        "Slogan: 'Fail fast, fail cheap!'"
+      ],
+      "modelAnswer": "Responsibility-driven design means constantly asking, for every method you put in the diagram, whether it logically belongs on the object you've placed it on, rather than over-engineering or dumping responsibilities wherever is convenient. The reason this matters so much at the diagram stage is cost: moving a method between objects on paper costs essentially nothing, but making the same change a month later after code has been built around the wrong allocation is expensive. That's the 'fail fast, fail cheap' idea — catch the design mistake while it's still just lines on a diagram.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-022-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The lecture shows a client-server example with a requestData()/sendData() exchange annotated with 'network delay' on both directions. What is this meant to teach about drawing sequence diagrams with a network in between?",
+      "keyBeats": [
+        "Until then, message exchanges were drawn as complete horizontal lines (instant)",
+        "If a network (or any delay source) sits between participants, the diagram should indicate this explicitly",
+        "The example: Client requestData() to Server, then sendData() back, both legs marked with a 'Network delay' annotation",
+        "The arrow is no longer perfectly horizontal/instant once delay is modelled"
+      ],
+      "modelAnswer": "Up to this point every message was drawn as an instantaneous horizontal line. Once you introduce a network, or any source of delay, between two participants, the diagram should show that explicitly — the requestData()/sendData() example draws both the request and the response with a 'network delay' annotation rather than pretending the round trip is instant, which is a much more honest model of a client-server interaction.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-023-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The slides give a UDP example where 'update #2' and 'update #3' arrive at the server before 'update #1'. What does this illustrate about asynchronous/networked interactions, and why is it hard to catch at design time?",
+      "keyBeats": [
+        "UDP is connection-less: it fires packets off and 'crosses its fingers'",
+        "You can send package A then B, but B arrives before A (out-of-order delivery)",
+        "This crossing of messages is shown as crossing lines in the sequence diagram",
+        "Not easy to detect in the design phase — often just observed later as a strange fault in the system"
+      ],
+      "modelAnswer": "The example sends update #1, #2, #3 in order but the server receives #2 and #3 before #1, because UDP is connectionless — it just fires packets and doesn't guarantee order or delivery. In a sequence diagram this shows up as message lines that cross each other instead of staying neatly parallel. The lecture stresses this kind of ordering bug is genuinely hard to spot purely at design time; in practice it tends to surface later as some unexplained, strange fault in the running system.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-024-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "In the student-registration example, an opt fragment wraps a getPastDueBalance() check. What does this show about combination fragments and about responsibility allocation?",
+      "keyBeats": [
+        "'register' asks 'ar' (AccountsReceivable) for the student's past balance via getPastDueBalance(studentId)",
+        "Only if the pastDueBalance condition is true does the framed code inside the opt execute",
+        "opt provides a clean way to model conditional behaviour (a single-branch alt, essentially)",
+        "Good responsibility allocation: AccountsReceivable owns the balance check, the enrolling Class owns the enrolment itself"
+      ],
+      "modelAnswer": "In this example, 'register' calls getPastDueBalance(studentId) on an AccountsReceivable object, and only if that balance condition comes back true does the framed block — the charge-related steps — actually execute; that framed, conditionally-executed block is an opt fragment, essentially a one-sided alt. Beyond the notation, it's a good illustration of responsibility allocation: AccountsReceivable owns the balance check because that's its job, while the Class object owns the enrolment logic, keeping each responsibility on the object that should logically have it.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-025-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the card-game example diagram, determineWinner is drawn as a self-call on Game rather than being delegated to Rules, and there's no guard condition for a tie. What design critique does the lecture attach to this?",
+      "keyBeats": [
+        "Rules is a separate object — game logic cleanly separated from players and the deck (good responsibility allocation overall)",
+        "determineWinner is a reflexive/self-call on Game",
+        "Game orchestrates its own winner logic rather than delegating it — you could argue this belongs on Rules instead",
+        "There are no guard conditions or opt blocks; what happens on a tie is simply not modelled"
+      ],
+      "modelAnswer": "The diagram generally shows good responsibility allocation, since Rules is a separate object holding the game logic apart from Players and the Deck. But determineWinner is drawn as a self-call on Game itself, meaning Game is orchestrating its own winner-decision logic rather than delegating that to Rules — arguably a misallocation worth questioning. On top of that, there's no alt or opt fragment covering what happens if the players tie, so that edge case is simply invisible in the diagram, which is exactly the kind of gap a careful reviewer should flag.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 38",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-026-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The satellite system example explicitly models a human actor and includes a 'Data is presented via GUI (not shown)' note. What point is this making about sequence diagrams and human interaction?",
+      "keyBeats": [
+        "Unlike other examples, this one has one notable difference: it includes a human actor explicitly",
+        "Explicitly modelling the human actor makes clear where human interaction fits in the flow",
+        "The 'not shown' note is honest, clean documentation — acknowledges the GUI exists without overcomplicating the diagram",
+        "Sequence diagrams can/should show human interaction points, since it makes clear where the system is waiting"
+      ],
+      "modelAnswer": "This example explicitly draws a human user as a participant, which makes it obvious at which point in the sequence the system is waiting on a person rather than another system. Rather than trying to also model the GUI in detail, it just adds an honest note — 'data is presented via GUI (not shown)' — which keeps the diagram focused without hiding the fact that a GUI is involved. The broader lesson is that sequence diagrams should show human interaction points explicitly, because it clarifies exactly where the system is blocked waiting on a human.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-027-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "The 'important stuff' summary says method references and lambdas (::) link directly to sequence diagram interaction. What does it mean by this, and what example is given?",
+      "keyBeats": [
+        "Method References and Lambdas (::) enable clean behavioural modelling",
+        "Links directly to sequence diagram interaction",
+        "Example: comparing(Train::getTotalLengthM) is almost self-documenting in the same way a sequence diagram is",
+        "Both are ways of expressing 'which object does what' clearly and concisely"
+      ],
+      "modelAnswer": "The idea is that a method reference like Train::getTotalLengthM names exactly which object is responsible for which behaviour in a single, self-documenting expression, the same way a sequence diagram makes an object's responsibility for a call visually explicit. Both are about clean behavioural modelling: instead of burying 'who does what' inside imperative logic, method references and sequence diagrams both surface it directly.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-028-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "According to the 'important stuff' summary, why does responsibility allocation matter enormously, and how do sequence diagrams help with it?",
+      "keyBeats": [
+        "Every method should logically belong to the object it sits on",
+        "Sequence diagrams are your cheapest opportunity to spot misallocated responsibilities",
+        "Combined fragments model real conditional behaviour",
+        "Design changes are cheap now, expensive later — the cost-of-change curve is brutal"
+      ],
+      "modelAnswer": "Responsibility allocation matters because a method that doesn't logically belong on the object it's placed on is a design smell that will cause pain later, and a sequence diagram is the cheapest place to catch that — you can see at a glance whether some object is doing work that isn't really its job. This ties into the cost-of-change curve: fixing a misallocated responsibility while it's still just an arrow on a diagram is nearly free, while fixing the same problem after the code exists is expensive, so the diagram phase is where that catch is cheapest.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-029-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Per the 'important stuff' summary, why are diagrams called 'living documentation', and why are obsolete diagrams called worse than no diagrams at all?",
+      "keyBeats": [
+        "Diagrams are living documentation",
+        "Obsolete diagrams are actively dangerous — worse than no diagrams at all",
+        "Keep them updated, annotate them with text that follows the sequence, and keep them honest",
+        "An out-of-date diagram misleads rather than merely being unhelpful"
+      ],
+      "modelAnswer": "Diagrams are called 'living documentation' because they're supposed to evolve alongside the code, not be drawn once and forgotten. An obsolete diagram is worse than having no diagram at all, because instead of just providing no help, it actively misleads whoever trusts it into believing a flow that no longer matches reality. The fix is to keep diagrams updated, keep the accompanying text following the sequence, and generally keep them honest reflections of the current code.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-030-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the difference between an alt fragment and an opt fragment, based on how they're used in the slide examples?",
+      "keyBeats": [
+        "alt = mutually exclusive branches, like if/else, at least one operand always runs",
+        "opt = a single conditionally-executed block that runs only if its guard is true, otherwise nothing happens (like an if with no else)",
+        "Registration example (page 37) uses opt around the balance-related steps",
+        "Delete/modify LOCAL and CLIENTSERVER diagrams use alt for found/not-found or success/error branches"
+      ],
+      "modelAnswer": "An alt fragment is like Java's if/else: it has two or more mutually exclusive operands and exactly one of them runs at runtime, such as the found-versus-not-found branches in the delete-train diagrams. An opt fragment is narrower — it's a single block that only runs if its guard condition is true, and otherwise nothing happens, which is closer to an if with no else, as seen in the registration example where the balance-charging steps only execute if pastDueBalance is true.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 19; PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-031-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "In the lecture-7 recap, why is a plain notify() 'technically enough but risky' when two threads wait on the same condition?",
+      "keyBeats": [
+        "Scenario: Thread A and Thread B both waiting for balance > 0 (same condition)",
+        "A depositing thread calls notify() and happens to wake the right thread — fine, but only by luck",
+        "If other threads are waiting for different conditions on the same object, notify() might wake the wrong one and the actual signal is lost",
+        "Code pattern: synchronized(account) { while(balance<=0) account.wait(); withdraw(); }"
+      ],
+      "modelAnswer": "When every waiting thread is blocked on the exact same condition, a single notify() can work because whichever thread it happens to wake will find the condition true and proceed. The risk is that this only holds as long as nothing else shares that wait set — if other threads are waiting on the same object but for a different condition, notify() might wake one of those instead, and the thread that actually needed the signal just keeps waiting because the wake-up was 'used up' on the wrong thread.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-032-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the lecture-7 recap scenario where Thread A wants to withdraw and Thread B wants to deposit — how can Thread A end up waiting forever with plain notify()?",
+      "keyBeats": [
+        "Thread A waiting to withdraw, Thread B waiting to deposit — two different conditions, same object",
+        "A producer deposits money and calls notify(), which wakes Thread B arbitrarily",
+        "Thread B checks its own condition (balance >= maximum), finds it false, and goes back to wait()",
+        "Thread A is never woken — it sits waiting forever because the single notify() was 'spent' on the wrong thread"
+      ],
+      "modelAnswer": "Thread A is blocked waiting for enough balance to withdraw, and Thread B is blocked waiting for balance to drop below some maximum before it can deposit — two different conditions on the same monitor. When a deposit happens and notify() fires, the JVM might wake Thread B instead of A; B re-checks its own condition, finds it still false, and goes right back to sleep. Because notify() only wakes one thread and that wake-up is now gone, Thread A — the one that actually needed to be woken — never gets notified and waits forever.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-033-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why is notifyAll() 'generally the right approach to follow' despite its cost, and what does that cost consist of?",
+      "keyBeats": [
+        "If multiple threads are waiting, notifyAll() is needed to ensure correct execution always",
+        "Costs: extra context switching, lock contention as all threads re-enter competition to reacquire the lock",
+        "Threads immediately going back to sleep after finding their condition false",
+        "Thundering herd problem: lots of activity that produces nothing useful",
+        "For high performance this matters, but generally notifyAll() is the correct default"
+      ],
+      "modelAnswer": "notifyAll() wakes every waiting thread instead of gambling on one, so whichever threads actually have their condition satisfied can proceed — that's what guarantees correctness when multiple different conditions share the same wait set. The price is that all those threads wake up, fight over the lock again, and most of them find their condition still false and go straight back to sleep — wasted context switches and lock contention, sometimes called the thundering herd problem. For performance-critical code that cost matters, but as a general default notifyAll() is still the right, safe choice.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-034-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why doesn't the JVM specification define which thread notify() wakes, and how does the lecture frame that design choice?",
+      "keyBeats": [
+        "notify() picks one arbitrary thread from the wait queue",
+        "JVM spec deliberately does not define which thread receives the signal — could be random, FIFO, priority-based; no way to predict or control it",
+        "A sophisticated notification system targeting specific threads/conditions was considered too expensive (legacy reasoning)",
+        "Pragmatic trade-off: simple and fast, with correctness responsibility pushed onto the programmer"
+      ],
+      "modelAnswer": "notify() deliberately picks one arbitrary thread from the wait queue, and the JVM spec never pins down which one — it could be random, FIFO, priority-based, anything — so you can never predict or rely on which thread wakes. Historically a more sophisticated mechanism that could target a specific thread or a specific condition was judged too expensive to build into the language, so the designers chose a simple, fast, basic signalling primitive instead, essentially saying 'here's the tool, it's your job as the programmer to use it correctly.'",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-035-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does ReentrantLock with multiple Condition objects solve the problem of waking the wrong thread?",
+      "keyBeats": [
+        "ReentrantLock() solves the issues with multiple condition objects",
+        "Each Condition has its own wait queue — no risk of waking the wrong thread",
+        "No thundering herd, no need for notifyAll()",
+        "This is the preferred approach over raw wait()/notify(); plain wait()/notify() is not adequate for complex scenarios",
+        "Example: canWithdraw.signal() only wakes withdrawal waiters, canDeposit.signal() only wakes deposit waiters"
+      ],
+      "modelAnswer": "Instead of one shared monitor with one wait set, a ReentrantLock lets you create separate Condition objects — say canWithdraw and canDeposit — each with its own dedicated wait queue. Signalling canWithdraw.signal() only ever wakes threads waiting on that specific condition, so there's no risk anymore of accidentally waking a thread waiting for something unrelated, no thundering herd, and no need to fall back to notifyAll(). That's why the lecture calls this the preferred approach for anything beyond trivially simple wait/notify scenarios.",
+      "citation": "ooadi8.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-036-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through diagram_delete_train.svg (LOCAL) step by step: who are the participants and what happens on the found vs not-found branches?",
+      "keyBeats": [
+        "Participants: User, CommandLineHandler, TrainListManager, CopyOnWriteArrayList",
+        "User -> CommandLineHandler: delete(train id) (sync)",
+        "CommandLineHandler self-call: read ID from input",
+        "CommandLineHandler -> TrainListManager: deleteTrain(id) (sync)",
+        "TrainListManager -> CopyOnWriteArrayList: removeIf(t.getId()==id) (sync)",
+        "alt [train found]: dashed return 'true (removed)' / [not found]: dashed return 'false'",
+        "TrainListManager returns boolean result to CommandLineHandler, which returns \"ok\" or \"not found\" to User"
+      ],
+      "modelAnswer": "The delete flow is entirely local and fully synchronous. The User sends delete(train id) to CommandLineHandler, which self-calls to read the ID from input, then calls deleteTrain(id) synchronously on TrainListManager. TrainListManager in turn calls removeIf on the underlying CopyOnWriteArrayList. An alt fragment splits the outcome: if the train was found, the list returns true (removed); if not, it returns false. That boolean bubbles back up as a return message through TrainListManager to CommandLineHandler, which finally reports 'ok' or 'not found' back to the User — every arrow here is a direct, blocking method call with no network involved.",
+      "citation": "diagram_delete_train.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-037-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through diagram_insert_train.svg (LOCAL) step by step, including the object creation calls.",
+      "keyBeats": [
+        "Participants: User, CommandLineHandler, TrainListManager, DieselTrain, Wagon",
+        "User -> CommandLineHandler: add(id, type, wagons)",
+        "CommandLineHandler self-call: handleAddTrain(sc)",
+        "CommandLineHandler -> Wagon: new Wagon(len, wt), returns Wagon instance (dashed return)",
+        "CommandLineHandler -> DieselTrain: new DieselTrain(id, wagons), returns DieselTrain instance (dashed return) — this is a <<create>> style message",
+        "CommandLineHandler -> TrainListManager: addTrain(train); note 'trains.add(t) thread-safe'",
+        "Return: confirmation printed -> train added, all the way back to User"
+      ],
+      "modelAnswer": "The insert flow starts with User calling add(id, type, wagons) on CommandLineHandler, which self-calls handleAddTrain(sc) to drive the input loop. It then creates objects on the fly: a synchronous new Wagon(len, wt) call that returns a Wagon instance, followed by new DieselTrain(id, wagons) which returns a DieselTrain instance — these are effectively participant-creation messages. Finally CommandLineHandler calls addTrain(train) on TrainListManager, annotated with a note that trains.add(t) is thread-safe since it's backed by a CopyOnWriteArrayList, and a chain of dashed return messages ('confirmation printed', 'train added') carries the result back up to the User.",
+      "citation": "diagram_insert_train.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-038-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through diagram_modify_train.svg (LOCAL, replace-all-wagons) step by step, including the loop fragment and nested alt.",
+      "keyBeats": [
+        "Participants: User, CmdLineInputHandler, TrainListManager, Train, Wagon",
+        "User -> handler: type: replacewagons; enter train ID; enter number of wagons",
+        "loop [for each new wagon]: User -> handler: enter length, weight",
+        "handler -> TrainListManager: replaceAllWagonsOnTrain(id, wagons)",
+        "TrainListManager -> Train: findById(id); Train -> Wagon: new Wagon(len, wt) (dashed arrow inside)",
+        "TrainListManager -> Train: replaceAllWagons(newWagons); note 'wagons.clear() then addAll()'",
+        "alt [train found]: return true / [not found]: return false",
+        "Returns: 'result logged' then 'print confirmation' back to User"
+      ],
+      "modelAnswer": "This diagram nests two control structures inside an otherwise linear flow. First a loop fragment repeats 'enter length, weight' for each new wagon the user types in. Once collected, CmdLineInputHandler calls replaceAllWagonsOnTrain(id, wagons) synchronously on TrainListManager, which does a findById(id) lookup (with a Wagon construction shown as a lighter dashed arrow to Train) and then calls replaceAllWagons(newWagons) — annotated with a note that this is implemented as wagons.clear() followed by addAll(). An alt fragment then branches on whether the train was found, returning true or false, and that result is logged and echoed back up to the User as a printed confirmation.",
+      "citation": "diagram_modify_train.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-039-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through cs_diagram_delete.svg step by step. Where is the network boundary drawn, and what changes compared to the LOCAL delete diagram?",
+      "keyBeats": [
+        "Participants split across a network boundary: User, CmdLineInputHandler, TrainClient (CLIENT) | TrainServer, TrainListManager (SERVER)",
+        "User -> handler: type: delete; enter train ID; note 'validate ID format (client)'",
+        "handler -> TrainClient: sendDeleteRequest(id)",
+        "TrainClient -> TrainServer: HTTP DELETE /trains/{id} — drawn in red, crossing the network boundary line, thick sync arrow",
+        "TrainServer -> TrainListManager: deleteTrain(id)",
+        "alt [train found]: removeIf()=true, 200 OK / [not found]: 404 Not Found",
+        "Return crosses network again: HTTP 200 OK / 404 Not Found (red dashed), then 'notify result' then 'print deleted / not found' back to User"
+      ],
+      "modelAnswer": "The network boundary is drawn as a vertical dashed line between TrainClient and TrainServer, splitting the page into a blue CLIENT zone and a red SERVER zone. Compared to the local version, the direct deleteTrain(id) call is replaced by TrainClient sending an HTTP DELETE /trains/{id} request across that boundary in red, and a client-side validation note ('validate ID format (client)') is added before anything is sent. On the server, TrainServer delegates to TrainListManager exactly as before, with the same found/not-found alt fragment, but now the result comes back as an HTTP 200 OK or 404 Not Found response crossing the network again rather than a plain in-process return value.",
+      "citation": "cs_diagram_delete.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-040-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through cs_diagram_insert.svg step by step. What new alt fragments appear compared to the LOCAL insert diagram, and why?",
+      "keyBeats": [
+        "Client side: User -> handler: type: add; enter train ID, type, wagons; note 'validate input (ID format, wagon values > 0, type valid)'",
+        "alt [validation fails]: show error, re-prompt (never leaves the client) / [validation passes]: continue",
+        "handler -> TrainClient: sendInsertRequest(trainData)",
+        "TrainClient -> TrainServer: HTTP POST /trains (JSON payload) — crosses network boundary",
+        "TrainServer -> TrainListManager: addTrain(train); note 'trains.add(t) — COWAL'; returns 201 Created",
+        "Second alt on the network/response side: [network/server error]: timeout / 500 error / [success]: return confirmation",
+        "Response crosses network back: HTTP 201 / error response, then 'notify result', then 'print confirmation/error' to User"
+      ],
+      "modelAnswer": "This diagram has two alt fragments where the local version had none. The first alt sits entirely on the client side, right after a validation note: if validation fails, the error is shown and the user is re-prompted without ever sending anything over the network; only on success does the flow continue to TrainClient, which issues an HTTP POST /trains with a JSON payload across the boundary to TrainServer. TrainServer calls addTrain(train) on TrainListManager (noted as a thread-safe COWAL add) and gets back 201 Created. A second alt then covers the network/server response itself — a timeout or 500 error branch versus a success branch — before the HTTP response crosses back to the client and the result is finally reported to the User. The extra alt fragments exist precisely because a network round trip introduces failure modes, like validation waste, timeouts and server errors, that a local method call never had.",
+      "citation": "cs_diagram_insert.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-041-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through cs_diagram_modify.svg step by step, tracing the call chain once it crosses onto the server.",
+      "keyBeats": [
+        "Client: type: replacewagons; enter train ID; loop [for each new wagon]: enter length, weight; note 'validate all wagon values (client)'",
+        "handler -> TrainClient: sendReplaceWagons(id, wagons)",
+        "TrainClient -> TrainServer: HTTP PUT /trains/{id}/wagons (JSON wagon array) — network crossing",
+        "TrainServer -> TrainListMgr: replaceAllWagons(id, list)",
+        "TrainListMgr -> Train: replaceAllWagons(list); note 'clear() + addAll()'",
+        "alt [train found]: 200 OK + updated train / [not found]: 404 Not Found",
+        "Response crosses network back: HTTP 200 / 404, then 'notify result', then 'print confirmation/error' to User"
+      ],
+      "modelAnswer": "On the client side the loop for entering each wagon's length/weight is unchanged from the local diagram, now paired with a validation note for wagon values before anything is sent. TrainClient issues an HTTP PUT /trains/{id}/wagons with a JSON wagon array across the network boundary to TrainServer, which calls replaceAllWagons(id, list) on TrainListMgr, which in turn calls replaceAllWagons(list) directly on the Train object — implemented, per the note, as clear() followed by addAll(). An alt fragment on the server decides between a 200 OK with the updated train or a 404 Not Found, and that HTTP response travels back across the network before the client notifies the user of the outcome.",
+      "citation": "cs_diagram_modify.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-042-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through Scenario 1 in cs_diagram_multiclient.svg: two clients deleting the same train simultaneously. What actually goes wrong, and is it harmful?",
+      "keyBeats": [
+        "Client A and Client B both send 'delete D-101' at roughly the same time",
+        "Both requests cross the network (delay annotated) as DELETE /trains/D-101, A's arriving slightly before B's",
+        "Server processes A's request first: deleteTrain(D-101) — note 'removeIf() — takes time' — A gets 200 OK deleted",
+        "Server then processes B's request: deleteTrain(D-101) again — note 'train already gone!' — B gets 404 Not Found",
+        "Outcome: not data corruption, but B receives an unexpected 404 for an operation the user thought would just succeed"
+      ],
+      "modelAnswer": "Client A and Client B both fire off a delete for train D-101 at almost the same moment, and both requests take some network delay to arrive at the server, with A's landing slightly ahead of B's. The server processes them serially: it runs deleteTrain(D-101) for A first, which succeeds and returns 200 OK, and only then processes B's identical request, by which point the train is already gone, so B gets a 404 Not Found back. Nothing is corrupted here since the delete itself is idempotent in effect, but it does mean the second client has to gracefully handle a 'not found' response for an operation it expected to just work, which is a direct consequence of concurrent access with network delay.",
+      "citation": "cs_diagram_multiclient.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-043-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through Scenario 2 in cs_diagram_multiclient.svg: Client A reads a train, Client B modifies it, then Client A writes back. What is this problem called and what actually happens?",
+      "keyBeats": [
+        "Client A: GET /trains/E-201 -> 200 OK, wagons [w1,w2,w3]",
+        "While A is 'thinking', Client B sends PUT /trains/E-201/wagons [w4,w5]; server calls replaceAllWagons(E-201) and returns 200 OK to B",
+        "Client A then sends PUT /trains/E-201/wagons [w1,w2,w3,w6] — built from its now-stale read",
+        "Server applies A's update, silently overwriting B's change — annotated 'B's update silently overwritten!'",
+        "This is the classic lost-update / stale-read problem in concurrent client-server systems"
+      ],
+      "modelAnswer": "Client A first does a GET on train E-201 and receives the current wagon list [w1, w2, w3]. Before A acts on that data, Client B sends its own PUT with a new wagon list [w4, w5], which the server applies immediately via replaceAllWagons and confirms with 200 OK. Client A then sends its own PUT built from the now-outdated data it originally read — [w1, w2, w3, w6] — and because the server just blindly applies whatever it receives, this silently overwrites B's change with no error or warning. That's the classic lost-update problem: two clients reading and writing concurrently without any coordination, so the second write clobbers the first with no one being told.",
+      "citation": "cs_diagram_multiclient.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-044-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "cs_diagram_multiclient.svg proposes three solution strategies for the concurrency problems it illustrates. What are they, and when is each best suited?",
+      "keyBeats": [
+        "Optimistic locking: each train carries a version number; client sends version with update; server rejects if version changed since client's last read, client must re-fetch and retry — best for read-heavy, low-conflict workloads",
+        "Pessimistic locking: client explicitly locks the train before modifying; other clients are blocked or get 423 Locked until the lock is released — best for write-heavy, high-conflict workloads",
+        "Queue / serialise writes: all write requests go into a queue, server processes one at a time (reads can still run concurrently); clients get a job ID and poll for the result — best for high write volume"
+      ],
+      "modelAnswer": "The diagram lists three strategies. Optimistic locking tags every train with a version number; a client must send that version along with its update, and the server rejects the write if the version has since changed, forcing the client to re-fetch and retry — cheap, and works well when conflicts are rare. Pessimistic locking has the client explicitly lock a train before editing it, blocking or 423-ing other clients until it's released — safer under heavy contention but slower, and it needs a timeout in case a client crashes while holding the lock. Queue-based serialisation routes all writes through a single queue processed one at a time, eliminating conflicts entirely at the cost of latency, with clients getting a job ID and polling for the result instead of an immediate response — best when write volume itself is the bottleneck.",
+      "citation": "cs_diagram_multiclient.svg",
+      "unverified": true,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L8-045-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Conceptually, what has to change when you redraw a local sequence diagram (CommandLineHandler -> TrainListManager) as a client-server diagram, according to the solutions?",
+      "keyBeats": [
+        "CommandLineInputHandler stays on the client side",
+        "TrainListManager and the entire train list move to the server side",
+        "Direct method calls between them become network messages",
+        "Input validation should happen on the client before sending",
+        "The server needs to send back responses over the network",
+        "New failure modes appear that didn't exist before: network errors and timeouts",
+        "TrainClient and TrainServer are introduced to interface between the handler/manager and the raw HTTP calls; the network boundary is drawn explicitly; client-side validation is shown as a yellow note box"
+      ],
+      "modelAnswer": "The client-server redesign keeps CommandLineInputHandler on the client and moves TrainListManager, together with the whole train list, onto the server; everything that used to be a direct, in-process method call between those two now becomes a message that has to cross the network. Two new mediator objects, TrainClient and TrainServer, are introduced specifically to wrap the raw HTTP calls on either side of an explicitly drawn network boundary. Input validation is deliberately pushed to happen on the client before anything is sent, shown as a yellow note box, because sending bad data across the network just to have it rejected wastes a round trip. And because a network is now involved, entirely new failure modes — timeouts, dropped connections, server errors — have to be modelled with alt fragments where a local call never needed one.",
+      "citation": "ooadi8.solutions.pdf.extracted.txt, PAGE 2-3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-046-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Train.java marks addWagon, removeWagon, replaceWagon and replaceAllWagons as synchronized. Given the sequence diagrams show multiple TrainOperator threads mutating trains concurrently, why is that synchronized keyword needed there specifically?",
+      "keyBeats": [
+        "Train.java: public synchronized void addWagon(Wagon w), synchronized boolean removeWagon(int index), synchronized boolean replaceWagon(int index, Wagon w), synchronized void replaceAllWagons(List<Wagon> newWagons)",
+        "TrainOperator.run() has multiple threads (10 operators) picking random known train IDs and calling these mutation methods concurrently",
+        "The underlying wagons field is a plain java.util.ArrayList — not itself thread-safe",
+        "synchronized on each mutator ensures only one thread can mutate a given Train's wagon list at a time, preventing lost updates or corrupted list state during concurrent modification"
+      ],
+      "modelAnswer": "Train's internal wagons list is a plain ArrayList, which is not thread-safe on its own, and the AssignmentDemo/TrainOperator setup spins up several TrainOperator threads that all pick random known train IDs and call addWagon, removeWagon, replaceWagon or replaceAllWagons concurrently. Marking those four mutator methods synchronized means only one thread can be inside a given Train's mutation method at a time, which prevents two threads from corrupting the wagons list or silently losing one another's update when they hit the same train object at once — exactly the kind of dynamic, concurrent interaction the multi-client sequence diagrams are warning about, just at the in-process thread level instead of across the network.",
+      "citation": "Train.java",
+      "unverified": true,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L8-047-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "TrainListManager backs its train list with a CopyOnWriteArrayList instead of a plain ArrayList. Why does that specific collection type matter for the concurrent scenarios these sequence diagrams model?",
+      "keyBeats": [
+        "TrainListManager.java: private final List<Train> trains = new CopyOnWriteArrayList<>(FleetData.sampleFleet())",
+        "CopyOnWriteArrayList is thread-safe for concurrent reads and structural changes (add/removeIf) without external synchronization",
+        "Matches the multi-operator scenario in AssignmentDemo/TrainOperator where many threads call addTrain/deleteTrain/search concurrently",
+        "Trade-off: writes copy the whole underlying array, cheap for read-heavy/write-light workloads, expensive if writes are frequent — same 'read-heavy vs write-heavy' consideration the multiclient locking-strategy discussion raises"
+      ],
+      "modelAnswer": "TrainListManager stores its trains in a CopyOnWriteArrayList rather than a plain ArrayList precisely because AssignmentDemo runs ten TrainOperator threads that concurrently call addTrain, deleteTrain and search on the very same manager instance. A CopyOnWriteArrayList lets all those reads and structural mutations happen safely without needing explicit synchronized blocks around list access, because every write copies the underlying array rather than mutating it in place, which also means concurrent iterators like search() never see a ConcurrentModificationException. The trade-off, echoed in the multi-client locking discussion, is that this is efficient for read-heavy, write-light traffic but gets expensive if writes become frequent, since every single one copies the whole list.",
+      "citation": "TrainListManager.java",
+      "unverified": true,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L8-E1",
+      "source": "ooadi8.assignments.pdf.extracted.txt / ooadi8.solutions.pdf.extracted.txt",
+      "promptVerbatim": "Create a message sequence diagram for the train search tool from last time",
+      "whatItTests": "Ability to turn an existing (lecture-7) search feature into a correct sequence diagram, choosing the right participants and showing a loop/filter over the fleet.",
+      "answerSketch": "Solution keeps it simple by covering only the search-by-type case. Participants: User, AssignmentDemo, TrainQueries, TrainSearch, TrainListManager, Train. Flow: User -> search(driveType) with a note that driveType is ELECTRIC/DIESEL/OTHER; call find(fleet, predicate); for each train in the fleet, call t.getDriveType(); an implicit alt/loop decides 'include in results' if it matches or 'skip' if not; finally print results back to the User. This mirrors TrainQueries.byType(DriveType) building a Predicate<Train> and TrainSearch.find/TrainListManager.search applying it via a stream filter."
+    },
+    {
+      "id": "OOADI-L8-E2",
+      "source": "ooadi8.assignments.pdf.extracted.txt / ooadi8.solutions.pdf.extracted.txt / Train.java, TrainListManager.java, CommandLineInputHandler.java",
+      "promptVerbatim": "Add functionality (and implement this) to insert new trains into the list as well as modify and remove these (e.g. change the number and types of wagons connected to a train). Draw message sequence diagrams for these actions (just some examples – as they are useful for discussing)",
+      "whatItTests": "Ability to extend a class design with new mutator methods at the right layer (Train, then TrainListManager, then the CLI handler) and to express each new operation as its own local sequence diagram.",
+      "answerSketch": "New wagon mutation methods were added to Train.java (addWagon, removeWagon, replaceWagon, replaceAllWagons, all synchronized), with matching delegating public methods on TrainListManager (addWagonToTrain, removeWagonFromTrain, replaceWagonOnTrain, replaceAllWagons) and new commands in CommandLineInputHandler (addwagon, removewagon, replacewagon, replacewagons) plus add/delete. Three example sequence diagrams were drawn and are provided as LOCAL_svg files: diagram_insert_train.svg (User -> CommandLineHandler -> new Wagon()/new DieselTrain() -> TrainListManager.addTrain), diagram_modify_train.svg (loop over new wagons -> TrainListManager.replaceAllWagonsOnTrain -> Train.findById/replaceAllWagons, with an alt for found/not-found), and diagram_delete_train.svg (User -> CommandLineHandler -> TrainListManager.deleteTrain -> CopyOnWriteArrayList.removeIf, alt found/not-found)."
+    },
+    {
+      "id": "OOADI-L8-E3",
+      "source": "ooadi8.assignments.pdf.extracted.txt / ooadi8.solutions.pdf.extracted.txt",
+      "promptVerbatim": "Consider that the input part of your program (and related validation for input) is located on a client, and the list of trains are located on a remote server that maintains this table, how would your message sequence diagram appear in that case. Redraw as needed",
+      "whatItTests": "Ability to redesign a local sequence diagram for a client-server split: introducing new mediator objects, an explicit network boundary, moved validation, and new network-specific failure modes.",
+      "answerSketch": "CommandLineInputHandler stays on the client; TrainListManager and the train list move to the server; direct method calls become network messages. Input validation happens on the client before sending (shown as a yellow note box) so bad data is never sent needlessly. Two new participants, TrainClient and TrainServer, are introduced to wrap the raw HTTP calls on each side of an explicitly drawn network boundary line. Server responses now travel back over the network as HTTP responses. Redrawn diagrams are provided as CLIENTSERVER_svg files: cs_diagram_delete.svg (HTTP DELETE /trains/{id}, alt 200 OK/404), cs_diagram_insert.svg (client validation alt, HTTP POST /trains, alt success/timeout-500), cs_diagram_modify.svg (loop for wagon entry, HTTP PUT /trains/{id}/wagons, alt 200 OK/404). New failure modes — network timeouts and HTTP 500 errors — now sit alongside the original not-found case inside the alt fragments, something a local method call never had to handle."
+    },
+    {
+      "id": "OOADI-L8-E4",
+      "source": "ooadi8.assignments.pdf.extracted.txt / ooadi8.solutions.pdf.extracted.txt",
+      "promptVerbatim": "Draw the message sequence diagram with multiple clients in mind. Consider that there is always a delay between sending a query and receiving it, as well as sending a return message. Also, consider that it takes a little bit of time to update the table. Can things go wrong? If so, how can you avoid it by design?",
+      "whatItTests": "Ability to reason about concurrency/race conditions across distributed clients with network delay, and to propose concrete design-level solutions (locking/versioning/queueing).",
+      "answerSketch": "Provided as cs_diagram_multiclient.svg, showing two clients (A and B) and the server with explicit network delay annotations. Two problems are illustrated: Scenario 1 — both clients delete train D-101 at nearly the same time; the server processes A first (200 OK, deleted) and then B (404 Not Found, since the train is already gone) — a harmless but user-facing race. Scenario 2 — Client A reads a train's wagons, Client B updates the same train in the meantime, and Client A then writes back based on its now-stale read, silently overwriting B's update (the classic lost-update problem). Three solution strategies are given: optimistic locking (version number per train; server rejects updates whose version is stale, forcing a re-fetch-and-retry; best for read-heavy/low-conflict), pessimistic locking (client explicitly locks the train before editing, others blocked or get 423 Locked until release; best for write-heavy/high-conflict, needs a lock timeout for crashed clients), and queue/serialised writes (all writes go through a single queue processed one at a time while reads stay concurrent; clients get a job ID and poll for the result; best for high write volume, trades latency for safety)."
+    }
+  ]
+}

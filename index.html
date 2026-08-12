@@ -103,6 +103,7 @@
       <option value="">— Select Course —</option>
       <option value="iam">IAM Oral Exam</option>
       <option value="cyber2">Software Security (CYBER2)</option>
+      <option value="ooadi">OOADI Oral Exam</option>
     </select>
     <div class="course-info" id="courseInfo"></div>
   </div>
@@ -247,6 +248,40 @@ const COURSES = {
         a:"Define non-interference formally and explain what it guarantees.",
         b:"Discuss why non-interference is too strong for most practical uses.",
         c:"Explain how type systems can guarantee non-interference."
+      }}
+    ]
+  },
+  ooadi: {
+    name: "OOADI Oral Exam",
+    subtitle: "~15 min oral exam · draw 1 of 9 topics · computer & notes allowed, no live communication",
+    dataPath: "courses/ooadi/questions/",
+    exam: [
+      {n:1,title:"Classes, fundamentally",anchor:2,parts:{
+        a:"Classes, fundamentally (Lectures 1–2: Java program basics, and classes/objects/attributes/methods)."
+      }},
+      {n:2,title:"Classes and how they relate",anchor:3,parts:{
+        a:"Classes and how they relate (Lectures 2–3: UML class relations — association, aggregation, composition, inheritance/generalization)."
+      }},
+      {n:3,title:"Objects and data structures",anchor:4,parts:{
+        a:"Objects and data structures (Lectures 2 & 4: objects as instances, built-in Java data types and data structures)."
+      }},
+      {n:4,title:"Polymorphic data",anchor:5,parts:{
+        a:"Polymorphic data (Lectures 4–5: SOLID, abstract classes, polymorphism, static/dynamic binding)."
+      }},
+      {n:5,title:"Interfaces and their uses",anchor:5,parts:{
+        a:"Interfaces and their uses (Lecture 5: interfaces vs. abstract classes, why/how interfaces are used)."
+      }},
+      {n:6,title:"Structured data",anchor:6,parts:{
+        a:"Structured data (Lectures 4 & 6: Lists, iterators, and operators/comparators for structured data)."
+      }},
+      {n:7,title:"Multi-threading",anchor:8,parts:{
+        a:"Multi-threading (Lectures 7–8: threads, lifecycle, synchronization, race conditions)."
+      }},
+      {n:8,title:"Asynchronous communication",anchor:9,parts:{
+        a:"Asynchronous communication (Lectures 8–9: sync vs. async interactions/sequence diagrams, I/O streams, sockets, events)."
+      }},
+      {n:9,title:"Exceptions and I/O etc.",anchor:10,parts:{
+        a:"Exceptions and I/O etc. (Lecture 10: exceptions, error handling, custom exceptions)."
       }}
     ]
   }

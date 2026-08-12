@@ -1,0 +1,1069 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 1,
+  "lectureTitle": "Introduction to OOP",
+  "examQuestions": [
+    { "examQ": 1, "subPart": "a", "promptVerbatim": "Classes, fundamentally" }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L1-01-o",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What is Object-Oriented Programming (OOP), and what are its two core building blocks?",
+      "keyBeats": [
+        "OOP is a programming paradigm that structures software around objects – small units bundling both data and functionality",
+        "OOP models the real world using classes and objects",
+        "Class = a template/recipe describing what data (attributes) and functions (methods) an object has",
+        "Object = a concrete instance of a class (the recipe vs the actual dish)"
+      ],
+      "modelAnswer": "OOP is a programming paradigm where software is structured around objects, which are small units that bundle together both data and functionality, and the whole approach is about modelling the real world using classes and objects. A class is the template or recipe that describes what attributes and methods something will have. An object is then a concrete instance of that class – if the class is the recipe, the object is the actual dish that gets made from it.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-02-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define what a class is.",
+      "keyBeats": [
+        "A class is a template or recipe",
+        "It describes what data (attributes) an object of that class will have",
+        "It describes what functions (methods) an object of that class will have",
+        "The class itself does not hold concrete values – it only defines the structure"
+      ],
+      "modelAnswer": "A class is a template or recipe that describes what data, called attributes, and what functionality, called methods, an object of that class will have. It doesn't hold any concrete values itself; it just defines the blueprint that objects are later built from.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-03-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define what an object is, and how does it relate to a class?",
+      "keyBeats": [
+        "An object is a concrete instance of a class",
+        "The class-to-object relationship is compared to a recipe and the dish made from it",
+        "Each object gets its own copy of the data described by the class"
+      ],
+      "modelAnswer": "An object is a concrete instance of a class. The slides use the analogy that if the class is the recipe, then the object is the actual dish made from following that recipe – so many different objects (dishes) can be created from the same class (recipe), each with their own data.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-04-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does imperative (procedural) programming differ from OOP, given that both ultimately execute as sequences of instructions?",
+      "keyBeats": [
+        "Imperative programming focuses on describing the order of instructions – how a task is implemented",
+        "OOP organises programs into objects and focuses on the objects and how they interact",
+        "OOP bundles data and functionality together into one unit, the object",
+        "OOP operates on 'models of reality', e.g. a Car and how you can interact with it",
+        "Underneath the hood, OOP is still imperative – it's an organizational structure layered on top"
+      ],
+      "modelAnswer": "Imperative programming is focused on describing the order of instructions – essentially how a task should be carried out step by step. OOP instead organises the program around objects and focuses on what those objects are and how they interact with each other, bundling data and functionality into one unit, the object. OOP tends to model 'reality', like a Car and how you can interact with it. Importantly, the slides stress that underneath the hood OOP is still imperative – OOP is really just an organizational structure on top of that same instruction-by-instruction execution.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-05-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Contrast the imperative (IP) code example with the OOP Car example given on the slides.",
+      "keyBeats": [
+        "IP example: int x = 5; x = x + 1; printf(\"%d\", x); – sequential operations on a plain variable",
+        "OOP example: class Car { int speed; void accelerate() { speed += 10; } }",
+        "In the OOP example, the data (speed) and the behavior (accelerate) live together inside the Car class",
+        "Calling accelerate() changes the object's own internal state rather than a loose global variable"
+      ],
+      "modelAnswer": "The imperative example is just three lines acting directly on a loose variable x: set it to 5, add 1 to it, then print it. The OOP example instead defines a class Car with a speed attribute and an accelerate method that increases speed by 10. The key difference is that in the Car example, the data and the behavior that changes it are bundled together inside the same unit, so calling accelerate() on a Car object changes that object's own internal state rather than manipulating a free-floating variable.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-06-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "According to the slides, how does OOP claim to model the real world, and what defines a real-world object in this view?",
+      "keyBeats": [
+        "Everything around us can be perceived as an object (tree, car, phone, etc.)",
+        "Objects are defined by attributes and behaviors",
+        "OOP: a paradigm that models software as a set of objects, defined through blueprints usually called classes"
+      ],
+      "modelAnswer": "The slides argue that everything in the real world – a tree, a car, a phone – can be perceived as an object, and that objects are defined by their attributes and their behaviors. OOP is then formally described as a programming paradigm that models software as a set of objects, where those objects are defined through blueprints, which we usually call classes.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-07-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Describe the diagram on the slides that contrasts Procedural Programming with Object-Oriented Programming.",
+      "keyBeats": [
+        "Procedural side shows separate 'Global Data' blocks accessed by multiple independent Methods",
+        "OOP side shows several Object boxes (Object 1, Object 2, Object 3), each with its own Local Data and its own Methods enclosed together",
+        "The diagram visually illustrates that procedural code shares/exposes data broadly, while OOP encapsulates data with the methods that operate on it inside each object's boundary"
+      ],
+      "modelAnswer": "This is a diagram-based slide, so let me describe it: on the procedural side, you see blocks of Global Data sitting apart, with multiple Methods accessing that shared data directly. On the OOP side, you instead see several separate Object boxes – Object 1, Object 2, Object 3 – and each one encloses its own Local Data together with its own Methods inside the same boundary. The picture is really illustrating encapsulation: procedural code has data floating around that many functions can touch, whereas OOP locks data away inside the object together with the only methods allowed to touch it.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L1-08-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Summarize the five-aspect comparison table between Imperative Programming and OOP given on the slides.",
+      "keyBeats": [
+        "Focus: how to perform tasks step-by-step vs what objects exist and how they interact",
+        "Code organization: functions and procedures vs classes and objects",
+        "Data handling: data and behavior separate vs data and behavior bundled together in objects",
+        "Reuse: through functions and modules vs through inheritance, interfaces, polymorphism",
+        "Best suited for: small, simple, procedural programs vs large, complex, modular systems"
+      ],
+      "modelAnswer": "The slides lay out a five-row comparison table. On Focus, imperative programming is about how to perform tasks step by step, while OOP is about what objects exist and how they interact. On code organization, imperative uses functions and procedures, OOP uses classes and objects. On data handling, imperative keeps data and behavior separate, while OOP bundles them together inside objects. On reuse, imperative programming reuses code through functions and modules, whereas OOP reuses code through inheritance, interfaces and polymorphism. And finally, imperative programming is best suited for small, simple, procedural programs, while OOP is best suited for large, complex, modular systems.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-09-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Explain the C struct example on the slides and why the lecturer calls it 'doing OO manually'.",
+      "keyBeats": [
+        "typedef struct { int x; int y; } Point; acts like a class definition",
+        "Point_move(Point* p, int dx, int dy) mutates the struct's fields through a pointer – acts like a method",
+        "Point_print(const Point* p) prints the struct's data – another method-like function",
+        "Explicitly passing 'Point* p' mimics an implicit 'this' reference used in real OO languages",
+        "Shows a programmer implementing class, constructor-like init, and methods in C, just unstructured/manually"
+      ],
+      "modelAnswer": "The example defines a Point struct with x and y fields, which plays the role of a class. Then Point_move takes a pointer to a Point plus deltas and mutates the fields through that pointer, and Point_print reads and prints them – these act just like methods. The pointer being passed explicitly, Point* p, is essentially doing by hand what an OOP language would give you implicitly as 'this'. The point of the example is that OO ideas – a class, something like a constructor, methods, and an implicit self-reference – can already be seen in ordinary C code; the programmer is doing OO manually, just without the structure and safety a real OOP language provides.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-10-o",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Which languages support OOP, and why did this course specifically choose Java?",
+      "keyBeats": [
+        "Well-known OOP languages: Java, C++, C#, and Python (with an OOP add-on)",
+        "Java requires an OO approach, making it well suited as a teaching tool for OOP",
+        "Other languages like C# support OO but still allow non-OO style code",
+        "Java is widely used in industry, e.g. the Android mobile system depends heavily on Java",
+        "Java is a mature language"
+      ],
+      "modelAnswer": "Several widely known languages support OOP, including Java, C++, C#, and Python with an OOP add-on. This course specifically picked Java because, as a teaching tool for OOP, it's well suited since it actually requires an object-oriented approach – unlike a language such as C#, which supports OO but still lets you write non-OO style code. On top of that, Java is very widely used in industry, with Android mobile development as a prime example, and it's simply a mature, well-established language.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-11-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the basic development workflow using just a text editor and the command line, and explain why an IDE eventually becomes necessary.",
+      "keyBeats": [
+        "A simple text editor (e.g. Atom) with syntax highlighting/formatting is enough to write code",
+        "Code is compiled and executed through the command line prompt",
+        "Disadvantage: as complexity grows, the need for debugging arises",
+        "This is where an IDE becomes valuable",
+        "Many IDE options exist, each with its own features and quirks"
+      ],
+      "modelAnswer": "You can get very far with just a plain text editor – something like Atom that supports syntax highlighting and formatting to keep the code readable – combined with compiling and executing from the command line. The disadvantage shows up as complexity grows: at some point you need real debugging support, and that's where an IDE comes into the picture. There are many IDE options out there, each with its own unique features and quirks.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-12-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why does this course specifically standardize on Eclipse as its IDE?",
+      "keyBeats": [
+        "Eclipse contains everything that is needed",
+        "It supports Windows, Linux and MacOS, making it consistent across the whole class"
+      ],
+      "modelAnswer": "The course sticks to Eclipse because it contains everything that's needed in a single tool, and it supports Windows, Linux and macOS, so everyone in class can use the same setup regardless of their operating system.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-13-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define assembly language and explain its relationship to machine code.",
+      "keyBeats": [
+        "Assembly was invented as a first layer of abstraction above raw zeros and ones",
+        "It is closely tied to actual hardware and consists of a set of primitive instructions",
+        "Described as 'efficient' but hopelessly difficult to read",
+        "Values are often given in binary or hexadecimal form",
+        "An assembler program is needed to convert assembly source into machine code"
+      ],
+      "modelAnswer": "A computer only understands zeros and ones, so assembly language was invented as the first layer of abstraction on top of that. It's still closely tied to the actual hardware and consists of a set of primitive instructions, which the slides describe as efficient but hopelessly difficult to read, with values often given in binary or hexadecimal form. To turn an assembly source file into actual machine code, you need a separate program called an assembler.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-14-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define a high-level programming language and what 'source code' means, according to the slides.",
+      "keyBeats": [
+        "High-level languages are a lot easier to learn and provide greatly improved readability",
+        "A program written in a high-level language (e.g. Java) is called source code",
+        "Code lines can be described in a way that is self-explanatory",
+        "The road down to zeros and ones is now even longer, so the need for an efficient compiler is obvious"
+      ],
+      "modelAnswer": "High-level programming languages, like Java, are much easier to learn and far more readable than assembly. A program written in such a language is called source code, and operations can be written in a way where the line itself is largely self-explanatory. Because the road from that readable code down to actual zeros and ones is now even longer than with assembly, the need for an efficient compiler becomes obvious.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-15-o",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Recount the history of Java: who created it, when, and what guiding principle drove its design?",
+      "keyBeats": [
+        "Java was 'invented' by J. Gosling, M. Sheridan and P. Naughton back in 1991",
+        "Sun Microsystems launched the first public version (Java 1.0) in 1996",
+        "The driving focus was the Write Once, Run Anywhere (WORA) principle",
+        "Java likely adopted a C/C++ syntax style to ensure recognizability"
+      ],
+      "modelAnswer": "Java was invented by James Gosling, Mike Sheridan and Patrick Naughton back in 1991, and Sun Microsystems launched the first public version, Java 1.0, in 1996. The driving focus throughout was the Write Once, Run Anywhere principle, and it's suggested that Java adopted a C/C++-style syntax specifically to make it feel recognizable to programmers already familiar with those languages.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-16-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "List the five goals that have driven Java's development throughout its life.",
+      "keyBeats": [
+        "Simple, object oriented and recognizable",
+        "Robust and secure",
+        "Architecture neutral and portable",
+        "High performance",
+        "Interpreted, threaded and dynamic"
+      ],
+      "modelAnswer": "The five goals the slides list are: simple, object oriented and recognizable; robust and secure; architecture neutral and portable; high performance; and interpreted, threaded and dynamic.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-17-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What must be installed to run Java, and how does Java differ from JavaScript?",
+      "keyBeats": [
+        "Java code is compiled into byte code and executed in a Java Virtual Machine",
+        "A Java Runtime Environment (JRE) must be installed as a minimum",
+        "The JDK contains a development layer as well as the JRE",
+        "Java is used for server and client software, while JavaScript is used for frontend browser code",
+        "Java ≠ JavaScript, despite the similar name"
+      ],
+      "modelAnswer": "Java code is compiled into byte code and then executed inside a Java Virtual Machine, so at minimum you need a Java Runtime Environment installed to run it; the JDK, on top of that, contains a full development layer as well as the JRE. Java is used for server and client software, whereas JavaScript is used for frontend browser code, and the slides explicitly stress that Java is not JavaScript despite the similar names.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-18-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is Java bytecode, and in what sense is (or isn't) the JVM 'independent'?",
+      "keyBeats": [
+        "Bytecode is much like native machine code but CPU independent",
+        "The JVM itself is NOT independent – you need the right JVM implementation for your platform",
+        "Some microcontrollers can natively execute bytecode directly"
+      ],
+      "modelAnswer": "Bytecode is much like native machine code, except that it's CPU independent – the same bytecode can run anywhere. However, the JVM that executes it is not independent; you need a JVM built for your specific platform. Interestingly, some microcontrollers can even execute bytecode natively.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-19-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What performance breakthrough happened around 1997/1998 for Java, and why does it matter?",
+      "keyBeats": [
+        "Just-in-time (JIT) compiling was introduced around 1997/1998",
+        "Much better options for code analysis appeared alongside it",
+        "This addressed the initial performance shortfall of the byte-code/VM approach",
+        "Today, algorithm/implementation strategy matters far more than the choice of programming language for performance"
+      ],
+      "modelAnswer": "Initially the high-performance ambition of Java suffered because bytecode had to be interpreted, but around 1997/1998, just-in-time compiling was introduced along with much better options for code analysis, which fixed most of that gap. The slides note that today, the choice of implementation strategy for your algorithms matters far more than which programming language you picked, since no significant performance difference can really be tied to language choice anymore.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-20-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the diagram showing how a Java program becomes executed machine code output.",
+      "keyBeats": [
+        "Java program is fed into the Java compiler",
+        "The Java compiler produces Java bytecode",
+        "The Java Virtual Machine executes that bytecode",
+        "The JVM runs on the CPU, which ultimately produces the machine code output",
+        "Two-stage translation: source-to-bytecode is platform independent, bytecode-to-machine-code (via the JVM) is platform specific"
+      ],
+      "modelAnswer": "This is a pipeline diagram, so let me describe the stages: you start with the Java program, which the Java compiler translates into Java bytecode. That bytecode is then handed to the Java Virtual Machine, which runs on the actual CPU and produces the machine code output. The important idea behind the picture is that there are two translation stages – compiling source to bytecode is platform independent, while the JVM's job of turning bytecode into real machine code is where platform-specific work happens.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L1-21-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are the advantages of running code through a virtual machine instead of compiling straight to machine code?",
+      "keyBeats": [
+        "Separation of byte code – machine code optimization is separated from application code optimization",
+        "Much simpler compilation process",
+        "The Java compiler can focus purely on the Java environment rather than every possible CPU/OS"
+      ],
+      "modelAnswer": "Using a VM might initially seem wasteful, but it separates concerns nicely: machine-code level optimization for a given CPU is kept separate from optimizing the actual application code. It also makes the compilation process much simpler, because the Java compiler only ever has to target the Java environment itself, rather than every possible combination of CPU, OS, memory layout and drivers directly.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-22-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Describe the internal architecture of the JVM as shown on the slides.",
+      "keyBeats": [
+        "A Class Loader loads JVM language classes",
+        "JVM Memory contains a Method Area, Heap, PC Registers, and JVM Language Stacks, plus separate Native Method Stacks",
+        "A Native Method Interface connects to Native Method Libraries",
+        "An Execution Engine actually runs the loaded bytecode"
+      ],
+      "modelAnswer": "This is another diagram slide: classes come in and are loaded by a Class Loader. Inside JVM Memory you then have several regions – a Method Area, the Heap, PC Registers, and the JVM Language Stacks – alongside separate Native Method Stacks for native code. A Native Method Interface bridges out to Native Method Libraries when native code is needed. Finally, an Execution Engine is what actually runs the loaded bytecode.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L1-23-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define the JRE and JDK, and explain the important caveat about how they relate.",
+      "keyBeats": [
+        "JRE = contains all packages/libraries needed to execute Java bytecode",
+        "JDK = contains everything related to development of Java code (compiler, javadoc, jar, debugger)",
+        "Splitting them lets you download and store locally only what you actually need",
+        "Caveat: the JDK does NOT always include the JRE!"
+      ],
+      "modelAnswer": "The JRE, the Java Runtime Environment, contains all the packages and libraries needed to execute Java bytecode – it's the execution-only piece. The JDK, the Java Development Kit, contains everything related to developing Java code: the compiler, javadoc, jar tooling, the debugger, everything. Splitting them this way lets you download and use only the local storage you actually need for your purpose. The slides specifically flag one important gotcha: the JDK does not always include the JRE.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-24-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Trace the full Java programming flow from writing source code to seeing a result, including what happens when things go wrong.",
+      "keyBeats": [
+        "Create/Modify Source Code, saved on disk (e.g. Welcome.java)",
+        "Compile Source Code with javac (e.g. javac Welcome.java)",
+        "If compile errors occur, you go back and fix the source code",
+        "Otherwise, bytecode is generated",
+        "Run Bytecode (e.g. java Welcome)",
+        "If runtime errors or an incorrect result occur, you go back to the source code",
+        "Otherwise, the correct result/output is shown on the console"
+      ],
+      "modelAnswer": "The flow starts with creating or modifying your source code and saving it to disk. You then compile it with javac – if there are compile errors, you go back and fix the source code and try again. Once compilation succeeds, you get bytecode, which you then run, for example with the java command. If that run produces a runtime error or an incorrect result, again you go back to the source code to fix it; if it works, you get the correct result displayed on the console.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L1-25-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What must you consider when downloading the JDK to get started with Java?",
+      "keyBeats": [
+        "Download the JDK from Oracle's Java downloads page",
+        "Make sure to get the right version – 32-bit vs 64-bit",
+        "There are many versions available; latest as of January 2026 is Java 25 (an LTS release)"
+      ],
+      "modelAnswer": "The first step is downloading the JDK, for example from Oracle's Java downloads page. You need to make sure you pick the right version for your system, in particular whether you need the 32-bit or 64-bit build. There are also a huge number of Java versions around – as of January 2026 the latest was Java 25, which is a Long-Term Support release.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-26-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How do you check which Java version is installed from a terminal, and what else can you already do from there?",
+      "keyBeats": [
+        "Command `java -version` prints the installed JRE/JVM version info",
+        "Once the JDK is installed, only a simple text editor is otherwise needed",
+        "Both compiling and executing Java code is possible entirely from the command line",
+        "Handy for small pieces of code"
+      ],
+      "modelAnswer": "Once the JDK is installed you can open a terminal and run `java -version`, which prints details like the JVM build and whether it's an LTS release. From there, all you otherwise need is a simple text editor, because it's entirely possible to both compile and execute Java code straight from the command line – which is convenient for small pieces of code.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-27-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the exact two-step command-line process used to compile and then run a Java program.",
+      "keyBeats": [
+        "Step 1: `javac <file>.java` compiles the source into a .class bytecode file",
+        "Step 2: `java <ClassName>` (without .java) executes the compiled class",
+        "Slide example: `javac helloWorld.java` then `java helloWorld` prints 'Hello World'"
+      ],
+      "modelAnswer": "From the command line the process is straightforward: first you use javac to compile, for example `javac helloWorld.java`, and then you use java to execute the result, for example `java helloWorld` – note you drop the .java extension for that second command. In the slide's example this sequence simply prints 'Hello World' to the console.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-28-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the one all-important structural rule of Java code, illustrated by the minimal HelloWorld skeleton?",
+      "keyBeats": [
+        "EVERYTHING is constructed using classes in Java",
+        "Minimal skeleton: `class HelloWorld { }`",
+        "Adding an entry point: `public static void main(String[] args) { }` inside the class"
+      ],
+      "modelAnswer": "The one crucial detail the slides stress is that everything in Java is constructed using classes – there's no such thing as free-floating code outside a class. The minimal skeleton is just `class HelloWorld { }`, and the next step is putting a `public static void main(String[] args) { }` method inside it, which is the one specific method the slides say we'll focus on for now.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-29-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What rules govern a Java public class and the file it lives in, and what is main() responsible for?",
+      "keyBeats": [
+        "Every executable Java program consists of a public class",
+        "That class contains a method named main, holding the statements to be executed",
+        "A public class must be placed in a file named ClassName.java (e.g. class HelloWorld -> HelloWorld.java)",
+        "Class names always start with a capital letter; camel case is generally promoted"
+      ],
+      "modelAnswer": "Every executable Java program is built around a public class, and that class must contain a method named main, which holds the statements that actually get executed. The public class also has to live in a file whose name matches the class name exactly, so class HelloWorld must be stored in a file called HelloWorld.java. On top of that, class names always start with a capital letter, and camel case naming is generally promoted.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-30-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How is code scope delimited in Java, and how is each statement terminated?",
+      "keyBeats": [
+        "Scoping of code is handled via curly braces { }",
+        "Each code line/statement is ended by a semicolon ;",
+        "Example: `System.out.println(\"Hello World\");`"
+      ],
+      "modelAnswer": "In Java, scope – blocks of code belonging together, like a class body or a method body – is handled with curly braces. Every individual statement then has to end with a semicolon, as in `System.out.println(\"Hello World\");`.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-31-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give the syntax of a Java for-loop, as shown on the slides.",
+      "keyBeats": [
+        "`for (int i=1; i<10; i++) { <do some stuff>; }`",
+        "Three parts inside the parentheses: initializer, condition, increment, separated by semicolons",
+        "Loop body enclosed in { }"
+      ],
+      "modelAnswer": "A for-loop looks like `for (int i=1; i<10; i++) { <do some stuff>; }`. The parentheses hold three parts separated by semicolons: an initializer that runs once, a condition checked before every iteration, and an increment step that runs after every iteration, with the loop body sitting inside curly braces.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-32-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give the syntax of a Java while-loop, as shown on the slides.",
+      "keyBeats": [
+        "`while (something) { <do some stuff>; }`",
+        "The body keeps executing as long as the boolean condition 'something' remains true"
+      ],
+      "modelAnswer": "A while-loop looks like `while (something) { <do some stuff>; }` – the code inside the braces keeps running, over and over, for as long as the condition 'something' evaluates to true.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-33-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give the syntax of a Java if-else statement, as shown on the slides.",
+      "keyBeats": [
+        "`if (something) { <do some stuff>; } else { <do other stuff>; }`",
+        "The if-body runs when the condition is true, the else-body runs otherwise"
+      ],
+      "modelAnswer": "An if-else looks like `if (something) { <do some stuff>; } else { <do other stuff>; }`. If the condition 'something' is true, the first block runs; otherwise the else block runs instead.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-34-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give the syntax of a Java switch statement, as shown on the slides.",
+      "keyBeats": [
+        "`switch (variable) { case A: … break; case B: … break; default: … break; }`",
+        "Each case tests the variable against a value",
+        "break exits the switch; default catches unmatched values"
+      ],
+      "modelAnswer": "A switch statement looks like `switch (variable) { case A: … break; case B: … break; default: … break; }`. Each case label checks the switch variable against a specific value, break stops execution from falling through to the next case, and default catches any value that didn't match one of the explicit cases.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-35-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give the syntax of Java's try-catch construct, as shown on the slides.",
+      "keyBeats": [
+        "`try { <something>; } catch(Exception e) { <something>; }`",
+        "Code in the try block runs normally",
+        "The catch block runs if an Exception occurs inside the try block"
+      ],
+      "modelAnswer": "The try-catch construct looks like `try { <something>; } catch(Exception e) { <something>; }`. The code inside try runs as normal, and if an Exception is thrown while it runs, control jumps into the matching catch block instead of crashing the program.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-36-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the conceptual difference between a 'function' and a 'method' in Java?",
+      "keyBeats": [
+        "Function = a piece of code designed to do a task, in general",
+        "Method = a function belonging to a class or an object",
+        "Functions and methods appear syntactically similar but are conceptually different"
+      ],
+      "modelAnswer": "A function, generally speaking, is just a piece of code designed to do some task. A method is specifically a function that belongs to a class or an object. The slides point out that functions and methods look very similar on the page, but conceptually they're different because a method is always tied to a class or object it belongs to.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-37-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is the general syntax pattern for defining a method that returns a value?",
+      "keyBeats": [
+        "`int someFunction(int x, int y) { … code using x and y …; return result; }`",
+        "Return type declared before the method name (here int)",
+        "Parameters listed in parentheses",
+        "The body must return a value matching the declared return type"
+      ],
+      "modelAnswer": "The general pattern is: return type, then method name, then parameters in parentheses, then a body in braces, e.g. `int someFunction(int x, int y) { … code using x and y …; return result; }`. Whatever gets returned inside the body has to match the declared return type, int in this example.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-38-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you make use of a method once it's defined, and what must you ensure about what it returns?",
+      "keyBeats": [
+        "Call a method simply by using its name with arguments, e.g. `someFunction(3,4);`",
+        "If the method should output something, it must return a value of the specific data type declared (it can be any type)"
+      ],
+      "modelAnswer": "To use a method, you just call it by its name and pass in the required arguments, for example `someFunction(3,4);`. If you want the method to actually give you something back, it's important that it returns a value of the exact data type it was declared to return – that type can be anything, but it has to match.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-39-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "List Java's basic primitive data types and their approximate storage sizes.",
+      "keyBeats": [
+        "byte: 8-bit signed, -128 to 127",
+        "short: 16-bit signed, -32768 to 32767",
+        "int: 32-bit signed, about -2.1 billion to 2.1 billion",
+        "long: 64-bit signed, an enormous range",
+        "float: 32-bit IEEE 754 floating point",
+        "double: 64-bit IEEE 754 floating point",
+        "Slides note these basic types are 'as we know from imperative programming'"
+      ],
+      "modelAnswer": "Java's basic primitive types, in increasing size, are: byte, an 8-bit signed value from -128 to 127; short, 16-bit signed, roughly -32768 to 32767; int, 32-bit signed, roughly -2.1 billion to 2.1 billion; and long, a 64-bit signed value with a huge range. For decimals there's float, a 32-bit IEEE 754 value, and double, a 64-bit IEEE 754 value with much greater precision and range. The slides note this is all essentially the same as what you'd already know from imperative programming.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-40-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Distinguish between a syntax error and a logical error in Java, and why does the distinction matter for beginners?",
+      "keyBeats": [
+        "Syntax errors are caught and reported by the compiler, which helps you fix them",
+        "Logical errors are much more difficult to handle – the code compiles fine but behaves incorrectly",
+        "The slides explicitly tell students not to worry about typos/mistakes because the compiler helps"
+      ],
+      "modelAnswer": "A syntax error is a mistake the compiler itself catches and reports, and it will help point you toward fixing it, for example a missing semicolon or an unmatched brace. A logical error, on the other hand, is when your code compiles perfectly fine but still produces the wrong result – there's no compiler safety net for that, so it's much harder to track down. The slides explicitly reassure students not to worry too much about making mistakes while learning, since the compiler will flag syntax problems; it's the logical ones you really have to hunt for yourself.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-41-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through the HelloWorld example line by line, as explained on the slides.",
+      "keyBeats": [
+        "Line 1: defines the class; class name starts with a capital letter",
+        "If declared `public class`, inside/outside package placement must be considered",
+        "Line 2: defines the main method – the entry point for program execution; String[] args catches any input arguments",
+        "Line 3: the print command System.out.println; every command must end with ;"
+      ],
+      "modelAnswer": "Line 1 defines the class itself, and the class name starts with a capital letter – if it were declared `public class`, you'd also need to think about whether it sits inside or outside a package. Line 2 defines the main method, which is the entry point for program execution, with `String[] args` there to catch any input arguments the program was launched with. Line 3 is the actual print command, `System.out.println(...)`, and like every Java statement it has to end with a semicolon.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-42-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you access command-line arguments in Java, and how should you defensively handle them?",
+      "keyBeats": [
+        "Arguments arrive in the `String[] args` parameter of main",
+        "Check `if (args.length == 0)` before using args[0], to detect missing input",
+        "Print a message and return early if no argument was provided",
+        "`//` starts a single-line comment"
+      ],
+      "modelAnswer": "Command-line arguments show up in the `String[] args` parameter that main receives. Before trying to use args[0], you should check `if (args.length == 0)`, and if that's true, print a message telling the user to provide input and then return early rather than crashing. The RepeatTextargs example on the slides does exactly this, and also shows that `//` starts a single-line comment in Java.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-43-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you read interactive user input during program execution in Java, as opposed to reading command-line arguments?",
+      "keyBeats": [
+        "Import the Scanner class: `import java.util.Scanner;`",
+        "Create a scanner over System.in: `Scanner scanner = new Scanner(System.in);`",
+        "Read a line the user types while the program runs: `scanner.nextLine();`",
+        "Close it afterward: `scanner.close();`",
+        "String[] args = input given at program launch; Scanner = interactive input during the run"
+      ],
+      "modelAnswer": "To read input interactively while the program is running, you import the Scanner class, create a Scanner wrapping System.in with `new Scanner(System.in)`, and then call `scanner.nextLine()` to read a line the user types. When you're done, you close the scanner with `scanner.close()`. This is different from String[] args, which only captures input given at program launch – Scanner instead lets you ask the user for input interactively during execution.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-44-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the two types of import statements in Java, and how do they differ?",
+      "keyBeats": [
+        "Specific import: imports a single named class, e.g. `import java.util.Scanner;`",
+        "Wildcard import: imports all classes of a package, e.g. `import java.util.*;`"
+      ],
+      "modelAnswer": "Java has two forms of import statement: a specific import, which brings in a single named class, like `import java.util.Scanner;`, and a wildcard import, which brings in every class from a package at once, like `import java.util.*;`.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-45-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is javac, and what might you need to configure for it to be usable from any directory?",
+      "keyBeats": [
+        "javac is the name of the Java compiler – the first step needed to build code",
+        "If not automatically added to the PATH, you may need to add it yourself, depending on OS",
+        "Via GUI (system settings) or via command line, e.g. `set PATH=%PATH%;C:\\your\\path`",
+        "javac supports many options beyond basic compiling (e.g. -d, -classpath, -g)"
+      ],
+      "modelAnswer": "javac is the name of the Java compiler, and running it is the first step needed to turn source into something runnable. If it isn't automatically on your system PATH, you may need to add it yourself depending on your OS, either through the GUI system settings or via a command line like `set PATH=%PATH%;C:\\your\\path`. javac also supports a wide range of options beyond the basics – things like specifying an output directory, a classpath, or debug info levels.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-46-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What happens when you run javac on a .java file, and is the original source file still needed afterward?",
+      "keyBeats": [
+        "javac translates code into a portable hybrid format – bytecode – not literal machine language",
+        "Produces a .class file of the same name as the source",
+        "The .class file is designed for the JVM and contains everything needed",
+        "The .java file is no longer needed once compiled – the .class file can be executed on all OSes"
+      ],
+      "modelAnswer": "Running javac translates your source into a portable hybrid format, bytecode, rather than actual machine language, and it produces a .class file with the same base name as your source file. That .class file is designed for the JVM and contains everything needed to run – so once you have it, you don't actually need the original .java file anymore, and the .class file itself can run on any OS with a suitable JVM.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-47-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What common pitfall is illustrated when running `java HelloWorld` after compiling `helloWorld.java`, and why does it happen?",
+      "keyBeats": [
+        "The `java` command is case sensitive",
+        "`java HelloWorld` fails with 'Error: Could not find or load main class HelloWorld ... NoClassDefFoundError: HelloWorld (wrong name: helloWorld)'",
+        "The actual compiled class/file was named lowercase helloWorld",
+        "Running `java helloWorld` (matching case exactly) succeeds",
+        "The class name and file name (and case) must match exactly; java is invoked without the .class extension"
+      ],
+      "modelAnswer": "The example on the slides shows that the java command is case sensitive: typing `java HelloWorld` after actually compiling `helloWorld.java` fails, with an error saying it could not find or load the main class HelloWorld and a NoClassDefFoundError complaining about the 'wrong name'. That's because the real class was named lowercase helloWorld, so once the command is corrected to `java helloWorld`, matching the case exactly, it runs fine and prints Hello World. The lesson is that the class name, the source file name, and the case all have to match exactly, and you invoke java without the .class extension.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-48-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What does Eclipse offer new users the first time it's opened, to help them build their first program?",
+      "keyBeats": [
+        "On first opening Eclipse, users are offered a choice of a 'cheat sheet'",
+        "Selecting it walks through creating a Hello World application step by step",
+        "Steps: open the Java perspective, create a Java project, create the HelloWorld class, add a print statement, run the application"
+      ],
+      "modelAnswer": "The first time you open Eclipse, it offers you the option of picking a 'cheat sheet', and choosing the Hello World cheat sheet walks you through the whole process step by step: opening the Java perspective, creating a Java project, creating your HelloWorld class, adding a print statement, and finally running the application.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-49-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "After completing the Eclipse Hello World cheat sheet, what are the three main UI areas you should recognize?",
+      "keyBeats": [
+        "Your code appears in the main editor pane",
+        "The project overview (Package Explorer) shows the project structure, e.g. the (default package)",
+        "The output console at the bottom shows program output and any problems"
+      ],
+      "modelAnswer": "Once you finish the cheat sheet you should see the code itself in the main editor pane, a project overview on the side – the Package Explorer, which here shows the project sitting in the default package – and an output console at the bottom where the program's output and any problems get shown.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 48",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-50-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What error appears if you add a `package` declaration to a Java file in Eclipse without moving the file into a matching folder, and how is it fixed?",
+      "keyBeats": [
+        "Adding `package helloworld;` while the file still sits in the default package causes a mismatch error",
+        "Error: 'The declared package \"helloworld\" does not match the expected package \"\"'",
+        "Eclipse offers quick fixes: correct the package declaration, or move the file into a matching package folder",
+        "Once the file is placed inside src/helloworld/HelloWorld.java it compiles and runs correctly"
+      ],
+      "modelAnswer": "If you add `package helloworld;` to a class file that's still physically sitting in Eclipse's default package, you get a compile error saying the declared package 'helloworld' doesn't match the expected package, which is empty. Eclipse offers quick fixes for this – either correct the package declaration back to nothing, or actually move the file into a matching 'helloworld' package folder. Once the file genuinely lives at src/helloworld/HelloWorld.java, matching its package declaration, it compiles and runs correctly again.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 49",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-51-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you pass runtime parameters to a Java program in Eclipse, and how does Eclipse pick which main() to run if a project has several?",
+      "keyBeats": [
+        "Open Run Configurations and edit the arguments for the 'Java Application' launch configuration",
+        "Eclipse assumes the starting point is the default/most 'available' class in the project",
+        "If a project has more than one main(), you must explicitly choose, since Eclipse otherwise picks the first main() it comes across"
+      ],
+      "modelAnswer": "To run with parameters in Eclipse, you open the Run Configurations menu and edit the arguments there for your Java Application launch. Eclipse's default assumption is to use the most 'available' main class in the project, but if the project actually contains more than one class with a main() method, you need to explicitly select which one you want, because otherwise Eclipse will just pick whichever main() it happens to find first.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 53",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-52-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you add external libraries to a Java project in Eclipse, and why does the build path matter?",
+      "keyBeats": [
+        "Configured through Project Properties -> Java Build Path",
+        "Needed for things like JSON libraries, database drivers, etc.",
+        "Compilation and execution will fail if the build path is missing a needed library",
+        "Doing the same via command line is possible but quickly becomes chaotic, needing scripts in practice"
+      ],
+      "modelAnswer": "External libraries – say a JSON library or a database driver – get added through the project's Properties, under Java Build Path. It's important to keep this correct, because compilation and execution will simply fail if a needed library isn't on the build path. You could technically manage all of this from the command line instead, but it quickly turns chaotic, and in practice you'd need scripts to keep it manageable.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 54",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-53-o",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What are the most common Eclipse/Java setup pitfalls, and how do you diagnose them?",
+      "keyBeats": [
+        "Multiple Java versions installed unknowingly – check/point compiler settings to the correct version",
+        "Only a JRE installed, not a JDK – the compiler component is then missing entirely",
+        "A project may specifically require a particular Java version despite general compatibility",
+        "Eclipse offers a long list of setup/preference options to help troubleshoot; you have to experiment yourself"
+      ],
+      "modelAnswer": "A very common problem is having several versions of Java installed without realizing it, which you diagnose and fix by checking the compiler settings and making sure they point to the right version. Another common one is having installed only a JRE rather than a full JDK, in which case the compiler component is simply missing from your setup. Sometimes, despite general compatibility efforts, a project genuinely needs a specific Java version. Beyond that, Eclipse exposes a long list of setup options to help, and the slides basically say you have to be willing to experiment with these yourself whenever something's going wrong.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 55",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-54-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the Eclipse debugger workflow, from setting a breakpoint to inspecting program state.",
+      "keyBeats": [
+        "Mark a breakpoint at the line where you want execution to pause",
+        "Click the 'bug' icon to start the debugger",
+        "Code runs to the first breakpoint",
+        "From there, variables and state can be assessed",
+        "Step forward line by line, or run to the next breakpoint",
+        "Use this to determine why things have gone wrong"
+      ],
+      "modelAnswer": "You start by marking a breakpoint at the line where you want the program to pause, then click the 'bug' icon to launch the debugger. Execution runs normally until it hits that first breakpoint, and from there you can inspect variables and program state. You can then step forward through the code line by line, or just run on to the next breakpoint, using this to play detective and figure out why the program isn't behaving as expected – which the slides admit can be easy in some cases and genuinely hard in others.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 57",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-55-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do you package and run a Java project outside of Eclipse, without needing the IDE installed?",
+      "keyBeats": [
+        "Export the project to an executable JAR file via Eclipse's Export wizard",
+        "Define launch conditions so Eclipse knows the main class",
+        "Eclipse packs required dependencies into a single filename.jar (configurable, default packs them)",
+        "Run it via the command line: `java -jar filename.jar`",
+        "Some OSes even support double-clicking the jar"
+      ],
+      "modelAnswer": "To run a project without Eclipse installed, you export it to an executable JAR file, which is a distinctly Java way of packaging things. As part of that you define the launch conditions so Eclipse knows which class contains main, and by default Eclipse packs the required dependencies into one filename.jar. From there you can run it directly from the command line with `java -jar filename.jar`, and on some operating systems you can even just double-click the jar to run it.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 59",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-56-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What productivity features does Eclipse offer to speed up writing boilerplate/common code?",
+      "keyBeats": [
+        "Toggle comments across selected lines automatically",
+        "Correct/auto indentation for readable code",
+        "Automatic method generation for standard methods (getters/setters, hashCode/equals, toString, constructors)",
+        "Automatic wrapping of code elements into proper scope { }"
+      ],
+      "modelAnswer": "Eclipse can toggle comments on and off automatically for selected lines, which is handy when comparing different versions of the same functionality. It can also auto-correct indentation for nicer looking code, and it has automatic generation for common boilerplate methods like getters and setters, hashCode and equals, toString, and constructors – since some of these are so standard that most IDEs automate them, this significantly increases coding efficiency. It can also automatically wrap selected code into a proper scope with braces.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 60",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-57-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What kinds of automated refactoring does Eclipse support, and why is manual refactoring risky in a large codebase?",
+      "keyBeats": [
+        "Manually renaming across 500+ files by hand is error prone and tedious",
+        "Eclipse automates: Rename, Move, Change Method Signature, Extract Local Variable/Constant, Extract Interface, Extract Superclass, Pull Up/Push Down, and more",
+        "Supports realizations like 'this class should really be an interface' or code belonging in a parent class",
+        "Copying/pasting code is generally a bad idea – refactor/extract instead"
+      ],
+      "modelAnswer": "As a codebase grows past a few hundred files, manually renaming a class everywhere it's used becomes tedious and error prone. Eclipse automates a whole family of these tasks: renaming, moving, changing a method's signature, extracting a local variable or constant, extracting an interface or superclass, pulling members up or pushing them down, and more. These tools support realizations that come naturally as a design evolves, like deciding a class is better off as an interface, or that some code really belongs in a parent class – and the slides are clear that copy-pasting code is generally a bad idea, refactoring is the better move.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 61",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-58-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What navigation aids does Eclipse offer for finding your way around a large codebase?",
+      "keyBeats": [
+        "'Open Declaration' jumps to where a method/variable/class is declared",
+        "'Open Call Hierarchy'/'Open Type Hierarchy' show who calls what and class relationships",
+        "Useful because UML documents may not stay in sync with the code",
+        "Most of these functionalities are also reachable via right-click"
+      ],
+      "modelAnswer": "In a larger project, finding the right code element or figuring out who calls what can be hard, and this may not be clear from the UML documentation, which is why the slides remind you to keep documentation up to date. Eclipse offers navigation aids like 'Open Declaration' to jump straight to where something is declared, and 'Open Call Hierarchy' or 'Open Type Hierarchy' to see who calls a method or how classes relate. Most of these are conveniently also accessible with a right mouse click.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 62",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-59-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What per-project maintenance actions are available in Eclipse's project menu?",
+      "keyBeats": [
+        "'Clean...' rebuilds the project, which can fix stale-build issues, especially on dynamically-synced folders (e.g. OneDrive)",
+        "'Generate Javadoc...' produces code-level documentation with a mouse click",
+        "Javadoc is only useful if you've commented your code effectively",
+        "Project-specific settings (build path, java version, etc.) live under Properties"
+      ],
+      "modelAnswer": "Each project can have its own configuration, so you interact with these on a per-project basis. Cleaning the build via 'Clean...' can solve certain issues, particularly if your code lives in a dynamically synced folder like OneDrive. 'Generate Javadoc...' produces code-level documentation with just a mouse click, though the slides warn that it will only be useful if you've actually commented your code well in the first place. Anything related to build path or Java version sits under the project's Properties.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 63",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L1-60-o",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize the key takeaways about Java presented at the end of this introductory lecture.",
+      "keyBeats": [
+        "Java requires an OO approach to everything but is imperative 'under the hood'",
+        "Java adopted C/C++ syntax, so it seems recognisable",
+        "Java is platform independent, but requires a JRE to achieve this and to handle program execution",
+        "A simple text editor + command line can handle most things, but this quickly becomes chaotic – an IDE like Eclipse can be a life saver",
+        "A good IDE is quite complicated, and efficient use comes only with invested experience"
+      ],
+      "modelAnswer": "The lecture closes with five key points. First, Java requires an object-oriented approach to everything, even though underneath it's still imperative. Second, Java adopted C/C++-style syntax, so it feels recognisable. Third, Java is platform independent in principle, but that independence relies on having a JRE installed to actually handle program execution. Fourth, a simple text editor and a command line prompt can handle most of what you need, but in practice this becomes chaotic quickly, which is where an IDE like Eclipse becomes a real life saver. And finally, a good IDE like Eclipse is itself fairly complicated, and getting efficient with it takes a real investment of time and experience.",
+      "citation": "ooadi1.slides.full.pdf.extracted.txt, PAGE 64",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L1-E1",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 1",
+      "promptVerbatim": "In case you did not already do this, then make the HelloWorld example work.",
+      "whatItTests": "Ability to install a JDK/IDE and get a minimal Java program (a class with a main method) to compile and run successfully.",
+      "answerSketch": "The official solution simply confirms this is a basic setup exercise ('This one you got!') with no code provided — the expected deliverable is a working HelloWorld.java class containing a main method that prints to the console, successfully compiled (e.g. via javac/java or Eclipse) and run without errors."
+    },
+    {
+      "id": "OOADI-L1-E2",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 2",
+      "promptVerbatim": "Write a small program that takes a text line as input and prints this ten times to the consol.",
+      "whatItTests": "Reading command-line arguments via String[] args, defensively checking args.length before use, and using a for-loop to repeat output a fixed number of times.",
+      "answerSketch": "The RepeatTextArgs solution checks `if (args.length == 0)`, printing a usage message and returning early if no argument was supplied. Otherwise it stores `args[0]` in a `text` variable and loops `for (int i = 0; i < 10; i++) { System.out.println(text); }` to print the given text ten times."
+    },
+    {
+      "id": "OOADI-L1-E3",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 3",
+      "promptVerbatim": "Write a small program that takes and integer, x, as input and prints a text string of you own choice to the console x times.",
+      "whatItTests": "Parsing a String command-line argument into an int with Integer.parseInt, reusing the args.length guard pattern, and looping a variable number of times with a for-loop.",
+      "answerSketch": "The RepeatTextIntArgsTimes solution checks `args.length == 0` first (same guard as exercise 2), then converts `args[0]` via `int numberOfTimes = Integer.parseInt(args[0]);`, defines its own fixed text string (\"testTest\"), and loops `for (int i = 0; i < numberOfTimes; i++) { System.out.println(text); }` to print it exactly x times."
+    },
+    {
+      "id": "OOADI-L1-E4",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 4",
+      "promptVerbatim": "If you used a for-loop structure in 3. then try to rewrite using a while-loop structure and visa-versa.",
+      "whatItTests": "Recognizing that for-loops and while-loops are interchangeable looping constructs, and correctly managing the loop counter manually in a while-loop.",
+      "answerSketch": "The official solution again just notes 'This one you got!' with no code given. The expected result is a while-loop rewrite of exercise 3's for-loop: initialize `int i = 0;` before the loop, use `while (i < numberOfTimes) { System.out.println(text); i++; }`, producing identical output to the for-loop version."
+    },
+    {
+      "id": "OOADI-L1-E5",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 5",
+      "promptVerbatim": "Implement a program that takes a word (string) as input and then reacts on keywords like for instance \"myWord\" and writes something else in its place. Define ten words and make the code react to those words (hint: switch).",
+      "whatItTests": "Interactive input via Scanner, string normalization (trim/toLowerCase) for case-insensitive matching, and a switch-case statement with a default branch.",
+      "answerSketch": "The KeyWordReactor solution reads a line via `Scanner`, normalizes it with `.trim().toLowerCase()` into `key`, then runs `switch(key)` with cases such as \"myword\" -> \"Word-Up!\", \"hello\" -> \"Well hello there!\", \"bye\" -> \"Goodbye\", \"java\" -> \"Do you refer to coffee or code?\", and a `default` branch echoing the unmatched word back. Note: the provided solution only implements 4 keyword cases plus default rather than the ten keywords the assignment asks for — the same switch pattern would just need six more case labels added to fully satisfy the assignment."
+    },
+    {
+      "id": "OOADI-L1-E6",
+      "source": "ooadi1.assignments.pdf.extracted.txt, item 6",
+      "promptVerbatim": "Using the Random class (import java.util.Random) it is possible to generate random numbers. Create a guessing-program that takes a number at user input and compares this to a random number. The program should tell the user if his/her number is too high or too low. Give the user either an infinite number of tries to guess the random number or specify a maximum number, say three tries maybe.",
+      "whatItTests": "Using java.util.Random to generate a target value, Scanner-based repeated interactive input with basic validation (hasNextInt), a while(true) loop with break/continue control flow, and if/else-if/else comparison logic.",
+      "answerSketch": "The GuessingGameInfinite solution generates `int secret = rand.nextInt(100) + 1;` (1..100), then loops `while (true)` prompting the user for a guess. It validates input with `sc.hasNextInt()`, printing an error and using `sc.next(); continue;` to discard bad input. Valid guesses are compared against `secret` with if/else-if/else, printing \"Too low!\" or \"Too high!\", or on a correct guess printing a success message with the guess count and `break`-ing out of the loop; the Scanner is closed at the end."
+    }
+  ]
+}

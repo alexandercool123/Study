@@ -1,0 +1,971 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 7,
+  "lectureTitle": "Threads, Concurrency and Synchronization",
+  "examQuestions": [
+    { "examQ": 7, "subPart": "a", "promptVerbatim": "Multi-threading" }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L7-001-o",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What is the fundamental difference between a process and a thread, and why does that difference matter for concurrent programming?",
+      "keyBeats": [
+        "Process = a program in execution; Thread = a dispatchable unit of work",
+        "A thread is sometimes seen as a light-weight process-within-a-process",
+        "A process may contain any number of threads",
+        "Memory is the critical distinction: processes have separate memory spaces, threads within the same process share memory",
+        "Shared memory between threads is both a strength (cheap communication) and a great danger (races)"
+      ],
+      "modelAnswer": "A process is a program in execution with its own isolated memory space, while a thread is a dispatchable unit of work inside a process, sometimes called a light-weight process. A process can contain many threads, and the key distinction is memory: processes are isolated from each other, but threads in the same process share memory, code and heap. That sharing makes communication between threads cheap, but it's also exactly why race conditions and synchronization problems exist.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-002-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'process' and 'thread' exactly as introduced on the slides.",
+      "keyBeats": [
+        "A 'Process' is a program in execution",
+        "A 'Thread' is a dispatchable unit of work",
+        "A thread is sometimes considered a light-weight process-within-a-process",
+        "A process may contain any number of threads"
+      ],
+      "modelAnswer": "A process is defined as a program in execution, while a thread is a dispatchable unit of work, sometimes thought of as a light-weight process running within a process. As such, a single process may contain any number of threads.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-003-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain how Java threads relate to native OS threads, and what 'write once, run anywhere' means specifically for threading.",
+      "keyBeats": [
+        "Every Java program already has threads, even 'Hello World' runs on the main thread",
+        "The JVM runs its own background threads, e.g. for garbage collection",
+        "Java threads map to native OS threads in modern JVMs",
+        "The OS scheduler handles Java threads directly",
+        "Same Java threading code runs on any OS despite differing OS scheduling behaviour"
+      ],
+      "modelAnswer": "Even the simplest Java program already runs on a thread, the main thread, and the JVM adds its own background threads such as the garbage collector. In modern JVMs, Java threads are mapped directly onto native OS threads, so the OS scheduler manages them. Java's write-once-run-anywhere promise extends here too: the same threading code runs correctly on any operating system even though the underlying OS scheduling behaviour can differ.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-004-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is process-based multitasking, and how does it differ architecturally from multithread-based multitasking?",
+      "keyBeats": [
+        "Process-based multitasking: two or more processes run simultaneously, controlled by the OS",
+        "Each process has its own separate address space: own data area, code area, heap and stack",
+        "Multithread-based multitasking: two or more threads run simultaneously within multitasking",
+        "Threads of the same process share address space, data, code and heap area",
+        "However each thread still has its own separate stack area",
+        "Multithread-based multitasking is implementable purely by programming and is supported by Java"
+      ],
+      "modelAnswer": "Process-based multitasking is when two or more separate processes run simultaneously, each fully isolated with its own address space, data, code, heap and stack, controlled by the OS. Multithread-based multitasking instead runs two or more threads simultaneously within the same process; those threads share the address space, data, code and heap area, but each still gets its own separate stack. Unlike process-based multitasking which is purely an OS concern, multithread-based multitasking is something the programmer implements, and Java supports it directly.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 5-6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-005-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does each thread need its own stack even though threads in the same process share memory, code and heap?",
+      "keyBeats": [
+        "Each thread has its own execution path: own method calls, own local variables, own call history",
+        "If threads shared a single stack, one thread calling a method would corrupt another thread's local variables",
+        "Stack separation is architecturally necessary for threads to work at all, not optional",
+        "Because everything else (code, heap, data) is shared, context-switching and communication between threads remain inexpensive"
+      ],
+      "modelAnswer": "Every thread needs its own execution path: its own sequence of method calls, its own local variables, and its own call history. If threads shared one stack, one thread invoking a method would stomp on another thread's local variables and return addresses, which is architecturally impossible to work with. So each thread gets a private stack even while sharing the rest of the process's memory, which is also why context switching and inter-thread communication stay cheap: only the stack, not the whole address space, changes.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-006-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'context switch' and describe what triggers one.",
+      "keyBeats": [
+        "When the OS/JVM scheduler pauses one thread to run another, it must save the paused thread's complete state so it can resume exactly where it left off",
+        "That saved state is called the 'context'",
+        "The act of saving one context and restoring another is the 'context switch'",
+        "Relates to cooperative versus preemptive multitasking",
+        "Timeslices are regulated by hardware timers",
+        "Thread information is saved onto stacks (context structures)"
+      ],
+      "modelAnswer": "A context switch happens when the scheduler decides to pause the currently running thread and run another one. To do this safely it saves the complete state of the paused thread, called its context, so it can be restored and resumed exactly where it left off later. This ties into cooperative versus preemptive multitasking, and timeslices are typically regulated by hardware timers, with thread context information saved onto stacks.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-007-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What is the difference between a Java 'user thread' and a 'daemon thread', and what happens if you forget to terminate a user thread?",
+      "keyBeats": [
+        "User threads keep running in the JVM until they are all finished, i.e. once their run() method completes",
+        "Daemon threads are background threads (like garbage collection) that the JVM destroys automatically once no user threads remain",
+        "If you forget to terminate a user thread, the application will not shut down cleanly"
+      ],
+      "modelAnswer": "User threads are the 'real' threads of your application: the JVM keeps running as long as any user thread's run() method hasn't completed. Daemon threads are background helper threads, like the garbage collector, that the JVM kills off automatically once no user threads are left. The practical consequence is that if you forget to terminate a user thread, your application will hang around and not shut down cleanly.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-008-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are the two ways to create a thread in Java, and what is the key trade-off between them?",
+      "keyBeats": [
+        "Option 1: create a class that extends Thread, override run() - simpler/readable but limited by single inheritance (can't extend anything else)",
+        "Extending Thread is used when the program needs full control over the thread life cycle",
+        "Option 2: create a class that implements Runnable, override run() - class stays free to extend another base class",
+        "Runnable gives better separation of 'what to do' (task) from 'the mechanism that does it' (the thread)",
+        "Implementing Runnable does not give control over the thread itself",
+        "Runnable is the preferred approach"
+      ],
+      "modelAnswer": "You can either write a class that extends Thread and overrides run(), which is simple and readable but burns your one allowed superclass since Java has single inheritance, and is used when you need full control over the thread's life cycle. Or you implement the Runnable interface and override run(), which leaves the class free to extend something else and cleanly separates the task's logic from the mechanism that runs it, though it gives you no direct control over the thread object itself. Implementing Runnable is the preferred approach.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 9, 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-009-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Show, with correct syntax, how to create and start a thread by extending Thread, and separately by implementing Runnable.",
+      "keyBeats": [
+        "Extend Thread: class MyThread extends Thread { public void run(){...} }; MyThread thr1 = new MyThread(); thr1.start();",
+        "Implement Runnable: class MyThread implements Runnable { public void run(){...} }; MyThread myObject = new MyThread(); Thread thr1 = new Thread(myObject); thr1.start();",
+        "Runnable needs three steps (create task object, wrap in Thread, start) versus two steps for extending Thread"
+      ],
+      "modelAnswer": "Extending Thread: write class MyThread extends Thread with an overridden run(), then simply do MyThread thr1 = new MyThread(); thr1.start(). Implementing Runnable takes one extra step: class MyThread implements Runnable with an overridden run(), then MyThread myObject = new MyThread(); Thread thr1 = new Thread(myObject); thr1.start() - you create the task object, wrap it in an actual Thread, then start it.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 10-12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-010-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why must you call start() rather than run() to actually launch a new thread of execution?",
+      "keyBeats": [
+        "run() must be public, void return type, and take no arguments; it contains the code to execute",
+        "Calling t.run() directly just executes that method on the CURRENT thread - no new thread is created",
+        "Calling t.start() creates a genuinely new thread, which the JVM then calls run() on"
+      ],
+      "modelAnswer": "run() is just an ordinary method - public, void, no arguments - that happens to contain the code you want executed concurrently. If you call t.run() directly, you're not starting anything new, you're simply executing that method synchronously on whichever thread called it. Only t.start() actually asks the JVM to spin up a brand-new thread, which then invokes run() on your behalf.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-011-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How do lambda expressions simplify implementing Runnable in modern Java, and why does this work at all?",
+      "keyBeats": [
+        "A lambda expression is simply 'a method without a name'",
+        "Thread t = new Thread(() -> { /* thread body */ }); t.start(); replaces writing a whole named Runnable class",
+        "Lambdas work with functional interfaces only: interfaces with exactly one abstract method",
+        "Runnable qualifies because it has exactly one abstract method, run()"
+      ],
+      "modelAnswer": "Instead of declaring a whole named class implementing Runnable, you can write Thread t = new Thread(() -> { /* body */ }); t.start();. A lambda is essentially a method without a name, and it only works because Runnable is a functional interface, meaning it has exactly one abstract method - run() - so the lambda body slots straight in as that method's implementation, giving identical functionality with far less ceremony.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 14-15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-012-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "List and describe the four states of a Java thread's life-cycle.",
+      "keyBeats": [
+        "New - the thread object has been created but start() has not been called yet",
+        "Runnable - after start() has been called, the thread is eligible to be dispatched/run by the scheduler",
+        "Blocked/Waiting - e.g. blocked on I/O, or waiting via wait(), until notified",
+        "Terminated/Dead - run() has completed (or the thread was stopped)"
+      ],
+      "modelAnswer": "The thread life cycle in Java, controlled by the JVM, has four states. New is a thread object that has been created but not yet started. Runnable is what it becomes after start() is called, meaning it's eligible to be scheduled. Blocked or Waiting covers a thread paused on I/O or waiting via wait() until notified. And Terminated, or dead, is reached once run() has completed. The thread moves between these states depending on operations performed by or on it.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-013-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Sketch the thread life-cycle state diagram used on the slides, including its transition labels.",
+      "keyBeats": [
+        "States: New, Runnable, Running, Blocked/Waiting, Terminated/Dead",
+        "New --start()--> Runnable",
+        "Runnable --dispatch--> Running",
+        "Running --time expired / interrupted--> back to Runnable",
+        "Running --block on I/O or wait()--> Blocked/Waiting",
+        "Blocked/Waiting --notify()--> Runnable",
+        "Running --completion / stop()--> Terminated (dead)"
+      ],
+      "modelAnswer": "Picture five boxes: New, Runnable, Running, Blocked/Waiting and Terminated. A thread starts in New, moves to Runnable once start() is called, then to Running when the scheduler dispatches it. From Running it can be knocked back to Runnable if its time slice expires or it's interrupted, or it can move to Blocked/Waiting if it blocks on I/O or calls wait(); a notify() moves it from Blocked/Waiting back to Runnable. Finally, from Running, either completion of run() or stop() moves it to Terminated/dead, the end state.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L7-014-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What does Thread.currentThread() do, and what does interrupt() do?",
+      "keyBeats": [
+        "public static Thread currentThread() returns the thread that is currently executing",
+        "public void interrupt() interrupts the called thread so another thread can get a chance to be executed"
+      ],
+      "modelAnswer": "currentThread() is a static method you can call from anywhere that returns a reference to whichever thread is currently executing that code. interrupt() is an instance method you call on a specific thread to interrupt it, signalling it (or forcing a wake from a blocking call) so another thread gets a chance to run.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-015-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why are suspend() and resume() deprecated in modern Java, and what replaces them?",
+      "keyBeats": [
+        "suspend() suspends the current thread so it can be resumed later; resume() resumes a suspended thread",
+        "Deprecated because: if a thread is suspended while holding a lock, that lock is never released, causing a deadlock",
+        "In modern Java they are replaced by wait() and notify()"
+      ],
+      "modelAnswer": "suspend() pauses a thread so it can later be woken up with resume(), but both are deprecated because of a serious flaw: if the suspended thread happened to be holding a lock at the moment it was suspended, that lock is never released, and you end up with a deadlock. Modern Java replaces this pattern with wait() and notify(), which cooperate properly with locks.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-016-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What do setPriority()/getPriority() and sleep() do for a thread?",
+      "keyBeats": [
+        "setPriority(int priority) sets a priority for the thread, on a 1-10 scale",
+        "getPriority() returns the thread's current priority (1-10)",
+        "sleep(long millis) throws InterruptedException, and causes a running thread to sleep for the specified number of milliseconds"
+      ],
+      "modelAnswer": "setPriority(int) lets you assign a thread a priority value from 1 to 10 as a hint to the scheduler, and getPriority() reads that value back. sleep(long millis) causes the currently running thread to pause for the given number of milliseconds, and because it can be interrupted while sleeping, it declares throws InterruptedException.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-017-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "The slides say 'join() != wait()'. Distinguish wait()/notify()/notifyAll() from join() precisely.",
+      "keyBeats": [
+        "wait() - the thread stops and RELEASES its lock, waiting until notified",
+        "notify() wakes up one waiting thread; notifyAll() wakes up all waiting threads",
+        "join()/join(millis) makes the calling thread wait until another thread finishes",
+        "join() means 'I want that thread to finish'",
+        "wait() means 'I'm temporarily pausing inside a synchronized block, giving others a chance to update the shared condition'"
+      ],
+      "modelAnswer": "wait() causes a thread to stop and release the lock it holds, staying paused until another thread calls notify() or notifyAll() on the same monitor - notify() wakes exactly one waiter, notifyAll() wakes them all. join(), by contrast, makes the calling thread block until a specific other thread has completely finished running. The slides put it neatly: join() means 'I want that thread to finish', while wait() means 'I'm pausing inside a synchronized block, giving others a chance to update the shared condition' - they solve different problems and are not interchangeable.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 19, 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-018-o",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Using the Dining Philosophers problem, explain what 'concurrent resource contention' means and why it matters for thread design.",
+      "keyBeats": [
+        "Each philosopher can only eat or think, and needs two forks (one per hand) to eat",
+        "Problem: how do we avoid the philosophers getting hungry (starvation)?",
+        "Forks are shared objects that need to be locked and released - concurrent resource contention",
+        "In technical terms: picking up a fork = entering a critical section",
+        "The philosophers are threads racing for the same shared resources",
+        "Deadlock happens when the critical-section solution is implemented incorrectly"
+      ],
+      "modelAnswer": "In the Dining Philosophers problem, each philosopher alternates between eating and thinking, but needs both neighbouring forks to eat. The forks are shared resources that must be locked and released safely, and the challenge is making sure no philosopher starves waiting for forks. Recast in technical terms, picking up a fork is entering a critical section, the philosophers are threads racing for the same shared resources, and if that critical-section logic is implemented wrong, you get deadlock - everyone holding one fork and waiting forever for the second.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 21, 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-019-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'race condition' and 'critical section'.",
+      "keyBeats": [
+        "Race condition: occurs when two or more threads access shared data and try to change its value at the same time",
+        "Consequence: variable values become unpredictable, varying with timing of context switches",
+        "Solved via thread synchronization: a mechanism ensuring concurrent threads don't simultaneously execute a particular program segment",
+        "Critical section: the part(s) of a program where the shared resource is accessed"
+      ],
+      "modelAnswer": "A race condition occurs when two or more threads access shared data and try to modify it at the same time, making the resulting value unpredictable and dependent on the exact timing of context switches. The fix is thread synchronization, a mechanism that ensures concurrent threads never simultaneously execute a particular program segment known as the critical section - the part of the code where shared resources are actually accessed.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-020-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'deadlock' using both the dining-philosophers framing and the two-lock (L1/L2) example from the slides.",
+      "keyBeats": [
+        "Dining philosophers framing: deadlock is what happens when the critical-section solution is implemented incorrectly",
+        "L1/L2 example: Thread 1 acquires+holds L1, Thread 2 acquires+holds L2",
+        "Thread 1 then tries to acquire L2 but it's in use, so it waits",
+        "Thread 2 then tries to acquire L1 but it's in use, so it waits",
+        "Result: both threads are deadlocked, no execution proceeds - a circular wait"
+      ],
+      "modelAnswer": "Deadlock is what happens when a critical-section solution is implemented incorrectly: threads end up blocking each other's progress forever. The classic concrete example uses two locks: Thread 1 grabs L1 and Thread 2 grabs L2; Thread 1 then tries to also acquire L2 but it's taken, so it waits; Thread 2 tries to acquire L1 but that's taken too, so it also waits. Neither can proceed because each holds what the other needs - a circular wait, and the system is deadlocked.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 23, 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-021-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is a message sequence diagram (MSD) and how does it differ from a class diagram? What do activation bars represent?",
+      "keyBeats": [
+        "MSD models behaviour over time (dynamics), while a class diagram shows structure",
+        "Activation bars indicate an object is active during some time period, typically annotated with a note about the activity",
+        "Arrows with text show exchange of information/direction of flow between objects, and can represent a method call",
+        "Sending a message from A to B is conceptually like A spawning a thread to let B handle the work independently"
+      ],
+      "modelAnswer": "A message sequence diagram models how objects behave over time, showing dynamics, whereas a class diagram shows static structure. Activation bars mark the periods when an object is actively doing something, usually with an explanatory note attached, and arrows labelled with text show information flowing between objects, which can represent a method call. Conceptually, sending a message from object A to object B is like A spawning a thread to let B handle that work independently.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-022-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Contrast synchronous and asynchronous messaging in a message sequence diagram, and explain what extra work asynchronous code must do.",
+      "keyBeats": [
+        "Synchronous messaging: caller waits, blocked until reply; drawn with a thick arrow-head",
+        "Asynchronous messaging: caller 'fires and forgets'; drawn with a thin arrow-head",
+        "For async messaging the diagram is only one example of a realization (simplified randomness)",
+        "Code must explicitly coordinate: await, join, callbacks, or design for eventual consistency"
+      ],
+      "modelAnswer": "In synchronous messaging the caller blocks and waits for a reply, shown with a thick arrow-head, while in asynchronous messaging the caller fires the message and moves on without waiting, shown with a thin arrow-head. Because asynchronous behaviour is inherently non-deterministic, the diagram for it is only one possible realization of the timing, and the actual code has to explicitly coordinate things itself - using await, join, callbacks, or simply designing for eventual consistency.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-023-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The slide's BankAccount example has plain deposit()/withdraw() methods with no synchronization. Why does running two threads that deposit/withdraw 100.0 x 1000 times each not reliably return the balance to the starting 1000?",
+      "keyBeats": [
+        "deposit/withdraw read balance, compute a new value, and write it back - not an atomic operation",
+        "Two threads can both read the same balance before either writes its update back (lost update)",
+        "With no synchronization, thread interleavings are unpredictable, so results vary run to run",
+        "Slides report actual varying results such as 800, 1000 (by chance), 1200 instead of a guaranteed 1000"
+      ],
+      "modelAnswer": "Even though deposit and withdraw look like single statements, each one reads the current balance, computes a new value, and writes it back - three separate steps. When two threads interleave those steps, both can read the same stale balance before either has written its update, so one thread's change is silently lost. Because the exact interleaving is unpredictable, the final balance varies from run to run - the slides show real observed results like 800, 1000 by pure chance, or 1200 - instead of the guaranteed 1000 you'd expect from equal deposits and withdrawals.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 27-28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-024-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The slides say that in the banking example 'it appears that the output is written AFTER executing transactions but before account is updated.' What does this reveal about thread execution order?",
+      "keyBeats": [
+        "Due to thread scheduling/management, execution is NOT ordered sequentially as written in source",
+        "Screen output and underlying account state can become interleaved/out of sync",
+        "This happens because operations were not atomized and threads were not made to wait for each other before starting the next transaction",
+        "Key lesson: code order in the source is not the same as execution order under concurrency"
+      ],
+      "modelAnswer": "This observation shows that, once multiple threads are involved, the order operations appear in your source code is not the order they actually execute in. Because deposits and withdrawals were neither atomized nor made to wait for one another to finish, the printed output and the account's real internal state can drift out of sync - what gets displayed on screen doesn't necessarily reflect the balance at that exact moment, because the scheduler is free to interleave the underlying operations in ways the code never anticipated.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-025-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain why 'counter = counter + 1' is NOT atomic, even though it looks like a single statement, and show the two fixes given on the slides.",
+      "keyBeats": [
+        "At the CPU level it is 3 steps: READ counter from memory, ADD 1, WRITE the result back",
+        "If two threads interleave those 3 steps, an increment can be silently lost",
+        "Fix 1: wrap it in a synchronized method, e.g. synchronized void increment(){counter=counter+1;} - now atomic",
+        "Fix 2: use AtomicInteger with counter.incrementAndGet() - atomic and lock-free"
+      ],
+      "modelAnswer": "The statement counter = counter + 1 looks atomic but at the machine level it's really three separate operations: read the current value, add one to it, and write the result back. If two threads perform those steps concurrently, both can read the same value before either writes, so one increment gets overwritten and lost. The slides show two fixes: marking the increment method synchronized so only one thread executes it at a time, making it effectively atomic, or replacing the plain counter with an AtomicInteger and calling incrementAndGet(), which is atomic and lock-free at the CPU instruction level.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-026-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What changes in the message-sequence timeline once the banking example uses synchronized deposit/withdraw methods, compared to the unsynchronized version?",
+      "keyBeats": [
+        "Once methods are synchronized, only one thread can hold the account's lock at a time",
+        "Other threads attempting deposit/withdraw are shown as 'Locked' and must wait their turn",
+        "Operations become serialized one after another rather than interleaving unpredictably",
+        "Result: a correct/consistent final balance"
+      ],
+      "modelAnswer": "With synchronized deposit and withdraw, only one thread can be inside the account's critical code at a time; any other thread that tries to call in while it's locked is shown waiting ('Locked') until the lock is released. Instead of operations interleaving unpredictably, they now execute one after another in a serialized order, which is exactly what guarantees the final balance comes out correct and consistent.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-027-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What counts as 'critical code' in Java, and how do synchronized methods/blocks protect it? How does this differ from the C-style mutex/semaphore approach mentioned on the slides?",
+      "keyBeats": [
+        "Critical code = code touching shared variables, objects, files, or any resource needing one-at-a-time access",
+        "Java expresses this with the synchronized keyword on methods or code blocks, e.g. public synchronized returnType methodName(){...}",
+        "Unlike C, which talks about explicit mutexes and semaphores, Java works with synchronized methods/blocks",
+        "When Thread A holds the lock inside critical code, Thread B's call to the same synchronized resource fails/waits"
+      ],
+      "modelAnswer": "Critical code is any code that touches a shared variable, object, file, or other resource that needs one-at-a-time access. Java protects it not with explicit mutex or semaphore objects the way C does, but with the synchronized keyword applied to a method or a code block. While Thread A is inside a synchronized method operating on the shared resource, Thread B calling the same method has to wait until A leaves, guaranteeing one-at-a-time access to the critical code.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-028-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What problem does join() solve, and what happens if you never call it?",
+      "keyBeats": [
+        "Without join(), a spawned thread can potentially hang around indefinitely (until system reboot)",
+        "t.start(); t.join(); makes the caller wait for the thread to finish, so nothing is left hanging around",
+        "Particularly important when resources have been locked, to ensure they are released properly",
+        "join() can also be used to control the order of thread execution"
+      ],
+      "modelAnswer": "join() lets the calling thread wait for another thread to actually finish. Without it, a spawned thread can be left running in the background with nobody tracking whether or when it completes - potentially hanging around indefinitely. Calling t.start() followed by t.join() ensures nothing is left dangling, which matters especially when that thread was holding locked resources, and join() can also be used deliberately to control the order in which threads execute.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-029-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Describe the two wait/notify pitfalls shown on the slides: threads waiting forever together, and a thread that never gets a lock.",
+      "keyBeats": [
+        "Pitfall 1: Thread 1 and Thread 2 both end up Waiting on each other with no one left to notify, so both wait forever",
+        "Pitfall 2: multiple threads request a lock, but one thread's request gets 'lost'",
+        "That thread never gets the lock and waits forever even while other threads keep getting served (starvation)"
+      ],
+      "modelAnswer": "The slides illustrate two related pitfalls. In one, Thread 1 and Thread 2 both end up waiting on each other with nobody left to send a notify, so both threads wait forever. In the other, several threads request the same lock, but through unlucky timing one thread's request gets effectively lost - it never receives the lock and waits indefinitely even though other threads keep being granted access, which is a form of starvation.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-030-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through why a thread that needs a result computed by another thread must actively wait for it, and how wait()/notify() elegantly solve this.",
+      "keyBeats": [
+        "If you assume results are produced sequentially like a normal function call, you can read a shared/global variable before the producing thread has stored the result",
+        "At best you get 0/meaningless, at worst something meaningful-but-wrong",
+        "The consuming thread must wait for the result to be ready",
+        "wait(): pause inside a synchronized block, release the lock, wait to be notified",
+        "notify(): producer signals the consumer once it has stored the result"
+      ],
+      "modelAnswer": "It's easy to assume that because you spawn a worker thread to compute something and then read a shared variable, the result will already be there - as if it were a normal sequential function call. But if you read too early, you get either an obviously meaningless value like 0, or worse, a plausible-looking but wrong value. The fix is to have the consumer actively wait: it calls wait() inside a synchronized block, which releases its lock and pauses, and once the producer thread stores its result it calls notify(), waking the consumer up to safely read the now-correct value.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-031-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "The slides state 'join() != wait()'. Explain precisely what each call means in practice.",
+      "keyBeats": [
+        "join() = 'I want that thread to finish' - caller blocks until the target thread terminates",
+        "wait() = 'I'm temporarily pausing inside a synchronized block and giving others a chance to update the shared condition'",
+        "join() waits for thread completion; wait() waits for a shared condition to change while cooperating over a lock"
+      ],
+      "modelAnswer": "join() means 'I want that thread to finish' - you block until the target thread has fully completed its run(). wait() means something different: 'I'm temporarily pausing inside a synchronized block, giving others a chance to update the shared condition' - you release your lock and pause until notified that the condition might have changed. join() is about waiting for a whole thread's lifetime to end; wait() is about waiting for a specific shared state to change, cooperating via a lock.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-032-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the L1/L2 deadlock scenario step by step, as given on the slides.",
+      "keyBeats": [
+        "Thread 1 acquires and holds L1",
+        "Thread 2 acquires and holds L2",
+        "Thread 1 tries to acquire L2, but it's in use, so it waits",
+        "Thread 2 tries to acquire L1, but it's in use, so it waits",
+        "Result: the threads are now deadlocked, no execution proceeds - each holds what the other needs (circular wait)"
+      ],
+      "modelAnswer": "Thread 1 grabs lock L1 and holds it, while Thread 2 grabs lock L2 and holds it. Thread 1 then tries to also acquire L2, finds it's already in use, and waits. Thread 2 then tries to acquire L1, finds it's already in use, and waits too. Now both threads are stuck waiting on a resource held by the other - a circular wait - and neither can ever proceed: that's the deadlock.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-033-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What three synchronization mechanisms does the slide deck name for ensuring atomic execution of code?",
+      "keyBeats": [
+        "Locks",
+        "Semaphores",
+        "Condition variables",
+        "Used to synchronize threads accessing something shared, e.g. multiple threads writing to the same database"
+      ],
+      "modelAnswer": "The slides name locks, semaphores, and condition variables as the mechanisms needed to ensure atomic execution of code when multiple threads share a resource, illustrated with several threads all writing to the same database.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-034-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Using the ticket-selling scenario (A) on the slides, explain how a race condition can cause a customer to see 'No ticket?!?!' despite the system having just shown tickets available.",
+      "keyBeats": [
+        "Multiple threads independently 'show tickets' (read the remaining count) and then 'get ticket' (decrement it) without atomicity",
+        "Between one thread reading the ticket count and acting on it, another thread can read the same stale count and take the last ticket",
+        "A thread that believed a ticket was still available then finds none left",
+        "This is a check-then-act race condition on shared inventory"
+      ],
+      "modelAnswer": "In the ticket scenario, threads first 'show tickets' by reading the remaining count, then later 'get ticket' by decrementing it, but those two steps aren't atomic together. Between one thread's read and its later decrement, another thread can slip in, read that same still-unchanged count, and take what turns out to be the last ticket. The first thread, having seen a ticket was available, then tries to get one and finds none left - a classic check-then-act race condition on shared inventory.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-035-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Explain the 'even worse' scenario (B) on the slides where a race condition leads to selling a duplicate/nonexistent ticket, and how the inventory count could even go negative.",
+      "keyBeats": [
+        "Without atomic check-and-decrement, two threads can both read the same low ticket count (e.g. 1) before either decrements",
+        "Both proceed to 'get ticket' and both succeed, resulting in a duplicate sale for a ticket that only existed once",
+        "If left unchecked this can drive the remaining count below zero (e.g. -1) - selling tickets that don't exist"
+      ],
+      "modelAnswer": "This scenario is worse because the same lack of atomicity means two threads can both read a low count, say 1 ticket left, before either has decremented it. Both then proceed to sell a ticket, so the system issues two tickets when only one existed - a duplicate sale. If nothing catches this, the count can even be driven negative, meaning the system has effectively sold tickets that don't exist.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-036-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'atomic operation' as used in the ticket-selling examples, and give two other real-world examples of naturally atomic operations mentioned on the slides.",
+      "keyBeats": [
+        "Atomic operation = a one-at-a-time protected operation on a resource",
+        "Once started, no one else can access that specific resource until it is released",
+        "Other examples: network access (one packet at a time)",
+        "File I/O (one file read/write at a time)"
+      ],
+      "modelAnswer": "An atomic operation protects a resource for one-at-a-time access: once it starts, no other thread can touch that specific resource until the operation releases it. Beyond the ticket example, the slides point to network access, where packets are handled one at a time, and file I/O, where a file is read or written one operation at a time, as everyday atomic operations we don't usually notice because they're so fast.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-037-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does 'waiting for others to finish' (acquire()/release()) fix the ticket-selling race condition, and what alternative mechanism is mentioned?",
+      "keyBeats": [
+        "Threads must acquire() access before checking/getting a ticket, and release() it afterward",
+        "This forces show-tickets/get-ticket to be effectively atomic per thread",
+        "A thread with no tickets left correctly sees 'No tickets left' instead of racing",
+        "notifyAll() is mentioned as an alternative signalling mechanism that could also be used"
+      ],
+      "modelAnswer": "By wrapping the show-tickets/get-ticket sequence in acquire() and release() calls, only one thread at a time can be inside that combined check-and-decrement, making it effectively atomic. That means a thread that finds no tickets left correctly reports 'No tickets left' instead of racing another thread for the same stale count. The slides also note notifyAll() could be used as an alternative way to coordinate waiting threads.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-038-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What fairness problem does the slide deck highlight about notifyAll(), and what policy options are suggested to resolve it?",
+      "keyBeats": [
+        "notifyAll() wakes ALL waiting threads but does not guarantee which one actually gets the resource",
+        "Illustrated by Thread 2 and Thread n competing for the last ticket",
+        "Suggested fairness policies: first-to-arrive has priority",
+        "Gold-member(s) have priority",
+        "Randomness decides priority",
+        "Or another custom policy"
+      ],
+      "modelAnswer": "The problem is that notifyAll() wakes up every waiting thread at once but gives no guarantee about which of them actually wins the contested resource, as shown with Thread 2 and Thread n both competing for the last ticket. The slides raise several possible fairness policies to decide the winner: first-to-arrive gets priority, gold members get priority, priority is assigned randomly, or some other custom rule entirely - notifyAll() alone doesn't decide this for you.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 46",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-039-o",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize the five 'important stuff' takeaways given at the end of the lecture.",
+      "keyBeats": [
+        "Threads run independently and unpredictably - the CPU scheduler interleaves execution unpredictably, never assume execution order",
+        "Shared mutable state requires synchronization, otherwise race conditions occur (a testability nightmare)",
+        "Visibility is a real problem - use synchronized, volatile, or atomic classes appropriately",
+        "Prefer high-level concurrency utilities (Executors, Futures, concurrent collections) provided by modern Java",
+        "Poor synchronization causes deadlocks and bottlenecks - design concurrency intentionally, minimize shared state and hold locks briefly"
+      ],
+      "modelAnswer": "The lecture closes with five key points. First, never assume execution order, since the CPU scheduler interleaves threads unpredictably. Second, any shared mutable state needs synchronization or you get race conditions, which are notoriously hard to test for. Third, visibility of updates across threads is a real concern, so use synchronized, volatile, or atomic classes as appropriate. Fourth, prefer modern high-level concurrency utilities like Executors, Futures and concurrent collections over hand-rolled locking. And fifth, poor synchronization causes deadlocks and bottlenecks, so design concurrency intentionally: minimize shared state and hold locks for as short a time as possible.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 48",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-040-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Explain exactly why RaceConditionExample.java produces inconsistent counter values across its 10 iterations.",
+      "keyBeats": [
+        "Two threads t1, t2 each call threadTask() which loops 100,000 times calling increment()",
+        "increment() does 'counter = counter + 1', which is not one atomic operation",
+        "At the CPU level it is 3 steps: READ, ADD, WRITE",
+        "When both threads READ the same stale value before either WRITEs, one thread's increment is silently lost",
+        "Over 100,000 iterations per thread this can happen thousands of times, giving results like 105984 instead of the expected 200000 (occasionally 200000 by chance)"
+      ],
+      "modelAnswer": "RaceConditionExample.java spins up two threads that each call increment() 100,000 times on a shared static int counter. increment() looks like a single operation, counter = counter + 1, but at the machine level it's really three steps: read the value, add one, write it back. Because both threads execute those three steps without any coordination, they can both read the exact same value before either has written its result back, causing one thread's increment to be silently overwritten - a lost update. With 100,000 increments per thread this can happen thousands of times per run, which is why the printed counter varies, showing something like 105984 in one iteration and, only by lucky timing, the correct 200000 in another.",
+      "citation": "RaceConditionExample.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-041-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Compare how RaceConditionExampleFix1.java and RaceConditionExampleFix2.java each fix the race condition, and what real concurrency trade-off Fix1 introduces that Fix2 avoids.",
+      "keyBeats": [
+        "Fix1 makes threadTask() a static synchronized method",
+        "Static synchronized locks on the Class object (RaceConditionExampleFix1.class)",
+        "This fixes correctness, but the WHOLE 100,000-iteration loop is the critical section",
+        "So t1 and t2 can never actually run concurrently - one thread fully finishes before the other starts (coarse-grained locking / bottleneck)",
+        "Fix2 replaces the plain int counter with an AtomicInteger and uses counter.incrementAndGet()",
+        "Atomic at the CPU level, lock-free, so both threads genuinely interleave/run concurrently while only the tiny increment is protected (fine-grained)"
+      ],
+      "modelAnswer": "Both fixes reliably print 200000 every iteration, but they get there very differently. Fix1 marks the static threadTask() method synchronized, which locks on the Fix1 class object itself; since the entire 100,000-iteration loop is now the critical section, t1 and t2 can never actually overlap in time - one thread must run its whole loop to completion before the other even starts, so it's correct but essentially eliminates concurrency, a coarse-grained bottleneck. Fix2 instead swaps the plain int counter for an AtomicInteger and calls incrementAndGet(), which is a lock-free, CPU-level atomic operation; only that tiny increment is protected, so t1 and t2 can genuinely interleave and make progress in parallel while still never losing an update - correctness without sacrificing real concurrency.",
+      "citation": "RaceConditionExampleFix1.java, RaceConditionExampleFix2.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-042-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why does RaceConditionExampleFix1's synchronized keyword sit on threadTask() rather than on increment(), and what would change if synchronized were moved to increment() instead?",
+      "keyBeats": [
+        "threadTask() is a static method, so 'synchronized' on it locks on the Class object (RaceConditionExampleFix1.class) for the whole loop",
+        "That makes the entire loop the critical section, so only one thread runs threadTask() at all at a time",
+        "If synchronized were on increment() instead, only a single increment call would be locked at a time",
+        "The lock would then be acquired/released 200,000 times total instead of just twice",
+        "This would let the two threads interleave between individual increments rather than being fully serialized thread-by-thread, at the cost of much higher lock-acquisition overhead"
+      ],
+      "modelAnswer": "Because threadTask() is static, marking it synchronized locks the whole Fix1 class object for the duration of the entire 100,000-iteration loop, meaning only one thread can be inside threadTask() at all at any moment - the two threads never overlap. If synchronized were instead placed on the tiny increment() method, the lock would be acquired and released on every single call - 200,000 times across both threads instead of just twice - which would let the two threads interleave between individual increments rather than fully serializing one after the other, but at a much higher synchronization overhead per increment.",
+      "citation": "RaceConditionExampleFix1.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-043-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In BankAccount.java (the ReentrantLock/Condition version), why does withdraw() use a while loop ('while (balance < amount)') instead of an if statement around fundsAvailable.await()?",
+      "keyBeats": [
+        "Code comment: 'while loop - not if - guards against spurious wakeups'",
+        "A thread can wake from await() without actually being validly signalled, or the condition may have become false again by the time it re-acquires the lock",
+        "Using while re-checks the condition every time the thread wakes",
+        "It goes back to waiting if funds are still insufficient, instead of incorrectly proceeding with too little balance"
+      ],
+      "modelAnswer": "The class's own comment explains it: 'while loop - not if - guards against spurious wakeups'. A thread woken from await() isn't guaranteed the condition it was waiting for is still true - it might have been a spurious wakeup, or another waiting thread could have already grabbed the funds in the meantime. Using while re-checks balance < amount every time the thread wakes up, sending it back to await() if funds are still insufficient, rather than an if that would let it wrongly proceed to withdraw with too little balance.",
+      "citation": "BankAccount.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-044-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In BankAccount.java, why is lock.unlock() called inside a finally block in every method, and what does 'new ReentrantLock(true)' do?",
+      "keyBeats": [
+        "finally guarantees the lock is always released even if an exception is thrown inside the try block",
+        "Prevents the lock from being held forever, which would deadlock every other thread waiting on it",
+        "ReentrantLock(true) creates a FAIR lock",
+        "Fair lock means waiting threads acquire the lock roughly in the order they requested it, rather than an arbitrary/barging order"
+      ],
+      "modelAnswer": "Wrapping lock.unlock() in a finally block guarantees the lock is released no matter what happens inside the try block, including an unexpected exception - without that guarantee, an exception could leave the lock held forever and deadlock every other thread waiting for it. Passing true to the ReentrantLock constructor creates a fair lock, meaning threads are granted the lock roughly in the order they requested it rather than in an arbitrary or 'barging' order, which relates directly to the fairness problem the slides raise about notifyAll() not guaranteeing who gets served next.",
+      "citation": "BankAccount.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-045-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In BankAccount.java, what is the purpose of fundsAvailable.signalAll() inside deposit(), and how does it relate to wait()/notify() from the slides?",
+      "keyBeats": [
+        "After a deposit changes the balance, signalAll() wakes up ALL threads currently waiting in withdraw()'s fundsAvailable.await()",
+        "So they can re-check whether the balance is now sufficient",
+        "This is the Condition-based equivalent of Object.notifyAll() the slides describe (wakes all waiting threads)",
+        "Each waiter loops back to re-check its own while condition rather than assuming it can proceed"
+      ],
+      "modelAnswer": "signalAll() is called right after a deposit updates the balance, and it wakes up every thread currently parked in withdraw()'s fundsAvailable.await(), giving them all a chance to re-check whether there's now enough balance for them to proceed. This plays exactly the same role as the slides' notifyAll(): it wakes all waiters rather than just one, and each woken thread re-checks its while (balance < amount) condition rather than assuming it can now safely withdraw.",
+      "citation": "BankAccount.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-046-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why does the AssignmentDemo train-fleet code use CopyOnWriteArrayList for the shared train list, and what performance trade-off does that introduce at scale?",
+      "keyBeats": [
+        "CopyOnWriteArrayList makes the shared train list thread-safe so many operator threads can add/search/delete concurrently without external synchronization or race conditions",
+        "It copies the entire underlying array on every write (add/delete)",
+        "Cheap for read-heavy workloads, very expensive as write volume/thread count grows",
+        "Per the solutions: fine at ~10 threads; jumbled-but-correct interleaved println output at ~100 (System.out.println isn't atomic across threads); slowdown from GC pressure at ~500; risk of OutOfMemoryError/severe degradation at 1000+",
+        "Suggested fix: a ReadWriteLock, letting many operators search concurrently while writes still get exclusive access"
+      ],
+      "modelAnswer": "TrainListManager wraps its train list in a CopyOnWriteArrayList specifically so that many concurrent operator threads can safely add, search and delete without needing to hand-roll their own synchronization or risk races on the list itself. The catch is that it copies the entire underlying array on every single write, which is cheap when reads dominate but gets very expensive as the write rate and thread count climb. The solutions describe exactly this: clean behaviour around 10 threads, jumbled-but-still-correct interleaved console output around 100 (because println itself isn't atomic across threads), noticeable slowdown from garbage-collection pressure around 500, and real risk of OutOfMemoryError and serious degradation at 1000+ - with a ReadWriteLock suggested as the fix, since it lets many operators search in parallel while still giving writes exclusive access.",
+      "citation": "TrainListManager.java; ooadi7.solutions.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-047-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why does TrainOperator implement Runnable rather than extend Thread, and why does the design separate CommandLineInputHandler/TrainOperator from TrainListManager?",
+      "keyBeats": [
+        "Implementing Runnable matches the slides' preferred approach (page 9, 13)",
+        "Keeps the class free to extend something else if needed",
+        "Cleanly separates the task (what to do: read input / simulate an operator) from the mechanism (the Thread that runs it)",
+        "CommandLineInputHandler and TrainOperator are both Runnable 'tasks' that can be wrapped in Thread objects and run identically",
+        "TrainListManager is a separate class solely responsible for owning/protecting the shared train list",
+        "Operator threads only ever talk to the list through its thread-safe methods, never touching internals directly"
+      ],
+      "modelAnswer": "TrainOperator implements Runnable instead of extending Thread, which matches the slides' recommended pattern: it keeps the class free to extend something else later, and cleanly separates 'what to do' (simulate an operator's actions) from 'the mechanism that runs it' (the Thread wrapper). Because both CommandLineInputHandler and TrainOperator are just Runnable tasks, either one can be wrapped in a Thread and started identically, whether the input source is a human via Scanner or a Random generator. TrainListManager is kept as a completely separate class solely responsible for owning and protecting the shared train list, so every operator thread interacts with the fleet only through its thread-safe public methods rather than reaching into its internals directly.",
+      "citation": "TrainOperator.java, CommandLineInputHandler.java, TrainListManager.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-048-s",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In AssignmentDemo.java, what does 'threads.forEach(Thread::start)' followed by 'for (Thread t: threads) t.join();' achieve, and why is the join loop necessary?",
+      "keyBeats": [
+        "forEach(Thread::start) launches every operator thread so they all run concurrently",
+        "The join loop makes the main thread wait until every single operator thread has finished before moving on",
+        "Without the joins, main could print the final fleet while operator threads are still mid-flight, giving an inconsistent/incomplete snapshot",
+        "Mirrors the slides' point that join() is what prevents threads from being left 'hanging around' and lets you control ordering"
+      ],
+      "modelAnswer": "threads.forEach(Thread::start) fires off every TrainOperator thread at once so they all run concurrently against the shared manager. The subsequent for loop calling t.join() on each thread then makes main block until every single one of them has actually finished. That's necessary because without it, main could race ahead and print the 'Final fleet' while some operator threads are still mid-action, giving an incomplete or inconsistent snapshot - exactly the ordering guarantee the slides describe join() as providing.",
+      "citation": "AssignmentDemo.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-049-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is the difference between a synchronized method and a synchronized code block in Java, and when might you prefer one over the other?",
+      "keyBeats": [
+        "The slide title itself is 'Synchronized methods and code block', naming both forms",
+        "A synchronized method locks on 'this' (or the Class object for static methods) for its entire body",
+        "A synchronized code block (synchronized(someObject){...}) lets you lock on a specific object and protect only the minimal section touching shared/critical data",
+        "Using a smaller synchronized block leaves other work in the method to run unsynchronized, reducing how long the lock is held",
+        "This matches the summary advice to minimize shared state and hold locks briefly"
+      ],
+      "modelAnswer": "A synchronized method locks the whole method body on an implicit monitor - 'this' for instance methods, or the Class object for static ones. A synchronized code block instead lets you pick a specific lock object and wrap only the minimal chunk of code that actually touches shared data, leaving the rest of the method to run without holding any lock. The second form is generally preferable when only part of a method is truly critical, since the summary advice on the slides is to minimize shared state and hold locks for as short a time as possible.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-050-d",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are semaphores and condition variables used for according to the slides, and how do they relate to wait()/notify()/join()?",
+      "keyBeats": [
+        "wait(), notify(), notifyAll(), join() are grouped as methods 'used mainly for solving concurrent access issues related to thread synchronization [and] implementation of semaphores'",
+        "Later: 'we need to synchronize threads... using locks, semaphores, and condition variables' to ensure atomic execution",
+        "Unlike C's explicit mutex/semaphore objects, Java favors synchronized methods/blocks plus wait/notify",
+        "Modern Java also offers java.util.concurrent.locks.Condition (seen in BankAccount.java) for the same coordination"
+      ],
+      "modelAnswer": "The slides group wait(), notify(), notifyAll() and join() together as tools for solving concurrent-access issues and effectively implementing semaphore-like behaviour, and later state directly that threads need to be synchronized 'using locks, semaphores, and condition variables' to guarantee atomic execution when multiple threads share something like a database. Where C exposes explicit mutex and semaphore objects, Java instead favors the synchronized keyword together with wait/notify, and modern Java adds java.util.concurrent.locks.Condition - exactly what BankAccount.java uses - to achieve the same coordinated waiting and signalling.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 19, 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-051-o",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What three learning objectives does this lecture set out?",
+      "keyBeats": [
+        "To be able to understand and use threads",
+        "To be able to understand and design for concurrency",
+        "To be able to understand synchronization issues in relation to concurrency"
+      ],
+      "modelAnswer": "The lecture sets three objectives: being able to understand and use threads, being able to understand and design for concurrency, and being able to understand synchronization issues that arise in relation to concurrency.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L7-052-m",
+      "anchorsExamQ": 7,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Sketch the four process/thread topology diagrams shown on the slides for Processes versus Threads.",
+      "keyBeats": [
+        "Diagram 1: a single process containing a single thread",
+        "Diagram 2: multiple separate processes, each with exactly one thread",
+        "Diagram 3: a single process containing multiple threads sharing its memory",
+        "Diagram 4: multiple processes, each itself containing multiple threads",
+        "Used to illustrate that threads nest inside processes, and multitasking can be achieved at either the process or the thread level"
+      ],
+      "modelAnswer": "Picture four small boxes-in-boxes diagrams. The first shows one process containing one thread. The second shows several separate processes lined up, each with exactly one thread inside it. The third shows a single process containing several threads that all share its memory. The fourth combines both: several processes, each itself containing several threads. Together they show that threads always nest inside a process, and that multitasking can happen at the process level, the thread level, or both simultaneously.",
+      "citation": "ooadi7.slides.full.pdf.extracted.txt, PAGE 3-4",
+      "unverified": false,
+      "diagram_only": true
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L7-E01",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Run the race-condition program found on Moodle",
+      "whatItTests": "Ability to set up and run the provided race-condition demo (RaceConditionExample.java) and observe its behaviour.",
+      "answerSketch": "The solutions call this step 'easy': compile and run RaceConditionExample.java as given, with no special setup needed, to observe the printed 'Iteration N: Counter = ...' output across 10 iterations."
+    },
+    {
+      "id": "OOADI-L7-E02",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Does it produce the desired output? Why not?",
+      "whatItTests": "Understanding of why the naive shared-counter increment is a race condition and produces incorrect, non-deterministic results.",
+      "answerSketch": "No. The program runs 10 iterations, each launching 2 threads that increment a shared counter 100,000 times, so the expected result each time is 200000. Instead the output varies, e.g. Iteration 0: Counter = 105984, Iteration 1: Counter = 200000, Iteration 2: Counter = 108124. The cause is that 'counter = counter + 1' takes three CPU-level steps (READ, ADD, WRITE) that are not atomic; when two threads execute those steps simultaneously they can both read the same value before either writes back, causing lost updates. Occasionally the interleaving works out and 200000 is printed by chance, but usually increments are lost."
+    },
+    {
+      "id": "OOADI-L7-E03",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 1-2",
+      "promptVerbatim": "Discuss ways to fix the program and make it count correctly",
+      "whatItTests": "Knowledge of the two standard fixes for a lost-update race condition: coarse-grained locking versus lock-free atomic types.",
+      "answerSketch": "Two obvious options: (1) use the 'synchronized' keyword, e.g. static synchronized void increment(){counter=counter+1;}, forcing one thread at a time into the critical section - simple but creates a bottleneck since threads serialize; (2) use AtomicInteger (the recommended approach): static AtomicInteger counter = new AtomicInteger(0); counter.incrementAndGet(); - this uses CPU-level atomic instructions so no locking is needed at all."
+    },
+    {
+      "id": "OOADI-L7-E04",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 2",
+      "promptVerbatim": "Implement and test if your solution(s) works",
+      "whatItTests": "Ability to actually implement both proposed fixes and verify they produce the correct, deterministic result across all iterations.",
+      "answerSketch": "Implemented as RaceConditionExampleFix1.java (synchronized static threadTask()) and RaceConditionExampleFix2.java (AtomicInteger counter with incrementAndGet()). Both, when run, print 'Counter = 200000' for every one of the 10 iterations, confirming correctness. Note the trade-off: Fix1's synchronized threadTask() fully serializes t1 and t2 (no real concurrency during the loop), while Fix2's AtomicInteger allows the two threads to genuinely interleave/run in parallel while still never losing an update."
+    },
+    {
+      "id": "OOADI-L7-E05",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 2-3",
+      "promptVerbatim": "Design and implement user input for a train management program as a thread (you can call it a Command Line Input Handler) and the part which holds the list of trains in another thread. Make the program work with those two threads. Hint: create a class specific for 1) the user input and 2) the train list management.",
+      "whatItTests": "Ability to split a program into a dedicated input/UI thread and a dedicated data-owning thread that communicate through a shared thread-safe object rather than touching each other's internals.",
+      "answerSketch": "CommandLineInputHandler implements Runnable and is dedicated solely to reading keyboard input (list/search/add/delete/quit), calling methods on a shared TrainListManager without knowing how the list works internally. TrainListManager is dedicated solely to owning and managing the train list, backed by a CopyOnWriteArrayList<Train> to make it thread-safe. In AssignmentDemo: TrainListManager manager = new TrainListManager(); Thread inputThread = new Thread(new CommandLineInputHandler(manager)); inputThread.start(); inputThread.join(); - the input thread runs independently while main waits via join(); both threads share the same manager object, and the thread-safe list is the bridge between them."
+    },
+    {
+      "id": "OOADI-L7-E06",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 3-4",
+      "promptVerbatim": "Create a set of threads of the user input handler to emulate a few train operators that wishes to seek, insert, delete trains from the main list. Make this run.",
+      "whatItTests": "Ability to spawn multiple Runnable-based worker threads that share one manager object, launch them all, and join them all before continuing.",
+      "answerSketch": "TrainOperator implements Runnable and is constructed with (manager, operatorId) so each instance has its own identity and its own Random generator, and offers search/insert/delete/list-all actions via a switch (case 0 search, case 1 insert with a new DieselTrain, case 2 delete, case 3 printAll). In AssignmentDemo: List<Thread> threads = new ArrayList<>(); for (int i=0;i<10;i++) threads.add(new Thread(new TrainOperator(manager, \"Operator-\"+i))); threads.forEach(Thread::start); for (Thread t: threads) t.join(); - this creates 10 operator threads sharing the same manager, launches them all concurrently, and waits for all to finish before the program proceeds (e.g. to print the final fleet)."
+    },
+    {
+      "id": "OOADI-L7-E07",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 4",
+      "promptVerbatim": "Now automatize the user input to emulate 10-100's of train operators trying to query the train list (by either searching, inserting, deleting, updating train entries). You should use the Random class to randomly select between the actions (previously taken as input from a real human via keyboard) a thread/train operator can take (if you forgot, then see previous assignment where you also used the Random class).",
+      "whatItTests": "Using java.util.Random to drive stochastic per-thread action selection in place of real keyboard input, plus randomized timing between actions, and scaling the number of concurrent operator threads.",
+      "answerSketch": "TrainOperator's run() loops (e.g. 20 times); each iteration picks int action = rng.nextInt(4), mapped via a switch to case 0 (search by random DriveType), case 1 (insert a new DieselTrain), case 2 (delete by random ID), or case 3 (list all). Thread.sleep(rng.nextInt(100)) between iterations adds a random delay to emulate realistic operator timing. Scaling from 10 to 100s of operators is controlled purely by changing the loop bound in AssignmentDemo that creates and starts TrainOperator threads."
+    },
+    {
+      "id": "OOADI-L7-E08",
+      "source": "ooadi7.assignments.pdf.extracted.txt, PAGE 1; ooadi7.solutions.pdf.extracted.txt, PAGE 5",
+      "promptVerbatim": "How many threads/train operators can you handle before you start seeing problems? Is it possible to solve the issues that you observe? And to what level can your solution hold, i.e. how many threads can you handle before more issues shows up?",
+      "whatItTests": "Understanding of how a thread-safe but write-expensive collection (CopyOnWriteArrayList) degrades under increasing concurrent load, and what alternative design fixes the bottleneck.",
+      "answerSketch": "At ~10 threads: output is clean and all operators finish predictably. At ~100 threads: output becomes interleaved/jumbled because System.out.println is not atomic across multiple threads, though the underlying data remains correct - fixable by synchronizing the print calls. At ~500 threads: a slowdown appears as garbage-collection pressure builds. At 1000+ threads: risk of OutOfMemoryError and significant performance degradation. The root cause is that CopyOnWriteArrayList copies the entire list on every write operation, which is great for read-heavy workloads but very expensive for write-heavy concurrent workloads; the suggested fix is a ReadWriteLock, which would let multiple operators search simultaneously while writes still get exclusive access."
+    }
+  ]
+}

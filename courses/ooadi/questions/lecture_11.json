@@ -1,0 +1,464 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 11,
+  "lectureTitle": "(EXTRA) Testing and Validation - xUnit",
+  "examQuestions": [],
+  "drills": [
+    {
+      "id": "OOADI-L11-01-o",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "opener",
+      "question": "Why is testing critical in software development, and how does the V-model relate design phases to test phases?",
+      "keyBeats": [
+        "Testing verifies the software does as intended, always",
+        "Some design approaches start by defining a set of tests and only then approach code development",
+        "This gives developers clear design guidance",
+        "V-model pairs each design/decomposition phase with a matching test phase over time: Kravspec/Programdesign/Procesdesign/Moduldesign/Implementation on one leg, Modultest/Modulintegration/Procesintegration/Accepttest on the other"
+      ],
+      "modelAnswer": "Testing matters because it is the only way to be sure the software really behaves as intended, not just once but always. Some development approaches flip the usual order: instead of writing code and testing it afterwards, they define the tests first and let those tests guide the implementation, since a well-chosen set of tests is itself a clear design specification. The V-model captures this idea visually - each design phase, from requirements down to module design, is mirrored on the other leg of the V by a corresponding test phase, from module tests up to acceptance tests, with implementation sitting at the bottom joining the two legs.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L11-02-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "What are the two core JUnit Platform concepts, Container and Test, and how do they relate to each other?",
+      "keyBeats": [
+        "Container: a node in the test tree that contains other containers or tests as its children",
+        "Test: a node in the test tree that verifies expected behaviour when executed",
+        "These are platform-level (engine-agnostic) vocabulary underlying JUnit's test tree structure"
+      ],
+      "modelAnswer": "At the JUnit Platform level, everything in a test run is a node in a test tree, and there are two basic kinds of node. A container is a node that holds other nodes as children - it could contain more containers or actual tests, giving the tree its hierarchical structure. A test is a leaf-like node that, when executed, actually verifies some expected behaviour. This vocabulary is engine-agnostic, meaning it applies regardless of which testing engine, such as Jupiter or Vintage, is actually running underneath.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-03-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "Define the three core JUnit Jupiter concepts: Lifecycle method, Test Class, and Test Method.",
+      "keyBeats": [
+        "Lifecycle method: any method annotated or meta-annotated with e.g. @AfterAll (and similarly @BeforeAll/@BeforeEach/@AfterEach)",
+        "Test Class: a top-level class (static member class or @Nested class) containing at least one test method; cannot be abstract; must have a single constructor",
+        "Test Method: any instance method annotated with @Test or a similar annotation"
+      ],
+      "modelAnswer": "JUnit Jupiter builds three specific concepts on top of the platform vocabulary. A lifecycle method is any method carrying a lifecycle annotation such as @AfterAll, @BeforeAll, @BeforeEach or @AfterEach, and it controls setup or teardown around the actual tests. A test class is a top-level class - either a static member class or one annotated @Nested - that contains at least one test method; it can't be abstract and must expose exactly one constructor. Finally, a test method is simply an instance method annotated with @Test or a similar test annotation, and it is what actually gets executed and checked.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-04-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "How do the JUnit Platform, JUnit Jupiter, JUnit Vintage, and JUnit5 relate to one another?",
+      "keyBeats": [
+        "JUnit Platform: a foundation for launching test frameworks; includes API, console launcher, and engines for testing",
+        "JUnit Jupiter: a programming and extension model for writing tests and extensions into JUnit",
+        "JUnit Vintage: a test engine that runs JUnit3 and JUnit4 tests",
+        "JUnit5 = the JUnit Platform + JUnit Jupiter + JUnit Vintage combined"
+      ],
+      "modelAnswer": "These four names describe layers of the same ecosystem. The JUnit Platform is the underlying foundation for launching any test framework, providing the API, a console launcher and the engines that actually run tests. JUnit Jupiter is the modern programming and extension model used to write new tests and extensions on top of that platform. JUnit Vintage is a separate test engine that exists purely to keep running old JUnit3 and JUnit4 tests. JUnit5, then, isn't a fourth separate thing - it's simply the combination of the Platform, Jupiter, and Vintage packaged together.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-05-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "Walk through the mechanics of writing the first JUnit Jupiter test against a simple Calculator class.",
+      "keyBeats": [
+        "Import static org.junit.jupiter.api.Assertions.assertEquals and import org.junit.jupiter.api.Test",
+        "Hold an instance of the class under test as a field, e.g. private final Calculator calculator = new Calculator()",
+        "Annotate the test method with @Test",
+        "Call assertEquals(expected, actual), e.g. assertEquals(2, calculator.add(1, 1))"
+      ],
+      "modelAnswer": "To write a first JUnit Jupiter test you only need two imports to start: the assertEquals method from org.junit.jupiter.api.Assertions, and the @Test annotation from org.junit.jupiter.api. Inside the test class you keep an instance of the class under test, here a Calculator, as a field. Then each test method is annotated with @Test and simply calls assertEquals with the expected value first and the actual computed value second, for example assertEquals(2, calculator.add(1, 1)) checks that adding one and one really returns two.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-06-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "Name and describe three core annotations used in JUnit Jupiter: @Test, @TestFactory, and @TestTemplate.",
+      "keyBeats": [
+        "@Test: specifies a test method",
+        "@TestFactory: a factory method for dynamic tests",
+        "@TestTemplate: a method template meant to be invoked multiple times",
+        "The official JUnit5 user guide documents many more annotations beyond these"
+      ],
+      "modelAnswer": "JUnit Jupiter uses annotations to mark methods with special roles. @Test simply marks an ordinary method as a test method to be run. @TestFactory marks a method as a factory that produces dynamic tests at runtime rather than declaring them statically. @TestTemplate marks a method as a template meant to be invoked multiple times, once per invocation context supplied by an extension. There are many more annotations documented in the official JUnit5 user guide beyond just these three.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-07-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How is a test class constructed with lifecycle annotations so that resources are correctly set up and freed around each test?",
+      "keyBeats": [
+        "@BeforeAll (static method, e.g. initAll()) runs once before all tests in the class",
+        "@BeforeEach (instance method, e.g. init()) runs before every individual test method",
+        "@AfterEach (instance method, e.g. tearDown()) runs after every individual test method",
+        "@AfterAll (static method, e.g. tearDownAll()) runs once after all tests have completed",
+        "This lifecycle guarantees resources are prepared and freed even if a test fails, giving a controllable test environment"
+      ],
+      "modelAnswer": "A test class often needs to prepare input or resources and then clean them up afterwards, even when a test fails. JUnit Jupiter provides four lifecycle annotations for this: a static method annotated @BeforeAll runs exactly once before any test in the class, an instance method annotated @BeforeEach runs before every single test, an instance method annotated @AfterEach runs after every single test, and a static method annotated @AfterAll runs exactly once after all tests have finished. Together these let you set up and tear down a controllable environment so each module can be tested reliably.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-08-s",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "specific",
+      "question": "In the StandardTests example, what is the difference between a failing test, a skipped (@Disabled) test, and an aborted test using assumeTrue?",
+      "keyBeats": [
+        "failingTest(): calls fail(\"a failing test\") -> explicit, reported failure",
+        "skippedTest(): annotated @Disabled(\"for demonstration purposes\") -> never executed at all",
+        "abortedTest(): calls assumeTrue(\"abc\".contains(\"Z\")) before fail(...); since the assumption is false, the test aborts at that point and never reaches the fail() call",
+        "Three distinct outcomes: failed, skipped, and aborted are all different from a passing test"
+      ],
+      "modelAnswer": "The StandardTests example shows three different non-passing outcomes. failingTest() explicitly calls fail(\"a failing test\"), so it is reported as a genuine failure. skippedTest() is annotated @Disabled with a reason, so JUnit never even runs its body - it is skipped entirely. abortedTest() is more subtle: it calls assumeTrue(\"abc\".contains(\"Z\")), and since \"abc\" does not contain \"Z\" that assumption is false, so the test aborts right there and the subsequent fail() call is never reached. So failed, skipped, and aborted are three genuinely different states a test can end up in.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-09-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How does @DisplayName let you control the names shown for tests, and what happens if you don't use it?",
+      "keyBeats": [
+        "@DisplayName(\"...\") can be placed on a test class and/or on individual test methods",
+        "Custom display names can contain spaces, special characters, or even emoji",
+        "JUnit Jupiter also has an automatic name generator that supplies default test naming when @DisplayName is absent",
+        "Useful once a class has many tests, so you can see which one is running/failing"
+      ],
+      "modelAnswer": "Once you have many tests, knowing exactly which one ran or failed becomes important, and @DisplayName solves that. You can annotate a whole test class, like @DisplayName(\"A special test case\"), and annotate individual test methods with their own custom names, which are free text and can include spaces, special characters, or even emoji. If you don't supply @DisplayName at all, JUnit Jupiter falls back on its own automatic name generator to produce a sensible default name from the method signature.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-10-o",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "opener",
+      "question": "What is meant by \"design by tests\" as an alternative to design by contract via requirement specifications?",
+      "keyBeats": [
+        "Design by contract asks: what defines a contract, and how do we ensure we keep our promises?",
+        "Requirement specifications are one way to define a contract, but they are difficult because we don't have our fingers in the actual machinery",
+        "Requirements miss an element of touch with the real world",
+        "Since we ultimately test the software anyway, an alternative is to start directly from tests",
+        "Doing this also means tests already exist when it's time to confirm the contract"
+      ],
+      "modelAnswer": "Design by contract in object orientation asks what promises a module makes and how we can be sure it keeps them. Written requirement specifications are one way to pin that contract down, but they're difficult because they sit at a distance from the actual running code - they lack real touch with the machinery. Since at the end of the day we always end up writing tests anyway, an alternative approach is to start directly from the tests as the definition of the contract. A nice side effect is that this way, the tests we'll eventually need to confirm the contract already exist from the start.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-11-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "According to the slides, what should actually come first when deciding whether to start with requirements or with tests?",
+      "keyBeats": [
+        "Starting with requirements is difficult (lacks touch with real machinery)",
+        "Starting with tests is also difficult",
+        "What must come first regardless: our understanding of the system",
+        "This is why the initial analysis phase is so critical - we must think before we act"
+      ],
+      "modelAnswer": "The slides pose the dilemma directly: starting from requirements is difficult, and starting from tests is also difficult. But underneath both options there's a prerequisite that has to come first regardless of which one you pick - our understanding of the system. That's exactly why the initial analysis phase is so critical, and the lecture stresses that we must think before we act, rather than jumping straight into either requirements or tests without first understanding what we're building.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-12-s",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "specific",
+      "question": "Using the Calculator example, why is assertNotEquals harder to design well than assertEquals, and what mistake illustrates the danger?",
+      "keyBeats": [
+        "assertEquals(2, calculator.add(1,1)) directly states the expected behaviour - easy to see how to implement correctly",
+        "assertEquals(4, calculator.multiply(2,2)) is similarly obvious to implement against",
+        "assertNotEquals(5, calculator.multiply(2,2)) checks that a specific wrong value is NOT produced - harder to design meaningfully, but useful to catch mistakes",
+        "Danger: if you mistakenly write assertNotEquals(4, calculator.multiply(2,2)) instead of assertEquals, the test itself is now wrong, and you won't immediately see that the error lies in the test design rather than the code"
+      ],
+      "modelAnswer": "With assertEquals, the test statement directly mirrors the intended behaviour: assertEquals(2, calculator.add(1,1)) makes it obvious that add should return the sum, and the same goes for multiply. assertNotEquals is trickier because it only asserts that some particular wrong value does not come out, which is useful for catching mistakes but much harder to design meaningfully. The danger the slides highlight is that if you accidentally write assertNotEquals(4, calculator.multiply(2,2)) when you meant assertEquals, the test itself becomes wrong, and because it still passes for the wrong reason, you won't immediately realize the bug is in the test design rather than in the code being tested.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-13-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "In the standardAssertions() example, what does adding a lambda as the failure message to assertTrue achieve, compared to passing a plain string?",
+      "keyBeats": [
+        "assertEquals(2, calculator.add(1,1)) - basic form",
+        "assertEquals(4, calculator.multiply(2,2), \"message\") - optional failure message as the last (plain string) parameter",
+        "assertTrue('a' < 'b', () -> \"message\") - message supplied as a lambda/supplier instead of a plain string",
+        "The lambda form is lazily evaluated: the message string is only constructed if the assertion actually fails, avoiding the cost of building complex messages unnecessarily"
+      ],
+      "modelAnswer": "The standardAssertions example first shows the plain form, assertEquals(2, calculator.add(1,1)), and then a form with an explicit failure message as the final string parameter, assertEquals(4, calculator.multiply(2,2), \"message\"). The interesting part is assertTrue('a' < 'b', () -> \"message\"), which uses the lambda arrow operator to supply the message. Because it's a lambda rather than a plain string, JUnit only evaluates and constructs that message lazily, if and when the assertion actually fails - so you avoid the runtime cost of building complex diagnostic strings on every passing test.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-14-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How does assertAll behave differently from writing several separate assertEquals calls in a row?",
+      "keyBeats": [
+        "assertAll(\"person\", () -> assertEquals(...), () -> assertEquals(...)) groups multiple assertions as lambdas",
+        "In a grouped assertion, all supplied assertions are executed, regardless of earlier ones failing",
+        "All failures are reported together in one combined report, rather than stopping at the first failure",
+        "A test using assertAll can still be disabled as usual with @Disabled(\"reason\")"
+      ],
+      "modelAnswer": "Normally, if you write separate assertEquals statements one after another, the test stops at the first one that fails and you never see whether the later ones would also have failed. assertAll changes that: you pass it a label like \"person\" plus a series of lambda-wrapped assertions, and all of them get executed regardless of whether earlier ones failed, with every failure collected and reported together in a single combined report. This makes it much easier to see the full picture of what's wrong in one run. Such a test can still be disabled in the usual way with @Disabled and a reason.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-15-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "In the dependentAssertions() example, how are independence and dependency between assertions controlled using nested assertAll blocks?",
+      "keyBeats": [
+        "Outer assertAll(\"properties\", block1, block2): the two top-level lambda blocks (for first name and last name) are grouped/independent - one failing doesn't stop the other from running",
+        "Within a single code block, if an assertion fails, subsequent code in that same block is skipped (so later lines depend on earlier ones passing)",
+        "Each block first checks assertNotNull(name), then only runs a nested assertAll on startsWith/endsWith if that first check passed",
+        "This combines dependent checks within a block with independent checks across blocks"
+      ],
+      "modelAnswer": "The dependentAssertions example nests assertAll to combine two kinds of behaviour. At the outer level, assertAll(\"properties\", block1, block2) treats the first-name block and the last-name block as independent groups - if the first-name block fails, the last-name block still runs anyway, because grouped assertions are processed independently of each other. But within a single block, JUnit's normal sequential behaviour applies: if assertNotNull(firstName) fails, the subsequent nested assertAll checking startsWith and endsWith is skipped, since that later code depends on the name actually being non-null. So the pattern lets you keep dependent checks within a block, while keeping separate blocks independent of one another.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-16-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How do you test that a specific exception is correctly thrown in JUnit Jupiter, and why is this useful?",
+      "keyBeats": [
+        "Exception exception = assertThrows(ArithmeticException.class, () -> calculator.divide(1, 0));",
+        "assertThrows returns the caught exception object so you can inspect it further",
+        "assertEquals(\"/ by zero\", exception.getMessage()) checks the exception's message content",
+        "Useful when designing/adding your own exceptions, and for checking that an exception is correctly propagated to higher levels rather than swallowed"
+      ],
+      "modelAnswer": "To test that an exception is thrown correctly, you call assertThrows with the expected exception class and a lambda containing the code that should throw it, for example Exception exception = assertThrows(ArithmeticException.class, () -> calculator.divide(1, 0)). Importantly, assertThrows returns the actual exception object it caught, so you can then make further assertions on it, such as assertEquals(\"/ by zero\", exception.getMessage()) to check the message. This is especially useful when you design and add your own custom exceptions, since you can't just trust the language the way you trust built-in exceptions, and also when you need to verify an exception correctly propagates up to a higher level rather than being swallowed somewhere.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-17-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "What is the practical difference in behaviour between assertTimeout and assertTimeoutPreemptively, illustrated by a task that takes 10ms and is repeated 10,000 times?",
+      "keyBeats": [
+        "assertTimeout(ofMinutes(1), lambda) lets the wrapped code run to completion first, then checks the elapsed time against the deadline afterwards",
+        "If the task actually takes 10ms but is repeated 10,000 times without preemption, the whole thing still runs to completion, effectively taking 10,000 minutes in the worst framing described",
+        "assertTimeoutPreemptively(ofMinutes(1), lambda) breaks/terminates execution as soon as the deadline logic determines the result, so 10,000 repetitions of a 10ms task takes only about 100 seconds",
+        "Preemptive termination can have side effects (e.g. on threads/resources), so its documentation should be read carefully"
+      ],
+      "modelAnswer": "Both methods check that a block of code finishes within a given time budget, but they behave very differently. assertTimeout just lets the wrapped lambda run to completion and then measures whether it stayed under the deadline afterwards - so if you have a task that takes 10 milliseconds and you repeat that check 10,000 times, you still end up running the full 10,000 repetitions, which the slides note would total something absurd like 10,000 minutes in that framing. assertTimeoutPreemptively instead actively breaks execution once it can determine the outcome relative to the deadline, so the same 10,000 repetitions of a 10ms task only take about 100 seconds. The trade-off is that preemptive termination can have side effects, so the documentation needs to be read carefully before relying on it.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-18-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "What does the @Timeout annotation do, and how does it differ from calling assertTimeout inline?",
+      "keyBeats": [
+        "@Timeout(value = 42, unit = SECONDS) is placed on a test method to declare its maximum allowed execution time",
+        "It is a declarative, annotation-based alternative to wrapping code manually in assertTimeout(...) or assertTimeoutPreemptively(...)",
+        "Complements the inline timeout assertions shown for timing/performance testing"
+      ],
+      "modelAnswer": "@Timeout is a declarative way to enforce a timing requirement on a whole test method: you write @Timeout(value = 42, unit = SECONDS) above the method, and JUnit enforces that ceiling for you, rather than you having to manually wrap the method body in an assertTimeout or assertTimeoutPreemptively call. It sits alongside those inline assertions as another tool for expressing timing requirements on tests.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-19-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How does @RepeatedTest work, and what role does failureThreshold play?",
+      "keyBeats": [
+        "@RepeatedTest(10) runs the annotated test 10 times, for statistical reasons and to avoid lucky/unlucky one-off passes",
+        "@RepeatedTest(value = 8, failureThreshold = 2) stops repeating once 2 failures have occurred, instead of always running all 8",
+        "failureThreshold = 5 means the overall test is declared failed after 5 individual failures",
+        "failureThreshold = 1 means a single failure is enough to conclude the test has failed (useful when even one failure is already conclusive)",
+        "The name parameter can customize the display name per repetition, e.g. \"{displayName} {currentRepetition}/{totalRepetitions}\", including localized text"
+      ],
+      "modelAnswer": "@RepeatedTest lets you run the same test multiple times, for example @RepeatedTest(10) runs it ten times, which matters statistically because a single lucky pass doesn't prove much. The failureThreshold option controls when to stop early: with @RepeatedTest(value = 8, failureThreshold = 2), the runner gives up after two failures instead of grinding through all eight repetitions. Setting failureThreshold to 5 means the overall test is only declared failed once five individual runs have failed, whereas setting it to 1 means a single failure is already considered conclusive proof of failure, which is appropriate when you strongly suspect a test can fail and don't need repeated confirmation. You can also customize how each repetition is displayed using the name parameter, including localized templates.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-20-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How can you force a specific execution order on test methods in a test class?",
+      "keyBeats": [
+        "By default, test execution order is not something you control unless you opt in",
+        "@TestMethodOrder(OrderAnnotation.class) is placed on the test class to enable order-based sequencing",
+        "@Order(n) is placed on each individual test method to declare its position, e.g. nullValues -> @Order(1), emptyValues -> @Order(2), validValues -> @Order(3)",
+        "Alternative: manually reordering the methods in the source file, but this is described as cumbersome"
+      ],
+      "modelAnswer": "If you need tests to run in a specific sequence, you annotate the test class with @TestMethodOrder(OrderAnnotation.class), which tells JUnit to respect explicit ordering rather than its default order. Then on each test method you add @Order(n) with the desired position, so for example nullValues gets @Order(1), emptyValues gets @Order(2), and validValues gets @Order(3), guaranteeing they run in that sequence. The alternative would be to physically move the methods around in the source file to change their order, but the slides note that's a cumbersome way to achieve the same result.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-21-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How do @ParameterizedTest and @ValueSource work together, using the palindrome test as an example?",
+      "keyBeats": [
+        "@ParameterizedTest marks a method to be run once per supplied argument, instead of only once",
+        "@ValueSource(strings = { \"racecar\", \"radar\", \"able was I ere I saw elba\" }) supplies the literal list of string arguments",
+        "The method signature palindromes(String candidate) receives each value in turn and calls assertTrue(StringUtils.isPalindrome(candidate))",
+        "Test report shows each invocation as a numbered sub-test, e.g. [1] candidate=racecar, [2] candidate=radar, [3] candidate=able was I ere I saw elba, each with its own pass/fail result",
+        "@ValueSource can also supply other primitive types, e.g. @ValueSource(ints = { 1, 2, 3 })"
+      ],
+      "modelAnswer": "@ParameterizedTest turns a single test method into a template that gets invoked once per argument, and @ValueSource is one way to feed it those arguments. In the palindrome example, @ValueSource(strings = { \"racecar\", \"radar\", \"able was I ere I saw elba\" }) supplies three candidate strings, and the method palindromes(String candidate) is invoked once for each, asserting StringUtils.isPalindrome(candidate) each time. In the test report this shows up as three separate numbered sub-tests under the palindromes(String) test, each labeled with its actual argument value and its own pass or fail mark. The same @ValueSource annotation can also be used with other primitive arrays, such as @ValueSource(ints = { 1, 2, 3 }).",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-22-s",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "specific",
+      "question": "What do @NullSource, @EmptySource, and @NullAndEmptySource each contribute to a parameterized test, and how can they be combined with @ValueSource?",
+      "keyBeats": [
+        "@NullSource supplies a single null argument to the parameterized test",
+        "@EmptySource supplies a single empty value (e.g. an empty string) as an argument",
+        "@NullAndEmptySource is a shorthand combining both null and empty in one annotation, instead of stacking @NullSource and @EmptySource separately",
+        "Both styles can be combined with @ValueSource(strings = { \" \", \"   \", \"\\t\", \"\\n\" }) so a single test method (e.g. nullEmptyAndBlankStrings) covers null, empty, and various blank-string cases together"
+      ],
+      "modelAnswer": "For parameterized tests over strings, @NullSource adds a single null value as one of the test arguments, and @EmptySource adds a single empty value. Rather than writing both annotations separately, @NullAndEmptySource is a convenience annotation that supplies both null and empty in one go. The slides show both styles combined with @ValueSource(strings = { \" \", \"   \", \"\\t\", \"\\n\" }) on the same method, nullEmptyAndBlankStrings, so that one test method ends up exercising null, empty, and several kinds of blank strings, all asserting that text == null or text.trim().isEmpty().",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-23-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How can a test be restricted to run only on (or never on) a specific operating system, and how can that restriction be packaged into a reusable custom annotation?",
+      "keyBeats": [
+        "@EnabledOnOs(MAC) restricts a @Test to run only on macOS",
+        "@EnabledOnOs({ LINUX, MAC }) allows running on either of several listed OSes",
+        "@DisabledOnOs(WINDOWS) prevents a test from running on Windows",
+        "A custom composed annotation (e.g. @TestOnMac) can bundle @Test + @EnabledOnOs(MAC) together via @Target(ElementType.METHOD), @Retention(RetentionPolicy.RUNTIME) and @interface, so it can be reused as a single annotation",
+        "Purpose: keep code and tests working correctly independent of, or intentionally limited to, a specific platform OS"
+      ],
+      "modelAnswer": "JUnit lets you gate individual tests by operating system using @EnabledOnOs and @DisabledOnOs. @EnabledOnOs(MAC) makes a test run only on macOS, and you can list several systems at once, like @EnabledOnOs({ LINUX, MAC }). Conversely, @DisabledOnOs(WINDOWS) stops a test from running on Windows specifically. When you find yourself repeating the same combination, such as @Test plus @EnabledOnOs(MAC), you can package it into your own custom annotation, like @TestOnMac, by declaring an @interface with @Target(ElementType.METHOD) and @Retention(RetentionPolicy.RUNTIME) and stacking the underlying annotations on it, so you can apply just @TestOnMac afterwards. The overall goal is to ensure code behaves correctly whether it needs to work everywhere or is intentionally scoped to particular platforms.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-24-s",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "specific",
+      "question": "How can tests be enabled or disabled based on CPU architecture, and why would that matter?",
+      "keyBeats": [
+        "@EnabledOnOs(architectures = \"aarch64\") restricts a test to run only on that architecture",
+        "@DisabledOnOs(architectures = \"x86_64\") prevents a test from running on that architecture",
+        "OS and architecture can be combined, e.g. @EnabledOnOs(value = MAC, architectures = \"aarch64\") for onNewMacs vs @DisabledOnOs(value = MAC, architectures = \"aarch64\") for notOnNewMacs",
+        "Motivation: some code runs only on 64-bit or only on 32-bit systems, so libraries build these dependencies in to ensure correct behaviour across different hardware architectures"
+      ],
+      "modelAnswer": "Beyond just the operating system, JUnit lets you restrict tests by CPU architecture using the architectures attribute on the same annotations: @EnabledOnOs(architectures = \"aarch64\") only runs a test on that architecture, while @DisabledOnOs(architectures = \"x86_64\") excludes it there. You can combine OS and architecture together, so @EnabledOnOs(value = MAC, architectures = \"aarch64\") targets newer Apple Silicon Macs specifically, with a matching @DisabledOnOs version to exclude them. This matters because some code genuinely only runs correctly on 64-bit systems or only on 32-bit systems, so libraries build in these architecture dependencies to guarantee correct behaviour across different hardware.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-25-m",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "mechanism",
+      "question": "How can tests be restricted to specific Java Runtime Environment versions, and how do custom conditions like @EnabledIf work?",
+      "keyBeats": [
+        "@EnabledOnJre(JAVA_8) restricts a test to run only under Java 8",
+        "@EnabledOnJre({ JAVA_9, JAVA_10 }) allows running under either of several listed versions",
+        "@EnabledForJreRange(min = JAVA_9, max = JAVA_11) restricts to a closed version range; @EnabledForJreRange(min = JAVA_9) restricts to an open-ended range from Java 9 upward",
+        "Custom criteria: @EnabledIf(\"customCondition\") / @DisabledIf(\"customCondition\") reference a boolean method, e.g. boolean customCondition() { return true; }",
+        "Further conditions can also be based on system properties and environment variables"
+      ],
+      "modelAnswer": "Just as with OS and architecture, JUnit can gate tests by Java version. @EnabledOnJre(JAVA_8) only runs a test under Java 8, and you can list several acceptable versions at once with @EnabledOnJre({ JAVA_9, JAVA_10 }). For ranges, @EnabledForJreRange(min = JAVA_9, max = JAVA_11) covers Java 9 through 11 inclusive, while omitting max, as in @EnabledForJreRange(min = JAVA_9), leaves the range open-ended upward to whatever the current Java feature version is. Beyond these built-in conditions, you can write your own logic with @EnabledIf(\"customCondition\") or @DisabledIf(\"customCondition\"), which reference a boolean method such as boolean customCondition() { return true; } that JUnit calls to decide whether to run the test. Conditions based on other system properties and environment settings are possible too.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L11-26-d",
+      "anchorsExamQ": 0,
+      "anchorsSubPart": "extra",
+      "type": "definition",
+      "question": "Summarize the four key takeaways from \"The Important Stuff\" slide about testing philosophy in this lecture.",
+      "keyBeats": [
+        "Testing is a design tool, not an afterthought - write tests before code to clarify requirements and define the software contract from day one",
+        "Test lifecycle management is non-negotiable - @BeforeAll/@BeforeEach/@AfterEach ensure isolation and clean state even when tests fail",
+        "Assertions are the contract in code - assertEquals, assertThrows and assertTimeout formally express what the software promises, including failures and timing",
+        "One passing run proves nothing - @ParameterizedTest and @RepeatedTest eliminate lucky passes; test across representative inputs and use failureThreshold deliberately",
+        "Think before you test: analysis comes first, always - a perfect test suite for the wrong requirements is worse than no tests at all; understanding the system is the prerequisite"
+      ],
+      "modelAnswer": "The lecture closes with a set of guiding principles. First, testing should be treated as a design tool rather than something bolted on afterwards - writing tests before code helps clarify requirements and defines the software's contract from the very start. Second, managing the test lifecycle with @BeforeAll, @BeforeEach and @AfterEach is non-negotiable, because it's what guarantees isolation and a clean state for every test, even when a test fails partway through. Third, assertions like assertEquals, assertThrows and assertTimeout are the contract written in code, formally expressing what the software promises, including how it should fail and how fast it should run. Fourth, a single passing run proves nothing on its own - tools like @ParameterizedTest and @RepeatedTest exist precisely to eliminate lucky one-off passes, so you should test across representative inputs and use failureThreshold deliberately. And underlying all of it: you must think before you test, since a perfect test suite built against the wrong requirements is worse than having no tests at all - understanding the system is always the real prerequisite.",
+      "citation": "ooadi11.slides.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L11-EX-01",
+      "source": "ooadi11.slides.pdf.extracted.txt",
+      "promptVerbatim": "The lecture's assignment (page 30): (1) Write down what can and should be tested for the client of your train application and for the server part of the train application. (2) Write JUnit tests for a subset of the two sides and execute them. (3) Extend the tests to include the maximum time an action must take, and repeating the tests at least 30 times.",
+      "whatItTests": "Ability to design and implement JUnit tests for a client/server system, including lifecycle setup, exception-based assertions, and timing/repetition-based reliability checks.",
+      "answerSketch": "Applying the lecture's toolkit to a client/server train application: first list candidate behaviours to verify on each side separately - e.g. on the client, input validation, correct requests being formed, and correct handling/display of server responses; on the server, correct processing of valid and invalid requests, correct state changes (e.g. train position/booking updates), and correct error/exception responses. Structure each side's test class using @BeforeEach/@AfterEach (and @BeforeAll/@AfterAll where setup is expensive, e.g. starting a server or opening a connection) to get a clean, isolated environment per test. Write concrete tests using assertEquals for expected results, assertThrows for expected error conditions (e.g. an invalid train ID or a malformed request throwing a specific exception), and assertAll where several related properties of a response should all be checked together. To extend the tests per part 3: wrap time-critical actions (e.g. handling a request, moving a train) in assertTimeout or assertTimeoutPreemptively with a maximum-time budget, and/or annotate the method with @Timeout(value = n, unit = ...); then apply @RepeatedTest(30) (or higher) to each such test to repeat it at least 30 times, optionally setting a failureThreshold so the run stops early once enough repetitions have failed to prove the behaviour unreliable."
+    }
+  ]
+}

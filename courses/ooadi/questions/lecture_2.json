@@ -1,0 +1,1139 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 2,
+  "lectureTitle": "UML and Use-Case Analysis (light), Classes and Objects",
+  "examQuestions": [
+    {
+      "examQ": 1,
+      "subPart": "a",
+      "promptVerbatim": "Classes, fundamentally"
+    },
+    {
+      "examQ": 2,
+      "subPart": "a",
+      "promptVerbatim": "Classes and how they relate"
+    },
+    {
+      "examQ": 3,
+      "subPart": "a",
+      "promptVerbatim": "Objects and data structures"
+    }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L2-001-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Why does object-oriented design insist on building a shared, unified description of a system before writing any code?",
+      "keyBeats": [
+        "Everybody sees and understands a system differently",
+        "That is unhelpful once we actually have to write code together",
+        "We need to share the same view of: the system, its models, its interfaces, its functionality",
+        "Misunderstanding the system context has real consequences down the line"
+      ],
+      "modelAnswer": "OO design starts from a firm, shared understanding of the context the code has to work in. Because every person naturally sees a system a little differently, that mismatch becomes a real problem the moment several people (or even just future-you) start writing code against it. So before we design anything we need to agree on a unified, unambiguous view of the system, its models, its interfaces and its functionality - which is exactly the gap UML is built to fill.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-002-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The lecture opens with the real, official 2014 procedure for changing your credit card on the Danish rejsekort travel-card website. What point is this anecdote making?",
+      "keyBeats": [
+        "Actual official 6-step procedure: log in, stop the old 'tank-op-aftale', wait 24h-7 days AND physically null-swipe at a train station, wait 24h, create a new agreement, wait again and null-swipe again",
+        "Presented under the heading 'How NOT to do things'",
+        "It is a real, publicly published procedure - not an exaggeration",
+        "Illustrates how an unclear, badly modelled process becomes absurd, slow and error-prone for the end user",
+        "Motivates why we need clear, structured system/requirements descriptions before building something"
+      ],
+      "modelAnswer": "It is a genuine example of a public self-service procedure that required waiting days and physically tapping in and out at a train station just to swap a credit card. The lecturer uses it as a cautionary 'how not to do things' story: when a process/system is not clearly modelled and understood up front, the result is a convoluted, user-hostile mess. It sets up the motivation for the whole lecture - understanding and describing a system properly before implementing it.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-003-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is UML, and what are examples of the diagram types it provides for describing a software system?",
+      "keyBeats": [
+        "UML = Unified Modelling Language, a full modelling-language framework for describing (software) systems",
+        "Contains many different diagram types: class diagrams, use-case diagrams, sequence diagrams, activity diagrams, etc.",
+        "All diagrams exist to create an unambiguous, shared picture of what is being designed",
+        "Different diagrams focus on different elements: Classes -> association/inheritance/aggregation; Objects -> messages/lifelines; States -> transitions/behaviors; Packages -> software dependencies; Actors -> usage/involvement; Processors and Nodes -> component dependency; Activities -> guards/synchronization"
+      ],
+      "modelAnswer": "UML, the Unified Modelling Language, is a full modelling-language framework used to describe software systems unambiguously. It is not a single diagram but a whole family of diagram types - class diagrams, use-case diagrams, sequence diagrams, activity diagrams and more - each one focusing on a different element of the system: classes show association/inheritance/aggregation, objects show messages and lifelines, states show transitions and behaviours, packages show software dependencies, actors show usage and involvement, and so on. The common thread is that they all give a team a shared, unambiguous picture of what is being designed.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-004-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Beyond class and use-case diagrams, what other UML diagram types does the lecture list, and roughly what does each one capture?",
+      "keyBeats": [
+        "Activity diagrams -> work flows",
+        "Interaction diagrams -> scenarios / communication / object interaction",
+        "Class diagrams -> structures",
+        "Use-case diagrams -> object-level usage",
+        "Packages and deployment diagrams -> structure",
+        "State diagrams -> individual behaviour"
+      ],
+      "modelAnswer": "The slide lists a further set of UML diagram categories beyond the two used in depth in this course: activity diagrams for capturing work flows, interaction diagrams for scenarios and communication between objects, class diagrams for static structures, packages and deployment diagrams for higher-level system structure, and state diagrams for the individual behaviour of one object over time. The point is simply that UML offers a dedicated diagram type depending on whether you want to show structure, behaviour, or communication.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-005-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does a UML use-case diagram capture about a system, and what does it deliberately leave out?",
+      "keyBeats": [
+        "Captures the complete set of functionality of a system that has value to a user",
+        "Captures stakeholders external to the system - a person, hardware, other systems, or something else",
+        "Stakeholders are characterized by their role, not by who they specifically are",
+        "The system itself is treated as a black box",
+        "Does NOT include design - design comes later",
+        "Contains only as many use cases as are necessary to understand the required functionality"
+      ],
+      "modelAnswer": "A use-case diagram captures the complete set of system functionality that has value to a user, together with the stakeholders - people, hardware or other systems - that are external to the system and interact with it. Stakeholders are described by their role rather than their concrete identity, and the system itself is treated purely as a black box: the diagram says nothing about internal design. It is also meant to be minimal - only as many use cases as are needed to understand the required functionality, not an exhaustive list.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-006-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the three basic building blocks of a UML use-case diagram, and how is each one drawn?",
+      "keyBeats": [
+        "Use case: a sequence of actions the system performs while interacting with external stakeholders - drawn as an oval/ellipse with a name",
+        "Stakeholder: a formalized entity that interacts with the system - drawn as a stick figure with a name",
+        "System boundary: a box representing the limits/boundaries of the system, containing the use cases"
+      ],
+      "modelAnswer": "A use-case diagram has three basic components. A use case is a named oval representing a sequence of actions the system performs when interacting with the outside world. A stakeholder is drawn as a labelled stick figure - a formalised representation of any entity, human or not, that interacts with the system. And the system boundary is the box drawn around the use cases, marking the limits of what is inside versus outside the system being modelled.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-007-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What relation types can connect elements in a UML use-case diagram, and what does each one mean?",
+      "keyBeats": [
+        "Association: a line showing interaction between a stakeholder and a use case",
+        "Generalization: relation between a generic use case and a more specific use case",
+        "Extension (<<extend>>): relation where an extended use case is based on an existing use case",
+        "Include (<<include>>): relation between a use case and one that it always includes"
+      ],
+      "modelAnswer": "Beyond the three basic shapes, use-case diagrams define a small set of relations. Association is the plain line showing that a stakeholder interacts with a use case. Generalization connects a generic use case to a more specific variant of it. Extension, marked <<extend>>, shows that one use case optionally extends the behaviour of another existing use case. And include, marked <<include>>, shows that a use case always incorporates the behaviour of another use case as part of itself.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-008-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How is the 'anatomy' of a full use-case diagram typically laid out, using the generic two-use-case example from the slides?",
+      "keyBeats": [
+        "A system boundary box contains the use cases (e.g. Use-case 1, Use-case 2)",
+        "A stakeholder sits outside the box and is connected by an association line, labelled as 'is a part of' interaction",
+        "The box itself represents 'an interface' to the outside world",
+        "The diagram gives a quick overview of the entire system being designed"
+      ],
+      "modelAnswer": "The generic example shows a rectangle - the system boundary - containing two ovals, Use-case 1 and Use-case 2. A stakeholder figure sits outside the box and is linked to a use case via an association line. The box as a whole acts as the interface the stakeholder interacts through, and together the picture gives a fast overview of the whole system that is being designed, without any internal implementation detail.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-009-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the worked online-store example, who are the stakeholders and what use cases connect to them?",
+      "keyBeats": [
+        "Stakeholders: Customer, Book keeper, Sales assistant",
+        "Use cases inside the 'Online store' system boundary: Order goods, doAccounting, Send order",
+        "Illustrates how a concrete system can be sketched with only a handful of actors and use cases"
+      ],
+      "modelAnswer": "In the online-store example the system boundary is the online store itself, containing three use cases: Order goods, doAccounting and Send order. Three stakeholders connect to it - the Customer (who orders goods), the Book keeper (who does the accounting) and the Sales assistant (who sends the order) - showing how even a small, realistic system can be captured with just a few actors and use cases.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-010-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What development-process models does the lecture mention as ways to structure how we move from use-cases to a finished system?",
+      "keyBeats": [
+        "The U-model is used as the main illustration: Analysis and requirements -> Use Cases -> Design -> Implementation -> Integration tests -> Acceptance test, with an iteration loop back",
+        "Other options mentioned: the V-model and the Spiral model",
+        "Spiral model cycles through Planning -> Risk Analysis -> Evaluation, repeatedly"
+      ],
+      "modelAnswer": "The lecture illustrates the design phase mainly with the U-model: you move from analysis and requirements, through use cases, into design, implementation, integration tests and acceptance tests, with iteration feeding back into the process. It also names two alternative process models - the V-model and the Spiral model, the latter cycling repeatedly through planning, risk analysis and evaluation - as other common options for structuring product development.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-011-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does the lecture say there is no single 'best' process model, and why do we need to revisit our use-cases and requirements repeatedly?",
+      "keyBeats": [
+        "Different models suit different purposes: some are better for implementation phases, others for overall product development",
+        "If we are trying to solve a problem we must periodically check that the problem is still there",
+        "We must also check that requirements have not changed since we started",
+        "Different models exist for different purposes - there are pros and cons to each"
+      ],
+      "modelAnswer": "There are pros and cons to each process model - some fit implementation-heavy phases better, while others suit overall product development better - so no single model is universally correct. On top of that, requirements and even the underlying problem can shift while a project is running, so any process needs a way to revisit and re-check both the problem and the requirements periodically rather than assuming the initial analysis stays valid forever.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-012-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the drone radioactivity-assessment example, what use cases and stakeholders appear on the initial use-case diagram?",
+      "keyBeats": [
+        "Use cases: Travel to position, Free flight, Create flightplan, Execute flightplan, Alarm if radioactivity is too high, Exit system",
+        "Stakeholders: Operator, Workers, Database",
+        "The diagram gives a good understanding of what the system needs to do and who it interacts with, before any code is written"
+      ],
+      "modelAnswer": "The drone use-case diagram shows use cases such as Travel to position, Free flight, Create flightplan, Execute flightplan, Alarm if radioactivity is too high and Exit system, connected to stakeholders Operator, Workers and Database. Having sketched this first gives the team a solid understanding of required functionality and the external parties involved, which is the foundation for turning the problem into code afterwards.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-013-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through the drone example's step-by-step use-case description and the alternative flows the lecture mentions.",
+      "keyBeats": [
+        "1) Operator turns on 'Robator' (part of the system); 2) Robator connects to the drone; 3) Operator inserts coordinates the drone should visit; 4) Operator accepts (or edits) Robator's suggested plan; 5) Robator sends the flight plan to the drone; 6) The drone acknowledges with OK, shown back to the operator",
+        "Alternative: the route may be too long relative to battery life - the system should inform the operator",
+        "Alternative: communication may be poor during flight - this should also be reported to the operator"
+      ],
+      "modelAnswer": "The description walks through a normal flow: the operator starts Robator, it connects to the drone, the operator enters target coordinates, accepts or edits the suggested plan, Robator sends the flight plan to the drone, and the drone acknowledges it, which Robator relays back to the operator. The lecture also calls out two alternative flows worth handling: a route that is too long for the battery's life-time, and poor communication during the flight - both of which the system should proactively inform the operator about.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-014-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do we get from a set of use-cases to concrete requirements, according to the lecture?",
+      "keyBeats": [
+        "From the set of use-cases we can derive requirements (not covered in depth in this course)",
+        "Example requirements from the drone case: information must be shown to the operator; Robator must communicate with the drone; Robator must accept operator input; the drone must navigate the field; the drone must communicate with Robator",
+        "These example requirements are explicitly flagged as illustrative, not polished",
+        "From requirements we may then be able to derive a system design"
+      ],
+      "modelAnswer": "Once the use-cases are known, we can start deriving requirements from them - the lecture gives illustrative (deliberately not polished) examples for the drone case, such as 'information must be shown to the operator' or 'the drone must be able to communicate with Robator'. Requirements analysis itself is not covered in depth in this course, but the key idea is the chain: use-cases produce requirements, and requirements are what let us start deriving an actual system design.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-015-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the drone example move from a system-level understanding to a set of recognisable software modules?",
+      "keyBeats": [
+        "With enough systems understanding we start to recognise 'software modules' directly, e.g. GUI, Keyboard input, CommunicationsManager, Main, Google map service, Route controller, Meas. planner, Alarm detector",
+        "These modules are grouped under the two top-level components Robator and Drone, both inside 'the system'",
+        "This is explicitly described as being already in the midst of the design phase"
+      ],
+      "modelAnswer": "As the team's understanding of the drone system deepens, concrete software modules start to appear almost by themselves - things like a GUI, Keyboard input, a CommunicationsManager, a Main entry point, a Google map service on the Robator side, and a Route controller, Measurement planner and Alarm detector on the Drone side. The lecture is explicit that by this point we are already practically inside the design phase, even though we started from a simple use-case diagram.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-016-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Once modules are identified, how does the lecture suggest we go one level deeper into submodules and their methods?",
+      "keyBeats": [
+        "Each module may subsequently be split into sub-modules",
+        "For each (sub)module we try to identify one or more ways to use it",
+        "Example generic methods: Initialize(), SendData(), ReceiveData(), SleepModule()",
+        "Illustrated with a Communications manager submodule shared conceptually between Robator/Communication and Drone/Communication, plus a Drone heartbeat submodule"
+      ],
+      "modelAnswer": "The next refinement step is to split each module into submodules and, for each one, work out the concrete ways it will be used - which shows up as candidate method names such as Initialize(), SendData(), ReceiveData() or SleepModule(). In the drone example this produces a Communications-manager submodule that exists conceptually on both the Robator and the Drone side, plus a separate Drone-heartbeat submodule for detecting that the drone is still alive.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-017-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the lecture visualise the timed interaction between the Robator and Drone communication managers once modules and methods are known?",
+      "keyBeats": [
+        "Drawn as a timeline of message calls between 'Robator/Communication' and 'Drone/Communication'",
+        "Example sequence: sendFlightSchedule(raw data) -> sendRawData(raw data) -> notifyRawData(raw data) -> pushFlightPlanData(data) -> sendAcknowledge() -> sendRawData(acksignal) -> acknowledgement() -> notifyAcknowledgement()",
+        "This is effectively a light-weight, hand-drawn sequence diagram, further specifying the task"
+      ],
+      "modelAnswer": "Once the modules and their basic methods exist, the lecture sketches a time-ordered exchange of messages between Robator/Communication and Drone/Communication - essentially a lightweight sequence diagram. It walks through calls such as sendFlightSchedule, sendRawData, notifyRawData, pushFlightPlanData, sendAcknowledge and finally an acknowledgement being relayed back with notifyAcknowledgement, showing how drawing interactions over time helps pin down exactly what each module needs to be able to do.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-018-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the cookie-cutter analogy the lecture uses to introduce classes, and what does it map onto?",
+      "keyBeats": [
+        "A cookie cutter defines a general description/shape for some kind of cookie",
+        "Many cookies can share that same form",
+        "But the cutter itself is not a cookie",
+        "In the analogy, the cutter resembles a class"
+      ],
+      "modelAnswer": "The lecture introduces classes through a kitchen analogy: a cookie cutter defines the general shape or description that many individual cookies can share, but the cutter itself is never a cookie - it only produces cookies. The cutter stands in for a class: a class defines the shape/structure that objects will have, but the class itself is not one of the objects it produces.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-019-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does the lecture formally define a class, and what is an abstract class?",
+      "keyBeats": [
+        "Classes are definitions of groups of objects with the same attributes and operations",
+        "They act as 'blueprints' for the actual objects",
+        "Individual objects of a class are called instances of that class; they can be created and later destroyed",
+        "In some (rare) cases objects of a class cannot be created at all - such classes are called abstract"
+      ],
+      "modelAnswer": "A class is formally defined as the definition of a group of objects that all share the same attributes and operations - it acts as the blueprint from which the actual objects are made. Individual objects belonging to a class are called instances, and they can be created and later destroyed. A special case is the abstract class: a class from which, by design, no direct objects/instances can ever be created.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-020-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Using the classic Bicycle example, what attributes and methods appear in its UML class diagram, and which are public versus private?",
+      "keyBeats": [
+        "Public methods: + changeGear(), + getSpeed()",
+        "Private method: - revolutionsToSpeed()",
+        "Public attribute: + gearLevel",
+        "Private attribute: - revolutionsPerMin.",
+        "The +/- prefixes are the UML visibility/accessibility indicators"
+      ],
+      "modelAnswer": "The classic Bicycle class diagram lists two public methods, changeGear() and getSpeed(), plus one private helper method revolutionsToSpeed(). Its attributes are gearLevel, marked public, and revolutionsPerMin, marked private. The plus and minus signs in front of each member are the standard UML visibility indicators, showing at a glance what outside code is and isn't allowed to touch.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-021-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What do the four UML visibility symbols mean, and what are their Java keyword equivalents and access rules?",
+      "keyBeats": [
+        "+ Public -> Java 'public' -> any class anywhere can access it",
+        "- Private -> Java 'private' -> only the same class can access it",
+        "# Protected -> Java 'protected' -> same class and subclasses (via inheritance), and same package",
+        "~ Package/default -> Java's default (no keyword) -> any class in the same package can access it"
+      ],
+      "modelAnswer": "UML uses four visibility symbols in front of a method or attribute. A plus sign means public, which in Java is the 'public' keyword and lets any class anywhere access the member. A minus sign means private - Java's 'private' - accessible only from inside the same class. A hash/pound sign means protected - Java's 'protected' - accessible from the class itself, its subclasses, and other classes in the same package. And package/default visibility, written with no keyword in Java, is accessible to any class within the same package.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-022-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is data encapsulation, illustrated with the Bicycle class-diagram layout?",
+      "keyBeats": [
+        "When creating classes we must carefully decide the 'openness' of the code",
+        "Some things must be shared with everyone, others must be kept secret inside the class",
+        "The Bicycle diagram lays this out as: class name, public attributes (numberOfGears, colour), private attributes (Wheels, Tire), constructor (Bicycle()), public operations (getFrontWheel(), getBackWheel(), changeGear()), private operations (moveChainToSprocket())"
+      ],
+      "modelAnswer": "Encapsulation is about deliberately deciding, for every class, how 'open' each part of it should be - some attributes or operations need to be shared with the outside world, others must stay secret inside the class. The Bicycle example lays a class diagram out with public attributes like numberOfGears and colour visible to everyone, private attributes like Wheels and Tire hidden away, a public constructor, public operations such as changeGear() and getFrontWheel(), and a private helper operation moveChainToSprocket() that only the class itself uses internally.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-023-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Data encapsulation refers to two distinct but related concepts - what are they?",
+      "keyBeats": [
+        "1) Bundling data together with the methods that operate on that data",
+        "2) Restricting access to some object components, referred to as information hiding"
+      ],
+      "modelAnswer": "Encapsulation is really two related ideas bundled under one name. The first is simply bundling: keeping the data and the methods that operate on that data together inside one class, rather than scattering them across the code. The second is restricting access to parts of that bundle - what the lecture calls information hiding - deliberately making some attributes or methods invisible from outside the class.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-024-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What concrete benefits does bundling data with its methods give us, according to the lecture?",
+      "keyBeats": [
+        "Reduces problems from external code having to worry about an object's inner workings",
+        "Helps provide consistent interfaces",
+        "Helps keep code organized",
+        "Encourages decoupling"
+      ],
+      "modelAnswer": "Bundling data together with the methods that act on it means external code no longer has to understand or worry about the object's internal workings - it just calls the methods. This gives more consistent interfaces, keeps the codebase organised because related data and behaviour live in one place, and encourages decoupling between different parts of the system.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-025-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What concrete benefits does information hiding give us, according to the lecture?",
+      "keyBeats": [
+        "Supports the integrity of objects by preventing users from manipulating parts that could lead to an invalid, inconsistent or unstable state",
+        "Makes it explicit what a user is allowed to do, which can reduce perceived complexity",
+        "Separates the concept of what something does from how it is implemented"
+      ],
+      "modelAnswer": "Information hiding protects an object's integrity: by hiding internal parts, users of the class cannot accidentally push it into an invalid, inconsistent or unstable state. It also makes the allowed interactions explicit - you only see what you're permitted to call - which reduces perceived complexity, and it cleanly separates what a class does (its public interface) from how it actually does it (its hidden implementation).",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-026-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The lecture shows two other example class diagrams beyond the bicycle - what attributes and methods do they list, and what do they illustrate?",
+      "keyBeats": [
+        "Waste pump: attributes rotational speed, lifting height, power consumption, number of running hours, max flow, max current; methods reset(), setSpeed(rotPerMin), getSpeed(), start()",
+        "A second device: attributes rotational speed, horizontalSpeed, powerConsumption, battery info, battery power, number of running hours; methods reset(), setVertSpeed(), start(), stop()",
+        "Both illustrate that any real-world piece of equipment can be modelled as a class with a mix of state (attributes) and behaviour (methods)"
+      ],
+      "modelAnswer": "To show the pattern generalises beyond bicycles, the lecture sketches two more example class diagrams from industrial-style equipment: a waste pump with attributes like rotational speed, lifting height, power consumption and running hours, and methods such as reset(), setSpeed(), getSpeed() and start(); and a second, drone-like device with attributes including horizontal speed, power consumption and battery info, and methods like setVertSpeed(), start() and stop(). The point is that essentially any real-world thing can be captured the same way - a set of attributes for its state, plus methods for what it can do.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-027-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What does a minimal Java class definition look like, and what is the file-naming convention?",
+      "keyBeats": [
+        "In Java, each class is often coded in a separate file",
+        "'public class HelloWorld { public static void main(String[] args) { ... } }' is a valid class",
+        "File must be named HelloWorld.java to match the public class name",
+        "//This is a comment shows Java's single-line comment syntax"
+      ],
+      "modelAnswer": "In Java a class is typically written in its own source file whose name matches the public class - so 'public class HelloWorld { ... }' must live in a file called HelloWorld.java. Inside, the example shows the minimal shape of a runnable class: a public static void main(String[] args) method containing a comment and a call to System.out.println to print 'Hello, World!'.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-028-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How do we add and call our own methods on a class, per the HelloWorld example?",
+      "keyBeats": [
+        "We can add methods (functions) to our classes and then actively use them for various purposes",
+        "public void doSomething() { System.out.println(\"Doing something\"); } is added as a method of HelloWorld",
+        "It is called via helloworld.doSomething();",
+        "The strength of this is that we can model our (real) world directly into code"
+      ],
+      "modelAnswer": "Beyond the built-in main method, we can add our own methods to a class - here a doSomething() method that just prints 'Doing something'. Once an object of the class exists (helloworld), we call the method on it with helloworld.doSomething(). The lecture frames this as the real strength of the class/object model: it lets us model pieces of the real world directly as code.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-029-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through the full Bicycle class code example from the lecture, including the deliberate bug it contains.",
+      "keyBeats": [
+        "Attributes: private int cadence, private float speed, private int gear, private float tireSize, private float tireDiameter",
+        "Constructor Bicycle(float ts, float td) sets tireSize and tireDiameter",
+        "changeCadence(newValue) sets cadence and recomputes speed using Math.PI, tireDiameter, tireSize, gear and cadence",
+        "changeGear(newValue) only sets gear - it does NOT recompute speed",
+        "applyBrake(decrement) reduces speed directly; getSpeed() returns speed; printBicycleState() prints cadence/speed/gear",
+        "Bug: speed is only updated inside changeCadence, so calling changeGear alone leaves speed stale; the lecture notes a private helper method for the speed formula would avoid repeating/forgetting it"
+      ],
+      "modelAnswer": "The Bicycle class holds private fields cadence, speed, gear, tireSize and tireDiameter, with a constructor that sets the tire dimensions and methods changeCadence(), changeGear(), applyBrake(), getSpeed() and printBicycleState(). The deliberate bug is that the speed-recalculation formula only lives inside changeCadence() - so if you call changeGear() on its own, speed is never refreshed even though gear affects it. The lecture uses this to argue that the formula should instead live in its own private method that both changeCadence() and changeGear() call, so the logic exists in exactly one place.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-030-s",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The lecture compares a Bicycle class with a public field to one with a private field and methods - why is the second version considered better despite being longer?",
+      "keyBeats": [
+        "Version 1: 'float speed = 0;' is a plain (default/public) field with no methods besides the constructor",
+        "Version 2: 'private float speed = 0;' plus changeCadence(int rpm) and getSpeed() that computes cadence*gear",
+        "bicycle.colour = 4 (direct field set) versus bicycle.changeColour(4) (method call) is used as the comparison",
+        "With version 2 you no longer need to remember how cadence translates to speed - that logic already lives inside the class"
+      ],
+      "modelAnswer": "Even though the encapsulated version has more code, it is better because the caller no longer needs to know or remember the internal formula for turning cadence into speed - that logic is hidden behind changeCadence() and getSpeed(). Contrast bicycle.colour = 4, which directly pokes a public field with no validation or logic, against bicycle.changeColour(4), a method call that can enforce rules and hide implementation details. Less code is not automatically better code.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-031-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does hiding implementation details behind private fields and methods protect us from bugs later on?",
+      "keyBeats": [
+        "The example speed = cadence*gear is admittedly simplistic and likely to need a more correct formula (involving tire info and pi) later",
+        "It is easy to make such mistakes, or need to revise a formula, due to bugs, misunderstandings or incomplete work",
+        "If state variables are protected (private) we can improve/update the internal formula in one place",
+        "Otherwise, every place in the codebase that directly used speed would need to be found and updated"
+      ],
+      "modelAnswer": "The lecture admits that a formula like speed = cadence*gear is probably too simplistic and will likely need fixing later - maybe it should involve tire size and pi. If the state variable was protected behind a private field and accessed only through methods, fixing that formula means editing it in exactly one place. If instead the field were public and every part of the program touched it directly, you would have to hunt down and fix every one of those places - a much riskier and more error-prone change.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-032-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the 'this' keyword work in Java, and why does 'this.cadence = cadence' behave differently from 'cadence = cadence'?",
+      "keyBeats": [
+        "'this' lets a method refer to 'its own' object, disambiguating it from a same-named local/parameter variable",
+        "changeCadence(float cadence) { this.cadence = cadence; } clearly sets the object's own field cadence to the value of the parameter cadence",
+        "changeColour(float cadence) { cadence = cadence; } only reassigns the local parameter to itself - it changes nothing about the object and effectively does nothing useful"
+      ],
+      "modelAnswer": "'this' is the keyword that lets a method explicitly say 'my own object's attribute' rather than a local variable of the same name. In the correct version, this.cadence = cadence clearly assigns the incoming parameter to the object's own cadence field. Without 'this', writing cadence = cadence just reassigns the local parameter to itself - the object's actual field is never touched, so the method silently does nothing useful. This is exactly why 'this' matters whenever a parameter name shadows a field name.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-033-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Explain the three visibility modifiers - private, protected, and public - in the plain-language terms the lecture uses.",
+      "keyBeats": [
+        "Private: 'we keep methods and attributes to ourselves' - not visible outside the class",
+        "Protected: 'we keep methods and attributes to our family' - only visible to children (via inheritance)",
+        "Public: 'we are open to all outsiders' - accessible to all who know the class"
+      ],
+      "modelAnswer": "The lecture explains the three core visibility modifiers with a family metaphor. Private means we keep something to ourselves - it is not visible outside the defining class at all. Protected means we keep it within the family - visible only to children classes via inheritance. And public means we are open to outsiders - the method or attribute can be accessed by anyone who knows about the class.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-034-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What are the UML visibility notation symbols, and what happens if you don't explicitly pick one in Java?",
+      "keyBeats": [
+        "Public: '+' in front of a method/attribute",
+        "Protected: '#' in front of a method/attribute",
+        "Private: '-' in front of a method/attribute",
+        "Default visibility in Java is public - if you don't actively hide your members, they are open to everyone"
+      ],
+      "modelAnswer": "UML marks visibility with a plus sign for public, a hash/pound sign for protected, and a minus sign for private, in front of the method or attribute name. The lecture's important warning is that Java's default visibility, if you specify no modifier at all, is effectively public - so if you don't actively decide to hide a field or method, it is wide open by default.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 46",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-035-d",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a static method, and why does Java need it at all?",
+      "keyBeats": [
+        "We use the keyword 'static' in front of the method name",
+        "A static method belongs to the class itself, not to any object instance",
+        "Sometimes we cannot, or don't want to, have an object instance - we just want to use a method",
+        "main(String[] args) must be static because at that point in the program there is no instance yet to call it on - this solves a 'chicken-egg' problem",
+        "Math.cos()/Math.sin() are used without ever creating a Math object, because instantiating Math wouldn't make sense"
+      ],
+      "modelAnswer": "A static method, marked with the 'static' keyword, belongs to the class itself rather than to any particular object instance - you can call it without ever creating an object. This solves real problems: main(String[] args) has to be static because it is the very first method called, before any object has been set up, so there's a chicken-and-egg problem it neatly sidesteps. Similarly, an instance of the Math class would make no sense by design, yet we still need functions like cosine and sine, so we call them as Math.cos() and Math.sin() directly on the class.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 50",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-036-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "According to the lecture, when should you reach for static methods or attributes?",
+      "keyBeats": [
+        "Global constants may effectively be implemented as static attributes",
+        "Methods you want to use without going through the process of instantiating an object - this somewhat violates OO principles but is often useful",
+        "Using static deliberately steps outside the OO model when object-oriented-ness isn't useful",
+        "It is described as a core, intentional Java language feature - not a 'hack'"
+      ],
+      "modelAnswer": "Static is appropriate for global constants, which can be implemented as static attributes, and for methods you simply want to call without the overhead of creating an object first - even though that technically bends the pure OO model. The lecture is explicit that this is a deliberate, intentional feature of Java for the cases where being object-oriented doesn't actually add value, not some kind of workaround or hack.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 51",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-037-m",
+      "anchorsExamQ": 1,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What rule of thumb does the lecture give for deciding whether a method should be static or an instance method?",
+      "keyBeats": [
+        "Use static when: it does not (and never will) need object state",
+        "It represents a general operation not tied to any one object",
+        "Creating an object would be meaningless (e.g. Math)",
+        "You need a function available before objects exist (e.g. main)",
+        "Otherwise, one should always use normal instance methods"
+      ],
+      "modelAnswer": "The rule of thumb is: make a method static only if it will never need per-object state, if it represents a general operation that isn't tied to any specific object, if creating an object to call it would be meaningless (as with Math), or if the function must be available before any objects exist at all (as with main). In every other case, the lecture says you should default to a normal instance method.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-038-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The lecture contrasts writing 'Decorate(myCookie);' with 'myCookie.Decorate();' - what is the difference, using the cookie analogy?",
+      "keyBeats": [
+        "Decorating a cookie can be described as something we can do to any cookie, or as a feature of a specific cookie",
+        "'Decorate(myCookie);' -> a method that belongs to a class, taking an object (myCookie) as its input parameter",
+        "'myCookie.Decorate();' -> a method that belongs to the object itself, run in the context of that specific object"
+      ],
+      "modelAnswer": "The same real-world action - decorating a cookie - can be written two different ways in code. Decorate(myCookie) treats decoration as an operation belonging to the class/module, with the specific cookie object simply passed in as a parameter, closer to a procedural style. myCookie.Decorate() instead treats decoration as something the object itself does, called directly on that object and running in its own context - the more object-oriented style, which is how instance methods are normally invoked in Java.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-039-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Continuing the cookie-cutter analogy, what is a constructor?",
+      "keyBeats": [
+        "Making a cookie needs a predefined procedure and some ingredients",
+        "The method for creating an object is called a constructor",
+        "Constructors can have defined input parameters (the 'ingredients')",
+        "Constructors are special methods that belong to the class"
+      ],
+      "modelAnswer": "Following the analogy, making an actual cookie from the cutter requires a defined procedure plus some ingredients - and that is exactly what a constructor is in code. A constructor is the special method, belonging to the class, that is responsible for creating an object, and just like a recipe it can take defined input parameters that shape the resulting object.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-040-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the lecture say about objects as instances of a class, using the cookie analogy?",
+      "keyBeats": [
+        "Cookies are all similar (all cookies) but remain distinct entities, however much or little they vary",
+        "Each individual cookie is an instance of a class - an object",
+        "Each object has its own attributes",
+        "Even if two objects have identical attributes, they are still not equal (they remain distinct objects)",
+        "Objects related to the same class share a type"
+      ],
+      "modelAnswer": "Every individual cookie made from the same cutter is still its own distinct thing, even though they're all clearly cookies - and that maps directly onto objects: each cookie is an instance of the cookie class, with its own set of attributes. Crucially, even two cookies (or two objects) with exactly identical attribute values are still not the same object - they merely share a type because they were made from the same class.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-041-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What line of code actually creates a new object from the HelloWorld class, and what does each part of it do?",
+      "keyBeats": [
+        "'HelloWorld helloWorld = new HelloWorld();'",
+        "'new' is the Java keyword that triggers the constructor call",
+        "'HelloWorld()' on the right is the constructor of the class being invoked",
+        "The result is stored in a reference variable named helloWorld"
+      ],
+      "modelAnswer": "The line HelloWorld helloWorld = new HelloWorld(); is the moment an object actually gets created. The 'new' keyword tells Java to call the constructor HelloWorld() and allocate a new object of that class, and the resulting object is then stored in the reference variable helloWorld so the rest of the program can use it.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-042-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does the lecture visually distinguish a class from the objects created from it?",
+      "keyBeats": [
+        "The class (e.g. HelloWorld) is the blueprint, drawn once, with its method doSomething()",
+        "'new HelloWorld()' is shown with an arrow pointing from the class to a newly created object",
+        "Multiple objects (instance, instance2, instance3) can all be created from the very same class",
+        "This shows one blueprint can produce many independent objects"
+      ],
+      "modelAnswer": "The lecture draws the class HelloWorld as a single blueprint box listing its method doSomething(), with an arrow showing that calling 'new HelloWorld()' produces an object from it. It then extends the picture to show three separate objects - instance, instance2, instance3 - all created from that one same class, visually reinforcing that a single class definition can be used to stamp out any number of independent objects.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-043-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a reference variable, and how does the lecture use the stack/heap picture to explain 'Bicycle bicycle = new Bicycle()'?",
+      "keyBeats": [
+        "Objects are accessed via a reference variable",
+        "The reference variable is a pointer to the location in memory where the created object is stored",
+        "'Bicycle bicycle = new Bicycle()' breaks down into: class name, reference variable, the Java keyword 'new' that calls the constructor, and the constructor of the class",
+        "Illustrated with a stack (small, fast) holding the reference, and a heap (large, slower) holding the actual object"
+      ],
+      "modelAnswer": "You never touch a Java object directly - you always go through a reference variable, which is essentially a pointer to wherever the object actually lives in memory. In 'Bicycle bicycle = new Bicycle()', 'Bicycle' names the class, 'bicycle' is the reference variable, 'new' is the keyword that triggers construction, and 'Bicycle()' is the constructor call itself. The lecture visualises this with the small, fast stack holding the reference and the larger, slower heap holding the real object data.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-044-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the two-bicycle code example, how do bike1 and bike2 behave as independent objects of the same class?",
+      "keyBeats": [
+        "Bicycle bike1 = new Bicycle(23, 600); Bicycle bike2 = new Bicycle(25, 700); - two separate objects from the same class, with different constructor arguments",
+        "Calling bike1.changeCadence(50), bike1.printBicycleState(), bike1.changeGear(2) only affects bike1's state",
+        "The same calls are then made independently on bike2, and printBicycleState() shows each bicycle keeps its own separate state"
+      ],
+      "modelAnswer": "The example creates two Bicycle objects, bike1 and bike2, from the same class but with different tire-size/tire-diameter constructor arguments. Calling changeCadence(), changeGear() and printBicycleState() on bike1 only ever affects bike1's own internal state; making the exact same calls on bike2 changes bike2 independently. This concretely demonstrates that each object keeps its own attribute values even though both were made from an identical class blueprint.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-045-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Since a class is like a module with inputs/outputs, what does it mean when those inputs/outputs are object references, and why can that cause conflicts?",
+      "keyBeats": [
+        "Input/output of a class's methods can be object references, e.g. person.use(bicycle) or Bicycle myBike = bicycleShop.buy(money)",
+        "Only the reference to the object is exchanged - not a copy of the object itself",
+        "If two people share the same bicycle (the same reference/object) they can change each other's seat height, move it, change gears, or even use it at the same time -> conflict",
+        "If each person instead has their own copy of the bicycle, no such conflicts occur",
+        "This becomes especially relevant once concurrent/multi-threaded code is involved"
+      ],
+      "modelAnswer": "Just like a module, a class's methods can take or return object references as their inputs and outputs - person.use(bicycle) passes a Bicycle reference in, and bicycleShop.buy(money) returns one out. The crucial detail is that only the reference is exchanged, never a copy of the underlying object, so if two people end up holding a reference to the very same bicycle they can step on each other's changes - adjusting the seat, moving it, changing gears, even trying to use it simultaneously causes a conflict. If each person instead had their own separate bicycle object, none of that would happen - and this exact issue becomes much more serious once multiple threads are involved.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-046-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does object creation versus object destruction differ in determinism in Java, and what replaced finalize()?",
+      "keyBeats": [
+        "The constructor is called when we initiate the object, e.g. 'Bicycle myBicycle = new Bicycle();'",
+        "A constructor is a method with no return value (it implicitly produces an object of that class)",
+        "Object creation is a deterministic process",
+        "Destroying an object (cleanup) is NOT deterministic in Java - it depends on many different things",
+        "finalize() was meant to run when an object died, but was deprecated in Java 9 and completely removed in Java 18",
+        "Objects using external resources must clean up explicitly using AutoClosable() instead"
+      ],
+      "modelAnswer": "Creating an object is fully deterministic: calling 'new Bicycle()' immediately and reliably runs the constructor, which is a special method with no return type that implicitly produces a new object of the class. Destroying an object is a different story - it is not deterministic in Java at all, since it depends on the garbage collector's own timing. The old mechanism for reacting to object death, finalize(), was deprecated in Java 9 and fully removed in Java 18, so objects that hold external resources now have to clean up explicitly using AutoClosable() instead of relying on any kind of deconstructor.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-047-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does garbage collection decide an object can be removed, and how does the 'localCycle'/'mainBicycle' example illustrate object scope?",
+      "keyBeats": [
+        "Java keeps track behind the scenes of objects and how they are referenced",
+        "If nothing references an object anymore, it is considered unused and is cleared from memory at some point",
+        "Example 1: 'Bicycle localCycle = new Bicycle();' inside an if-block - once the block ends, localCycle is no longer valid/referenced, so it is removed",
+        "Example 2: if instead 'mainBicycle = localCycle;' is assigned before the block ends, the object 'lives on' as mainBicycle even after localCycle itself goes out of scope"
+      ],
+      "modelAnswer": "Java silently tracks, for every object, how many references still point to it; once nothing references an object any more, it is considered no longer used and gets cleared from memory at some later point by the garbage collector. The example contrasts a Bicycle created purely as a local variable inside an if-block - which is discarded once the block ends because localCycle goes out of scope - with the same object being additionally assigned to an outer variable, mainBicycle, before the block ends: because mainBicycle keeps a live reference, that same object survives even after localCycle itself is gone.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 48",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-048-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is Java's 'null' value, and how does it relate to the classic NullPointerException?",
+      "keyBeats": [
+        "You can declare a variable of a class type without constructing an object yet, e.g. 'Bicycle bicycle;'",
+        "Until 'new Bicycle()' is called, bicycle holds the value null - a reference to an invalid address 0, essentially meaning 'not created'",
+        "A highly common error is the NullPointerException, meaning some object was never created (forgot to call 'new ...()') somewhere in the code",
+        "NullPointerExceptions often surface at a different location than where the actual mistake was made",
+        "Setting a variable to null also tells the garbage collector the object is no longer needed - e.g. 'bicycle = null;' effectively destroys that bicycle reference"
+      ],
+      "modelAnswer": "It's possible to declare a variable of a class type without immediately constructing an object - 'Bicycle bicycle;' - and until 'new Bicycle()' is actually called, that variable holds null: not really a usable value, but a reference to an invalid address 0, meaning nothing has been created yet. Trying to use such a variable is the classic cause of the dreaded NullPointerException, and the exception often shows up somewhere far away from where the object was actually forgotten. On the flip side, explicitly setting a variable to null - 'bicycle = null;' - is also a signal to the garbage collector that the object is no longer needed and can be reclaimed.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 49",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-049-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the lecture visually distinguish calling a static method from calling an instance method?",
+      "keyBeats": [
+        "A static method is called directly on the class itself (e.g. MyClass.staticMethod()), without needing any object",
+        "An instance method is called on a specific instance of the class (an object), e.g. anObject.instanceMethod()",
+        "The diagram contrasts an instance method/instance data field (accessed via an object) with a static method/static data field (accessed via the class)"
+      ],
+      "modelAnswer": "The lecture's diagram makes the static-versus-instance distinction visual: a static method is invoked straight on the class itself, like MyClass.staticMethod(), with no object involved at all, while an instance method is invoked on a particular object, like anObject.instanceMethod(). The same split applies to data fields - static data fields belong to the class and are accessed through it, instance data fields belong to a specific object and are accessed through that object reference.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-050-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the difference between simple 'placeholder' objects and objects with meaningful state, and how are state diagrams used to document this?",
+      "keyBeats": [
+        "Some objects are merely placeholders for data (attributes)",
+        "Others are complex and contain several states that influence how they work",
+        "Transitions between states often happen due to external events, requiring input from the outside world",
+        "State diagrams are useful for documenting how a class works, and can be described at many levels of detail",
+        "Best practice: states should also be visible in the actual code",
+        "Bicycle example states: Stopped, Accelerating, Moving, Braking, Pedalling (hard), Pedalling (normal), with transitions like 'Brake activation'"
+      ],
+      "modelAnswer": "Not every object just holds data - some objects are essentially plain data containers, while others are genuinely stateful, meaning their current state changes how they behave. Those state transitions are usually triggered by external events and inputs, and state diagrams are the recommended way to document them, at whatever level of detail is useful - ideally with the same states visible directly in the code. The bicycle example sketches states like Stopped, Accelerating, Moving, Braking, and two flavours of Pedalling (hard/normal), connected by transitions such as brake activation.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 54",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-051-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "When trying to decide which classes we actually need, what questions does the lecture say data modelling should answer?",
+      "keyBeats": [
+        "The core aspect is that we need to model the context our code will work in",
+        "Data modelling is a key aspect: what data is going to be used? how is it going to be used?",
+        "When is it going to be exchanged, how, and between whom?",
+        "What concrete elements exist in our system? What can we do with them and how? What do we need from these elements? What role do they have?"
+      ],
+      "modelAnswer": "Deciding which classes a system needs starts with modelling its underlying data and context. The lecture frames this as a set of guiding questions: what data will be used and how, when it gets exchanged and between which parties, what concrete elements actually exist in the system, what we can do with each of them, what we need from them, and what role each one plays. Answering these questions is what surfaces the candidate classes.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 55",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-052-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the satellite ground-station example, how many classes does the use-case diagram suggest are needed, and what are they?",
+      "keyBeats": [
+        "The use-case diagram shows at least five modules/classes needed",
+        "Login, Store Data, Retrieve data, View Telemetry Data, View Current Orbit Location",
+        "Stakeholders shown: Student and Satellite",
+        "'Store Data' is marked as the most common use case"
+      ],
+      "modelAnswer": "Looking at the Satellite Ground Station use-case diagram - with a Student and a Satellite as stakeholders - the lecture reads off at least five candidate classes/modules directly from the use cases: Login, Store Data (flagged as the most common use case), Retrieve data, View Telemetry Data, and View Current Orbit Location. This shows how just reading a use-case diagram can already suggest a first cut at the system's classes.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 56",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-053-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What methodology does the lecture propose for finding candidate classes and attributes from a written use-case description, illustrated with 'View telemetry data'?",
+      "keyBeats": [
+        "Example description: user picks a data set (scientific data, household data, alarms, etc.) from a list; specifies a start and/or end time; system retrieves the data from persistent storage and shows it via GUI; unspecified start/end times get default values automatically",
+        "Nouns in such a description represent potential class or attribute candidates"
+      ],
+      "modelAnswer": "Working through the 'View telemetry data' use case in prose - the user picks a data set from a list, specifies a start and/or end time (with sensible defaults if left blank), and the system fetches the data from persistent storage and shows it via the GUI - the lecture highlights a concrete technique: the nouns in that description (data set, start time, end time, persistent storage, GUI) are exactly the candidates worth considering as classes or attributes. Reading requirements text this way is a quick, repeatable way to start identifying your class model.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 57",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-054-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the general system-view example, what obvious components does the lecture identify just from looking at a system drawing, and how does it recommend turning that into code?",
+      "keyBeats": [
+        "Client, which comes in different flavours: for private customers, for industrial customers, for shop owner",
+        "Server (only one needed, since we just create different instances)",
+        "Items for sale",
+        "Money (to be exchanged)",
+        "Basic starting point: code is constructed in a 1:1 manner (or as close as possible) to what we can see"
+      ],
+      "modelAnswer": "Just from looking at a system drawing, obvious components tend to jump out: different flavours of Client (for private customers, industrial customers, and the shop owner), a single Server class (since we only ever need one class - different customers just become different instances of Client), Items for sale, and Money to be exchanged. The suggested starting point is refreshingly direct: build the code in as close to a 1:1 mapping to what you visually identify as possible.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 58",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-055-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the drone example's 'modularized system view' build on the earlier use-case analysis and general system view?",
+      "keyBeats": [
+        "Next step after use-case diagrams and the general system view is to look at modularization",
+        "Based on that analysis, it becomes possible to form a picture of a modularized system view",
+        "Module/class names start appearing explicitly: GUI, Keyboard input, CommunicationsManager, Main, Google map service, Route controller, Meas. planner, Alarm detector, grouped under Robator and Drone"
+      ],
+      "modelAnswer": "Having already produced a use-case diagram and a rough general system view, the next step is modularization: combining both earlier analyses into a single modularized system view. This is where concrete module/class names - GUI, Keyboard input, CommunicationsManager, Main, Google map service, Route controller, Measurement planner, Alarm detector, organised under the two top-level pieces Robator and Drone - actually start appearing on the page.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 59",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L2-056-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Once modules exist, how does the lecture suggest turning them directly into classes, and what does it say makes a class name 'intuitive'?",
+      "keyBeats": [
+        "A natural start: state that our modules can be modelled as classes directly",
+        "Robator -> has a GUI, Main, Keyboard Input and Communication protocol; Drone -> has a Route Controller, Alarm detector, Measurement Planner and a Communication Protocol",
+        "'Main' is flagged as too generic/close to the start method - 'Core' suggested as better",
+        "'Keyboard input' is flagged as strange - just 'Keyboard' is suggested, since input is implicit for that object",
+        "There is no single right or wrong answer, but some naming choices are more intuitive than others",
+        "An intuitive design increases the likelihood of writing good code: maintainable, debuggable, understandable, extensible"
+      ],
+      "modelAnswer": "The most direct path from modules to classes is simply to treat each module as a class - Robator becomes a class made up of a GUI, Main, Keyboard Input and a Communication protocol, and Drone becomes one made up of a Route Controller, Alarm detector, Measurement Planner and its own Communication Protocol. The lecture then critiques its own naming: 'Main' feels too close to a generic start method and 'Core' is suggested instead, and 'Keyboard input' feels odd when just 'Keyboard' already implies input functionality. There's no single correct naming, but more intuitive class names measurably increase the odds of ending up with maintainable, debuggable, understandable and extensible code.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 60",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-057-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the lecture derive concrete method names for the communication manager from the earlier interaction diagrams?",
+      "keyBeats": [
+        "We need to understand how we want to use our objects - designs, diagrams and subdivision give us the insight",
+        "Communication manager needs to send a flight schedule using the generic module method SendData (sends any generic data)",
+        "This raises the question: why not add a dedicated method called sendFlightSchedule(..)?",
+        "Because the approach is asynchronous, we also need something to receive and ack/nack",
+        "This raises the question: why not add receiveAck()?",
+        "We could also add receiveNotAck(), putting the Comm.Manager into a different state than receiveAck()"
+      ],
+      "modelAnswer": "Even before naming methods feels obvious, simply knowing when and how modules need to interact - from the earlier diagrams - already hints strongly at what methods are needed. The communication manager needs to send a flight schedule, and the generic module already offers SendData() for sending any raw data - which raises the tempting question of whether to instead add a dedicated sendFlightSchedule(..) method. Because communication is asynchronous, we also need a way to receive an acknowledgement or a negative acknowledgement, prompting the same kind of question about adding dedicated receiveAck() and receiveNotAck() methods that would put the Comm.Manager into different states.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 61",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-058-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does the lecture argue AGAINST adding a dedicated sendFlightSchedule(..) method to the generic communication module?",
+      "keyBeats": [
+        "Breaks generic design: the module suddenly 'knows' about a specific data type (flight schedules) instead of staying generic",
+        "Increases coupling: the communication logic becomes coupled to the domain concept 'flight schedule'",
+        "Other modules using SendData (weather, maintenance, crew info, etc.) would not fit naturally alongside a flight-schedule-specific method",
+        "Reduces reusability: a generic SendData module can be reused across many systems; sendFlightSchedule() cannot",
+        "Leads to 'method explosion': next you'd need sendPassengerList(), sendGateChanges(), sendFuelStatus(), etc. - brittle and uncontrolled growth",
+        "Correct approach: keep the interface generic"
+      ],
+      "modelAnswer": "Adding sendFlightSchedule() would quietly break the module's generic design, because the communication module would now 'know about' a specific domain concept - flight schedules - instead of just moving generic data, which increases coupling to that concept. It would also hurt reusability, since other data types like weather, maintenance or crew info wouldn't fit naturally next to a flight-schedule-specific method, and it opens the door to uncontrolled method explosion as every new data type demands its own send method. The correct approach the lecture lands on is to keep the interface generic and let callers pass whatever data they need through SendData().",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 62",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-059-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does the lecture argue AGAINST adding a dedicated receiveAck() method, and what does it recommend instead?",
+      "keyBeats": [
+        "Leaks low-level protocol details into higher-level modules - the communication manager need not know exactly how acknowledgements look",
+        "Creates tight coupling between sender and receiver implementation - if the ack format changes (structured object, delays, retries, timestamps) the whole public API would need to change",
+        "Leads to scattered state-handling: high-level components start reacting to ACK/NAK specifics rather than to communication outcomes",
+        "More methods = more states = more bugs: each method is effectively a possible state transition, and multiplying them makes the design fragile",
+        "Correct approach: expose one generic method or event instead"
+      ],
+      "modelAnswer": "A dedicated receiveAck() method would leak low-level protocol details up into higher-level modules that shouldn't need to care exactly what an acknowledgement looks like, and it tightly couples sender and receiver implementations - if the ack format later changes to include retries or timestamps, the whole public API has to change with it. It also scatters state-handling logic across the codebase, since components end up reacting to specific ACK/NAK shapes rather than to a general communication outcome, and more special-purpose methods simply means more possible states and more opportunities for bugs. The recommended fix is the same as before: expose a single generic receive method or event instead of one method per protocol detail.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 63",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-060-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the lecture suggest organizing many classes once we know which objects we need, and how does Java support this?",
+      "keyBeats": [
+        "Once we know which objects we want, we should also have a structure for them",
+        "Java offers packages for this (other languages have similar concepts)",
+        "It is a good alternative to spreading all classes around in a single directory, which quickly becomes messy",
+        "Syntax example: 'package cim.core.wcn.es.aau.dk;' followed by 'import cim.CIMobjects.wcn.es.aau.dk.Asset;'"
+      ],
+      "modelAnswer": "Once a design has produced a whole set of classes, they need organisational structure rather than sitting loose in one folder - Java's answer to this is packages (other languages offer similar mechanisms). A class declares which package it belongs to with a 'package ...;' statement at the top of the file, and other classes pull in classes from different packages using 'import ...;' statements, keeping a growing codebase navigable instead of turning into one messy directory of files.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 64",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L2-061-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The lecture closes with 'the important stuff' - what four takeaways does it highlight as the summary of the whole lecture?",
+      "keyBeats": [
+        "Start with system behavior, not code: use-case diagrams clarify actors, interactions and goals before coding begins, ensuring system clarity - understand what the system must do before thinking about how to implement it",
+        "UML visualizes architecture: UML diagrams structure team thinking around architecture, class responsibilities, and communication pathways",
+        "Meaningful classes and responsibilities: classes should represent domain concepts with clear, non-overlapping responsibilities for maintainability",
+        "Objects combine state and behavior: methods operate on an object's data, reflecting real-world behavior and encapsulation"
+      ],
+      "modelAnswer": "The lecture wraps up with four core takeaways. First, always start with system behaviour rather than code - use-case diagrams exist to clarify actors, interactions and goals so you understand what the system must do before worrying about how. Second, UML exists to visualise architecture and structure a team's shared thinking about class responsibilities and communication pathways. Third, classes should be meaningful: representing real domain concepts with clear, non-overlapping responsibilities. And fourth, objects combine state and behaviour - their methods operate on their own data, which is the whole point of encapsulation and realistic real-world modelling.",
+      "citation": "ooadi2.slides.full.pdf.extracted.txt, PAGE 65",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L2-E1",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Make a use case diagram for a small robot system that cleans garbage in a canteen. You don't need to have all complete",
+      "whatItTests": "Ability to derive a use-case diagram (actors + use cases + system boundary) directly from a short natural-language system description.",
+      "answerSketch": "Solution notes the diagram was 'proudly' generated using AI, showing a canteen-cleaning robot with a 'Return to charging station' use case; the solution points out other use cases that are obviously also needed but missing from the generated picture, namely 'avoid obstacles' and 'notify of full bin'."
+    },
+    {
+      "id": "OOADI-L2-E2",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Identify main modules that can realize the use cases.",
+      "whatItTests": "Translating use-case-level functionality into a first cut of candidate software modules.",
+      "answerSketch": "Non-exclusive list of possible modules: Cleaning monitor (executes the cleaning routine, controls brushing/suction systems); Navigation & path-planning (plans routes around tables/chairs/people, tracks position during cleaning); Garbage bin monitoring (detects garbage fill level, triggers a 'bin full' event)."
+    },
+    {
+      "id": "OOADI-L2-E3",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Select one or a few modules and subdivide these modules.",
+      "whatItTests": "Breaking one chosen module down into smaller, more focused submodules.",
+      "answerSketch": "The Cleaning module is divided into: Cleaning routine manager (the overall manager); Cleaning tool controller (on/off for suction & brush); Floor type adaptor (adjusts cleaning based on floor surface); Cleaning session logger (provides statistics for the user)."
+    },
+    {
+      "id": "OOADI-L2-E4",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Describe how those would need to interact.",
+      "whatItTests": "Describing the concrete interactions/messages between submodules identified in the previous step.",
+      "answerSketch": "Cleaning Routine Manager -> Cleaning Tool Controller: commands like start/stop tools, set brush speed. Cleaning Routine Manager -> Floor Type Adaptor: requests current floor type, receives change events. Cleaning Routine Manager -> Session Logger: logs lifecycle events (started, paused, error, completed). Floor Type Adaptor -> Cleaning Tool Controller: applies parameter updates (suction level, brush pressure) based on detected surface. Floor Type Adaptor -> Session Logger: logs floor-type changes/adaptation actions."
+    },
+    {
+      "id": "OOADI-L2-E5",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Describe what entities are involved and for each entity, describe what we need to be able to do with them.",
+      "whatItTests": "Identifying data/state entities behind a module and specifying the operations needed on each.",
+      "answerSketch": "Using the Floor Type Adaptor as an example, entities: FloorType (e.g. 'tile', 'carpet', 'linoleum'), SensorReading (optical reflectance, vibration, pressure), AdaptedToolSettings (output settings depending on floor type), FloorChangeEvent (signals changes to the Routine Manager). Required operations: interpret raw SensorReading values, determine the current FloorType, produce AdaptedToolSettings for the Cleaning Tool Controller, and notify the Routine Manager via a FloorChangeEvent. The module is essentially a 'translator' between sensor data and cleaning behaviour."
+    },
+    {
+      "id": "OOADI-L2-E6",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Make (simple) code that in the same way as demonstrated in the lecture, demonstrates a selected part of the interactions you defined in step 4).",
+      "whatItTests": "Turning a designed set of module interactions into compiling Java classes wired together via constructor injection, and a main() that drives them.",
+      "answerSketch": "Classes SessionLogger (log(String)), CleaningToolController (applyToolSettings(String)), and FloorTypeAdaptor (detectFloorType(), generateToolSettingsForFloor(String)) are defined. CleaningRoutineManager receives all three via its constructor and its startCleaningRoutine() method logs the start, asks the FloorTypeAdaptor for the floor type, gets the adapted settings, applies them via the CleaningToolController, and logs completion. A Main class with main() constructs all the objects, wires them into a CleaningRoutineManager, and calls startCleaningRoutine()."
+    },
+    {
+      "id": "OOADI-L2-E7",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Based on the below description, define a set of classes for things on a bicycle down to nuts and bolts. Define methods and attributes for each - you don't have to overdo this. Just so you have enough to roughly model a bicycle and be able to \"use\" each class in a limited way.",
+      "whatItTests": "Decomposing a described real-world object (a bicycle) into a class structure with sensible attributes and methods, scoped appropriately (not over-engineered).",
+      "answerSketch": "Suggested structure: Drivetrain (Pedal -> Crank -> Chain -> GearSystem, where GearSystem has front chainring(s), rear cassette, derailleur); Wheel (front/rear, with Tire, Rim, Hub, Spokes, Axle, Nut+Bolt); Brake (front/rear, simple rim-brake abstraction); Lights (front/rear, with LightSensor); Frame (placeholder entity for overall structure). Behavioural highlights: stepOnPedals(force) converts rider effort into speed modulated by gear ratio; shiftUp()/shiftDown() change the ratio (higher = faster but harder); applyFrontBrake(force)/applyRearBrake(force); updateAmbientLight(lux) auto-switches lights on/off; removeWheel(position)/fixPuncture(position)."
+    },
+    {
+      "id": "OOADI-L2-E8",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Implement the main classes from your initial design. Add some simple functionality to key method that simply prints its functionality to the screen, e.g. \"changing gear\", \"wheel off\".",
+      "whatItTests": "Turning a class design into real, compilable Java classes with simple observable (println) behaviour per method.",
+      "answerSketch": "Core classes implemented: GearSystem (private int gear=1; shiftUp()/shiftDown() adjust gear within bounds 1-7 and println the change or 'already in highest/lowest gear'; getGear()); Wheel (position string, boolean mounted; remove()/mount() println the action or that it's already in that state); Brake as an abstract class holding position and apply() that prints '<position> brake applied.', with FrontBrake/RearBrake subclasses calling super(position); Light (position, boolean on; switchOn()/switchOff() println the change)."
+    },
+    {
+      "id": "OOADI-L2-E9",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Create a bicycle class, that initiates the previous defined classes. Also add attributes and methods to the bicycle as you would use a normal bicycle.",
+      "whatItTests": "Composing several previously defined classes as private fields of a top-level Bicycle class, and exposing a facade of methods matching how a real bicycle is used.",
+      "answerSketch": "Bicycle holds final fields for a GearSystem, two Wheel objects (front/rear), FrontBrake, RearBrake, and two Light objects (front/rear), all constructed as fields. It exposes facade methods: stepOnPedals(), shiftUp()/shiftDown() (delegating to gears), applyFrontBrake()/applyRearBrake() (delegating to the brakes), switchLightsOn()/switchLightsOff() (delegating to both lights), and removeFrontWheel()/removeRearWheel()/mountFrontWheel()/mountRearWheel() (delegating to the wheels)."
+    },
+    {
+      "id": "OOADI-L2-E10",
+      "source": "ooadi2.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Create a main() that initiates the bicycle and show that you can execute via code, the below description [riding forward, changing gears, front/backlights, removable wheels, front and rear brakes].",
+      "whatItTests": "Driving the completed Bicycle facade class from a main() method to demonstrate the whole described real-world behaviour end-to-end.",
+      "answerSketch": "public class Main creates Bicycle bike = new Bicycle(); then calls bike.stepOnPedals(); bike.shiftUp(); bike.shiftUp(); bike.applyRearBrake(); bike.switchLightsOn(); bike.removeRearWheel(); bike.mountRearWheel(); bike.switchLightsOff(); - exercising pedalling, gear changes, braking, lights, and the removable wheel, matching every behaviour named in the bicycle description."
+    }
+  ]
+}

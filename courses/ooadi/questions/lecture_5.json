@@ -1,0 +1,871 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 5,
+  "lectureTitle": "Abstraction, Interfaces and Polymorphism",
+  "examQuestions": [
+    {"examQ": 4, "subPart": "a", "promptVerbatim": "Polymorphic data"},
+    {"examQ": 5, "subPart": "a", "promptVerbatim": "Interfaces and their uses"}
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L5-01-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Besides the general objectives of OO (like platform independence), what set of five design principles guides OO design, and what does the acronym stand for?",
+      "keyBeats": [
+        "SOLID is a set of 5 principles supplementing general OO objectives",
+        "S - Single-responsibility principle",
+        "O - Open-closed principle",
+        "L - Liskov Substitution principle",
+        "I - Interface Segregation principle",
+        "D - Dependency Inversion principle"
+      ],
+      "modelAnswer": "In addition to general OO goals such as platform independence, the SOLID principles are five guidelines for good OO design: Single-responsibility, meaning a class should have only one reason to change; Open-closed, meaning code should be open for extension but closed for modification; Liskov Substitution, meaning subtypes must be usable wherever their supertype is expected; Interface Segregation, meaning clients should not be forced to depend on methods they do not use; and Dependency Inversion, meaning high-level modules should depend on abstractions rather than concrete classes.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-02-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the Single-Responsibility Principle (SRP) say, and what effect does following it have on your code structure?",
+      "keyBeats": [
+        "A class should have one and only one reason to change",
+        "A class should have only one job",
+        "Naturally leads to smaller, simpler classes",
+        "Methods should also naturally belong to the class itself",
+        "Example: split a monolithic Main into Robator + CommManager classes"
+      ],
+      "modelAnswer": "SRP states that a class should have one and only one reason to change, meaning it should have exactly one job. Following this automatically breaks code into smaller, simpler parts rather than one class trying to do everything. On the slides this is illustrated by contrasting a single Main class that 'does it all' against splitting the responsibilities into a Robator class for overall logic and a separate CommManager class for communication.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-03-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the Open-Closed Principle (OCP) say, and why is directly adding new methods to an existing class (e.g. wifiConnect(), bluetoothConnect()) a problem?",
+      "keyBeats": [
+        "Objects/entities should be open for extension but closed for modification",
+        "We may always need to extend behaviour later",
+        "Changing operational code, especially method names, is risky ('a nightmare')",
+        "If implementation changes are needed, they should stay inside the method",
+        "Adding a new protocol method for every new communication type forces modification of the existing class each time"
+      ],
+      "modelAnswer": "The Open-Closed Principle says classes should be open for extension but closed for modification: you should be able to add new behaviour without editing existing, working code. The slide's motivating problem is a CommManager class that gets a new method, like wifiConnect() or bluetoothConnect(), every time a new communication protocol appears — each addition means modifying the already-operational class, which is risky, especially if method names change.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-04-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does introducing an interface fix the Open-Closed Principle violation in the CommManager example?",
+      "keyBeats": [
+        "Define an interface CommManagerIF with a connect() method",
+        "Each protocol becomes its own final class implementing the interface (WifiComm, BluetoothComm)",
+        "Adding a new protocol means adding a new class, not modifying an existing one",
+        "'final' on the protocol classes prevents further subclassing",
+        "A new 'super-WiFi' variant must come from an additional class definition, not a change to WifiComm"
+      ],
+      "modelAnswer": "Instead of adding a new method to CommManager for every protocol, you define an interface, CommManagerIF, with a single connect() method, and let each protocol implement it in its own class: WifiComm and BluetoothComm each implement connect() with their protocol-specific logic. Both classes are marked final so nobody accidentally subclasses them; if a super-WiFi variant is needed later, it must come from a brand-new class, not a modification of WifiComm. This way, extending to a new protocol means adding a class, never touching the existing, working ones — closed for modification, open for extension.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-05-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "State the Liskov Substitution Principle (LSP) and explain, with the Bird/Penguin example, where it can break.",
+      "keyBeats": [
+        "If property q(x) is provable for objects of type T, q(y) must also be provable for objects y of subtype S",
+        "If something is true for every T, it must also be true for every subtype S",
+        "Example: Circle and Square can both be treated as Shape",
+        "Counter-example: Bird has fly(); Penguin extends Bird but Penguin.fly() throws an exception — this breaks LSP",
+        "LSP ensures more predictable and maintainable code"
+      ],
+      "modelAnswer": "The Liskov Substitution Principle says that if some property is provable about objects of a type T, that same property must be provable for objects of any subtype S of T — subclasses must be substitutable for their superclass without breaking correctness. Circle and Square can both safely be treated as a Shape. But the principle breaks down in the classic Bird/Penguin case: Bird declares fly(), and if Penguin extends Bird but throws an exception from fly(), code that trusted 'every Bird can fly' now breaks. LSP is what keeps inheritance hierarchies predictable and maintainable.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-06-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the Interface Segregation Principle (ISP) say, and what is wrong about putting getRadius() on a common Shape superclass shared by Circle and Square?",
+      "keyBeats": [
+        "A client should never be forced to implement/depend on methods it does not use",
+        "If a method is not needed for a subclass it should not be forced to implement (or inherit) it",
+        "getRadius() on Shape makes no sense for Square — what is the radius of a square?",
+        "Solution: segregate (split) interfaces by the qualities/characteristics a shape actually has"
+      ],
+      "modelAnswer": "The Interface Segregation Principle says clients should never be forced to depend on methods they don't use. The slide example puts getRadius() directly on a base Shape class that both Circle and Square extend — but a Square has no radius, so calling getRadius() on it makes no sense. The fix is to split, or segregate, the interface into smaller pieces based on what each shape actually has, so a class only exposes the operations that are meaningful for it.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-07-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Show the concrete package-level fix for the ISP violation: how are Shape and Circular structured so that only Circle exposes getRadius()?",
+      "keyBeats": [
+        "Split interfaces are defined outside Shape but in the same package (e.g. shapes/)",
+        "interface Shape { double getArea(); }",
+        "interface Circular { double getRadius(); }",
+        "class Circle implements Shape, Circular — implements both getArea() and getRadius()",
+        "class Square implements only Shape — no getRadius() forced on it"
+      ],
+      "modelAnswer": "The recommended fix is to split the shared class into two interfaces living in the same package: Shape declares only getArea(), and a separate Circular interface declares getRadius(). Circle then implements both Shape and Circular, providing both getArea() and getRadius(), while a class like Square implements only Shape and is never forced to provide a meaningless getRadius(). This is exactly interface segregation in practice: each class only commits to the capabilities it actually has.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-08-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the keyword 'extends' mean for a Java class, and what restriction does Java impose on it?",
+      "keyBeats": [
+        "extends is used for class inheritance",
+        "You inherit fields and methods from the parent class",
+        "You can override methods and reuse existing behaviour",
+        "Establishes an is-a relationship (a Circle is-a Shape)",
+        "Java restriction: a class can only extend ONE class (single inheritance)",
+        "Reason: if two parents defined different implementations of the same method, it would be ambiguous which one to use"
+      ],
+      "modelAnswer": "extends is Java's keyword for class inheritance: the subclass inherits the parent's fields and methods, can override them, reuses existing behaviour, and establishes an is-a relationship — a Circle is-a Shape. Java restricts a class to extending only one parent class at a time; the slide's justification is that if you could extend two classes that each provided a different implementation of the same method, it would be ambiguous which implementation the compiler should use.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-09-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the Dependency Inversion Principle (DIP) say, and how does putting draw() directly on the parent Shape class (with a Circle implementation in mind) violate it?",
+      "keyBeats": [
+        "Entities must depend on abstractions, not on concretions",
+        "High-level modules must not depend on low-level modules; both should depend on abstractions",
+        "Goal: decoupling between classes",
+        "If draw() is implemented in the parent Shape with a Circle in mind, a Square will incorrectly be drawn as a circle",
+        "Generalization goes upward, specialization goes downward in a class hierarchy"
+      ],
+      "modelAnswer": "The Dependency Inversion Principle says entities should depend on abstractions rather than on concrete implementations — high-level and low-level modules should both depend on an abstraction, not on each other directly, so classes stay decoupled. The slide's example is a Shape parent class whose draw() method is actually written with a Circle in mind: if Square inherits that same implementation, it gets drawn as if it were a circle, which is wrong. The fix is to keep specific drawing logic in the subclasses (specialization goes downward) while the shared abstraction stays generic (generalization goes upward).",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-10-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The lecture motivates abstract classes with a team drawing-program scenario. Describe the problem, and what the team manager decides.",
+      "keyBeats": [
+        "Team A implements squares/circles, Team B implements polygons, Team C implements visualization",
+        "Person A adds drawSquare() and drawCircle(); Person B adds drawPolygons()",
+        "Person C (visualization) is confused and needs many if-statements depending on which shape it is",
+        "Manager decides all shapes must expose the same method draw(), with implementation responsibility given to whoever wrote the shape"
+      ],
+      "modelAnswer": "The scenario: separate developers implement squares/circles, polygons, and visualization independently. Because each shape-implementer names their drawing method differently — drawSquare(), drawCircle(), drawPolygons() — the visualization developer ends up with a mess of if-statements to figure out which method to call for which shape. The manager's fix is to mandate that every shape class expose the same method name, draw(), so the visualization code can call it uniformly — which is exactly the motivation for abstract classes and polymorphism.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-11-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is an abstract class, and how can we still work with a family of shapes (Circle, Square) uniformly via the abstract Shape type?",
+      "keyBeats": [
+        "Abstract classes are classes we cannot directly instantiate",
+        "abstract class Shape { abstract void draw(); setCenterCoordinate(x,y); }",
+        "Circle extends Shape and implements draw()",
+        "We can be sure draw() is properly implemented because Circle/Square extend Shape",
+        "We can identify objects as Shapes via instanceof: if (s1 instanceof Shape) { s1.draw(); }",
+        "A Shape variable can point to a Circle or Square object: Shape s1 = new Circle();"
+      ],
+      "modelAnswer": "An abstract class is a class you cannot directly instantiate — you can never write 'new Shape()'. Instead, Shape declares an abstract draw() method plus a concrete setCenterCoordinate(x,y). Circle and Square extend Shape and each supply their own draw(). Because they extend Shape, we're guaranteed draw() is implemented, and we can check membership with instanceof, e.g. if (s1 instanceof Shape) { s1.draw(); }. This lets code hold a Shape s1 = new Circle() and call s1.draw()/s1.setCenterCoordinate() uniformly, regardless of the concrete subclass.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-12-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "The slides say abstract classes are 'not about overriding — they are about enforcing a contract + sharing partial implementation.' When are abstract classes handy?",
+      "keyBeats": [
+        "Abstract classes let you define a contract and shared logic together",
+        "Handy when: some behaviours must be provided by subclasses (abstract methods)",
+        "Handy when: some behaviour is common and should be inherited (concrete methods)",
+        "Handy when: some internal state(s) must be shared",
+        "Handy when: some methods should be left for implementation in subclasses",
+        "Example: abstract Animal with abstract makeSound() and a concrete shared sleep()"
+      ],
+      "modelAnswer": "Abstract classes aren't fundamentally about overriding methods; they're about enforcing a contract while also sharing partial implementation. They're useful whenever some behaviour must be supplied by each subclass, some behaviour is common enough to be inherited as-is, some internal state needs to be shared across subclasses, or some methods should deliberately be left open for subclasses to fill in. The Animal example captures this: makeSound() is abstract, forcing every subclass to define it, while sleep() is a concrete, shared implementation every Animal inherits unchanged.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-13-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why can't you create a Shape object directly, and what is the main goal of using an abstract class here?",
+      "keyBeats": [
+        "Using abstract classes prohibits any instances of that class from being formed",
+        "We cannot create an object Shape but we can create a Circle or Square",
+        "We can still check membership: is this object a Shape?",
+        "We can add as many common (concrete) things as we normally would, e.g. setCoordinate(x0,y0)",
+        "draw() needs a specific implementation per shape, but conceptually 'draw the shape' makes sense for all",
+        "Main goal: provide shared implementation of common behaviour, promoting code reuse"
+      ],
+      "modelAnswer": "Declaring Shape abstract prohibits forming a bare Shape instance — you can't write 'new Shape()', but you can create a Circle or Square and still test whether it 'is a' Shape. This lets Shape carry ordinary shared members, like a concrete setCoordinate(x0,y0) method, while leaving draw() abstract because circles and squares are drawn differently even though 'draw the shape' conceptually applies to both. The overall goal is to provide shared implementation of common behaviour and promote code reuse across the family of subclasses.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-14-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In what sense is an abstract class an 'incomplete inheritance', and what must subclasses do about it?",
+      "keyBeats": [
+        "An abstract class defines a common base for related subclasses",
+        "It outlines shared behaviour or expectations across a family of classes",
+        "It implements some behaviour and leaves other behaviour abstract (unimplemented) — hence 'incomplete'",
+        "Subclasses must provide the missing pieces, ensuring the shared contract is fulfilled",
+        "You can even have abstract classes with static methods — which basically bypasses OO principles"
+      ],
+      "modelAnswer": "An abstract class defines a common base for a family of related subclasses, outlining shared behaviour and expectations. Because it implements some methods but deliberately leaves others abstract, it is 'incomplete' by design — like forcing your children to fill in specific code while sharing a common interface. Subclasses are required to provide the missing pieces, which is exactly how the shared contract gets fulfilled. Interestingly, abstract classes can also hold static methods, which sidesteps object-oriented principles entirely.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-15-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Helper/GFG example, an abstract class hosts a static method. Explain why this bypasses object-oriented design even though GFG extends Helper.",
+      "keyBeats": [
+        "abstract class Helper { static void demofun() {...} }",
+        "class GFG extends Helper { main calls Helper.demofun(); }",
+        "GFG extends Helper but doesn't use inheritance in any meaningful OO way",
+        "It just calls the static method via Helper.demofun() (called on the class, not an instance)",
+        "Helper.demofun() is essentially a global function that happens to live inside a class",
+        "Conclusion: abstract classes are meant for incomplete OO inheritance, not for hosting static (procedural) utility code"
+      ],
+      "modelAnswer": "In the example, Helper is an abstract class with a static demofun() method, and GFG extends Helper but calls demofun() as Helper.demofun() — a static, class-level call rather than an instance method call. Even though GFG technically extends Helper, no real inheritance behaviour (overriding, polymorphic dispatch) is happening; demofun() is essentially a global procedural function that just happens to live inside a class named Helper. The slides call this 'procedural programming in disguise' — abstract classes exist for incomplete OO inheritance, and stuffing static utility methods into them defeats that purpose.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-16-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In a GUI drawing scenario, what does 'classical OOP' suggest for rendering shapes, and how do real GUI rendering systems actually differ?",
+      "keyBeats": [
+        "OOP suggestion: each Shape object draws itself; the screen is built by asking each object to render",
+        "Rendering = looping over shapes and calling shape.draw(graphicsContext) for each",
+        "'Each object knows how to do its own job'",
+        "Real GUI systems: collect draw commands, batch and sort them, flatten hierarchy into a linear work queue, then feed the queue to a renderer that sends optimized commands to the GPU",
+        "This real approach is pipeline-centric, not object-centric"
+      ],
+      "modelAnswer": "The classical OOP idea is object-centric: each Shape object knows how to draw itself, and rendering the whole screen is just looping over shapes calling shape.draw(graphicsContext) on each. Real GUI rendering engines work differently — they collect draw commands from all the objects, batch and sort them, flatten the object hierarchy into a linear work queue, and feed that queue to a renderer that issues optimized commands to the GPU. That real pipeline is pipeline-centric rather than object-centric, showing where pure OOP design and high-performance implementation diverge.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-17-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How do abstract classes embody 'classical' OOP, and how does polymorphism fit into that picture?",
+      "keyBeats": [
+        "Abstract classes are tools of classical, textbook OOP",
+        "You create a base class with behaviour, and subclasses override/extend it",
+        "Each object is responsible for its own operations",
+        "Polymorphism dispatches the call to the right subclass implementation",
+        "State + behaviour live together in the same place",
+        "'Call shape.draw() and the right thing happens' — abstract classes = 'objects do the work'"
+      ],
+      "modelAnswer": "Abstract classes represent the purest, textbook OOP model: you write a base class carrying shared behaviour, subclasses override or extend it, and each object stays responsible for its own operations, with state and behaviour co-located. Polymorphism is the mechanism that makes this work — when you call shape.draw(), the runtime dispatches the call to whichever subclass's implementation actually applies, so 'the right thing happens' automatically. In short, abstract classes embody the OOP idea that 'objects do the work.'",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-18-o",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What is an interface in general OO terms, and what three things does it specify?",
+      "keyBeats": [
+        "An interface is a specification of methods",
+        "It tells us what methods exist",
+        "It tells us what their signatures look like",
+        "It tells us what behaviour a class must provide",
+        "Interfaces do not allow code — like function declarations in C header files",
+        "Example: interface Animal { public void animalSound(); public void run(); }"
+      ],
+      "modelAnswer": "An interface is a specification of methods: it tells you what methods exist, what their signatures look like, and what behaviour a class implementing it must provide — but it does not allow any actual code, much like function declarations in a C header file. The slide example is 'interface Animal' with animalSound() and run(), both bodyless — any class implementing Animal must supply the actual behaviour.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-19-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What core separation do interfaces provide, and how does that connect to two of the SOLID principles?",
+      "keyBeats": [
+        "Interfaces separate what something does from how it does it",
+        "Allows code to depend on abstractions, not concrete classes",
+        "draw() not depending on the specific shape realizes the Dependency Inversion principle (D in SOLID)",
+        "An interface can stay small and precise",
+        "No object is forced into interfaces it does not need — realizes Interface Segregation (I in SOLID)"
+      ],
+      "modelAnswer": "Interfaces separate what a component does from how it does it, letting calling code depend on an abstraction rather than a concrete class. Because draw() is declared on an interface rather than tied to a specific Shape implementation, code that calls draw() doesn't depend on the specific shape — this is the Dependency Inversion principle in action. And because interfaces can be kept small and precise, no class is ever forced to implement methods it doesn't need — that's the Interface Segregation principle showing up directly in how interfaces are designed.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-20-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the Shape/Square/Circle example that shows an interface decoupling draw() from any specific shape.",
+      "keyBeats": [
+        "package shapes; public interface Shape { void draw(java.awt.Graphics2D g); }",
+        "public class Square implements Shape { ... @Override public void draw(...) {...} }",
+        "public class Circle implements Shape { ... @Override public void draw(...) {...} }",
+        "Each shape provides its own drawing logic behind the same method signature",
+        "Calling code can call draw() on any Shape without knowing whether it's a Square or Circle"
+      ],
+      "modelAnswer": "The Shape interface declares a single method, void draw(Graphics2D g), with no implementation. Square and Circle each implement Shape and provide their own draw() logic — Square draws a square, Circle draws a circle — but both expose exactly the same method signature. Code that just holds a Shape reference and calls draw() never needs to know or care which concrete shape it actually has; the interface is the only contract that matters.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-21-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Using two interfaces, Shape and Circular, how do you give Circle a getRadius() method without forcing Square to implement one it doesn't need?",
+      "keyBeats": [
+        "interface Shape { void draw(Graphics2D g); double area(); }",
+        "interface Circular { double getRadius(); }",
+        "class Circle implements Shape, Circular — implements draw(), area(), and getRadius()",
+        "class Square implements Shape only — implements draw() and area(), no getRadius()",
+        "A class can implement as many interfaces as needed"
+      ],
+      "modelAnswer": "Shape declares draw() and area(), which every shape needs. A separate Circular interface declares only getRadius(). Circle implements both Shape and Circular, so it provides draw(), area(), and getRadius(); Square implements only Shape, providing draw() and area(), and is never forced to define a meaningless getRadius(). This works because in Java a class may implement as many interfaces as it wants, so composing exactly the capabilities you need is straightforward.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-22-o",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The lecture uses a geographically distributed team (Denmark, Canada, Bangladesh) each implementing part of a Robator/drone communication manager. What problem does this scenario set up?",
+      "keyBeats": [
+        "Teams in different countries each implement one piece of the communication system (Transmitter, Receiver, Comm. manager, drone heartbeat/detect drone)",
+        "Question posed: what happens if we meet after 3 months?",
+        "Sets up the risk of pieces not fitting together if nothing was agreed upon beforehand"
+      ],
+      "modelAnswer": "The scenario is a team spread across Denmark, Canada, and Bangladesh, each building a separate piece of a Robator-to-drone communication system — transmitters, receivers, and communication managers on both the Robator and drone side. The slide poses the question directly: what happens when the teams try to integrate their work after three months of working independently? This sets up the motivation for agreeing on interfaces before any code is written.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-23-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The lecture compares an un-agreed integration attempt to Apollo 13. What point is this analogy making about interfaces?",
+      "keyBeats": [
+        "Analogy to Apollo 13's 'Houston, we have a problem' scenario, where everything went wrong",
+        "The teams have to make incompatible pieces 'fit into this, using only that on the table'",
+        "Urgency framing: 'we must solve this before they die'",
+        "Point: without agreed interfaces up front, late integration becomes a crisis"
+      ],
+      "modelAnswer": "The Apollo 13 analogy dramatizes what happens if independent teams never agreed on interfaces: at integration time you're stuck trying to force incompatible pieces together using only what's already been built, under real time pressure — just like the Apollo 13 crew had to improvise a fix from only the parts on hand. The point is that this crisis-mode integration is avoidable, and the fix is agreeing on interfaces before coding starts.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-24-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What is the recommended process for avoiding integration problems between independently-developed components, and what artifact provides the basis for it?",
+      "keyBeats": [
+        "Before starting to code, teams must agree on interfaces",
+        "Proper design work beforehand, including message sequence diagrams, provides the basis",
+        "The sequence diagrams define what interfaces the communication manager must expose (e.g. sendFlightSchedule, sendRawData, notifyRawData, acknowledgement, etc.)"
+      ],
+      "modelAnswer": "The recommended process is: before any team writes code, they must agree on the interfaces. That agreement is grounded in proper up-front design work — specifically, message sequence diagrams that show which messages flow between Robator and drone (e.g. sendFlightSchedule, sendRawData, notifyRawData, acknowledgement). Those sequence diagrams give a firm, concrete basis for defining exactly which methods the communication manager interface must expose, so every team can build to the same contract independently.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-25-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "'The strength lies in the agreement.' What does this mean for how independent teams can safely divide interface implementation work?",
+      "keyBeats": [
+        "If teams can agree on interfaces (grounded in message sequence diagrams), that agreement is what matters most",
+        "Agreeing can be surprisingly hard — requires real discussion between teams",
+        "A good initial design on paper with a pen helps a lot",
+        "Once agreed, each team can count on those methods being implemented",
+        "HOW a method is implemented is up to the individual team — implementation detail is less important than the agreed contract",
+        "Example: separate CommManager, SendData, ReceiveData interfaces owned by Team Denmark, Canada, Bangladesh"
+      ],
+      "modelAnswer": "The key insight is that once teams agree on the interface — the method signatures — each team can trust that those methods will exist and be callable, regardless of how any other team actually implements them internally. Reaching that agreement can be surprisingly hard, since it requires real discussion, and a good paper-and-pen design session up front helps a lot. In the example, separate interfaces — CommManager, SendData, ReceiveData — are each owned by a different country's team; how each team implements its interface internally is entirely up to them, as long as the agreed method signatures are honored.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-26-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How is the interface-agreement approach related to 'design-by-contract', and which SOLID principles does it connect to?",
+      "keyBeats": [
+        "Question raised: 'Is this not just modularization of software components?'",
+        "Both the Open-Closed and Liskov Substitution principles support the use of interfaces",
+        "Design-by-contract: a concept introduced in 1986, credited to Bertrand Meyer",
+        "Like a module specification/requirement: input, output, functionality",
+        "The point: everyone is solving the same problem and delivering what was promised"
+      ],
+      "modelAnswer": "The slides link this whole approach to design-by-contract, a concept introduced by Bertrand Meyer in 1986: an interface acts like a module specification stating input, output, and functionality that a class promises to deliver. Both the Open-Closed and Liskov Substitution principles support using interfaces this way. The underlying point is simple — everyone on a distributed team is solving the same overall problem, and interfaces are the mechanism that lets each team deliver exactly what was promised without needing to know how anyone else implemented their part.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-27-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a Java interface specifically, compared to the general OO notion of an interface?",
+      "keyBeats": [
+        "A Java interface is a more restrictive version of the general OO definition",
+        "Strong separation between state and behaviour",
+        "In short: a list of methods and attributes without any code",
+        "Similar to header files in C/C++ where functions are declared with no code",
+        "A class can implement an interface; Class = behaviour + state",
+        "Example: interface Vehicle { void driveForward(); void brake(); ... } then class Bicycle implements Vehicle {}"
+      ],
+      "modelAnswer": "A Java interface is a more restrictive version of the general OO interface concept: it enforces a strong separation between state and behaviour by being nothing but a list of method (and attribute) declarations without any code — much like a C or C++ header file that declares functions without defining them. A class is where behaviour and state actually come together, and it implements the interface, as in 'public class Bicycle implements Vehicle {}' for an interface Vehicle declaring driveForward() and brake().",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-28-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Using the Vehicle interface example (Car, Bicycle both implement driveForward()), explain why the implementations can differ completely even though the method signature is shared.",
+      "keyBeats": [
+        "DriveForward and Brake are similar methods for vehicles in general but implemented very differently per vehicle",
+        "Car: pressing a speeder makes the engine work and drives the wheels",
+        "Bike: bicyclist steps on the pedals, which drives the wheels",
+        "You may be unsure whether you're handling a Car or a Bike, but it's useful to know you're handling a Vehicle",
+        "If a list of classes all implement Vehicle, a call to DriveForward is guaranteed to work for all of them"
+      ],
+      "modelAnswer": "DriveForward and Brake mean roughly the same thing for any vehicle, but their actual implementations are completely different: a car's driveForward works by pressing a speeder that drives an engine, while a bike's works by the cyclist pedaling. The interface hides that difference — you might not know whether a given object is a Car or a Bicycle, but as long as you know it's a Vehicle, calling driveForward() is guaranteed to work. This is exactly the payoff of interfaces: if you have a list of objects that all implement Vehicle, you can be certain a call to driveForward() succeeds on every one of them, regardless of the concrete type.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-29-s",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given a heterogeneous array of vehicle objects (Volvo, Racercycle, Train, Tesla, Scooter), how do you call driveForward() on each one uniformly through the Vehicle interface?",
+      "keyBeats": [
+        "objectInList[] holds different concrete vehicle types",
+        "Cast each element to the Vehicle interface type: Vehicle vehicleIF = (Vehicle) objectInList[i];",
+        "Call vehicleIF.driveForward(); — works regardless of concrete class, as long as it implements Vehicle",
+        "You can cast an object to the interface type it implements"
+      ],
+      "modelAnswer": "Given an array objectInList[] mixing Volvo, Racercycle, Train, Tesla, and Scooter objects, you loop over the array, cast each element to the Vehicle interface with Vehicle vehicleIF = (Vehicle) objectInList[i], and then call vehicleIF.driveForward(). Because every concrete class implements Vehicle, this single line works uniformly no matter which concrete type is actually stored at that index — you're programming against the interface, not the concrete class.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-30-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Compare interfaces and inheritance (extends) point by point, as laid out on the slides.",
+      "keyBeats": [
+        "Interface: allows individual implementations of the same method (per implementing class)",
+        "Interface: forces all implementing classes to have specific and same method signatures",
+        "Interface: classes can implement more than one interface",
+        "Interface: attributes can only be defined as final static",
+        "Interface: only fully supported if made public (private/protected have restrictions, were fully prohibited in earlier Java)",
+        "Extends: allows code reuse for subclasses — write once, reuse in all subclasses",
+        "Extends: a class can only inherit from ONE class, but a class can have many subclasses",
+        "Extends: attributes can be inherited by subclasses, with access controlled via public/protected/private"
+      ],
+      "modelAnswer": "On the interface side: each implementing class provides its own individual implementation of the shared methods, all implementing classes are forced to expose the exact same method signatures, a class can implement several interfaces at once, interface attributes can only ever be final static (constants), and interfaces are only fully usable when declared public — private and protected members have restrictions and were once entirely prohibited. On the inheritance (extends) side: code is written once in the parent and reused across subclasses, a class can extend only one parent (though that parent can have many subclasses), and attributes are inherited and access-controlled through the normal public/protected/private keywords.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L5-31-m",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Can a Java class use both inheritance and interfaces at the same time? What is the syntax/ordering rule?",
+      "keyBeats": [
+        "Yes, both inheritance and interfaces can be used at the same time",
+        "You can still only inherit from one parent class at a time",
+        "There is virtually no limit to how many interfaces you can implement",
+        "List the parent class first, then interfaces, comma-separated",
+        "Example form: Class Example : ParentClass, InterfaceOne, InterfaceTwo"
+      ],
+      "modelAnswer": "Yes — a class can extend one parent class and implement any number of interfaces simultaneously. The single-inheritance restriction still applies to the parent class, but there's virtually no limit on how many interfaces you can implement. The convention is to list the parent class first, then the interfaces, comma-separated, e.g. Class Example : ParentClass, InterfaceOne, InterfaceTwo.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-32-d",
+      "anchorsExamQ": 5,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the keyword 'implements' mean for a Java class, and how does that differ semantically from 'extends'?",
+      "keyBeats": [
+        "implements is used to ensure contract compliance",
+        "You promise to implement the methods declared in the interface",
+        "No behaviour is inherited — only the method signatures",
+        "You can implement multiple interfaces",
+        "Indicates a can-do capability rather than an is-a inheritance relationship",
+        "Example: class Circle implements Shape, Circular { // must implement both getArea() and getRadius() }"
+      ],
+      "modelAnswer": "implements means the class promises to fulfil a contract: it commits to providing concrete bodies for every method signature declared in the interface, but it inherits no actual behaviour — only the signatures come across. Unlike extends, a class can implement as many interfaces as it needs. Semantically, implements expresses a can-do capability (a Circle 'can draw' and 'can report its radius') rather than an is-a relationship, which is what extends expresses.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-33-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Sketch the overall map of polymorphism types shown on the slides: how do static and dynamic polymorphism relate to overloading/overriding and to compile-time/runtime binding?",
+      "keyBeats": [
+        "Two branches: Static polymorphism and Dynamic polymorphism",
+        "Static polymorphism -> static binding -> method overloading -> resolved at compile time",
+        "Dynamic polymorphism -> dynamic binding -> method overriding -> resolved at runtime",
+        "Diagram: a simple two-column mapping, static side vs dynamic side"
+      ],
+      "modelAnswer": "Diagram: two parallel chains. On one side, static polymorphism leads to static binding, which corresponds to method overloading, and is resolved at compile time. On the other side, dynamic polymorphism leads to dynamic binding, which corresponds to method overriding, and is resolved at runtime. The diagram essentially pairs each kind of polymorphism with its binding mechanism, its associated Java feature, and the point in the program's lifecycle where the decision is made.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L5-34-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is static polymorphism, also known as method overloading? Use the Transmitter.send() example.",
+      "keyBeats": [
+        "Static polymorphism = method overloading",
+        "Scenario: one Transmitter class used on both Robator side and Drone side",
+        "Robator -> drone: needs to send data plus a drone ID to target the right drone",
+        "Drone -> Robator: only one Robator exists, so an ID is superfluous",
+        "public void send(byte[] payload) — drone side, single default destination",
+        "public void send(String droneId, byte[] payload) — Robator side, selects destination by ID",
+        "Both methods share the name send() but differ in parameter list"
+      ],
+      "modelAnswer": "Static polymorphism, also called method overloading, means defining several methods with the same name but different parameter lists in the same class. The slide's example is a single Transmitter class used on both ends of a Robator-drone link: on the drone side, send(byte[] payload) sends to the one and only Robator, so no destination ID is needed; on the Robator side, send(String droneId, byte[] payload) needs an extra ID parameter to pick which drone to target. Both share the name send but are distinguished purely by their parameter signatures.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-35-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is static binding, and when/how is it resolved?",
+      "keyBeats": [
+        "Method overloading = compile-time polymorphism",
+        "In Java, C#, C++, Swift, overloading is resolved by the compiler, not at runtime",
+        "The compiler decides which overload to call based only on the argument types at the call site",
+        "Static binding: the binding between object reference and class type is done statically, when the type is explicitly declared in advance",
+        "At compilation time the relation is established, and the how/what of the objects is defined"
+      ],
+      "modelAnswer": "Static binding is what makes method overloading compile-time polymorphism: in languages like Java, C#, C++ and Swift, the compiler — not the runtime — decides which overloaded method to call, purely based on the declared types of the arguments at the call site. Because the object reference's type is explicitly known and fixed at compile time, the binding between the reference and the actual method implementation is established during compilation, before the program ever runs.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-36-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Compare an overloaded brake() design to three differently-named methods (brakeFrontWheel(), brakeFrontWheelStr()) — what trade-off does the slide highlight?",
+      "keyBeats": [
+        "Overloaded version: bicycle.brake(); bicycle.brake(frontWheel); bicycle.brake(frontWheel, 0.5)",
+        "Non-overloaded version: bicycle.brake(); bicycle.brakeFrontWheel(); bicycle.brakeFrontWheelStr(0.5)",
+        "One method name (overloaded) reduces complexity vs. three distinct method names",
+        "Balance between overloaded and specific methods is a design choice"
+      ],
+      "modelAnswer": "The slide contrasts one overloaded brake() method — called as brake(), brake(frontWheel), or brake(frontWheel, 0.5) — against three differently named methods: brake(), brakeFrontWheel(), and brakeFrontWheelStr(0.5). Overloading saves a lot of complexity by letting one name cover related variants, but it's ultimately a design choice: sometimes distinct, explicit names communicate intent more clearly than an overloaded set, so the balance depends on context.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-37-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is dynamic polymorphism (late binding)? Use the Data/PositionData/SensorData/CommandData example.",
+      "keyBeats": [
+        "Data is a superclass modelling data exchanged between Robator and drone (position, sensor, command, etc.)",
+        "Subclasses: PositionData, SensorData, CommandData extend Data",
+        "We sometimes need to refer to Data in different ways: superclass-as-superclass, superclass-as-subclass, subclass-as-subclass",
+        "Data d = new PositionData(); d.send(); calls PositionData.send() — this is late binding: the appropriate implementation is chosen at the point of the call",
+        "Diagram: Data (superclass) with subclasses PositionData, SensorData, CommandData branching from it"
+      ],
+      "modelAnswer": "Dynamic polymorphism, or late binding, is illustrated with a Data superclass modelling exchanged Robator/drone data, with subclasses PositionData, SensorData, and CommandData. We can refer to Data in different ways — as a superclass, as a subclass through a superclass reference, or directly as a subclass — and the appropriate implementation is chosen automatically: Data d = new PositionData(); d.send(); actually calls PositionData's send(), even though d is declared as type Data. The class tree here is Data at the top with PositionData, SensorData, and CommandData branching off as subclasses.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 46",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L5-38-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is dynamic binding, and how do compile-time type and runtime type each play a role, using Vehicle v = new Bicycle(); v.move();?",
+      "keyBeats": [
+        "The method that runs is chosen at runtime, based on the object's actual type, not the variable's declared type",
+        "Compile-time type decides what is allowed to be called",
+        "Runtime type decides which implementation is executed",
+        "Compiler only sees Vehicle v; checks 'does Vehicle have move()?'; if yes, allows the call",
+        "At runtime the object is actually a Bicycle, so Bicycle.move() executes, even though the variable's declared type is Vehicle",
+        "Binding is dynamic: done when the type of class is not explicitly known/declared in advance, only implicitly"
+      ],
+      "modelAnswer": "Dynamic binding means the method that actually runs is chosen at runtime based on the object's real type, not the compile-time declared type of the variable. With Vehicle v = new Bicycle(); v.move();, the compiler only sees the declared type Vehicle and checks that Vehicle has a move() method — if so, the call is allowed. But at runtime, the actual object is a Bicycle, so Bicycle.move() is the implementation that executes, even though v's declared type is Vehicle. Compile-time type controls what you're allowed to call; runtime type controls which implementation actually runs.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 47",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-39-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given Vehicle bicycle = new Bicycle();, why does bicycle.thisIsABicycleInterface() fail to compile, and how do you fix it with a cast?",
+      "keyBeats": [
+        "The compiler only allows calling members declared on the static (declared) type, here Vehicle",
+        "thisIsABicycleInterface() is not declared on Vehicle, so the compiler rejects bicycle.thisIsABicycleInterface()",
+        "Fix: narrow the type to Bicycle via an explicit downcast: ((Bicycle) bicycle).thisIsABicycleInterface();",
+        "The cast is allowed because the object bicycle actually refers to is a Bicycle at runtime"
+      ],
+      "modelAnswer": "Even though bicycle actually points to a Bicycle object at runtime, its declared (static) type is Vehicle, and the compiler only allows calling members that exist on the declared type. Since thisIsABicycleInterface() isn't part of Vehicle's API, bicycle.thisIsABicycleInterface() fails to compile. The fix is an explicit downcast: ((Bicycle) bicycle).thisIsABicycleInterface(), which narrows the reference's type to Bicycle so the compiler allows access to Bicycle-only members.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 48",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-40-d",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is method overriding, and what intuition does it give us when working with a class hierarchy like Vehicle/Car/Bicycle/Bus?",
+      "keyBeats": [
+        "Overriding is useful when we need a different implementation for the same functionality, often in class hierarchies",
+        "We obtain the intuition that: as long as we know an object is a Vehicle, we can call drive() on it",
+        "Contrast: Car.driveVehicle(), Bicycle.rideBicycle(), Bus.driveBus() — no shared name, no intuition, must know exact type",
+        "With overriding: Vehicle car = new Car(); car.drive(); Bicycle bicycle = new Bicycle(); bicycle.drive(); Bus bus = new Bus(); bus.drive();"
+      ],
+      "modelAnswer": "Overriding lets each subclass provide its own implementation of a method inherited from a common supertype, which is what gives us a useful intuition: as long as we know an object is a Vehicle, we know we can call drive() on it, regardless of whether it's actually a Car, Bicycle, or Bus. The slide contrasts this with a design that skips overriding and instead gives each class its own uniquely-named method — driveVehicle(), rideBicycle(), driveBus() — which forces calling code to already know the exact concrete type, losing that uniform intuition entirely.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 49",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-41-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given class B { public void p(double i) {...} } and class A extends B { public void p(double i) {...} } — is a.p(10) and a.p(10.0) an example of overriding or overloading, and why?",
+      "keyBeats": [
+        "A a = new A(); a.p(10); a.p(10.0); — both calls resolve to the SAME method signature p(double)",
+        "Because A's p(double) has the identical signature to B's p(double), this is overriding, not overloading",
+        "10 (an int) is automatically widened to double, so both calls invoke A's overridden p(double)",
+        "Contrast case: if A instead declared p(int i), that would be overloading (different signature) — B's p(double) and A's p(int) coexist as separate overloads"
+      ],
+      "modelAnswer": "Because A's p(double i) has exactly the same signature as B's p(double i), A's version overrides B's — it isn't a new overload. So both a.p(10) and a.p(10.0) resolve to the same method, A's p(double), with the int literal 10 automatically widened to a double. The slide contrasts this with a variant where A instead declares p(int i): now A and B have different parameter types, so A's p(int) doesn't override B's p(double) at all — it's a separate overload, and which one gets called depends on the argument's type at compile time.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 50",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-42-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Person/Student example, printPerson() always prints 'Person' even when called on a Student — why, when getInfo() is private?",
+      "keyBeats": [
+        "Person has printPerson() calling getInfo(), plus a private getInfo() returning 'Person'",
+        "Student extends Person and defines its own private getInfo() returning 'Student'",
+        "printPerson() is defined inside Person and cannot see Student's private getInfo() implementation",
+        "Because getInfo() is private, it is not actually overridden (private methods are not polymorphic/inherited for overriding purposes)",
+        "new Student().printPerson() still prints 'Person', since printPerson() always resolves getInfo() to Person's own private version"
+      ],
+      "modelAnswer": "When getInfo() is declared private in both Person and Student, Student's version does not actually override Person's — private methods are not visible to subclasses and are not part of the overridable, polymorphic contract. So printPerson(), defined in Person and calling getInfo() internally, can only ever see Person's own private getInfo(). As a result, both new Person().printPerson() and new Student().printPerson() print 'Person' — polymorphic dispatch never kicks in because private methods aren't overridden, only hidden.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 51",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-43-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Every class needs a constructor, even if you don't write one — explain why, and how super() lets subclasses reuse a parent constructor's logic.",
+      "keyBeats": [
+        "Every class requires a constructor, always — but Java can supply a default one if you don't write it",
+        "In Java, any class is also an Object, which has a default constructor, automatically called if you don't write your own",
+        "This default constructor always runs — it performs initialization Java requires",
+        "If you want to call the parent class's constructor because needed code is there, use super(), even with parameters",
+        "Using super() avoids copy/pasting the parent's constructor code into every subclass",
+        "super() use is not restricted to the constructor"
+      ],
+      "modelAnswer": "Every class technically needs a constructor because, in Java, every class is also an Object, and Object provides a default constructor that runs automatically to perform initialization Java requires — that's why you don't have to write one yourself for it to exist. When a subclass needs the parent class's own constructor logic to run too, it calls super(), optionally passing parameters, e.g. DroneData's constructor calls super(d) to invoke Data's constructor. This means you never need to copy-paste the parent constructor's code into every subclass; note also that super() isn't limited to constructors only.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 52",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L5-44-m",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain upcasting and downcasting with Fruit fruit = new Apple(); and Apple apple1 = (Apple) someUnknownFruit;. What does casting give us flexibility to do, and what happens if we don't cast?",
+      "keyBeats": [
+        "Casting allows flexible use of classes",
+        "If we do not cast, we cannot use the cast'ed methods/attributes (or use is limited to the declared type's members)",
+        "Upcasting: Parent p = new Child(); — treating a Child as its Parent type (implicit, always safe)",
+        "Downcasting: Child c = (Child) p; — allowed because p actually refers to a Child object",
+        "Fruit fruit = new Apple() is upcasting; Apple apple1 = (Apple) someUnknownFruit is downcasting"
+      ],
+      "modelAnswer": "Casting lets you flexibly move a reference between related types. Upcasting — e.g. Fruit fruit = new Apple() or Parent p = new Child() — treats a more specific object through its more general supertype reference; it's implicit and always safe since every Apple is a Fruit. Downcasting — e.g. Apple apple1 = (Apple) someUnknownFruit or Child c = (Child) p — narrows a general reference back to a specific type, and is only safe when the object being referenced actually is that specific type at runtime. If you never cast down, you're limited to only the members visible on the declared (general) type, even though the actual object may support more.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 53",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L5-45-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize 'the important stuff' from this lecture: how do abstraction, interfaces, and polymorphism fit together?",
+      "keyBeats": [
+        "Abstraction simplifies complex systems by hiding implementation details",
+        "Interfaces define what can be done, not how; they enable interchangeable components",
+        "Polymorphism allows different types to be used through one interface, with behaviour chosen at runtime",
+        "Overriding (dynamic binding) enables polymorphism; overloading (static binding) does not",
+        "Combining abstraction, interfaces, and polymorphism leads to cleaner, more flexible, more maintainable software"
+      ],
+      "modelAnswer": "Abstraction simplifies complex systems by hiding implementation details behind a simpler view. Interfaces build on that by defining what can be done rather than how, which is what lets components be swapped for one another. Polymorphism is the mechanism that lets different concrete types be used interchangeably through one shared interface or supertype, with the actual behaviour chosen at runtime — and it's specifically overriding, backed by dynamic binding, that enables this; overloading, backed by static binding, does not. Put together, abstraction, interfaces, and polymorphism are what make OO software cleaner, more flexible, and more maintainable.",
+      "citation": "ooadi5.slides.full.pdf.extracted.txt, PAGE 55",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L5-E01",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q1",
+      "promptVerbatim": "Trains can be characterized in many ways and include locomotives and wagons of all sorts (goods, passengers, luxury wagons, armored wagons, dangerous goods etc.). Sketch first a class diagram for defining Trains.",
+      "whatItTests": "Ability to model a composite class structure (Train composed of Locomotive and a list of Wagon subtypes) before applying interfaces/polymorphism on top of it.",
+      "answerSketch": "A Train class holds a Locomotive and a List<Wagon>. Wagon is specialized into subclasses such as PassengerWagon, GoodsWagon, ArmoredWagon, HazardousWagon, and LuxuryWagon, each representing a different wagon type on the diagram."
+    },
+    {
+      "id": "OOADI-L5-E02",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q2",
+      "promptVerbatim": "One possible superclass to a Train class could be Vehicle. Define an interface that properly describes what vehicles can do. Let the Train implement the Vehicle interface.",
+      "whatItTests": "Designing a small, precise interface capturing shared vehicle behaviour, and implementing it on a composite class (Train).",
+      "answerSketch": "public interface Vehicle { void start(); void stop(); void accelerate(int amount); void decelerate(int amount); int getSpeed(); } Then public class Train implements Vehicle holds a Locomotive, a List<Wagon>, and an int speed, and provides @Override implementations: start() runs common startup behaviour, stop() sets speed = 0, accelerate(amount) adds to speed, decelerate(amount) subtracts from speed."
+    },
+    {
+      "id": "OOADI-L5-E03",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q3",
+      "promptVerbatim": "Consider that some of your trains may be electric powered, and some may be diesel (and others). Define an electric Train interface that captures the electric type, e.g. it requires charging, one needs to check status of the battery etc. and implement on a few selected Train classes (or subclasses) that interface.",
+      "whatItTests": "Applying Interface Segregation: only electric-capable trains implement the electric-specific interface, while diesel trains are unaffected.",
+      "answerSketch": "public interface ElectricTrain { void chargeBattery(int kWh); int getBatteryLevel(); boolean needsCharging(); } A diesel train simply does not implement this interface, since it has no use for it. public class BatteryTrain extends Train implements ElectricTrain holds a batteryLevel field, initialized via its constructor, and implements chargeBattery(kWh) by adding kWh to batteryLevel, getBatteryLevel() by returning it, and needsCharging() by returning batteryLevel < 20."
+    },
+    {
+      "id": "OOADI-L5-E04",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q4",
+      "promptVerbatim": "The electric Train may need to be initiated differently as the normal version of the Train, e.g. starting charge state of the battery which is not present in the diesel version of the train. Use polymorphism to ensure your Train class can support the electric Train version in a generic fashion.",
+      "whatItTests": "Using polymorphism (a common Vehicle/Train supertype plus instanceof checks) so heterogeneous train fleets can be handled generically, with electric-only behaviour accessed via a safe instanceof cast.",
+      "answerSketch": "The goal is that any Train object, electric or diesel, behaves correctly through the Train or Vehicle type: Vehicle v = new BatteryTrain(50); v.start(); works fine generically, and ((ElectricTrain) v).chargeBattery(20); is used only when the object is actually electric. All trains can be stored together: List<Train> fleet = List.of(new Train(), new DieselTrain(), new BatteryTrain(80)); for (Train t : fleet) { t.start(); } starts every train polymorphically, each using its own start(). For electric-only operations: if (t instanceof ElectricTrain e) { e.chargeBattery(10); }."
+    },
+    {
+      "id": "OOADI-L5-E05",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q5",
+      "promptVerbatim": "Will there be a difference if the top-level Vehicle class is created as an abstract class? Is this a reasonable choice? Why/why not?",
+      "whatItTests": "Weighing abstract class vs interface trade-offs for a top-level type (shared implementation and single inheritance vs role-based multiple inheritance of behaviour).",
+      "answerSketch": "As an abstract class: you can provide shared fields or code (e.g. speed, engineStatus), but a class can only extend one abstract class (Java limitation), which limits flexibility since your classes then cannot inherit from any other class. As an interface (modern Java style): interfaces can have default methods since Java 8, narrowing the implementation gap, they allow multiple inheritance of behaviour, and Vehicle is really a role rather than a concrete object, so an interface fits better. Conclusion: prefer an interface here; an abstract class should only be chosen when you need shared implementation and are sure subclasses won't need another parent class."
+    },
+    {
+      "id": "OOADI-L5-E06",
+      "source": "ooadi5.assignments.pdf.extracted.txt, PAGE 1, Q6",
+      "promptVerbatim": "Create other vehicle types – just a few examples, e.g. bicycles from previous assignments. Which of the operations from previous assignments can you easily perform?",
+      "whatItTests": "Demonstrating that any new class implementing Vehicle slots into existing polymorphic operations (collections, loops, comparators, streams) for free.",
+      "answerSketch": "public class Bicycle implements Vehicle { private int speed; @Override public void start() { speed = 1; } @Override public void stop() { speed = 0; } @Override public void accelerate(int amt) { speed += amt; } @Override public void decelerate(int amt) { speed = Math.max(0, speed - amt); } @Override public int getSpeed() { return speed; } } This reuses existing mechanisms: Collections — List<Vehicle> traffic = List.of(new Train(), new Bicycle()); Polymorphic operations — for (Vehicle v : traffic) v.start(); works for all; Comparators — traffic.sort(Comparator.comparing(Vehicle::getSpeed)); Streams — traffic.stream().map(Vehicle::getSpeed).reduce(Integer::max);."
+    }
+  ]
+}

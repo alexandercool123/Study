@@ -1,0 +1,639 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 6,
+  "lectureTitle": "Lists, Iterators and Operators",
+  "examQuestions": [
+    { "examQ": 6, "subPart": "a", "promptVerbatim": "Structured data" }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L6-001-o",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What are the three core learning objectives Jan sets out for lecture 6, and how do they build on each other?",
+      "keyBeats": [
+        "Understand and use the List interface",
+        "Understand and use iterators",
+        "Understand and use operators and operator overloading",
+        "Together they explain how structured data is stored, traversed and compared in Java"
+      ],
+      "modelAnswer": "Lecture 6 has three tied-together goals: first, understanding the List interface so we can store and manipulate ordered collections of objects; second, understanding iterators, the safe mechanism for walking through those collections one element at a time; and third, understanding operators - how Java overloads a few built-in operators like '+' but forbids user-defined overloading, pushing us instead toward named comparison and equality methods on our own classes.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 2",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-002-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why is it significant that 'List' in Java is an interface rather than a class?",
+      "keyBeats": [
+        "List is an interface, not a concrete class",
+        "All implementing classes (ArrayList, LinkedList, Vector, Stack) guarantee the same method set",
+        "Underlying implementation code can differ wildly while usage stays identical",
+        "Enables interchangeable use of any List-typed class once you've learned one"
+      ],
+      "modelAnswer": "Because List is an interface, every class that implements it - ArrayList, LinkedList, Vector, Stack - is guaranteed to expose the same methods such as add(), get(), remove(), size() and iterator(), even though what happens internally can be completely different, e.g. an array-backed structure versus a linked node structure. That means once you've learned to use one List, you intuitively know how to use any other, and you can swap implementations without rewriting the code that consumes them.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-003-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the inheritance/interface chain Jan draws: Stack, Vector, List, Collection. What does each 'is-a' step mean?",
+      "keyBeats": [
+        "A Stack is a kind of Vector (extends)",
+        "A Vector is some sort of List (implements)",
+        "A List is also a Collection (interface extends interface)",
+        "A Collection is something we can iterate (Iterable)",
+        "This is a modeling choice - 'a reflection of someone's mind and view of the world', not an objective truth"
+      ],
+      "modelAnswer": "Jan traces a concrete example of interface/inheritance layering: Stack extends Vector, so a Stack literally is a Vector with extra push/pop behaviour; Vector implements List, so it is some sort of List; List extends Collection, so a List is also a Collection; and Collection extends Iterable, meaning anything that is a Collection can be iterated over. He stresses this is just a model someone designed - a reflection of a particular worldview - not an inevitable law of nature.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-004-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Name at least six methods the List interface provides, as listed on the slides.",
+      "keyBeats": [
+        "add()",
+        "contains()",
+        "get()",
+        "iterator()",
+        "remove()",
+        "size()",
+        "sort()",
+        "subList()",
+        "toArray()"
+      ],
+      "modelAnswer": "The List interface guarantees methods like add() to insert an element, contains() to test membership, get() to fetch by index, iterator() to obtain a traversal object, remove() to delete an element, size() to get the element count, sort() to order in place, subList() to get a view of a range, and toArray() to convert to a plain array - plus more.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-005-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What practical benefit do we get from programming against the List interface rather than a specific implementation like ArrayList?",
+      "keyBeats": [
+        "Any List-typed class (ArrayList, Vector, Stack, our own list) exposes the same operations",
+        "Code written against List works unmodified if we swap the concrete implementation",
+        "Once you learn one List you intuitively know how to use any child class",
+        "Caveat: designers can still 'ruin' this intuitiveness with poor implementations"
+      ],
+      "modelAnswer": "Programming to the List interface means our code only depends on the contract, not the concrete class, so we can freely swap ArrayList for Vector, Stack, or even our own custom list without touching the calling code - Jan's slide literally shows List A/B/C, Vector A/B/C, Stack A/B/C and 'our own list' all being usable the same way. The catch is that this intuitive interchangeability only holds if we, as designers, implement the interface sensibly.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-006-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Which four concrete classes does the slide give as examples implementing the List interface, and how is List<Vehicle> used in the train example?",
+      "keyBeats": [
+        "ArrayList, LinkedList, Stack, Vector all implement List",
+        "List<Vehicle> train = new ArrayList<Vehicle>();",
+        "list.add(new Locomotive(...)); list.add(new Wagon(...));",
+        "Vehicle[] trainAsArray = list.toArray();"
+      ],
+      "modelAnswer": "Jan lists ArrayList, LinkedList, Stack and Vector as examples of List implementers, and demonstrates it with a train example: you declare List<Vehicle> train = new ArrayList<Vehicle>(), add a Locomotive and a Wagon to it through the same add() method even though they're different Vehicle subtypes, and can later pull everything out into a plain array with toArray().",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-007-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What goes wrong if you try to remove an element from a Vector/List while looping over it with a plain indexed for-loop?",
+      "keyBeats": [
+        "for (int i=0; i<minVector.size(); i++) loop re-reads size() every iteration",
+        "Removing item 3 shrinks the list, so size() is no longer 10",
+        "Remaining indices shift, so subsequent iterations skip or misread elements",
+        "Result: unpredictable code - 'which sucks' per the slide"
+      ],
+      "modelAnswer": "If you loop with `for (int i=0; i<minVector.size(); i++)` and remove element 3 partway through, the list shrinks immediately, so size() returns one less than before and every element after index 3 shifts down by one position. The loop's book-keeping no longer matches reality, so you can skip elements or read the wrong one - Jan calls the resulting behaviour unpredictable, which is exactly the kind of problem iterators are introduced to solve.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-008-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define what an Iterator is in Java and list its four core operations from the slides.",
+      "keyBeats": [
+        "Iterator is technically an interface implemented by all Collection sub-classes",
+        "hasNext() - is there another element?",
+        "next() - advance and return the next element",
+        "remove() - remove the current element safely",
+        "forEachRemaining() - apply an action to all remaining elements"
+      ],
+      "modelAnswer": "An Iterator is itself an interface, implemented by every Collection subclass, that provides a simpler and less error-prone way of interacting with elements: hasNext() tells you whether another element exists, next() advances to and returns it, remove() lets you delete the current element safely during traversal, and forEachRemaining() applies an action to everything left in the collection.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-009-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does Jan say iterators make code 'more readable' and less error-prone compared to indexed access like minVector.get(i)?",
+      "keyBeats": [
+        "Iterators let you work with the current object directly instead of re-fetching it via get(i)",
+        "hasNext()/next()/remove() encapsulate the bookkeeping that caused the page-7 bug",
+        "Code intent (iterate, check id, remove) becomes explicit rather than index arithmetic",
+        "Improved readability translates directly into fewer coding errors"
+      ],
+      "modelAnswer": "With an iterator you write minIterator = minVector.iterator(); while (minIterator.hasNext()) { it.next()...; if (it.id==\"someIDNo3\") it.remove(); } - you work with the current element directly rather than repeatedly calling get(i), and remove() is defined to keep the iteration state consistent. That makes the code's intent clearer and, per Jan's broader point, more readable code directly means fewer coding errors.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-010-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Compare the explicit-Iterator version of stopAll(List<Vehicle> train) with the for-each version. What does the ':' in a for-each loop mean?",
+      "keyBeats": [
+        "Explicit form: for (Iterator<Vehicle> trainSet = train.iterator(); trainSet.hasNext();) trainSet.next().stop();",
+        "For-each form: for (Vehicle wagon : train) wagon.stop();",
+        "':' reads as 'in' and realises a for-each construct",
+        "Same behaviour, but for-each is shorter and hides the iterator bookkeeping"
+      ],
+      "modelAnswer": "Both versions stop every vehicle in the train list. The explicit form manually grabs an Iterator<Vehicle>, checks hasNext(), and calls next().stop() each round. The for-each form, for (Vehicle wagon : train) wagon.stop();, does exactly the same thing under the hood but reads as 'for each wagon in train' - Jan notes the colon is read as 'in' and turns the loop into a for-each construct, which is nicer for humans even though it makes no difference to the computer.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-011-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through (and sketch) the classic nested-iterator bug: two lists (locomotives, wagons) combined into trains using nested explicit iterators. Why does it throw NoSuchElementException?",
+      "keyBeats": [
+        "Outer loop: for (Iterator locIter ...; locIter.hasNext();) with no locomotive variable captured",
+        "Inner loop: for (Iterator wagIter ...; wagIter.hasNext();) trains.add(new Train(locIter.next(), wagIter.next()));",
+        "locIter.next() is called once per INNER iteration, not once per outer iteration",
+        "The outer iterator is advanced far faster than intended and eventually run past its last element",
+        "Same bug shown with a suits/ranks nested loop meant to build a card deck"
+      ],
+      "modelAnswer": "Picture two separate lists, locomotives and wagons, each with its own iterator. The buggy code calls locIter.next() inside the inner wagon loop's add(new Train(...)) call, so every time the inner loop ticks, the outer iterator is also advanced - instead of once per outer pass. Since the inner loop typically runs many times per outer pass, the outer iterator quickly runs out of elements, and calling next() on it throws NoSuchElementException. The same structural bug is shown with a suits/ranks nested loop meant to build a card deck.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L6-012-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does version (B) on page 12 fix the nested-iterator bug from (A), and how does the for-each version make the same fix automatic?",
+      "keyBeats": [
+        "(A) bug: locIter.next() called inside inner loop, once per inner iteration",
+        "(B) fix: Locomotive locomotive = locIter.next(); pulled OUTSIDE the inner loop, so it advances once per outer iteration only",
+        "Inner iterator wagIter.next() still advances once per inner iteration, as intended",
+        "for (Locomotive locomotive : locomotives) for (Wagon wagon : wagons) trains.add(new Train(locomotive, wagon)); is equivalent but structurally prevents the mistake"
+      ],
+      "modelAnswer": "In the buggy version, locIter.next() sits inside the innermost loop body, so it fires once per inner iteration. The fix hoists Locomotive locomotive = locIter.next(); up into the outer loop's body, so it only advances once per outer pass, while wagIter.next() inside the inner loop still advances once per inner pass - giving the correct cross product. Rewriting both loops as for-each, for (Locomotive locomotive : locomotives) for (Wagon wagon : wagons) trains.add(new Train(locomotive, wagon));, achieves the same correct result but makes the mistake structurally impossible because you never manipulate the iterator yourself.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-013-o",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "In Jan's conclusion on iterators, what actually affects program performance, and what doesn't?",
+      "keyBeats": [
+        "Interfaces, inheritance and comparisons chosen well greatly enhance readability",
+        "Readability itself does not matter to the computer",
+        "What matters: compiler's ability to optimize (often out of our control), choice of algorithm, our coding style/approach",
+        "Reduction of coding errors is directly tied to readability - the real payoff"
+      ],
+      "modelAnswer": "Jan's takeaway is that using interfaces, inheritance and well-chosen comparisons mainly benefits us as coders - the computer doesn't care how readable code is. What actually impacts performance is the compiler's ability to optimize (largely out of our hands), the algorithms we choose for a given problem, and our own coding style - we can do things the efficient way or the dumb way. But the concrete payoff of readability is a reduction in coding errors, which is directly related to how readable the code is.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-014-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why does operator behaviour get complicated once we move beyond simple data types?",
+      "keyBeats": [
+        "Simple types (numbers) have obvious meaning for =, <, >, ++, --",
+        "Complex built-in types like Strings, Vectors, Queues already raise questions",
+        "Homebrewed classes (our own objects) have no built-in agreed meaning for these operators",
+        "We as designers must decide and implement what these operations mean"
+      ],
+      "modelAnswer": "For primitive numeric types, operators like =, <, >, increment and decrement have an obvious mathematical meaning. But once we move to more complex data types - Strings, Vectors, Queues - the meaning is less obvious, and it gets even worse for our own homebrewed classes, where Java has no built-in idea of what '<' or equality should mean, so it's on us as the designers to define and implement that behaviour explicitly.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-015-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Jan shows A^2 + B^2 = C^2 next to a string concatenation example. What point is this making about the '+' token?",
+      "keyBeats": [
+        "A^2 + B^2 = C^2 - '+' means numeric addition, obvious from maths",
+        "\"I am some\" + \" text that\" + \" is concatenated.\" - '+' means string concatenation",
+        "Same token '+' used for two completely different operations",
+        "Raises the question: how does Java know which behaviour to apply?"
+      ],
+      "modelAnswer": "The Pythagorean example A^2 + B^2 = C^2 uses '+' to mean ordinary numeric addition, which is intuitive from maths class. The string example, \"I am some\" + \" text that\" + \" is concatenated.\", uses the exact same '+' token to mean concatenation instead. Jan uses this contrast to pose the question of how Java - or any language - decides which behaviour to apply for a given use of '+'.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-016-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain the famous '+' gotcha: why does System.out.println(\"sum: \" + 1 + 2) print 'sum: 12' while System.out.println(\"sum: \" + (1 + 2)) prints 'sum: 3'?",
+      "keyBeats": [
+        "'+' meaning in Java depends on operand types and left-to-right evaluation order",
+        "Without parentheses: (\"sum: \" + 1) becomes a String first, then + 2 concatenates '2' as text -> 'sum: 12'",
+        "With parentheses: (1 + 2) is evaluated as numeric addition first -> 3, then concatenated with the string -> 'sum: 3'",
+        "One of the 'gotchas' Jan warns about with Java's limited operator overloading"
+      ],
+      "modelAnswer": "Java evaluates '+' left to right. In \"sum: \" + 1 + 2, the first '+' combines a String and an int, so Java converts 1 to \"1\" and concatenates, giving \"sum: 1\"; the second '+' then concatenates that String with 2, giving \"sum: 12\". In \"sum: \" + (1 + 2), the parentheses force the numeric addition 1+2=3 to happen first, and only then is that 3 converted to text and concatenated, giving \"sum: 3\". It's exactly the kind of 'gotcha' Jan warns comes with Java's very limited, language-defined operator overloading.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-017-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Does Java allow programmers to overload operators for their own classes, unlike C++? What is the design rationale?",
+      "keyBeats": [
+        "Java does NOT allow user-defined operator overloading (unlike C++)",
+        "The language itself defines a few built-in overloads of '+' (numeric add, string concat)",
+        "Deliberate design choice: reduce complexity, limit risk of surprises",
+        "Favors explicit, named method calls on your own types instead of 'clever' operator tricks",
+        "Goal: simplicity, readability, avoiding confusing behaviour - keeps code clear"
+      ],
+      "modelAnswer": "Java deliberately forbids user-defined operator overloading, in contrast to C++ (and Python). The language itself only overloads a handful of built-in operators, like '+' for numbers and Strings. Jan frames this as a conscious design philosophy: it reduces complexity and limits the risk of 'clever' but confusing operator behaviour, pushing programmers toward explicit, clearly-named method calls on their own types instead, which keeps code readable and predictable.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-018-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "By default, what does '==' equality testing actually check for two Java objects, e.g. house1 == house2?",
+      "keyBeats": [
+        "Default equal test = same instance test (identity/reference equality), not content equality",
+        "House@d4e332ee == House@45eab2c3 -> false, different instances even if content matches",
+        "House@d4e332ee == House@d4e332ee -> true, literally the same object reference",
+        "Question posed: 'What does equal actually mean to us?'"
+      ],
+      "modelAnswer": "If we don't do anything special, Java assumes an equality test means 'are these the same object instance', i.e. reference equality - comparing identity, not field content. So House@d4e332ee == House@45eab2c3 is false even if every field matches, because they're two different objects, while House@d4e332ee == House@d4e332ee is true because it's literally the same reference twice. Jan poses this as the opening question: what do WE actually mean by 'equal'?",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-019-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Using the Coordinate (longitude/latitude) example, why is exact field equality a bad way to test if two coordinates are 'equal', and what's Jan's proposed fix?",
+      "keyBeats": [
+        "Naive idea: Coord_1==Coord_2 iff longitude_1==longitude_2 AND latitude_1==latitude_2",
+        "Problem: coordinates are floating point, so exact equality is extremely rarely true in practice",
+        "Fix: define 'within an area/range' instead - sqrt(diff_long^2 + diff_latt^2) < Range",
+        "Caveat: this assumes a flat Euclidean system; real Earth curvature makes it much more complex",
+        "Take-away: what counts as 'equal' is a design decision we hide behind a method"
+      ],
+      "modelAnswer": "Naively you might say two Coordinates are equal only if both their longitude and latitude fields match exactly, but since these are floating-point numbers, exact equality almost never holds even for points that are practically the same. Jan's fix is to define equality as 'within a certain range' instead - using sqrt(diff_long^2 + diff_latt^2) < Range, which assumes a flat Euclidean system and is a simplification, since real Earth curvature would make it much more complex. The broader point is that we get to choose and hide our own definition of 'equal' behind a method.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-020-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What does the 'instanceof' operator do, and what is the alternative (and its risk) if you just want to check an object's type before using type-specific methods?",
+      "keyBeats": [
+        "instanceof tests whether an object is of a given type/class, e.g. if (house instanceof Location) {...}",
+        "Gives safety: inside that scope you know you can call Location-specific methods",
+        "Alternative: direct downcast, e.g. Location locationOfHouse = (Location) house;",
+        "Risk: if house is not actually a Location, the downcast throws an exception (covered later)"
+      ],
+      "modelAnswer": "instanceof lets you safely test whether an object is of a particular type - if (house instanceof Location) { ... } - and only inside that guarded block do you know it's safe to call Location-specific methods. The alternative is to just downcast directly, Location locationOfHouse = (Location) house;, but if house isn't actually a Location at runtime, that cast throws an exception, which Jan flags as something to be dealt with later when exceptions are covered.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-021-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the default behaviour of equals() inherited from the Object class, and why would we override it?",
+      "keyBeats": [
+        "Every Java class inherits from Object",
+        "Object provides a default equals() method",
+        "Default behaviour compares object hashes/identity",
+        "Overriding equals() lets us write our own, specific interpretation of what 'equal' means for that class",
+        "Benefit: avoids re-writing custom comparison code every time we compare"
+      ],
+      "modelAnswer": "Because every Java class ultimately inherits from Object, every object automatically has an equals() method - but its default behaviour just compares object hashes, i.e. identity. Overriding equals() in our own class lets us plug in a specific, meaningful interpretation of equality, and once written, we reuse that one method instead of hand-writing ad hoc comparison code (like the haversine-style distance formula Jan shows) everywhere we need to compare two instances.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-022-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why can't we generically define what '>' or '<' means between two homebrewed objects like Coordinates, and what does Jan recommend instead?",
+      "keyBeats": [
+        "Comparatives are just as use-case specific as equality - Coordinate_1 > Coordinate_2 has no universal meaning",
+        "We may need ordering for sorting (most sort algorithms rely on comparisons)",
+        "Recommendation: implement specific, well-named comparison methods, e.g. isNorthOfLocation(), isWestOfCoordinate(), distanceIsFurtherThan()",
+        "Once agreed, hide the comparison logic behind that method or the compare operator",
+        "Naming rule: names must make sense - do NOT use cryptic names like cmpN(), cmpW(), dift()"
+      ],
+      "modelAnswer": "Just like equality, 'greater than' has no built-in universal meaning for a homebrewed class - what does Coordinate_1 > Coordinate_2 even mean? We often need such an ordering anyway, e.g. because most sorting algorithms rely on comparisons, so Jan recommends defining specific, clearly named comparison methods for the use case, like isNorthOfLocation(), isWestOfCoordinate(), or distanceIsFurtherThan(), and hiding the comparison logic behind them once we've agreed what they mean. Crucially, name them so they make sense - cryptic names like cmpN(), cmpW() or dift() will be meaningless to you and your co-workers within a month.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-023-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the Collections class, and name at least three static methods it provides along with what they do.",
+      "keyBeats": [
+        "Collections is a class full of static methods that operate on Collection objects (Collection is a super-interface of List)",
+        "asLifoQueue(Deque<T>) - returns a view of a Deque as a LIFO queue",
+        "frequency(Collection<?> x, Object o) - counts occurrences of an object",
+        "max(Collection<? extends T> coll, Comparator<? super T> comp) - finds the maximum per a comparator",
+        "sort(List<T> list, Comparator<? super T> comp) - sorts a list per a comparator"
+      ],
+      "modelAnswer": "The Collections class provides a large set of useful static utility methods that operate on anything implementing Collection - and since List extends Collection, they work on Lists too. Examples from the slides: asLifoQueue(Deque<T>) returns a view of a Deque as a last-in-first-out queue; frequency(Collection<?> x, Object o) counts how many times an object appears; max(Collection<? extends T> coll, Comparator<? super T> comp) finds the largest element per a given comparator; and sort(List<T> list, Comparator<? super T> comp) sorts a list using a comparator.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-024-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the Comparator interface for, and what consistency rule must a well-behaved comparator satisfy?",
+      "keyBeats": [
+        "Comparator interface is implemented to define how a collection of objects should be sorted",
+        "Different object types need different, specific sorting logic, so implementation is custom per type",
+        "Consistency rule: c.compare(e1,e2)==0 iff e1.equals(e2), for every e1,e2 in S",
+        "If we guarantee this consistency, we can safely use the comparator with the Collections class sorting methods"
+      ],
+      "modelAnswer": "The Comparator interface is what you implement to tell Java how to order a specific kind of object, since sorting logic necessarily differs from one class to another. The key rule Jan highlights is consistency with equals: a comparator c's ordering on a set S is consistent with equals if and only if c.compare(e1,e2)==0 exactly whenever e1.equals(e2), for every pair in S. If we can guarantee that in our implementation, we can safely plug the comparator into the Collections class's sorting utilities.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-025-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What sorting algorithm does Collections.sort() use by default, and what are its time/space complexities? How does this differ from Arrays.sort()?",
+      "keyBeats": [
+        "Collections.sort() defaults to an adaptive merge sort",
+        "Time complexity O(n log n)",
+        "Space complexity O(n)",
+        "Arrays.sort() uses a dual-pivot quicksort algorithm",
+        "Quicksort is non-stable, Timsort is stable, both O(n log n) time",
+        "Writing your own sorting algorithms on top of these base classes is doable"
+      ],
+      "modelAnswer": "Collections.sort() defaults to an adaptive merge sort, giving O(n log n) time complexity but O(n) space complexity because merge sort needs auxiliary storage. Arrays.sort(), by contrast, uses a dual-pivot quicksort - quicksort itself is not a stable sort, while Timsort (the alternative Jan mentions) is stable; both are still O(n log n) in time. Jan notes it's entirely doable to write your own sorting algorithms building on these base classes if you need something custom.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-026-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through the Student/Sortbyroll example: how does implementing Comparator<Student> let Collections.sort() order an ArrayList<Student> by roll number?",
+      "keyBeats": [
+        "class Sortbyroll implements Comparator<Student>",
+        "Overrides compare(Student a, Student b) { return a.rollno - b.rollno; }",
+        "Collections.sort(ar, new Sortbyroll()); is called with the list AND a Sortbyroll instance",
+        "Negative/zero/positive return value from compare() tells sort the relative order",
+        "Result: ArrayList<Student> ar is reordered in ascending roll number"
+      ],
+      "modelAnswer": "The example builds an ArrayList<Student> with three students added in an arbitrary order, then defines class Sortbyroll implements Comparator<Student> whose compare(Student a, Student b) method returns a.rollno - b.rollno - negative if a comes first, positive if b does, zero if equal. Calling Collections.sort(ar, new Sortbyroll()); hands both the list and this comparator to the sort method, which uses the sign of compare()'s return value to reorder the list, producing the students printed in ascending roll-number order.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-027-o",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize the 'important stuff' checklist Jan gives for lists, iterators and operators.",
+      "keyBeats": [
+        "Lists store elements in ordered fashion - always use generics, avoid raw types",
+        "Iterators provide a safe way to visit elements one at a time by enforcing correct traversal",
+        "Never call next() more times than hasNext() returns true",
+        "Use enhanced for-loops when possible to prevent most iterator bugs",
+        "'+' is overloaded by the language itself (numbers + strings), not by users",
+        "Java forbids user-defined operator overloading, unlike C++ and Python",
+        "Deliberate design choice for simplicity, readability, avoiding confusing 'clever' operator behaviour"
+      ],
+      "modelAnswer": "Jan's checklist: lists store elements in order, so always use generics and avoid raw types; iterators exist to visit elements safely one at a time by enforcing correct traversal, and you should never call next() more times than hasNext() has returned true; prefer enhanced for-loops whenever possible since they prevent most iterator bugs by construction; and remember '+' is overloaded only by the language itself for numbers and Strings - Java deliberately forbids user-defined operator overloading, unlike C++ and Python, to keep code simple, readable and free of 'clever' but confusing behaviour.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-028-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Sketch/describe the traversal diagram for an Iterator over a List: what state does it track and what do hasNext()/next()/remove() each do to that state?",
+      "keyBeats": [
+        "Draw the list as a sequence of boxes (elements) with a 'cursor' positioned between elements",
+        "Iterator internally tracks a cursor position (just before the next element to return)",
+        "hasNext() checks whether an element exists past the cursor; returns true/false, does NOT move the cursor",
+        "next() returns the element at the cursor and moves the cursor one step forward",
+        "remove() deletes the element most recently returned by next(), shifting subsequent elements, while keeping cursor state consistent"
+      ],
+      "modelAnswer": "Picture the list as a row of boxes with a cursor sitting between two boxes. hasNext() just peeks at whether a box exists past the cursor without moving it - true or false. next() moves the cursor one box forward and hands back the element it just passed. remove() deletes exactly the element that was last returned by next(), and internally keeps the cursor consistent with the now-shorter list - which is exactly what a plain indexed for-loop calling list.remove(i) fails to do, since it doesn't have this cursor bookkeeping and its size()/index tracking breaks.",
+      "citation": "ooadi6.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L6-029-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through how TrainSort.java builds and applies its three Comparator<Train> constants (BY_TYPE, BY_LENGTH, BY_WEIGHT).",
+      "keyBeats": [
+        "Static import of java.util.Comparator.* for comparing()/comparingDouble()",
+        "BY_TYPE = comparing(Train::getDriveType).thenComparing(Train::getId) - primary key DriveType enum, tie-broken by id",
+        "BY_LENGTH = comparingDouble(Train::getTotalLengthM).thenComparing(Train::getId)",
+        "BY_WEIGHT = comparingDouble(Train::getTotalWeightT).thenComparing(Train::getId)",
+        "sortByType/sortByLength/sortByWeight call trains.sort(THE_COMPARATOR), using List's own in-place sort()",
+        "thenComparing gives deterministic, stable ordering when the primary key ties"
+      ],
+      "modelAnswer": "TrainSort is a non-instantiable utility class (private constructor) that builds three Comparator<Train> constants using method references and Comparator's fluent factory methods. BY_TYPE uses comparing(Train::getDriveType), which compares trains by their enum DriveType, then chains .thenComparing(Train::getId) as a tie-breaker so trains of the same type sort deterministically by id. BY_LENGTH and BY_WEIGHT use comparingDouble on getTotalLengthM()/getTotalWeightT() the same way. The public sortByType/sortByLength/sortByWeight methods then just call trains.sort(BY_...), relying on List's own in-place sort().",
+      "citation": "TrainSort.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-030-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Explain how TrainQueries.java uses Predicate<Train> and an Op enum to implement generic 'larger than / smaller than / equal to' style queries.",
+      "keyBeats": [
+        "byType(DriveType type) returns Predicate<Train>: t -> t.getDriveType() == type",
+        "enum Op { LT, LTE, EQ, GTE, GT } represents the comparison operators from the assignment brief",
+        "private static boolean cmp(double left, double right, Op op) uses a switch expression to apply the right comparison, Double.compare for EQ",
+        "byLength(Op op, double meters) and byWeight(Op op, double tons) both build a Predicate<Train> calling cmp() against the train's computed length/weight",
+        "isElectric() is a convenience Predicate equivalent to byType(DriveType.ELECTRIC)"
+      ],
+      "modelAnswer": "TrainQueries centralizes query logic as Predicate<Train> factories. byType(DriveType) returns a lambda testing t.getDriveType() == type. To support the assignment's 'larger than / smaller than / equal to' requirement generically, it defines an Op enum (LT, LTE, EQ, GTE, GT) and a private cmp(double left, double right, Op op) helper that uses a switch expression to dispatch to the right comparison - using Double.compare for exact equality to avoid floating point pitfalls. byLength(Op, meters) and byWeight(Op, tons) both build predicates around cmp() applied to the train's computed getTotalLengthM()/getTotalWeightT(), and isElectric() is a convenience predicate equal to byType(DriveType.ELECTRIC).",
+      "citation": "TrainQueries.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-031-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What does TrainSearch.find() do, and how does it use Java Streams instead of a manual iterator loop?",
+      "keyBeats": [
+        "find(List<Train> fleet, Predicate<Train> p) is generic - works with ANY Predicate<Train> produced by TrainQueries",
+        "Implementation: fleet.stream().filter(p).collect(Collectors.toList())",
+        "stream() converts the List into a Stream<Train>",
+        "filter(p) keeps only elements for which the predicate returns true",
+        "collect(Collectors.toList()) gathers matches back into a new List<Train>"
+      ],
+      "modelAnswer": "TrainSearch.find(List<Train> fleet, Predicate<Train> p) is a single generic method that works with any predicate built by TrainQueries. Internally it calls fleet.stream().filter(p).collect(Collectors.toList()): stream() turns the list into a Stream<Train>, filter(p) keeps only the trains for which the predicate returns true, and collect(Collectors.toList()) gathers the surviving elements into a brand-new List<Train>. It's a Stream-based alternative to manually looping with an Iterator, checking a condition, and adding matches to a result list by hand.",
+      "citation": "TrainSearch.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-032-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In Train.java, how does the class expose its wagon list safely, and what does its overridden toString() reveal about designing readable output for lists of objects?",
+      "keyBeats": [
+        "getWagons() returns java.util.Collections.unmodifiableList(wagons) - an immutable VIEW protecting internal state",
+        "Constructor defensively copies the incoming list: this.wagons = new java.util.ArrayList<>(wagons)",
+        "toString() overrides Object's default and uses String.formatted() to build 'ClassName{id=..., type=..., len=...m, wt=...t}'",
+        "getClass().getSimpleName() means DieselTrain vs BatteryTrain automatically print their own subclass name",
+        "Total length/weight computed via wagons.stream().mapToDouble(...).sum() plus a fixed locomotive contribution"
+      ],
+      "modelAnswer": "Train.java guards its internal wagon list two ways: the constructor makes a defensive copy with new ArrayList<>(wagons), and getWagons() returns Collections.unmodifiableList(wagons), an unmodifiable view so callers can read but not mutate the train's real wagon list. Its overridden toString() replaces Object's default identity-hash string with a purpose-built one using String.formatted(), including getClass().getSimpleName() so a DieselTrain and a BatteryTrain each print their own class name, plus id, drive type, and the computed total length/weight - exactly the kind of override needed to make fleet.forEach(System.out::println) produce readable output.",
+      "citation": "Train.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-033-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does AssignmentDemo.java combine two TrainQueries predicates with .and() to answer 'has electric drive AND weight < 200t'?",
+      "keyBeats": [
+        "TrainQueries.isElectric() returns a Predicate<Train>",
+        "TrainQueries.byWeight(Op.LT, 200) returns another Predicate<Train>",
+        "Predicate.and() (from java.util.function.Predicate) composes them: isElectric().and(byWeight(LT,200))",
+        "TrainSearch.find(fleet, combinedPredicate) applies the combined predicate in a single pass",
+        "Demonstrates how small, composable Predicate factories build arbitrary compound queries without new search code"
+      ],
+      "modelAnswer": "AssignmentDemo builds the compound query var efficient = TrainSearch.find(fleet, TrainQueries.isElectric().and(TrainQueries.byWeight(TrainQueries.Op.LT, 200)));. isElectric() and byWeight(Op.LT, 200) each return a Predicate<Train>, and Predicate's built-in .and() method composes them into one predicate that's true only when both underlying tests pass. That combined predicate is then handed straight to the same generic TrainSearch.find(), so no new search logic is needed - this is the payoff of designing queries as small composable Predicate factories.",
+      "citation": "AssignmentDemo.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L6-034-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "In FleetData.sampleFleet(), why is the result wrapped as new ArrayList<>(List.of(...)) instead of just returning List.of(...) directly?",
+      "keyBeats": [
+        "List.of(...) produces a fixed-size/immutable list",
+        "AssignmentDemo later calls TrainSort.sortByWeight(fleet), which calls trains.sort(...) - an in-place mutating operation",
+        "An immutable List.of() would throw UnsupportedOperationException if sort() were attempted",
+        "Wrapping in new ArrayList<>(...) makes a genuinely mutable copy that supports sort() and later structural changes",
+        "Wagons use asList(...) since those sub-lists are only read, never sorted"
+      ],
+      "modelAnswer": "sampleFleet() returns new ArrayList<>(List.of(new DieselTrain(...), ...)) rather than the bare List.of(...) because List.of() produces an immutable list that throws UnsupportedOperationException on structural changes. Since AssignmentDemo immediately calls TrainSort.sortByWeight(fleet), which internally calls trains.sort(...) - an in-place mutating call - the returned list must be genuinely mutable, so wrapping it in a fresh ArrayList gives a real, resizable, sortable copy while still letting List.of() concisely declare the initial contents.",
+      "citation": "FleetData.java",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L6-E01",
+      "source": "ooadi6.assignments.pdf.extracted.txt, PAGE 1 / ooadi6.solutions.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Create a list of trains from your previous assignments",
+      "whatItTests": "Ability to assemble a mutable List<Train> collection of instances from a previously built domain model (Train/Wagon/DriveType hierarchy) using List factory helpers.",
+      "answerSketch": "FleetData.sampleFleet() builds three fixed Wagon lists via Arrays.asList(...) (pax3, goods4, mixed2), then constructs five Train instances (DieselTrain 'D-101'/'D-102', BatteryTrain 'E-201'/'E-202'/'E-203' with varying initial charge) and returns them wrapped as new ArrayList<>(List.of(...)) so the caller gets a mutable List<Train> ready for sorting/searching."
+    },
+    {
+      "id": "OOADI-L6-E02",
+      "source": "ooadi6.assignments.pdf.extracted.txt, PAGE 1 / ooadi6.solutions.pdf.extracted.txt, PAGE 1-2",
+      "promptVerbatim": "Create methods to allow you to sort the trains, for example a. According to type b. According to length c. According to weight",
+      "whatItTests": "Use of the Comparator interface, method references, Comparator.comparing()/comparingDouble() with thenComparing() tie-breakers, and List.sort() for in-place structured-data ordering.",
+      "answerSketch": "TrainSort.java (private constructor, non-instantiable) defines three public static final Comparator<Train> constants: BY_TYPE = comparing(Train::getDriveType).thenComparing(Train::getId); BY_LENGTH = comparingDouble(Train::getTotalLengthM).thenComparing(Train::getId); BY_WEIGHT = comparingDouble(Train::getTotalWeightT).thenComparing(Train::getId). Public sortByType/sortByLength/sortByWeight(List<Train>) each call trains.sort(theComparator). Demonstrated in AssignmentDemo.java: TrainSort.sortByWeight(fleet); fleet.forEach(System.out::println); then TrainSort.sortByType(fleet); fleet.forEach(System.out::println);, producing weight-then-type ordered console output shown in the solution."
+    },
+    {
+      "id": "OOADI-L6-E03",
+      "source": "ooadi6.assignments.pdf.extracted.txt, PAGE 1 / ooadi6.solutions.pdf.extracted.txt, PAGE 2-3",
+      "promptVerbatim": "Create a small program that allows you to type in a query for a train (and/or specific wagons) and return this. Implement this so the line interface allows use of larger than, smaller than, equal to type of queries. Search should be for example a. Search by type of trains (probably returns a list of those types or null) b. Search by length c. Search by weight d. Has electric power drive (electric trains)",
+      "whatItTests": "Designing use-case-specific comparison logic via Predicate<Train> factories driven by an Op enum (LT/LTE/EQ/GTE/GT), applying Stream filter() for searching a List, and composing predicates with Predicate.and() for compound queries.",
+      "answerSketch": "TrainQueries.java exposes Predicate<Train> factories: byType(DriveType), byLength(Op, meters), byWeight(Op, tons) built around a private cmp(double,double,Op) switch-expression helper, plus isElectric(). TrainSearch.find(List<Train> fleet, Predicate<Train> p) returns fleet.stream().filter(p).collect(Collectors.toList()). AssignmentDemo.java exercises all four cases: (a) TrainSearch.find(fleet, TrainQueries.byType(DriveType.ELECTRIC)) lists three trains; (b) TrainQueries.byLength(Op.GT, 80) lists one train longer than 80m; (c) TrainQueries.byWeight(Op.GTE, 180) lists one train at/above 180t; (d) TrainQueries.isElectric().and(TrainQueries.byWeight(Op.LT, 200)) composes two predicates and lists two trains with electric drive under 200t."
+    }
+  ]
+}

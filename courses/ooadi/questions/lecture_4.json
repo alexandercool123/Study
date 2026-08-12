@@ -1,0 +1,657 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 4,
+  "lectureTitle": "Data Structures and Types",
+  "examQuestions": [
+    {"examQ": 3, "subPart": "a", "promptVerbatim": "Objects and data structures"},
+    {"examQ": 4, "subPart": "a", "promptVerbatim": "Polymorphic data"},
+    {"examQ": 6, "subPart": "a", "promptVerbatim": "Structured data"}
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L4-01-o",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Java has both lower-case primitive types (int, double, byte...) and capitalised wrapper classes (Integer, Double, Byte...). Why does Java bother with both, instead of just one?",
+      "keyBeats": [
+        "Primitives = raw values (IEEE 754 for floating point, plain bits for integers), exchanged by value",
+        "Wrapper classes = objects that carry the primitive's value plus extra methods",
+        "Needed when you must treat a value as an object (e.g. in collections) or convert to/from text",
+        "Examples of extra methods: parseInt(String), longValue(), rotateLeft(int,int)"
+      ],
+      "modelAnswer": "Primitive types like int or double are just raw numeric values handled efficiently by value, with no object overhead. Wrapper classes such as Integer or Double wrap that same value inside an object and add useful methods on top, like parsing from a String or converting between numeric representations. We reach for wrappers whenever we need object semantics -- for instance storing numbers in a collection that only accepts objects, or converting user input text into a usable number. So the two exist side by side: primitives for raw performance, wrappers for object-oriented flexibility.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-02-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define 'wrapper class' and give the mapping from a basic Java data type to its wrapper class.",
+      "keyBeats": [
+        "Wrapper class = object form of a primitive/simple value, adding object semantics",
+        "byte->Byte, short->Short, int->Integer, long->Long",
+        "float->Float, double->Double, boolean->Boolean, char->Character"
+      ],
+      "modelAnswer": "A wrapper class is the object form of a primitive value -- it carries the same underlying data as, say, an int or a double, but packaged as a Class instance so it can behave like any other object. Each primitive has exactly one corresponding wrapper: byte to Byte, short to Short, int to Integer, long to Long, float to Float, double to Double, boolean to Boolean, and char to Character. We reach for the wrapper version when we need to store the value somewhere that expects an object, or when we want the extra methods that come bundled with the class.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-03-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "You have a String read from the keyboard, e.g. via Scanner. Walk through how you'd convert it into a usable int and a usable double using wrapper classes.",
+      "keyBeats": [
+        "int y = Integer.parseInt(strX);",
+        "double f = Double.parseDouble(strX);",
+        "Similarly byte b = Byte.parseByte(strX);",
+        "Each wrapper class ships its own parse method -- no need to hunt for a separate conversion function as in C",
+        "If parsing fails, an exception is thrown"
+      ],
+      "modelAnswer": "Instead of searching for a standalone conversion function like you might in C, Java puts the parsing method directly on the wrapper class you want to end up with. To get an int from a String you call Integer.parseInt(str), to get a double you call Double.parseDouble(str), and the pattern repeats for every wrapper -- Byte.parseByte, and so on. If the string doesn't actually represent a valid number, the call throws an exception rather than failing silently. This keeps the conversion logic co-located with the type it produces, which is a very object-oriented way of organising the API.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-04-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given `Double x = 1.234; String strX = x.toString();` -- what actually happens here, and why is this considered a strength of wrapper classes?",
+      "keyBeats": [
+        "x is a Double object wrapping the primitive value 1.234",
+        "toString() is a method available because x is an object, not a raw double",
+        "Produces the textual representation \"1.234\"",
+        "This bidirectional conversion (value<->String) is exactly the extra functionality wrappers add"
+      ],
+      "modelAnswer": "Here x is a Double object, so it carries methods beyond just holding the number -- calling x.toString() asks the object to produce a human-readable String form of the value it wraps, giving us \"1.234\". This works precisely because x is an object and not a raw primitive; a bare double has no methods to call. The slides highlight this as the real strength of wrapper classes: conversions like toString() and the reverse parseDouble() are attached right to the type, so we never have to go looking for an external conversion function.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-05-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Test2 example, why must `2.766` be cast to float with `float f2 = (float) 2.766;` instead of just assigning it directly?",
+      "keyBeats": [
+        "Java's default floating-point literal type is double, not float",
+        "2.766 is interpreted as a double literal",
+        "Assigning a double literal to a float variable without a cast is a narrowing conversion -> compile error",
+        "Explicit (float) cast tells the compiler to truncate precision intentionally"
+      ],
+      "modelAnswer": "In Java, any decimal literal like 2.766 is treated as a double by default, since double is the language's default floating-point type. A float has less precision than a double, so assigning a double value into a float variable is a narrowing conversion that the compiler won't do implicitly -- it could silently lose precision. Writing (float) 2.766 makes that precision loss an explicit, deliberate choice by the programmer, which is why the example needs the cast.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-06-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "In the Temperature class, a primitive double is wrapped inside an object with a constructor `public Temperature(double value) { this.value = value; }`. What happens if the `this` keyword is removed, and why?",
+      "keyBeats": [
+        "Constructor parameter is also named 'value', shadowing the field 'value'",
+        "'this.value' explicitly refers to the instance field; plain 'value' refers to the parameter",
+        "Removing 'this' makes 'value = value;' assign the parameter to itself -- the field is never set",
+        "Resulting object's internal state stays at its default (0.0), a classic field-shadowing bug"
+      ],
+      "modelAnswer": "The constructor parameter is deliberately named the same as the field, value, which means inside the constructor body the bare name value refers to the parameter, not the field -- that's variable shadowing. Writing this.value = value explicitly tells Java to assign the parameter's value into the object's field. If you remove this, the line becomes value = value, which just assigns the parameter to itself and leaves the actual field untouched at its default of 0.0. It's a classic illustration of why this is needed whenever a constructor or setter parameter shares a name with the field it initialises.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-07-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the difference between `new int[5]` and `new Coordinate[5]` in terms of what's inside the array right after creation?",
+      "keyBeats": [
+        "For simple/primitive types, arrays are defined and used simply",
+        "int[] priceOfPen = new int[5] -> [0, 0, 0, 0, 0], slots default to 0",
+        "Coordinate[] myCoordinates = new Coordinate[5] -> [null, null, null, null, null]",
+        "The array itself is initialised, but the objects inside it do not yet exist -- each element must be created separately, typically with a for loop"
+      ],
+      "modelAnswer": "For a primitive array like new int[5], Java allocates five slots and fills each with the type's default value, so we immediately get [0, 0, 0, 0, 0]. For an object array like new Coordinate[5], only the array itself -- the container of five reference slots -- is created; none of the actual Coordinate objects exist yet, so every slot starts out as null. That means for object arrays we have to go through and construct each element ourselves, commonly with a for loop, before we can use them.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-08-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How would you correctly populate a `Coordinate[] myCoordinates = new Coordinate[5];` array with actual Coordinate objects?",
+      "keyBeats": [
+        "Array creation only allocates reference slots, all null initially",
+        "Must instantiate each object explicitly: myCoordinates[0] = new Coordinate(3,4);",
+        "Repeat for each index, typically inside a for loop over the array's length",
+        "Only after this step can methods be called on individual elements"
+      ],
+      "modelAnswer": "Since new Coordinate[5] only creates five null reference slots, we have to loop through the array and instantiate a real Coordinate object at each index, for example myCoordinates[0] = new Coordinate(3,4), and repeat for every index up to the array's length. Only once every slot holds an actual object can we safely call methods on the elements -- calling a method on a still-null slot would throw a NullPointerException. This two-step nature, allocate then populate, is specific to arrays of objects and doesn't apply to arrays of primitives.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-09-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the ArrayTests example, `System.out.println(cars)` on a String array prints something like an object reference rather than the array contents. Why, and how does the class then correctly print each car?",
+      "keyBeats": [
+        "Even an array is itself an object in Java",
+        "Printing the array directly invokes its default toString(), yielding a reference-like string, not the contents",
+        "Array objects expose a 'length' attribute telling how many elements exist",
+        "Correct approach: for (int i=0; i<cars.length; i++) print cars[i] individually"
+      ],
+      "modelAnswer": "In Java, an array is itself an object, so printing it directly just calls the default toString() inherited from Object, which produces a cryptic reference-style string rather than the actual elements. To see the contents we instead loop over the array using its length attribute, which tells us exactly how many elements exist, and print each element individually with cars[i] inside a for loop. This length field is what makes iterating safely over any array straightforward, regardless of its size.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-10-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define a multi-dimensional array in Java, and distinguish a regular matrix-style array from a jagged array.",
+      "keyBeats": [
+        "Multi-dimensional array = array(s) of array(s)",
+        "Declared as data_type[dim1][dim2]...[dimN]; e.g. int[][] twoD_arr = new int[10][20]",
+        "Useful for matrices, tabular data, fast-access maps",
+        "Jagged array = array of arrays where each row can have a different size",
+        "Jagged arrays are flexible, can model irregular data, and can save memory"
+      ],
+      "modelAnswer": "A multi-dimensional array in Java is really just an array whose elements are themselves arrays, declared like int[][] twoD_arr = new int[10][20] for a two-dimensional case. Used as a regular matrix, every row has the same fixed length, which is great for tabular data or fast index-based lookups such as a simple map. A jagged array relaxes that constraint -- each inner array, each 'row', can have its own different length, which makes it flexible for modelling irregular data and can save memory compared to a full rectangular matrix when rows genuinely differ in size.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-11-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given `int[][] myNumbers = { {1, 2, 3, 4}, {5, 6, 7} };`, describe the structure and how you'd iterate over every element.",
+      "keyBeats": [
+        "This is a jagged array: row 0 has 4 elements, row 1 has 3 elements",
+        "Each myNumbers[x] is itself an array object with its own length",
+        "Outer loop: for (i=0; i<myNumbers.length; i++)",
+        "Inner loop: for (j=0; j<myNumbers[i].length; j++) -- length differs per row",
+        "Diagram: two rows of unequal width, [1,2,3,4] and [5,6,7]"
+      ],
+      "modelAnswer": "This is a jagged array: the outer array has two elements, and each of those elements is itself an int array, one holding four numbers and the other holding three. Because each row is its own independent array object, it has its own length, so a nested loop is needed -- the outer loop runs from 0 to myNumbers.length, and for each row i the inner loop runs from 0 to myNumbers[i].length, since that inner length can differ per row. Picture it as two shelves of unequal size sitting side by side: [1,2,3,4] on the first shelf, [5,6,7] on the second.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L4-12-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is an ArrayList, and how does implementing the List interface benefit it?",
+      "keyBeats": [
+        "ArrayList = a resizable array with additional features",
+        "Implements the List interface",
+        "This allows use of e.g. Collections.sort(myList) and Collections.sort(myList, Collections.reverseOrder())",
+        "Requires import java.util.ArrayList;"
+      ],
+      "modelAnswer": "An ArrayList is basically a resizable array wrapped in an object, with extra convenience features layered on top. Because it implements the List interface, generic utility methods written against that interface -- like Collections.sort(myList), or a reverse-order sort via Collections.sort(myList, Collections.reverseOrder()) -- work on any ArrayList without any special-casing. That's the interface at work: as long as something is a List, these shared algorithms apply uniformly.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-13-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the core ArrayList operations: creating one, adding elements, accessing/replacing an element, and sorting it.",
+      "keyBeats": [
+        "ArrayList<String> cars = new ArrayList<String>();",
+        "cars.add(\"Volvo\"); cars.add(\"BMW\"); cars.add(\"Ford\");",
+        "cars.get(0) reads an element by index",
+        "cars.set(0, \"Opel\") replaces an element at an index",
+        "Collections.sort(cars) sorts in place using the List interface",
+        "Other methods: remove(), clear(), size()"
+      ],
+      "modelAnswer": "You create a typed ArrayList with new ArrayList<String>(), then build it up with add() calls, each of which appends a new element and grows the underlying array automatically. get(0) reads back the element at index 0, while set(0, \"Opel\") overwrites whatever was at that index with a new value. Because ArrayList implements List, Collections.sort(cars) can sort it in place without any extra code, and there's a broader toolkit of methods -- remove(), clear(), size() -- for manipulating the list as needed.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-14-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the ArrayListExample code, cars is populated with four Strings and then printed with `for (String i: cars) { System.out.println(i); }`. What kind of loop is this and why is ArrayList well-suited to it?",
+      "keyBeats": [
+        "This is an enhanced for-each loop over the ArrayList",
+        "Works because ArrayList is iterable (implements the List/Collection hierarchy)",
+        "No manual index management needed, unlike a classic array loop",
+        "ArrayList can be dynamically resized, and add()/remove() make it flexible and easy to operate on"
+      ],
+      "modelAnswer": "That's an enhanced for-each loop, which works on cars because ArrayList, via the List and Collection interfaces, is iterable -- Java can hand back each element in turn without us managing an index manually the way we would with a raw array. This ties into why ArrayList is described as extremely versatile: it can be dynamically resized as items are added or removed, and the add()/remove() methods make it flexible and easy to operate with compared to a fixed-size array.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-15-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a Vector, and how does it compare to ArrayList?",
+      "keyBeats": [
+        "Vector = a flexible, dynamic, index-based, resizable array, very similar to ArrayList",
+        "Both implement the List interface",
+        "Vector is a legacy class",
+        "Unlike ArrayList, Vector is synchronized (thread-safe)",
+        "Has some additional methods not available in ArrayList, but is considered somewhat legacy overall"
+      ],
+      "modelAnswer": "A Vector is, structurally, very much like an ArrayList -- a dynamic, index-based, resizable array that implements the List interface. The key practical difference is that Vector is synchronized, meaning its methods are thread-safe by default, whereas ArrayList is not. Vector predates ArrayList and is generally considered a legacy class today; it has a few extra methods ArrayList lacks, but for most modern single-threaded use cases ArrayList is preferred.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-16-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "You need to choose between Vector and ArrayList for a list that will be accessed from multiple threads simultaneously. Which fits better, and why?",
+      "keyBeats": [
+        "Vector's methods are synchronized -- safe for concurrent access without extra locking",
+        "ArrayList is not synchronized -- faster in single-threaded use but unsafe if shared across threads without external synchronization",
+        "Choice depends on the access pattern (structuring data for the right context), not raw feature count",
+        "Vector constructors also allow size and growth-increment tuning: Vector<E>(int size), Vector<E>(int size, int incr)"
+      ],
+      "modelAnswer": "If the list genuinely needs to be safely modified from multiple threads at once, Vector's built-in synchronization makes it the safer default, since its methods already guard against concurrent modification. ArrayList skips that overhead, which makes it faster in ordinary single-threaded code, but it becomes unsafe the moment multiple threads touch it without external synchronization. So the decision comes down to matching the structure to the access pattern: prefer ArrayList by default for performance, but reach for Vector, or an externally synchronized wrapper, when concurrent access is a real requirement.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-17-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What operations does Java's LinkedList class provide, and what does it save you from writing yourself?",
+      "keyBeats": [
+        "LinkedList<String> cars = new LinkedList<String>(); cars.add(...)",
+        "Built-in methods: addFirst(), addLast(), removeFirst(), removeLast(), getFirst(), getLast()",
+        "You don't need to write the linked-list node/pointer logic yourself",
+        "But you still need to reason about the complexity of operations -- the class isn't magically efficient"
+      ],
+      "modelAnswer": "Java's built-in LinkedList gives you a ready-made doubly-linked list with methods like addFirst(), addLast(), removeFirst(), removeLast(), getFirst(), and getLast(), so you never have to hand-write the node and pointer manipulation yourself. That said, the slides are careful to point out that using this class doesn't make complexity concerns disappear -- you still need to think about how efficient each operation is, because the underlying implementation behaves like any other linked structure, not some magical shortcut.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-18-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain the efficiency difference between LinkedList and ArrayList for insert, delete, and random-access operations, and why it arises.",
+      "keyBeats": [
+        "ArrayList is based on a contiguous memory approach (a backing array)",
+        "Random access (get by index) is fast for ArrayList -- direct offset calculation",
+        "Insert/delete in the middle of an ArrayList requires shifting subsequent elements",
+        "LinkedList links nodes via pointers, so insert/delete at a known node is cheap (no shifting)",
+        "Random access in LinkedList is slow -- must walk the chain of pointers from an end"
+      ],
+      "modelAnswer": "ArrayList stores its elements in one contiguous block of memory, so random access -- get(i) -- is fast because it's just an offset calculation from the start of the array. But that same contiguous layout means inserting or deleting in the middle requires shifting every subsequent element over, which gets expensive for large lists. LinkedList flips that trade-off: each element is a separate node connected by pointers, so inserting or removing at a known position is cheap, just relinking a couple of pointers, but there's no direct offset trick for random access -- you have to walk the chain node by node from one end, making indexed access slow.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L4-19-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define a Stack and the principle it follows.",
+      "keyBeats": [
+        "Stack = a linear and simple data structure",
+        "Follows the LIFO principle: Last In, First Out",
+        "Shines for backtracking, reversal, or nesting-structure handling",
+        "Classic example: undo (ctrl-z)"
+      ],
+      "modelAnswer": "A Stack is a simple linear data structure built around the LIFO principle -- Last In, First Out -- meaning the most recently added item is always the first one removed. It's the natural fit whenever a problem needs backtracking, reversing an order, or handling nested structures, since undoing the most recent action first matches exactly how a stack behaves. The classic real-world example given is ctrl-z: each undo pops the most recently performed action off the top.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-20-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given `Stack stack = new Stack(); stack.push(\"4\"); stack.push(\"All\"); while(!stack.isEmpty()) { System.out.println(stack.pop()); }`, what gets printed and in what order, and why?",
+      "keyBeats": [
+        "push() adds to the top of the stack",
+        "pop() removes and returns the top element, following LIFO",
+        "\"4\" pushed first, then \"All\" pushed on top",
+        "Loop pops until empty, printing \"All\" first, then \"4\"",
+        "Other Stack methods: peek(), search(), capacity()"
+      ],
+      "modelAnswer": "push() places a new element on top of the stack, so after these two calls the stack holds \"4\" at the bottom and \"All\" on top. The while loop keeps popping until the stack is empty, and pop() always removes the topmost element first -- that's LIFO -- so the output is \"All\" followed by \"4\", the reverse of insertion order. Stack also offers peek() to look at the top element without removing it, search() to find an element's position, and capacity() among others.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-21-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define a Queue in Java and state the principle it follows. What implementing classes are commonly used?",
+      "keyBeats": [
+        "Queue = a simple datatype following FIFO: First In, First Out",
+        "Queue is actually a Java interface, not a concrete class",
+        "Common implementations: LinkedList, PriorityQueue, and others",
+        "Use it when order of processing matters and the oldest item should be handled next (e.g. print jobs)"
+      ],
+      "modelAnswer": "A Queue follows the FIFO principle, First In First Out, so the earliest item added is the first one processed and removed. In Java, Queue is actually an interface rather than a concrete class, and it's implemented by classes like LinkedList and PriorityQueue, among others. You reach for a queue whenever the order of processing matters and the oldest waiting item should be handled next -- the classic example given is a print job queue, where documents get printed in the order they were submitted.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-22-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given `Queue<Obj> queue = new PriorityQueue<Obj>(); queue.add(\"apple\"); queue.add(\"banana\"); queue.add(\"cherry\"); String front = queue.remove(); String peeked = queue.peek();`, explain what add(), remove(), and peek() do, and name the queue terminology involved.",
+      "keyBeats": [
+        "add() enqueues an element into the queue",
+        "remove() dequeues -- removes and returns the front/head element",
+        "peek() inspects the front element without removing it",
+        "Terminology: Enqueue, Dequeue, Front/Head, Back/Tail/Rear",
+        "Other Queue methods: sort(), size(), clear()"
+      ],
+      "modelAnswer": "add() enqueues an item onto the queue, placing it toward the back or rear. remove() performs a dequeue -- it removes and returns whatever is at the front or head of the queue, which for a plain FIFO queue would be the earliest-added item still present. peek() lets you look at that front element without actually removing it, which is handy when you want to inspect what's next without committing to processing it yet. The vocabulary that goes with this -- enqueue, dequeue, front/head, back/tail/rear -- describes the two ends of the queue and the operations performed at each.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-23-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a Hashtable/HashMap and how does it achieve efficient access to data?",
+      "keyBeats": [
+        "Offers efficient <index, value> access to data",
+        "Index is the hash value computed from the key",
+        "Hash can be calculated in many ways, e.g. index = key mod noOfStorageElements",
+        "Related types: HashMap, LinkedHashMap, ConcurrentHashMap, HashSet"
+      ],
+      "modelAnswer": "A Hashtable, or HashMap, gives efficient access to values by mapping each key to an index via a hash function, rather than scanning through every entry. One simple way to compute that index is index = key mod noOfStorageElements, though real hash functions are usually more sophisticated to spread keys evenly. Java offers several variants around this idea -- HashMap for general use, LinkedHashMap when insertion order matters, ConcurrentHashMap for thread-safe access, and HashSet when you only care about unique keys with no associated value.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-24-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "A call to `capitalCities.get(\"Denmark\")` returns null. What are the two different situations this could mean, and why is this a common source of bugs?",
+      "keyBeats": [
+        "Case 1: the key \"Denmark\" is simply not present in the map -- a normal situation you must handle",
+        "Case 2: the key IS present, but its stored value is literally null -- this is allowed in a HashMap",
+        "get() alone cannot distinguish these two cases -- both return null",
+        "Common fix: use containsKey() alongside get() to disambiguate"
+      ],
+      "modelAnswer": "When get(\"Denmark\") returns null, it's ambiguous between two different situations: either the key \"Denmark\" was never inserted into the map at all, which is a perfectly normal case you have to handle in code, or the key was inserted but its associated value genuinely is null, which HashMap fully permits. The slides flag this as a very common source of bugs, because a plain call to get() cannot tell you which of the two happened -- both return the same null. The usual remedy is to also check containsKey() when the distinction actually matters.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-25-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the TestHashMap example, `capitalCities` is populated with four country->capital pairs, then printed directly, then queried with get(\"England\") and get(\"Denmark\"). What is output at each step?",
+      "keyBeats": [
+        "Direct print shows all <key,value> pairs, e.g. {USA=Washington DC, Norway=Oslo, England=London, Germany=Berlin}",
+        "capitalCities.get(\"England\") -> \"London\"",
+        "capitalCities.get(\"Denmark\") -> null, since \"Denmark\" was never put into the map",
+        "HashMap iteration/print order is not guaranteed to match insertion order"
+      ],
+      "modelAnswer": "Printing the HashMap directly shows all the key-value pairs at once, something like {USA=Washington DC, Norway=Oslo, England=London, Germany=Berlin} -- note the order isn't guaranteed to match insertion order. Calling get(\"England\") then returns \"London\", since that pair was explicitly put into the map. But get(\"Denmark\") returns null, because \"Denmark\" was never added as a key at all -- this is the normal, expected case of a missing key rather than a stored null value.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-26-d",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a heap data structure, and what does it optimise for?",
+      "keyBeats": [
+        "Useful for applications with priorities: scheduling algorithms, caching",
+        "Complete max-heap (or min-heap) implemented using an array",
+        "Max-heap: parent always >= children; min-heap: parent always <= children",
+        "O(1) access time for the min or max element"
+      ],
+      "modelAnswer": "A heap is a data structure specialised for quickly finding the highest- or lowest-priority element, which is why it shows up in scheduling algorithms and caching. It's typically implemented as a complete binary tree stored inside a plain array, where in a max-heap every parent is greater than or equal to its children, or the reverse for a min-heap. The payoff of maintaining that ordering property is that the maximum, or minimum, element is always right at the root, giving O(1) access to it whenever you need it.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-27-m",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Explain how a max-heap stored in an array locates a node's children/parent, and what max_heapify does to restore the heap property.",
+      "keyBeats": [
+        "Array index i: left child at 2*i+1, right child at 2*i+2, parent at (i-1)/2",
+        "max_heapify(a, i) compares a[i] to its children, finds the largest of the three",
+        "If a child is larger than the parent, swap them and recursively heapify at the child's position",
+        "build_max_heap() calls max_heapify from the middle of the array down to index 0 to build the whole heap",
+        "extract_max() removes the root, moves the last element to the root, shrinks heapSize, then re-heapifies"
+      ],
+      "modelAnswer": "A heap stored in an array uses index arithmetic instead of pointers: for a node at index i, its left child sits at 2*i+1, its right child at 2*i+2, and its parent at (i-1)/2. max_heapify at index i compares that node against both children, finds the largest of the three, and if a child turns out to be bigger, swaps it with the parent and recursively calls max_heapify again at the child's old position to let the violation ripple further down. build_max_heap applies this from the middle of the array back to the start to turn any array into a valid heap, while extract_max pulls the root out, moves the last element into the root's place, shrinks the heap, and calls max_heapify once more to restore the property. Picture the array as a complete binary tree drawn top to bottom, left to right, with those index formulas describing the parent-child links.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L4-28-s",
+      "anchorsExamQ": 6,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give real-world examples of where a max-heap is useful, both for priority-driven processing and for tracking top-N values in a stream.",
+      "keyBeats": [
+        "Priority processing: CPU task scheduling, print job prioritization, GUI event handling, network packet scheduling",
+        "Streaming top-N: top-10 high scores in an online game, most popular hashtags today, highest speed-trap measurements in a Formula One race"
+      ],
+      "modelAnswer": "On the priority side, max-heaps back CPU task scheduling, print job prioritisation, GUI event handling, and network packet scheduling -- anywhere the 'most important' item needs to always be processed next. On the streaming side, a heap is a natural fit for keeping, say, a running top-10 while data keeps arriving -- like the top-10 high scores in an online game, the currently most popular hashtags, or the highest speed-trap readings recorded so far during a Formula One race.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-29-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In the 'Three Structures' example, why would you model an n-ary tree of Area objects with Locations at the bottom instead of just doing a linear search through a list of Locations?",
+      "keyBeats": [
+        "Problem: searching for a specific Location by linear search through a flat list is inefficient",
+        "Define an Area datatype holding information about (sub)Areas and their nesting",
+        "Area exposes methods like isInRange() to check whether a location falls within it",
+        "Building an n-ary tree of areas, with Locations at the leaves, enables far more efficient queries",
+        "Example queries: what tourist attractions are nearby, where is the nearest railway station"
+      ],
+      "modelAnswer": "A flat list forces a linear search every time you want to find a location, which doesn't scale well. Instead, the slides define an Area datatype that knows about its own sub-areas and exposes a method like isInRange() to test whether a given location falls inside it. Nesting these Areas into an n-ary tree, with actual Locations sitting at the bottom leaves, lets you prune large parts of the search space at each level instead of checking every location individually -- which is what makes queries like 'what tourist attractions are near me' or 'where's the nearest railway station' efficient.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L4-30-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Given the TLNode class (int data; TLNode left, right;) and the preorder/inorder/postorder methods on BinaryTree, explain the traversal order each produces.",
+      "keyBeats": [
+        "TLNode: base node model holding data plus left and right child references, set via constructor",
+        "preorder: print r.data, then recurse left, then recurse right (root -> left -> right)",
+        "inorder: recurse left, then print r.data, then recurse right (left -> root -> right)",
+        "postorder: recurse left, then recurse right, then print r.data (left -> right -> root)",
+        "All three check `if (r == null) return;` as the recursion base case"
+      ],
+      "modelAnswer": "TLNode is the basic building block: it stores a data value plus references to a left and a right child, both initially set through the constructor. Preorder visits the current node's data first, then recurses into the left subtree, then the right, so it processes root-before-children. Inorder instead recurses left first, then visits the current node's data, then recurses right, which for a binary search tree yields sorted output. Postorder visits both children before the node itself, going left, then right, then the current node's data. All three share the same base case -- if the node is null, just return -- which stops the recursion at the bottom of each branch.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L4-31-o",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "The slides model a base Location class with attributes like coordinates, description, object references, and a marker, and then a TouristLocation subtype adding popularity, handicap-friendliness, ice-cream sale, and parking capacity. Why design it this way instead of one flat class with every field?",
+      "keyBeats": [
+        "Location holds the attributes common to every kind of place: coordinates, description, object references, marker",
+        "TouristLocation extends Location, adding only attributes specific to tourist spots",
+        "Other specialised location types (transport point / railway station, etc.) could extend Location similarly",
+        "Using inheritance means shared behaviour lives in one place and specialised types only add what's genuinely different",
+        "This separation is what later lets a data structure store many different location subtypes uniformly"
+      ],
+      "modelAnswer": "Every kind of place shares certain basics -- coordinates, a human-readable description, references to other objects at that spot, and a marker for how to display it -- so those live in the base Location class. A TouristLocation then extends Location and adds only what's actually specific to tourist spots, like popularity, handicap-friendliness, or parking capacity, rather than duplicating the shared fields. This keeps specialised code in exactly one place and, critically, sets things up so that any list or data structure built to hold Locations can transparently hold TouristLocations, railway stations, or any other subtype as well.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 38",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-32-s",
+      "anchorsExamQ": 4,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The slides describe a `<List> Location` holding a mix of a Railwaystation, a Bar, a Tourist attraction, and a Work location, used by a trip-planning algorithm. How does treating all of these uniformly as Location help, and when do we need to treat an item as its specific subtype instead?",
+      "keyBeats": [
+        "A list of locations to visit may contain many different Location subtypes: work, tourist attraction, bar, railway station",
+        "Trip-planning algorithm (optimal order of visits, least time/fuel) only needs generic Location behaviour to operate on the list",
+        "Consequently it's useful to treat all objects as Location, not as specialized types, while planning/ordering",
+        "When you actually arrive at/visit a location, it's useful to treat the object as its specialized type to access subtype-specific behaviour",
+        "Output: an ordered list of locations to visit, still typed as Location"
+      ],
+      "modelAnswer": "The trip-planning algorithm only cares about generic Location behaviour -- things like coordinates -- to compute an optimal order of visits by time or fuel, so it can operate on a single List<Location> containing a Railwaystation, a Bar, a Tourist attraction, and a Work location all mixed together, without caring which subtype each one actually is. That's the polymorphism payoff: one algorithm, one list type, many concrete kinds of object. But once you actually arrive at a given stop, you'd treat that object as its specific subtype again, say a TouristLocation, to access things like its popularity or parking capacity that only exist on that specialised type.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-33-m",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "The slides compare two designs for giving a Car a location: (a) Car duplicates its own Coordinates fields and get/setCoordinate() methods, versus (b) Car has a `- Location` field with get/setLocation(). Which is the better design and why?",
+      "keyBeats": [
+        "Design (a): Car re-declares Coordinates and get/setCoordinate() independently of Location -- duplicated code",
+        "Duplication risk flagged explicitly: 'if we start to reuse (copy/paste) code elsewhere, then be aware'",
+        "Ideally specialized code exists in one, and only one, place",
+        "Design (b): Car holds a Location (association / has-a relation) and exposes get/setLocation()",
+        "A car has a Location because it is a physical object -- association models this relation cleanly, reusing Location's existing implementation"
+      ],
+      "modelAnswer": "The first design has Car re-implement its own Coordinates fields and get/setCoordinate() methods completely independently of the Location class, which duplicates logic that already exists elsewhere -- exactly the copy-paste trap the slides warn about. The better design gives Car a Location field, an association, a 'has-a' relationship, since a car is a physical object and so naturally has a location, and exposes get/setLocation() that delegates to the existing Location implementation. That way the coordinate logic lives in exactly one place, inside Location, and Car simply reuses it rather than duplicating it.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-34-d",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Summarise the four 'important stuff' takeaways from this lecture on data types and structures.",
+      "keyBeats": [
+        "Primitive vs wrapper types: understand memory (primitives -> stack, objects -> heap), behaviour, and when wrappers are needed",
+        "Know your data structures: each has specific strengths for specific access patterns",
+        "OO principles drive Java's type system: encapsulation, abstraction, and interfaces matter",
+        "Data structures are behaviour + rules, not just storage: designing your own requires defining behaviour, choosing representation, and enforcing invariants"
+      ],
+      "modelAnswer": "First, know the primitive-versus-wrapper distinction at a memory level: primitives live on the stack while objects, including wrapper instances, live on the heap, and you reach for wrappers when object behaviour or storage in a collection is required. Second, every built-in data structure -- array, ArrayList, LinkedList, Stack, Queue, HashMap, heap -- has its own strengths tied to a specific access pattern, so picking the right one is a design decision, not a default. Third, Java's whole type system is shaped by OO principles -- encapsulation, abstraction, and interfaces are what let, say, any List implementation plug into Collections.sort(). Finally, a data structure is never just storage: designing your own means defining its behaviour, choosing an internal representation, and enforcing the invariants that keep it correct.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L4-35-s",
+      "anchorsExamQ": 3,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "If you print a custom tree object directly and get something like `MyTree@5ccd43c2`, what is this, and how do you fix the output to actually be useful?",
+      "keyBeats": [
+        "MyTree@5ccd43c2 is an object reference -- the default Object.toString() output (class name + hash code)",
+        "Mostly useful just for confirming the object is not null",
+        "Fix: add a printNice() method, or override toString(), that prints the actual information you want shown",
+        "Same underlying idea as the Temperature class's overridden toString() earlier in the lecture"
+      ],
+      "modelAnswer": "That output, MyTree@5ccd43c2, is just the default Object.toString() result -- effectively the class name plus a hash code representing the object's reference, not its contents. It's really only useful for a sanity check that the object isn't null. To get meaningful output, you add your own printNice() method, or override toString() the way the Temperature class did earlier in the lecture, so the object explicitly prints the state you actually care about instead of a generic reference string.",
+      "citation": "ooadi4.slides.pdf.extracted.txt, PAGE 33",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L4-E01",
+      "source": "ooadi4.assignments.pdf.extracted.txt (task 1); ooadi4.solutions.pdf.extracted.txt; Bicycle.java; Assignment.java (code example)",
+      "promptVerbatim": "Create an array with 100 bicycles – each with individual characteristics. Use the Random class to generate some random attribute values... Add an attribute name to the bicycle class, and code a namegenerator, such that you get a random and unique name for each bicycle, e.g. \"myBicycle_1\"",
+      "whatItTests": "Designing a custom data class (Bicycle) with meaningful attributes, and populating an object array of 100 elements with randomly generated attribute values plus a generated unique name per element.",
+      "answerSketch": "Bicycle has fields name (final), speedKmh, gearCount (final), weightKg (final), order (final), set via a constructor plus a copy constructor/copy() helper. To build the array: Random rnd = new Random(42); a Function<Integer,String> nameGen = i -> String.format(\"myBicycle_%03d\", i+1) generates unique names; Bicycle[] bikes = new Bicycle[100]; then a for loop (i=0..99) computes speed = 5.0 + rnd.nextDouble()*35.0 (5-40 km/h), gears = 1 + rnd.nextInt(21) (1-21), weight = 6.0 + rnd.nextDouble()*14.0 (6-20 kg), and stores bikes[i] = new Bicycle(name, speed, gears, weight, i), using i as the insertion order for later use with PriorityQueue."
+    },
+    {
+      "id": "OOADI-L4-E02",
+      "source": "ooadi4.assignments.pdf.extracted.txt (task 2a); ooadi4.solutions.pdf.extracted.txt; Assignment.java (code example)",
+      "promptVerbatim": "Add them one-by-one to a stack. Then decrease the speed for each bicycle by 25% as you take them off the stack",
+      "whatItTests": "Correct use of Stack push()/pop() LIFO semantics, and mutating objects while transferring them between data structures (copy-on-transfer to avoid side effects on the original array).",
+      "answerSketch": "Stack<Bicycle> stack = new Stack<>(); for each bike in bikes: stack.push(b.copy()) (a copy is used so the original bikes array is unaffected). Then: List<Bicycle> afterStack = new ArrayList<>(); while (!stack.isEmpty()) { Bicycle b = stack.pop(); b.adjustSpeed(0.75); afterStack.add(b); } -- popping reverses the insertion order (LIFO), and adjustSpeed(0.75) multiplies speedKmh by 0.75, i.e. a 25% decrease."
+    },
+    {
+      "id": "OOADI-L4-E03",
+      "source": "ooadi4.assignments.pdf.extracted.txt (task 2b); ooadi4.solutions.pdf.extracted.txt; Assignment.java (code example)",
+      "promptVerbatim": "Add them one-by-one to a PriorityQueue. Then increase speed for each bicycle by 25% in the same order as you inserted the bicycles",
+      "whatItTests": "Using a PriorityQueue with a custom Comparator to control ordering (here, to preserve original insertion order rather than natural/priority ordering), and mutating objects as they are polled.",
+      "answerSketch": "PriorityQueue<Bicycle> pq = new PriorityQueue<>(Comparator.comparingInt(Bicycle::getOrder)); for each bike in bikes: pq.add(b.copy()) (copies again, to leave other structures unaffected). Then: List<Bicycle> afterPQ = new ArrayList<>(); while (!pq.isEmpty()) { Bicycle b = pq.poll(); b.adjustSpeed(1.25); afterPQ.add(b); } -- since the comparator orders by the stored 'order' field, poll() returns bikes in the same sequence they were originally inserted into the array, and adjustSpeed(1.25) increases speed by 25%."
+    },
+    {
+      "id": "OOADI-L4-E04",
+      "source": "ooadi4.assignments.pdf.extracted.txt (task 2c); ooadi4.solutions.pdf.extracted.txt; Assignment.java (code example)",
+      "promptVerbatim": "Structure the bicycles in a LinkedList, then remove all bicycles that drives less than 10 km/h",
+      "whatItTests": "Using LinkedList as a general-purpose list and filtering its contents with removeIf() based on a predicate over object state.",
+      "answerSketch": "LinkedList<Bicycle> linked = new LinkedList<>(); for each bike in bikes: linked.add(b.copy()). Record int before = linked.size(); then linked.removeIf(b -> b.getSpeedKmh() < 10.0); removes every bicycle whose speed is under 10 km/h in place; int after = linked.size() shows how many remain -- this remaining LinkedList feeds into the next task's HashMap."
+    },
+    {
+      "id": "OOADI-L4-E05",
+      "source": "ooadi4.assignments.pdf.extracted.txt (task 3); ooadi4.solutions.pdf.extracted.txt; Assignment.java (code example)",
+      "promptVerbatim": "Use a hashmap to organize the remaining bicycles and add a possibility to input a name from the user. Use the inputted name to search and find the hashmapped bicycle and print its info. Repeat this until the user types \"exit\". To get user input you can use the Scanner class",
+      "whatItTests": "Building a HashMap keyed by a natural identifier (name) for O(1) lookup, and driving an interactive Scanner-based read loop with a sentinel exit condition and a not-found case.",
+      "answerSketch": "Map<String, Bicycle> mapByName = new HashMap<>(); for each remaining bike in linked: mapByName.put(b.getName(), b). Then open try (Scanner scanner = new Scanner(System.in)) { while (true) { read String input = scanner.nextLine(); trim it; if input equalsIgnoreCase(\"exit\") break the loop; otherwise Bicycle found = mapByName.get(input); if found != null print found (using Bicycle's toString()), else print \"No bicycle found with that name.\" } } -- looping continues until the user types exit."
+    }
+  ]
+}

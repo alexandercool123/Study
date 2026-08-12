@@ -1,0 +1,465 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 10,
+  "lectureTitle": "Exceptions and Error Handling",
+  "examQuestions": [
+    { "examQ": 9, "subPart": "a", "promptVerbatim": "Exceptions and I/O etc." }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L10-01-o",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What problem do exceptions solve compared to traditional error-code based error handling, and what is the core benefit Java's exception model provides?",
+      "keyBeats": [
+        "Traditional (C-style) error handling returns integer status codes with no forced checking; happy-path logic gets buried in nested if/else error checks",
+        "Programmers can silently ignore an error code, nothing forces you to check it",
+        "Java exceptions are objects generated when normal flow is interrupted, only generated when needed",
+        "Exceptions let you separate where something goes wrong from where you deal with it (organization/clarity, not shortcuts)",
+        "The try block reads like the happy-path pseudocode; all error handling is pushed to the catch blocks on the side"
+      ],
+      "modelAnswer": "In C-style error handling you get back an integer error code that you must remember to check, and the real logic gets buried under nested if/else blocks - nothing forces the caller to actually check the returned code, so bugs slip through unnoticed. Java's exception mechanism instead generates exception objects only when something actually goes wrong, and lets you separate the place an error occurs from the place that decides what to do about it. The try block can be written as clean happy-path pseudocode, while all the recovery logic is pushed into the catch blocks - exceptions are about clarity and organization, not about doing less work.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-02-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In the Java exception hierarchy, what is the difference between an Error and an Exception, and where do both sit relative to Throwable?",
+      "keyBeats": [
+        "Both Error and Exception inherit from java.lang.Throwable",
+        "Errors are catastrophic, JVM-level failures - OutOfMemoryError, StackOverflowError, VirtualMachineError",
+        "\"The environment has catastrophically failed\" -> Error, do not bother catching",
+        "Exceptions represent conditions that are abnormal but recoverable",
+        "\"Something went wrong in my program's logic or environment\" -> Exception, let us try to handle it"
+      ],
+      "modelAnswer": "In Java, Throwable is the root of the whole hierarchy, and it splits into Error and Exception. Errors are catastrophic, JVM-level failures like OutOfMemoryError or StackOverflowError - the environment itself has failed, so there's nothing sensible your code can do, and you generally don't bother catching them. Exceptions, on the other hand, represent conditions that are abnormal but recoverable - something went wrong in the program's logic or environment that you can reasonably try to handle, and that's where Java's design really shines compared to old error-code based approaches.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-03-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the difference between checked and unchecked exceptions in Java, and give two examples of each?",
+      "keyBeats": [
+        "Checked exceptions: conditions outside your control that a reasonable program should anticipate/recover from; compiler enforces handling (catch or declare with throws)",
+        "Checked examples: IOException, SQLException, FileNotFoundException",
+        "Unchecked exceptions: subclasses of RuntimeException, represent programmer mistakes/bugs",
+        "Unchecked examples: NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException",
+        "Compiler does not force catching unchecked ones because you're expected to write code that avoids them in the first place"
+      ],
+      "modelAnswer": "Checked exceptions are conditions outside the program's control that any reasonable program should anticipate, such as IOException when a file might not exist or SQLException when a database is unavailable - the compiler forces you to either catch them or declare them with throws, otherwise the code won't compile. Unchecked exceptions are subclasses of RuntimeException, like NullPointerException or ArrayIndexOutOfBoundsException, and they represent programmer mistakes - bugs that shouldn't happen if the code were correct. Because they're supposed to be preventable through defensive coding, the compiler doesn't force you to handle them.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-04-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the mechanical difference between throw and throws in Java, using the checked-exception example of opening a file that might not exist.",
+      "keyBeats": [
+        "throw is a statement that actually raises/creates an exception instance at the point of the fault - throw new SingularMatrixException(...)",
+        "throws is a method-signature declaration that a method may propagate a checked exception up the call stack - public void readFile() throws FileNotFoundException",
+        "FileReader file = new FileReader(\"test.txt\"); will not compile unless wrapped in try/catch or the enclosing method declares throws",
+        "try/catch = \"deal with it here\"; throws = \"let caller deal with the shit\""
+      ],
+      "modelAnswer": "throw is the statement that actually creates and raises an exception object at the exact point something goes wrong, like throw new SingularMatrixException(...). throws is different - it's part of a method's signature, declaring that this method might propagate a checked exception up the call stack, like public void readFile() throws FileNotFoundException. For a checked exception such as FileNotFoundException from opening a file, the compiler literally refuses to compile the code unless you either catch it right there with try/catch, or pass the buck to the caller by declaring throws on the method.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-05-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Name at least five of Java's built-in unchecked (runtime) exceptions from the slide list, and explain why almost all of them are described as preventable.",
+      "keyBeats": [
+        "Examples: ArithmeticException (divide by zero), ArrayIndexOutOfBoundsException, ClassCastException, IllegalArgumentException, NullPointerException, NumberFormatException, IndexOutOfBoundsException, UnsupportedOperationException",
+        "Slide point: nearly every entry is entirely preventable with proper defensive coding - null checks, bounds checks, input validation",
+        "Reinforces that unchecked exceptions represent bugs, not recoverable conditions",
+        "Useful to inspect the stack trace when debugging these"
+      ],
+      "modelAnswer": "The slides list runtime exceptions like ArithmeticException for divide-by-zero, ArrayIndexOutOfBoundsException, ClassCastException for an invalid cast, IllegalArgumentException, NullPointerException, and NumberFormatException for a bad string-to-number conversion. The key point is that almost every one of these is entirely preventable with basic defensive coding - null checks, bounds checks, validating input before you use it - which is exactly why they're unchecked: the compiler assumes you should have avoided them rather than needing to formally handle them, and when they do occur, the stack trace is your main debugging tool.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-06-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Why does catch-block order matter in Java, and what happens if you put catch (Exception e) before a more specific catch block like catch (FileOpenFailed e)?",
+      "keyBeats": [
+        "Rule: catch more specific exceptions before more general ones",
+        "The try block reads like happy-path pseudocode; all catches are pushed to one side, ordered specific to general",
+        "catch(Exception e) is too broad - catches everything, including things you wanted to handle specifically",
+        "A subsequent catch(FileOpenFailed e) placed after catch(Exception e) is unreachable code - \"never reached!\""
+      ],
+      "modelAnswer": "Java checks catch blocks top to bottom and uses the first one whose type matches, so you must order them from most specific to most general. If you write catch (Exception e) first, it swallows literally everything - including a more specific FileOpenFailed - so a subsequent catch (FileOpenFailed e) block is unreachable and the compiler will actually flag it as dead code. The correct pattern mirrors the happy path: try the sequence of operations, then list catches from the narrowest exception type down to the broadest.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-07-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "A Throwable is more than a signal - it's an object. What state does it carry, and what methods let you inspect it?",
+      "keyBeats": [
+        "Created via throw; contains a snapshot of the execution stack at creation time",
+        "Usually carries a message describing the error",
+        "May carry a cause - another Throwable, forming a chain/hierarchy of exceptions",
+        "Key methods: getMessage(), getCause(), toString(), printStackTrace() (prints full stack to stderr, useful for debugging), getStackTrace(), fillInStackTrace()"
+      ],
+      "modelAnswer": "A Throwable is a full object, not just a flag. When it's created with throw, it takes a snapshot of the execution stack at that moment, usually carries a descriptive message, and can optionally carry a cause - another Throwable - which lets exceptions chain into a whole hierarchy of causes. On the API side you get getMessage() to retrieve that description, getCause() to walk the chain, toString() and printStackTrace() to dump the full stack to stderr for debugging, and getStackTrace()/fillInStackTrace() to inspect or manipulate the stack trace data directly.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-08-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Sketch the Java exception class hierarchy from Object down through Throwable, showing where Error, Exception, RuntimeException and a few named exceptions sit.",
+      "keyBeats": [
+        "Object -> Throwable at the top",
+        "Throwable splits into two siblings: Exception and Error",
+        "Under Exception: checked exceptions hang directly off it (e.g. IOException, ClassNotFoundException)",
+        "Also under Exception: the RuntimeException branch (unchecked) - ArithmeticException, NullPointerException, IndexOutOfBoundsException, IllegalArgumentException, plus many more classes",
+        "Under Error: LinkageError, VirtualMachineError, plus many more classes"
+      ],
+      "modelAnswer": "At the top sits Object, which Throwable extends. Throwable then splits into two siblings: Exception and Error. Under Exception you have the checked exceptions hanging directly off it, like IOException and ClassNotFoundException, plus one special unchecked branch, RuntimeException, which is where ArithmeticException, NullPointerException, IndexOutOfBoundsException and IllegalArgumentException live, each with many more subclasses beneath them. Under Error you get JVM-catastrophe classes like LinkageError and VirtualMachineError, again with many more subclasses. So checked-ness is really about whether a class descends from RuntimeException (or Error) or not.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L10-09-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Trace what happens mechanically when an exception is thrown deep inside a call chain: main calls a method with an error handler, which calls a method without an error handler, which calls the method where the error actually occurs.",
+      "keyBeats": [
+        "The method where the error occurs generates and throws an exception",
+        "Execution halts at that point; the exception is passed back up the call stack looking for an appropriate handler",
+        "The method without an error handler forwards the exception automatically",
+        "The method with an error handler catches it",
+        "Either we handle the exception, or we pass it on to our object's creator/caller",
+        "If no handler is ever found anywhere up the chain, the program dies"
+      ],
+      "modelAnswer": "When the innermost method hits a fault, it generates and throws an exception object, and program execution at that point stops. The runtime then walks back up the call stack looking for a handler: a method with no matching catch just forwards the exception automatically to its own caller, and this keeps happening until a method with an appropriate catch block is found, which then catches and handles it. Every method along the way either handles the exception or passes it on to whoever called it - and if nobody up the whole chain ever catches it, the program terminates.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-10-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Using the SingularMatrixException example from the slides, show how you would catch it specifically, and explain why catching the generic Exception instead is worse.",
+      "keyBeats": [
+        "Specific: try { Vector v = system.computeOutput(theValues); } catch (SingularMatrixException sme) { // handle singular matrices specifically }",
+        "IDEs like Eclipse actively suggest catching SingularMatrixException because computeOutput declares throws SingularMatrixException",
+        "Generic catch(Exception e) also compiles but you lose the ability to respond to what specifically went wrong",
+        "Consequence of generic catch: user-facing responses that \"help very little\""
+      ],
+      "modelAnswer": "For a method declared as computeOutput(...) throws SingularMatrixException, you catch it specifically with catch (SingularMatrixException sme) and then write recovery logic tailored to a singular matrix - your IDE will even prompt you to do this because the method's signature announces it. If instead you write catch (Exception e), the code still compiles, but you've thrown away the information about what actually failed - you end up with generic, unhelpful responses to the user because you genuinely don't know anymore whether it was a singular matrix or something else entirely.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-11-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What problem does try-with-resources solve compared to manually closing a resource in a finally block, using the FileReader example?",
+      "keyBeats": [
+        "Without try-with-resources: if the try part fails, you must remember to close the FileReader yourself in finally",
+        "If you forget, 'fr' could be left hanging until the JVM shuts down (leaked resource)",
+        "Closing the resource can itself throw an IOException, so you end up nesting a try/catch inside the finally block - \"pretty ugly\"",
+        "try-with-resources auto-closes the declared resource, avoiding this nested-try mess"
+      ],
+      "modelAnswer": "If you open a FileReader manually and something in the try block fails, you still need to make sure the reader gets closed, which means writing a finally block that calls fr.close() - but that close() call can itself throw an IOException, so you end up with an ugly try/catch nested inside your finally. Try-with-resources solves this by declaring the resource in the try(...) parentheses so the JVM closes it automatically once the block exits, with or without an exception, removing the need for that nested cleanup code entirely.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-12-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through how InsufficientFundsException.java defines a custom checked exception for a bank withdrawal scenario.",
+      "keyBeats": [
+        "public class InsufficientFundsException extends Exception - extends Exception, so it's a checked exception",
+        "Carries a private double amount field, representing how much money is missing",
+        "Constructor InsufficientFundsException(double amount) sets this.amount = amount",
+        "Getter getAmount() returns the shortfall so callers can report it",
+        "Code also declares a serialVersionUID field, since Exception (via Throwable) implements Serializable"
+      ],
+      "modelAnswer": "InsufficientFundsException extends Exception directly, which makes it a checked exception the compiler will force callers to deal with. It carries one piece of custom state, a private double amount representing exactly how much money was missing, set through its constructor. It then exposes that via a getAmount() getter, so any code that catches this exception can report precisely how far short the account was, rather than just knowing 'something went wrong'. The actual code file also declares a serialVersionUID, since Exception (via Throwable) implements Serializable.",
+      "citation": "InsufficientFundsException.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-13-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through how CheckingAccount.withdraw() decides whether to throw InsufficientFundsException, and what the throws clause on the method signature means for its callers.",
+      "keyBeats": [
+        "Signature: public void withdraw(double amount) throws InsufficientFundsException",
+        "If amount <= balance: normal path, balance -= amount",
+        "Else: compute needs = amount - balance and throw new InsufficientFundsException(needs)",
+        "Because InsufficientFundsException extends Exception (checked), the throws declaration is mandatory for the code to compile",
+        "Any caller of withdraw() must either catch InsufficientFundsException or declare throws itself"
+      ],
+      "modelAnswer": "withdraw(double amount) is declared throws InsufficientFundsException because it can raise a checked exception, which the compiler requires it to announce. Internally it's a simple guard: if the requested amount is less than or equal to the current balance, it just subtracts and returns normally. Otherwise it computes how much is missing as needs = amount - balance, and throws a new InsufficientFundsException(needs) carrying that shortfall. Because the exception is checked, every caller of withdraw() is forced by the compiler to either catch it or propagate it further with its own throws clause.",
+      "citation": "CheckingAccount.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-14-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In BankDemo.java, how is InsufficientFundsException actually caught and used, and why does the demo deliberately withdraw $600 after only depositing $500 and withdrawing $100?",
+      "keyBeats": [
+        "deposit(500.00) happens outside any try block (deposit never throws)",
+        "withdraw(100.00) and withdraw(600.00) both happen inside one try block",
+        "After depositing 500 and withdrawing 100, balance is 400, so withdrawing 600 deliberately triggers InsufficientFundsException",
+        "catch (InsufficientFundsException e) prints \"Sorry, but you are short $\" + e.getAmount() and also calls e.printStackTrace()",
+        "Demonstrates catching a specific custom exception rather than a generic Exception, so the exact shortfall amount is available"
+      ],
+      "modelAnswer": "BankDemo deposits $500 outside of any try block since deposit never throws, then wraps both withdrawals in a single try. The first withdrawal of $100 succeeds, leaving a $400 balance, so the second withdrawal of $600 is deliberately engineered to fail - it needs $200 more than is available. That triggers InsufficientFundsException, which is caught specifically with catch (InsufficientFundsException e), letting the demo print exactly how short the account was via e.getAmount(), plus a full stack trace via e.printStackTrace() for debugging.",
+      "citation": "BankDemo.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-15-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "According to the slides, when should you throw an exception, and what does 'Design by Contract' have to do with it?",
+      "keyBeats": [
+        "Throw an exception when a method hits an abnormal condition it can't handle itself",
+        "Avoid using exceptions for conditions that are a reasonably expected part of the method's typical functioning",
+        "Exceptions indicate a broken contract",
+        "Design by Contract: a method is a contract between the client (caller) and the class that declares the method, expressed via preconditions and postconditions"
+      ],
+      "modelAnswer": "The guideline is: throw an exception only when your method hits an abnormal condition it genuinely can't deal with itself, and avoid using exceptions for anything that's a normal, expected part of how the method typically works. This ties into Design by Contract - a method represents a contract between the caller and the class, defined by preconditions the caller must satisfy and postconditions the method promises to deliver. An exception, in that framing, signals that the contract has been broken, not that a routine situation has occurred.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 34",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-16-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why does the slides' map.get(key) example count as misusing exceptions for control flow, and what's the preferred alternative?",
+      "keyBeats": [
+        "Bad: try { int value = map.get(key); } catch (Exception e) { // \"handle\" missing key } - uses an exception to detect a routine, expected condition",
+        "Good: if (map.containsKey(key)) { int value = map.get(key); } - handle the expected condition with a normal conditional",
+        "Labeled directly as \"bad form to use exceptions as control flow\""
+      ],
+      "modelAnswer": "Using try/catch around map.get(key) to detect a missing key treats a perfectly normal, expected outcome - the key not being present - as if it were an exceptional failure, which the slides call bad form. The preferred style checks the condition directly with an if, like if (map.containsKey(key)) { ... }, handling the expected case as ordinary control flow rather than routing it through the exception machinery, which is both clearer and avoids the performance cost of throwing.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-17-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Compare the two end-of-file handling styles from the slides: using EOFException to break a loop versus checking InputStream.read() for a -1 sentinel value. Which is considered better style, and why?",
+      "keyBeats": [
+        "ExEOFa: uses DataInputStream.readInt() in an infinite for(;;) loop, deliberately broken by catching EOFException, then silently swallowing it with an empty catch block",
+        "Considered bad practice: using an exception for normal control flow rather than a truly exceptional condition",
+        "ExEOFb: uses InputStream.read() which returns -1 as a sentinel when EOF is reached, checked in a normal while loop condition",
+        "Sentinel approach is cleaner/better style because EOF is the expected, normal end of reading a file, not an abnormal condition",
+        "Maps back to the checked/unchecked discussion about what genuinely deserves exception treatment"
+      ],
+      "modelAnswer": "The first version reads ints in an infinite for(;;) loop and relies on DataInputStream throwing EOFException to break out, then silently swallows that exception with an empty catch block - it works, but it's using the exception system purely as a loop-break mechanism. The second version instead uses InputStream.read(), which simply returns the sentinel value -1 when it hits end of file, so you can check that directly in a normal while loop condition. The sentinel approach is considered the better style because reaching EOF is the expected, normal outcome of reading a file to its end, not a genuinely abnormal condition - so it shouldn't be signaled with an exception at all.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-18-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Explain the three scenarios the slides describe for how try/catch/finally interact, in terms of which blocks execute.",
+      "keyBeats": [
+        "No exception occurs: both try and finally execute; catch is skipped entirely",
+        "Exception occurs and is caught: remaining statements in try are skipped, catch executes, then finally still executes",
+        "Exception occurs and is NOT caught: remaining try statements skipped, finally still executes, then the exception continues propagating",
+        "finally guarantees some code always runs regardless of what happened"
+      ],
+      "modelAnswer": "If no exception happens, both the try block and the finally block run in full, and the catch block is never touched. If an exception occurs and there's a matching catch, the rest of the try block is skipped, the catch block runs to handle it, and then finally still runs afterward. If an exception occurs but there's no matching catch for it, the remaining try statements are skipped, finally still executes to do its cleanup, and only after that does the uncaught exception continue propagating up the call stack. The whole point of finally is that its code is guaranteed to run no matter which of these paths you took.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-19-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Using the slides' database transaction and lock examples, show how finally is used to guarantee cleanup even when an exception occurs mid-operation.",
+      "keyBeats": [
+        "DB example: db.setAutoCommit(false); try { ...transaction...; db.commit(); } catch (SQLException e) { db.rollback(); } finally { db.setAutoCommit(true); } - autocommit always reset regardless of outcome",
+        "Lock example: lock.acquire(); try { // critical section } finally { lock.release(); } - lock must always be released no matter what happens",
+        "General pattern: whenever a resource does not support auto-closable (try-with-resources), you still must do the finally cleanup yourself"
+      ],
+      "modelAnswer": "In the database example, autoCommit is turned off, the transaction runs and commits inside the try, a catch handles SQLException by rolling back - but critically, the finally block always resets setAutoCommit(true) regardless of whether the commit succeeded or the rollback happened. Same pattern with the lock example: lock.acquire() happens before the try, the critical section runs inside it, and lock.release() sits in finally so the lock is guaranteed to be released no matter what happens in between. This is the general rule: whenever a resource doesn't support try-with-resources auto-closing, you still need finally to guarantee its cleanup.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 42",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-20-d",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does the slide deck identify as the worst ways to use catch and finally together, and why?",
+      "keyBeats": [
+        "Bad pattern: catch (Exception e) { System.out.println(\"An unknown error happened\"); } finally { fin.close(); socket.close(); } - closes resources fine, but gives no clue what caused the error",
+        "Generic catching is \"very problematic\" because you don't know: is the data corrupted? did the network drop mid-transaction? was the file half-written?",
+        "Worse still: silently swallowing exceptions (empty catch block) - tells you absolutely nothing"
+      ],
+      "modelAnswer": "The slides call out catching a broad Exception and just printing 'An unknown error happened' as very problematic, because even though the finally block dutifully closes the file and socket, you have no idea what actually went wrong - was the data corrupted, did the network drop mid-transaction, was the file left half-written? You've cleaned up the resources but learned nothing useful for recovery or debugging. The only thing considered worse is silently swallowing an exception with an empty catch block, which tells you absolutely nothing at all.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-21-o",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize the 'important stuff' takeaways the lecture closes on regarding exceptions.",
+      "keyBeats": [
+        "Exceptions are about separation of concerns - separating where something goes wrong from where you deal with it",
+        "try/catch enforces a clean architectural boundary",
+        "Exceptions are for exceptional conditions only, never normal program flow; misuse hurts readability and can hurt performance",
+        "Checked vs unchecked is a design decision, not just syntax - reflects how you think about responsibility",
+        "Custom exceptions make code self-documenting: FileOpenFailed immediately reveals what went wrong, Exception tells you nothing",
+        "Catching order and granularity matter: always catch specific before general, each catch block should handle exactly what it claims"
+      ],
+      "modelAnswer": "The lecture wraps up on a handful of points: exceptions exist for separation of concerns, keeping where a fault occurs cleanly separated from where it's handled, and try/catch enforces that as an architectural boundary. Exceptions should be reserved for truly exceptional conditions, never normal control flow, since misusing them hurts both readability and performance. Whether you make an exception checked or unchecked is a real design decision about who's responsible for handling it, not just syntax. Naming your custom exceptions well makes code self-documenting - FileOpenFailed tells you immediately what happened, whereas a bare Exception tells you nothing. And finally, catch order and granularity matter: always catch the more specific exception before the general one, and each catch block should only handle exactly what it claims to handle.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 45",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-22-m",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the mechanics of the traditional C error-code approach shown in the slides' readFile() example, and explain its core weaknesses.",
+      "keyBeats": [
+        "Function returns an errorCodeType; different negative values (-1, -2, -3) represent different failure points",
+        "Deeply nested if/else structure: if(fp != NULL) { if(fileLength > 0) { if(buffer != NULL) { ... } else errorCode = -2 } else errorCode = -3 } - no meaningful info beyond an integer",
+        "The programmer must remember to check the return value; nothing forces them to",
+        "Happy-path logic (reading the file) buried several levels deep while error handling is scattered throughout via nested if/else",
+        "Easy to lose overview; error-handling code can itself introduce bugs; easy to simply forget to handle an error"
+      ],
+      "modelAnswer": "In the C example, readFile() returns an errorCodeType integer, where different negative values like -1, -2 or -3 encode different failure points - opening the file, determining its length, or allocating memory - nested three levels deep in if/else. The core weaknesses are that this integer carries no meaningful information about what actually happened, the programmer has to remember to check it and nothing in the language forces that, and the real happy-path logic of actually reading the file ends up buried several levels down inside a maze of nested error checks. That makes it easy to lose the overview, easy for the error-handling code itself to introduce bugs, and easy to simply forget to handle a case altogether.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-23-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the TrainServer/TrainClient try-with-resources recap connect to the exceptions material, specifically around what gets auto-closed versus what must be closed manually?",
+      "keyBeats": [
+        "try (ServerSocket serverSocket = new ServerSocket(PORT)) { ... } only lists ServerSocket as a resource - its close() is auto-called",
+        "clientSocket obtained via serverSocket.accept() inside the block is NOT part of the try-with-resources declaration, so it must be closed manually, same for in/out streams defined later",
+        "setReuseAddress(true) prevents \"Address already in use\" errors from the OS holding the port in TIME_WAIT after a close/reconnect cycle",
+        "TrainClient try-with-resources lists multiple resources (Socket, BufferedReader in, PrintWriter out, BufferedReader userInput), all auto-closed since all declared in the try(...) parentheses"
+      ],
+      "modelAnswer": "The TrainServer recap only puts ServerSocket in the try-with-resources parentheses, so only that gets auto-closed; the clientSocket returned by serverSocket.accept() inside the block, along with any input/output streams built later, are not part of that declaration and must be closed manually or the program leaks them. setReuseAddress(true) is there because otherwise the OS can hang onto the port in TIME_WAIT after a disconnect, causing an 'Address already in use' error on quick reconnect. The TrainClient side, by contrast, declares all four resources - Socket, the BufferedReader for server input, the PrintWriter for output, and the BufferedReader for user keyboard input - directly inside the try(...) parentheses, so all four get auto-closed together, which is exactly the kind of pattern that avoids the nested try/catch-in-finally mess seen with plain FileReader.",
+      "citation": "ooadi10.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L10-24-s",
+      "anchorsExamQ": 9,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The InsufficientFundsException.java code includes a private static final long serialVersionUID field with the comment 'Why is this needed? :-)'. What is it for?",
+      "keyBeats": [
+        "Exception (via Throwable) implements Serializable",
+        "serialVersionUID is a version identifier used by Java's serialization mechanism to verify a loaded class matches the serialized object during deserialization",
+        "Not explicitly explained anywhere on the slides - inferred purely from the code comment, so flagged as background knowledge beyond lecture content"
+      ],
+      "modelAnswer": "Because Exception ultimately implements Serializable (through Throwable), the JVM can serialize exception instances, and serialVersionUID is the version identifier Java's serialization mechanism uses to confirm that a class loaded during deserialization matches the class that was originally serialized. Declaring it explicitly avoids relying on a compiler-generated value that could change if the class is edited later. This isn't explained anywhere in the slide deck itself - the code just leaves it as a rhetorical question - so it's worth flagging as background knowledge rather than lecture content.",
+      "citation": "InsufficientFundsException.java",
+      "unverified": true,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L10-E01",
+      "source": "ooadi10.assignments.pdf.extracted.txt, PAGE 1, item 1; ooadi10.solutions.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Consider the client code from previous course module exercise, what type of errors can you envision? Write at least three fault possibilities",
+      "whatItTests": "Ability to identify real fault points in existing client networking code and connect them to checked/unchecked exception categories and defensive coding.",
+      "answerSketch": "From the TrainClientNetworked.java review: (a) Number Format Crash - typing 'three' instead of '3' for number of wagons (or a bad port argument) throws an uncaught NumberFormatException and crashes the client. (b) Wrong port number at startup makes the client freeze forever waiting for a connection, so the 'quit' command is never reached. (c) No wagon data validation - length and weight are read as raw strings and sent on with zero validation, so negative numbers, zero, or text like 'heavy' are all accepted and forwarded to the server. (d) No socket timeout - if the server stops responding mid-conversation, the client waits forever with no way to recover; fixable with socket.setSoTimeout(5000)."
+    },
+    {
+      "id": "OOADI-L10-E02",
+      "source": "ooadi10.assignments.pdf.extracted.txt, PAGE 1, item 2; ooadi10.solutions.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Repeat with the server-side code that you may have. Write at least three fault possibilities",
+      "whatItTests": "Ability to identify server-side fault points (resource lifecycle, single-client limitation, silent failure) and connect them to exception handling design.",
+      "answerSketch": "From the TrainServer.java review: (a) Single-client support only - the server accepts exactly one client and shuts down entirely once that client disconnects, with no loop to accept more; a second client would wait forever. (b) Client socket never closed properly - unlike the client's try-with-resources, clientSocket.close() only happens in the 'quit' case, so a server crash leaves the socket open. (c) No error is communicated to the client - if the server crashes with an IOException, it just prints to its own console and exits silently, leaving the connected client hanging with no idea what went wrong."
+    },
+    {
+      "id": "OOADI-L10-E03",
+      "source": "ooadi10.assignments.pdf.extracted.txt, PAGE 1, item 3; ooadi10.solutions.pdf.extracted.txt, PAGE 2",
+      "promptVerbatim": "Some of the above faults and errors you are probably already catching. Consider by design, what to do when entering those fault conditions. Anything you can change from standard output to actual sensible behavior beside stopping some functionality?",
+      "whatItTests": "Ability to redesign fault handling so the program degrades gracefully (keeps running, logs, reports) instead of merely printing an error and/or dying.",
+      "answerSketch": "Wrap serverSocket.accept() in an outer while(true) with try/catch(IOException) that logs 'Failed to accept client, continuing...' and loops again instead of dying, keeping the service alive across client disconnects; delegate per-client work to handleClient(). To support multiple simultaneous clients, spawn a new Thread per accepted client running handleClient() inside its own try/catch. Also flagged: the 'add' functionality silently accepted corrupt data (negative wagon length, weight = 'heavy') and stored it, later breaking search with 'ERROR bad add: For input string: heavy' - it should validate and reject bad input with a sensible error response instead of corrupting stored data."
+    },
+    {
+      "id": "OOADI-L10-E04",
+      "source": "ooadi10.assignments.pdf.extracted.txt, PAGE 1, item 4a; ooadi10.solutions.pdf.extracted.txt, PAGE 3",
+      "promptVerbatim": "A search for a specific train type most likely just lead to a null pointer exception, but that is not useful. Creating a TrainNotFoundException may be a more intuitive way to indicate and catch faults. But is it really a fault and if so, what type is it?",
+      "whatItTests": "Designing a custom checked exception to replace an unhelpful NullPointerException, and reasoning about whether a 'not found' search result is genuinely exceptional.",
+      "answerSketch": "Define: public class TrainNotFoundException extends Exception { public TrainNotFoundException(String id) { super(\"Train not found with ID: \" + id); } } - a checked exception with a descriptive constructed message. The solution stresses the real question is whether this is a fault at all: exceptions should only be used when the user would have expected something other than what happened, so a 'not found' search result arguably belongs to normal, expected program flow rather than being a truly exceptional condition."
+    },
+    {
+      "id": "OOADI-L10-E05",
+      "source": "ooadi10.assignments.pdf.extracted.txt, PAGE 1, item 4b; ooadi10.solutions.pdf.extracted.txt, PAGE 3-4",
+      "promptVerbatim": "If your communication only allows, say 100 train descriptions to be send back in a single response, an error could also be that too many trains were found. How can you address this?",
+      "whatItTests": "Designing a custom checked exception that carries structured data (found/limit counts) and using it to implement graceful partial-result degradation rather than a crash.",
+      "answerSketch": "Define TooManyResultsException extends Exception with fields found and limit, a constructor building the message 'Query returned N results, maximum allowed is M', plus getFound()/getLimit(). In the server's 'search' case, after collecting results, if results.size() > MAX_RESULTS (100), throw new TooManyResultsException(results.size(), MAX_RESULTS) instead of crashing or silently truncating. The catch block then sends 'WARNING: <message>' plus 'Showing first <limit> results only.' and still returns a usable partial response via results.stream().limit(MAX_RESULTS).forEach(out::println), so the client gets a graceful degraded result instead of an error dead-end."
+    }
+  ]
+}

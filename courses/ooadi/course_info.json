@@ -1,0 +1,20 @@
+{
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "courseCode": "OOADI",
+  "examFormat": "Oral exam: ~15 min per student (23 min with dispensation), incl. ~5 min grading. Student draws 1 of 9 topics, does the talking, examiners ask supplementary questions (may diverge from the topic). Computer and any notes allowed; no external communication.",
+  "notesAllowed": "Computer and any notes allowed (no live communication with others)",
+  "numLectures": 11,
+  "topics": [
+    "Introduction to OOP",
+    "UML and Use-Case Analysis (light), Classes and Objects",
+    "Class Relations and Diagrams",
+    "Data Structures and Types",
+    "Abstraction, Interfaces and Polymorphism",
+    "Lists, Iterators and Operators",
+    "Threads, Concurrency and Synchronization",
+    "Dynamic Interactions and Sequences",
+    "I/O, Communication and Events",
+    "Exceptions and Error Handling",
+    "(EXTRA, non-examinable) Testing and Validation - xUnit"
+  ]
+}

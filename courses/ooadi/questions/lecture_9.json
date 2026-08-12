@@ -1,0 +1,835 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 9,
+  "lectureTitle": "I/O, Communication and Events",
+  "examQuestions": [
+    { "examQ": 8, "subPart": "a", "promptVerbatim": "Asynchronous communication" }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L9-001-o",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What is a stream in Java, and why does splitting the concept into input streams and output streams create a foundation that everything else (files, sockets, keyboard, GUI) can build on?",
+      "keyBeats": [
+        "A stream models an input and/or output with a sequence of data flowing between two points",
+        "Streams are twofold: input streams relate to reading, output streams relate to writing",
+        "This two-model split is the foundation for all subsequent data-exchange cases (files, sockets, etc.)"
+      ],
+      "modelAnswer": "In Java a stream is just a model of a sequence of data moving between a source and a destination, and it's deliberately split into two directions: input streams for reading data in, and output streams for writing data out. Because every I/O scenario — reading a file, writing to a file, talking over a socket, or reading the keyboard — reduces to one of these two directions, this simple abstraction becomes the shared foundation the whole java.io and java.net API is built on top of.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 6",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-002-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What distinguishes byte streams from character streams in Java, and which abstract classes anchor each family?",
+      "keyBeats": [
+        "Byte streams are the simplest, lowest-level type of stream, modelled by abstract classes InputStream and OutputStream",
+        "From InputStream/OutputStream, access to files or sockets can occur",
+        "Character streams are very similar but work with characters instead of raw bytes",
+        "Character streams are anchored by Reader (reading) and Writer (writing), with specialized classes inheriting from them"
+      ],
+      "modelAnswer": "Byte streams are the lowest-level I/O abstraction, rooted in the abstract classes InputStream and OutputStream, and they move raw bytes — this is what underlies file and socket access. Character streams sit on a parallel hierarchy rooted in Reader and Writer; they work identically in spirit but operate on characters instead of raw bytes, which matters once you care about text encoding rather than binary data.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-003-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the mechanics of reading a file with FileInputStream: how do you open it, and what does the read loop with a byte buffer look like?",
+      "keyBeats": [
+        "Open the resource: new FileInputStream(\"path/to/your/file\") inside a try, catching IOException",
+        "Allocate a byte[] buffer (e.g. 1024 bytes) to hold read chunks",
+        "Loop: bytesRead = fileInputStream.read(buffer) returns the count read, or -1 at end of stream",
+        "Process buffer contents each iteration, then close the stream when done"
+      ],
+      "modelAnswer": "You first 'open' the file as a resource with new FileInputStream(path) inside a try/catch for IOException. Then you allocate a byte array buffer, say 1024 bytes, and loop calling fileInputStream.read(buffer), which fills the buffer and returns how many bytes were actually read — or -1 once the stream is exhausted. Inside the loop you do whatever processing is needed on the bytes just read, and afterward you close the stream to release the underlying OS resource.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-004-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "After reading bytes into a buffer with FileInputStream, how do you convert that raw byte content into a printable String, and why is the String class relevant here?",
+      "keyBeats": [
+        "Use new String(buffer, 0, bytesRead) to convert the read byte range into a String (assuming ASCII)",
+        "The String class conveniently provides the conversion logic from bytes to printable characters",
+        "Illustrates a broader lesson: when you have data of a given type, check that type's own class for relevant functionality"
+      ],
+      "modelAnswer": "Once bytesRead bytes are sitting in the buffer, you convert them into text with new String(buffer, 0, bytesRead), which interprets that byte range as characters (assuming ASCII, no failure checking). The lecture uses this to make a broader point: the String class conveniently bundles the byte-to-text conversion logic, so whenever you're holding some kind of data, it's worth checking that data's own class for the functionality you need rather than writing it yourself.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-005-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through writing a String to a file using FileOutputStream.",
+      "keyBeats": [
+        "Open the output resource with new FileOutputStream(\"path/to/your/file\") in a try/catch(IOException)",
+        "Convert the String to bytes with data.getBytes()",
+        "Call fileOutputStream.write(bytes) to write the byte array",
+        "Close the stream when finished"
+      ],
+      "modelAnswer": "Output is handled the mirror-image way to input: you open a FileOutputStream on the target path inside a try/catch for IOException, then take your String data and convert it into a byte array via data.getBytes(), and finally hand that byte array to fileOutputStream.write(bytes). As with input, closing the stream afterward is required to flush and release the resource.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-006-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the FileReader/FileWriter char-by-char file copy example work, and what OO design point does it illustrate about read()/write()?",
+      "keyBeats": [
+        "FileReader and FileWriter are file-I/O classes built on top of Reader/Writer",
+        "int c = inputStream.read() reads one character at a time (as an int), returns -1 at EOF",
+        "outputStream.write(c) writes that character out inside the same loop",
+        "Both FileReader/FileWriter and byte streams share the same method names read()/write() — this consistency is a deliberate part of the OO design"
+      ],
+      "modelAnswer": "FileReader and FileWriter give you character-stream access to files. You read char by char with int c = inputStream.read(), which returns the next character or -1 at end of stream, and immediately write it out with outputStream.write(c) inside the while loop — that's the whole copy. The lecture stresses that using the same method names, read() and write(), across both the byte-stream and character-stream hierarchies is a deliberate part of the OO design: once you know the pattern, it transfers regardless of which concrete stream class you're using.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 13",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-007-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why must the FileReader/FileWriter stream variables be declared outside the try{} block in the classic (pre try-with-resources) pattern, and what does the finally block guarantee?",
+      "keyBeats": [
+        "Stream variables are declared before try{} so they remain visible/available inside the finally block",
+        "The finally block always runs, whether the copy succeeded or an exception was thrown",
+        "Closing streams is critical: without it file handles leak and the output file may not be fully flushed to disk",
+        "Remembering the finally block is emphasized as very important"
+      ],
+      "modelAnswer": "The stream variables are declared as null outside the try block specifically so that the finally block — which runs no matter what, whether the copy succeeded or an exception was thrown midway — can still reach them and call close(). Skipping this is dangerous: unclosed streams leak file handles and can leave the output file not fully flushed to disk, so the lecture is explicit that remembering the finally-close pattern is critical.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-008-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How does try-with-resources (Java 7+) improve on the manual finally-based stream-closing pattern?",
+      "keyBeats": [
+        "try (FileReader inputStream = ...; FileWriter outputStream = ...) { ... } declares resources in the try's parentheses",
+        "The compiler automatically generates the closing logic, in reverse declaration order, once the block exits",
+        "Same behaviour as the finally pattern, but the finally block and null checks are no longer needed",
+        "The old finally-based pattern is explicitly marked obsolete ('OBSOLETSKI') once try-with-resources is available"
+      ],
+      "modelAnswer": "Try-with-resources lets you declare the resources you need to close directly in the try's parentheses, e.g. try (FileReader inputStream = new FileReader(...); FileWriter outputStream = new FileWriter(...)) { ... }, and the compiler generates the equivalent close-in-finally logic automatically once the block exits — including on exceptions. The behaviour is identical to the manual finally pattern, but you no longer need the null checks or the explicit finally block, which is why the slides flag the old pattern as obsolete now that try-with-resources exists.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 15",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-009-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a buffered stream, and how do you add buffering to an existing stream? Name the four buffering wrapper classes and which family (byte or character) each belongs to.",
+      "keyBeats": [
+        "A buffer is added by 'wrapping' an existing stream inside a buffering class (decorator-style composition)",
+        "Character streams: BufferedReader wraps a Reader (e.g. FileReader), BufferedWriter wraps a Writer (e.g. FileWriter)",
+        "Byte streams: BufferedInputStream wraps an InputStream (e.g. FileInputStream), BufferedOutputStream wraps an OutputStream (e.g. FileOutputStream)",
+        "Direct-to-OS I/O in the earlier examples works, but an intermediate buffer between the application and the OS is often useful"
+      ],
+      "modelAnswer": "The prior byte/character stream examples talk directly to the underlying OS file I/O every call, which is often inefficient; a buffered stream inserts an intermediate buffer by wrapping the base stream inside a buffering class. For character streams that's BufferedReader wrapping a Reader like FileReader, and BufferedWriter wrapping a Writer like FileWriter; for byte streams it's BufferedInputStream wrapping a FileInputStream, and BufferedOutputStream wrapping a FileOutputStream. The naming tells you which family each belongs to.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-010-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are DataInputStream and DataOutputStream for, and what unusual behaviour does DataInputStream exhibit at end-of-stream compared to most Java I/O?",
+      "keyBeats": [
+        "Data streams support binary I/O of primitive data type values (readDouble, readInt, readUTF, writeDouble, writeInt, writeUTF, etc.)",
+        "Typically layered: DataInputStream wraps BufferedInputStream wraps FileInputStream (and symmetrically for output)",
+        "DataInputStream reads until it runs out of data, then throws EOFException — it does NOT return -1",
+        "This is unusual: e.g. FileReader.read() returns -1 at EOF instead"
+      ],
+      "modelAnswer": "DataInputStream and DataOutputStream let you read and write Java's primitive types directly in binary form — readDouble, readInt, readUTF and their write counterparts — typically layered as DataInputStream wrapping a BufferedInputStream wrapping a FileInputStream. The odd part is end-of-stream handling: unlike FileReader.read(), which returns -1 when there's nothing left, DataInputStream throws an EOFException once it runs out of data to read.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-011-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What is the standard try/catch pattern for reading a DataInputStream until EOF, and why does the lecture call using EOFException for this purpose 'poor design'?",
+      "keyBeats": [
+        "Pattern: try { while (true) { double d = in.readDouble(); ... } } catch (EOFException e) { /* normal end */ } catch (IOException e) { /* real error */ }",
+        "Reaching EOF is caught as EOFException and treated as a normal, expected condition, not printed as an error",
+        "A separate catch (IOException e) after it still handles genuinely unexpected errors",
+        "Criticism: exceptions should signal unexpected conditions, not routine ones like reaching end of file — using them for normal control flow mixes normal flow with error handling and hurts readability; this is called out as a legacy Java design decision"
+      ],
+      "modelAnswer": "You wrap an infinite while(true) loop of in.readDouble() calls in a try, then catch EOFException specifically to mean 'we reached the end, that's fine, stop looping,' followed by a separate catch (IOException e) for actual errors. The lecture criticizes this because exceptions are supposed to signal unexpected conditions, whereas reaching end-of-file during normal reading is a routine, expected event — using an exception for ordinary control flow like this is called a legacy Java design decision that mixes normal flow with error handling and makes the code harder to read and reason about.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-012-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is object serialization in Java, what interface must an object implement to be serialized, and what invariant must hold between writeObject and readObject calls?",
+      "keyBeats": [
+        "Object stream classes (ObjectInputStream/ObjectOutputStream) let you read/write complete objects, not just primitives or bytes",
+        "The object must implement the Serializable interface",
+        "Serializable is only a marker interface — it declares and asks nothing (no methods to implement)",
+        "For each writeObject call there must be a matching readObject call — this is a simplification for saving/exchanging complex objects"
+      ],
+      "modelAnswer": "Object streams — ObjectOutputStream and ObjectInputStream — let you serialize and deserialize whole objects rather than manually breaking them into primitives or bytes, as long as the object's class implements Serializable. Serializable is only a marker interface: it has no methods to implement, it just tells the JVM the object is eligible for serialization. The contract is symmetric — each writeObject() call on the way out must be matched by a readObject() call on the way in, in the same order — and the whole mechanism exists as a convenient simplification for saving or exchanging objects that would otherwise be complex to serialize by hand.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 19",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-013-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are Java's three standard streams for command-line I/O, and why is System.in described as a legacy design?",
+      "keyBeats": [
+        "Standard input: System.in — a byte stream, for historical reasons",
+        "Standard output: System.out — a PrintStream based on a character stream",
+        "Standard error: System.err — also a PrintStream based on a character stream",
+        "System.in is a byte stream as a legacy from Java mirroring C's stdin; in practice you almost never use it raw, you wrap it immediately (e.g. InputStreamReader)"
+      ],
+      "modelAnswer": "Java exposes three standard streams: System.in for standard input, System.out for standard output, and System.err for standard error. System.out and System.err are both PrintStream, built on a character stream, but System.in is oddly a raw byte stream — a legacy from Java's early days mirroring C's stdin. In practice nobody uses System.in raw; it's immediately wrapped, typically with an InputStreamReader, to bridge it into the character-stream world.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-014-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Trace the decorator-style wrapping used to turn System.in into buffered character input, and explain how this relates to what Scanner does internally.",
+      "keyBeats": [
+        "InputStreamReader cin = new InputStreamReader(System.in) bridges the raw byte stream into a character stream",
+        "BufferedReader input = new BufferedReader(new InputStreamReader(System.in)) adds buffering on top",
+        "This is the same decorator pattern seen throughout Java I/O (stream wrapped inside stream, each adding one capability)",
+        "Scanner sc = new Scanner(System.in) does exactly the same wrapping internally, just hidden inside the constructor"
+      ],
+      "modelAnswer": "InputStreamReader acts as the bridge that converts the raw byte stream System.in into a character stream — new InputStreamReader(System.in) — and then BufferedReader wraps that again to add buffering: new BufferedReader(new InputStreamReader(System.in)). This nested wrapping is the same decorator pattern seen throughout java.io. Scanner does exactly the same thing when you write new Scanner(System.in) — it's just that all that wrapping happens internally to the Scanner constructor instead of being spelled out explicitly.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-015-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "What is the practical difference between System.out and System.err, both being PrintStream instances?",
+      "keyBeats": [
+        "Both System.out and System.err are PrintStream, but serve different purposes",
+        "System.out is the normal program output, and it can be redirected (e.g. java MyProgram > output.txt)",
+        "System.err carries error messages, and is typically shown in red in IDEs",
+        "When output is redirected to a file, errors still show on screen (they go to different streams)"
+      ],
+      "modelAnswer": "Both are the same class, PrintStream, but they're used for different purposes: System.out is where normal program output goes and it can be redirected, e.g. running java MyProgram > output.txt sends only System.out into the file. System.err carries error messages and is left going to the console (typically rendered in red inside an IDE), so even after redirecting standard output, error messages still show up on screen because they travel on the separate System.err stream.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-016-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the two stream classes that implement formatting in Java, which is used for byte streams and which for character streams, and what makes System.out convenient for testing?",
+      "keyBeats": [
+        "PrintStream implements formatting for byte streams",
+        "PrintWriter implements formatting for character streams",
+        "System.out (a PrintStream) is the most commonly used, offering print(), println(), format()",
+        "Being a PrintStream gives println() the convenience of internal type conversion — it accepts literally anything, which is why it's good for testing"
+      ],
+      "modelAnswer": "Formatting is provided by two parallel classes: PrintStream for the byte-stream world, and PrintWriter for the character-stream world. System.out is the most commonly used example, being a PrintStream, and it exposes print(), println(), and format(). The reason println() is so convenient — accepting essentially any type of argument and formatting it — is precisely because PrintStream handles the type conversion internally, which is also why it's such a handy tool for quick testing.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-017-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Given System.out.format(\"The square root of %d is %f.%n\", i, r);, explain what the format specifiers %d, %f and %n do.",
+      "keyBeats": [
+        "%d formats an integer argument",
+        "%f formats a floating-point (double) argument",
+        "%n inserts a platform-specific line separator",
+        "format() (like printf) substitutes arguments into the format string in order, doing the type conversion for you"
+      ],
+      "modelAnswer": "In System.out.format(\"The square root of %d is %f.%n\", i, r), %d is a placeholder for an integer argument (here i), %f is a placeholder for a floating-point value (here r, the double result of Math.sqrt), and %n inserts the platform's line separator. format() walks through the arguments in order and substitutes them into these placeholders, handling the type-to-text conversion for you, the same idea as C's printf.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 23",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-018-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Scanner is overloaded to accept many kinds of sources. Give the constructor forms shown on the slides and explain what unifying idea this achieves.",
+      "keyBeats": [
+        "Scanner(File source); Scanner(InputStream source); Scanner(Path source) — overloaded constructors",
+        "This lets you treat the keyboard the same way as a file, a data transmission stream, and more",
+        "System.in is the JVM's default input stream (defaults to the keyboard) provided by the host environment",
+        "Example: Scanner keyboard = new Scanner(System.in); int myint = keyboard.nextInt();"
+      ],
+      "modelAnswer": "Scanner's constructor is overloaded to accept a File, an InputStream, or a Path, among others — Scanner(File source), Scanner(InputStream source), Scanner(Path source). Because System.in is just another InputStream (the JVM's default input, which normally means the keyboard), passing it into new Scanner(System.in) means the exact same Scanner API you'd use to read a file can be used to read the keyboard, or in principle any other stream source, unifying all these cases behind one class.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-019-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give an example of Scanner's hasNextX() pattern and its useDelimiter() capability, using the '1 fish 2 fish red fish blue fish' example from the slides.",
+      "keyBeats": [
+        "while (sc.hasNextLong()) { long aLong = sc.nextLong(); } — hasNextX() checks before consuming with nextX()",
+        "Scanner supports many hasNext... variants: hasNextFloat(), hasNextInt(), hasNextBoolean(), etc.",
+        "useDelimiter(\"\\\\s*fish\\\\s*\") changes what separates tokens, letting 's.nextInt()' and 's.next()' pull '1', '2', 'red', 'blue' out of the fish-separated string",
+        "Combined with regex, Scanner can do sophisticated pattern matching and data extraction from any string or stream"
+      ],
+      "modelAnswer": "Scanner exposes a family of hasNextX() checks — hasNextLong(), hasNextInt(), hasNextFloat(), hasNextBoolean() and so on — that let you safely check the type of the next token before consuming it with the matching nextX(). On top of that, useDelimiter() lets you redefine what separates tokens: for the string '1 fish 2 fish red fish blue fish', calling useDelimiter(\"\\\\s*fish\\\\s*\") makes 'fish' the separator, so successive calls to nextInt()/next() pull out 1, 2, 'red', and 'blue' cleanly. Combined with regular expressions this lets Scanner do fairly sophisticated pattern matching and data extraction from any string or stream.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 24",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-020-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does Scanner's findInLine() combined with match() extract multiple regex groups from a single string, as in the fish example?",
+      "keyBeats": [
+        "s.findInLine(\"(\\\\d+) fish (\\\\d+) fish (\\\\w+) fish (\\\\w+) fish\") searches the line for a match of the given regex",
+        "MatchResult result = s.match() retrieves the result of that match",
+        "result.groupCount() gives the number of capture groups; result.group(i) retrieves group i's captured text",
+        "For '1 fish 2 fish red fish blue fish': group 1 = '1', group 2 = '2', group 3 = 'red', group 4 = 'blue'"
+      ],
+      "modelAnswer": "You call s.findInLine() with a regex containing capture groups, e.g. \"(\\\\d+) fish (\\\\d+) fish (\\\\w+) fish (\\\\w+) fish\", which searches the current line for that pattern. Then s.match() returns a MatchResult object, and you loop from 1 to result.groupCount(), printing result.group(i) for each. On the classic '1 fish 2 fish red fish blue fish' example this pulls out group 1 = '1', group 2 = '2', group 3 = 'red', group 4 = 'blue' — full regex-group extraction through Scanner.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-021-o",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "At what layer of the network stack does Java's networking API operate, and what does that mean for what you as a Java programmer have to implement yourself?",
+      "keyBeats": [
+        "Standardized protocols allow (easy) communication; most of the stack is already part of the host OS",
+        "Java focuses on the transport layer and above (TCP, UDP and above)",
+        "Java's networking classes abstract away everything below: you never write code for IP packet routing or TCP handshakes",
+        "The OS and Java runtime handle the lower layers (network, link) for you"
+      ],
+      "modelAnswer": "Java's networking classes operate at the transport layer and above — TCP and UDP, and application-level protocols built on top of them. Everything underneath that, IP packet routing, the actual TCP three-way handshake, link-layer device drivers, is handled by the host operating system and the Java runtime; a Java programmer never writes code that manages those lower layers directly, they just work with the socket abstractions Java provides.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L9-022-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "A socket is described as 'a plug point for network communication' made up of three things. What are they, and what is the basic minimal TCP socket code for server and client?",
+      "keyBeats": [
+        "A socket combines: an IP address (who to talk to), a port number (what service), and a protocol (usually TCP or UDP)",
+        "Server-side and client-side sockets are distinct types with distinct roles",
+        "Server minimal code: ServerSocket ss = new ServerSocket(6666); Socket s = ss.accept();",
+        "Client minimal code: Socket s = new Socket(\"localhost\", 6666);",
+        "This TCP socket type relies on the TCP stack in the OS"
+      ],
+      "modelAnswer": "A socket is essentially a plug point for network communication, and it's defined by three things: an IP address specifying who to talk to, a port number specifying which service on that machine, and a protocol, usually TCP or UDP. On the server side the minimal pattern is ServerSocket ss = new ServerSocket(6666) followed by Socket s = ss.accept(), which blocks until a client connects; on the client side it's just Socket s = new Socket(\"localhost\", 6666). This whole TCP socket type relies on the OS's underlying TCP stack.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-023-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Diagram/describe the TCP client-server socket handshake sequence: what happens on the server side and client side, in order, before data can flow?",
+      "keyBeats": [
+        "Server: opens a ServerSocket bound to a port and calls listen (implicitly via accept())",
+        "Server calls accept(), which blocks the calling thread until a client connects",
+        "Client: creates new Socket(host, port), which connects out to the server's listening socket",
+        "Once accept() unblocks, it returns a dedicated Socket object representing that specific client connection",
+        "TCP is connection-oriented: a connection must be established (the handshake) before any data flows",
+        "After connection, both ends use getInputStream()/getOutputStream() on their respective Socket for two-way read/write"
+      ],
+      "modelAnswer": "On the server side you open a ServerSocket bound to a port and call accept(), which blocks the thread until some client connects. On the client side, creating new Socket(host, port) reaches out and establishes that connection. Once the handshake completes, the server's accept() call unblocks and returns a dedicated Socket object just for that client — separate from the ServerSocket used for listening. From that point on, TCP is connection-oriented, so a connection must exist before any data flows, and both sides use getInputStream()/getOutputStream() on their own Socket object to read and write in both directions.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L9-024-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the relationship between Socket and ServerSocket, and what do accept() and getInputStream()/getOutputStream() each return?",
+      "keyBeats": [
+        "ServerSocket ensures the server gets a dedicated socket to interact with each client",
+        "accept() returns a Socket — the dedicated per-client connection",
+        "The Socket provides streams (via getInputStream()/getOutputStream()) that you read from and write to",
+        "Read/write goes both ways over the same connection",
+        "Both Socket and ServerSocket implement Closeable/AutoCloseable"
+      ],
+      "modelAnswer": "ServerSocket's job is purely to listen and, on accept(), hand back a dedicated Socket object for that specific client — the ServerSocket itself is never used to exchange data. That returned Socket is what you call getInputStream() and getOutputStream() on to get the actual read/write streams, and because it's a normal socket connection, both directions are open simultaneously: you can read and write on the same Socket. Both Socket and ServerSocket implement Closeable/AutoCloseable so they play nicely with try-with-resources.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-025-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How is a UDP socket set up in Java, and what are the two equivalent ways of binding it to a port shown on the slides?",
+      "keyBeats": [
+        "UDP is described as 'the postcard' — you just worry about sending and receiving, no connection management",
+        "Approach 1: DatagramSocket s = new DatagramSocket(null); s.bind(new InetSocketAddress(8888));",
+        "Approach 2 (equivalent): DatagramSocket s = new DatagramSocket(8888);",
+        "Receiving: byte[] buffer = new byte[512]; DatagramPacket response = new DatagramPacket(buffer, buffer.length); socket.receive(response);",
+        "DatagramSocket implements Closeable/AutoCloseable, with bind()/receive()/send()/close(); DatagramPacket has getData()/getLength()/getPort()/setData()"
+      ],
+      "modelAnswer": "UDP is the 'postcard' protocol in the lecture's analogy — you just send and receive, there's no connection to manage. You can set up a socket on a given port two equivalent ways: either DatagramSocket s = new DatagramSocket(null) followed by s.bind(new InetSocketAddress(8888)), or the shorthand DatagramSocket s = new DatagramSocket(8888). To receive, you allocate a byte buffer, wrap it in a DatagramPacket(buffer, buffer.length), and call socket.receive(response), which fills that packet when data arrives. DatagramSocket exposes bind(), receive(), send(), close(), and DatagramPacket exposes getData(), getLength(), getPort(), setData().",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-026-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Contrast TCP and UDP sockets at a conceptual level: connection-oriented vs connectionless, and what that implies for reliability.",
+      "keyBeats": [
+        "TCP (ServerSocket/Socket) is connection-oriented: a connection must be established (via accept()/connect()) before any data flows",
+        "UDP (DatagramSocket/DatagramPacket) is the 'postcard' model: send and receive independently, no connection setup",
+        "TCP guarantees ordered, reliable delivery; UDP does not guarantee delivery or ordering",
+        "Choice of TCP vs UDP has real implications for protocol design (illustrated concretely by the train client/server code, where UDP would break an END-marker-based protocol)"
+      ],
+      "modelAnswer": "TCP, via ServerSocket and Socket, is connection-oriented — a handshake (accept()/connect()) must succeed before any byte flows, and once connected TCP guarantees ordered, reliable delivery. UDP, via DatagramSocket and DatagramPacket, works like a postcard: you just send and receive independent packets with no connection setup and no guarantee they arrive, arrive in order, or arrive at all. This isn't just theory — the lecture's own train client/server protocol depends on TCP's guaranteed delivery because the client blocks waiting for an 'END' marker line; if that packet were dropped under UDP, the client would block forever.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-027-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does InetAddress represent, and what does InetAddress.getByName() do?",
+      "keyBeats": [
+        "InetAddress is Java's way of representing a network address",
+        "It wraps either an IP address or a hostname into a single object and tells the package where to go",
+        "InetAddress.getByName() handles both IPv4 and IPv6 automatically",
+        "Related methods: getAddress(), getByAddress(), isLinkLocalAddress(), isReachable(), isMulticastAddress()",
+        "Subclasses: Inet4Address and Inet6Address"
+      ],
+      "modelAnswer": "InetAddress is Java's abstraction for a network address: it wraps either a raw IP address or a resolvable hostname into a single object that tells outgoing packets where to go. InetAddress.getByName(\"127.0.0.1\") or InetAddress.getByName(\"2001:db8:...\") handles both IPv4 and IPv6 forms automatically, resolving to the appropriate Inet4Address or Inet6Address subclass, and the class also exposes utility methods like isReachable(), isMulticastAddress(), and isLinkLocalAddress().",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-028-o",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "When designing communication entities (clients, servers, handlers), what design guidance does the lecture give, and what qualities should the resulting code have?",
+      "keyBeats": [
+        "Model what you have designed — often a (sub)module can also be expressed as a class",
+        "Specialization may happen separately in the client part and the server part",
+        "You can extend from existing classes (e.g. Socket or ServerSocket) with benefit, but the slide also warns: often it's simpler to just include such things as attributes (composition over inheritance)",
+        "Example roles named: Multicast Agent, File Exchanger, File Storage, GUI Client, Validator Client, Handler, Storage Handler, DataBase Client, Server",
+        "End result should: align well with documentation, be intuitively easy to understand, be logically structured, be easy to maintain, be easy to spot bugs in, and avoid very long code segments"
+      ],
+      "modelAnswer": "The guidance is to model the system the way you've actually designed it: a (sub)module you've identified in your design documentation can usually become its own class directly. You can specialize separately on the client and server side, and while extending from existing classes like Socket or ServerSocket is possible, the lecture explicitly warns that it's often simpler to just hold such things as attributes instead — composition over inheritance. Whatever approach you take, the code should end up aligning with your documentation, being intuitively understandable, logically structured, easy to maintain and debug, and avoiding overly long code segments.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 32",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-029-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How are events similar to Exceptions in Java, and what is the key difference in how they propagate?",
+      "keyBeats": [
+        "Events are similar to Exceptions in that they are generated when 'something happens'",
+        "Events are typically generated in connection with user interaction, e.g. mouse clicks",
+        "Unlike Exceptions, events are NOT thrown down the call stack — they are handed over to an Event Listener, which acts as an event handler",
+        "If an event is not caught, the program typically does not die (unlike an uncaught Exception)",
+        "No try-catch construct is involved — just ordinary method calls"
+      ],
+      "modelAnswer": "Events resemble Exceptions in that both represent 'something happened' — but the propagation mechanism is fundamentally different. An Exception is thrown down the call stack looking for a handler, and if none exists the program dies; an event instead is handed directly to an Event Listener object, which acts as the handler, using ordinary method calls rather than a try-catch construct. If nothing listens for an event, the program typically just carries on — it does not crash the way an uncaught exception would.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-030-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Define the five pieces of event terminology given in the lecture: event, event firing, event listener, event handler, event subscriber.",
+      "keyBeats": [
+        "event: a type of thing that can happen",
+        "event firing: a specific occurrence of an event; an event happening",
+        "event listener: something that looks out for event firings",
+        "event handler: something that occurs when an event listener detects an event firing",
+        "event subscriber: a response that the event handler is supposed to call"
+      ],
+      "modelAnswer": "An event is a type of thing that can happen — a category, like a button click. An event firing is one specific occurrence of that category actually happening. An event listener is something set up to look out for firings of that event. When the listener detects a firing, it triggers an event handler, which is what runs in response. Finally, the event subscriber is the actual response that the handler is supposed to call — the concrete piece of logic ultimately being invoked. The chain reads: something happens (firing) → detected by (listener) → triggers (handler) → calls (subscriber).",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-031-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the GUI event listener model diagram: how do event sources (like JButton, JSpinner, JMenu) relate to event listeners (like UIWindow, SettingsManager, PlayerCharacter)?",
+      "keyBeats": [
+        "GUI widgets (JMenu, JSpinner, JButton, key bindings like Return/Space) act as event sources",
+        "Application objects (UIWindow, SettingsManager, PlayerCharacter) act as event listeners registered against those sources",
+        "The diagram illustrates a many-to-many style wiring: several UI components can feed events into one or more listener objects",
+        "This models the general GUI event dispatch pattern before diving into the concrete addActionListener/actionPerformed code"
+      ],
+      "modelAnswer": "The diagram splits GUI elements into two roles: on one side, event sources like a JMenu, a JSpinner, a JButton, or key bindings such as Return/Space, each of which can fire events; on the other side, listener objects such as a UIWindow, a SettingsManager, or a PlayerCharacter, which register themselves against one or more of those sources to receive events. It's essentially a visual map of who can fire what and who's listening for it, setting up the concrete addActionListener()/actionPerformed() code shown on the following slides.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 37",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L9-032-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through wiring up GUI events in Java: how do you register an event listener on a Swing component, and how do you implement the handler?",
+      "keyBeats": [
+        "The class implements ActionListener (e.g. public class Simulator extends JFrame implements ActionListener)",
+        "In the constructor, event source objects (JButton startBtn, stopBtn) are created",
+        "startBtn.addActionListener(this) and stopBtn.addActionListener(this) register the Simulator itself as listener on both buttons",
+        "This lets both buttons hand over Action events to the Simulator object",
+        "The class must implement public void actionPerformed(ActionEvent ae) to receive events",
+        "Inside actionPerformed, ae.getActionCommand() retrieves the button's label/command to distinguish which source fired"
+      ],
+      "modelAnswer": "First you add one or more listener objects to the event source objects: the class implements ActionListener, and in the constructor, after creating JButton startBtn and stopBtn, you call startBtn.addActionListener(this) and stopBtn.addActionListener(this), registering the Simulator object itself as the listener for both buttons. To actually receive the events you implement public void actionPerformed(ActionEvent ae), and inside it you use ae.getActionCommand() to read the button's label — e.g. checking if it equals 'Start' versus anything else — to decide whether to call startSimulation() or stopSimulation().",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 38",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-033-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the event cascade for UDP-based networking events: what threads are involved and how does a single received UDP packet turn into an application-level action?",
+      "keyBeats": [
+        "We may wish to create and handle an event upon receiving a UDP packet",
+        "The UDP listener thread waits in blocked mode until a UDP packet is received (blocking on socket.receive())",
+        "Once received, the UDP listener triggers a cascade of events (method calls)",
+        "Chain of threads shown: UDP listener thread → Protocol handler thread → our main program thread",
+        "Labelled steps: message transmission, message forward, message forward, action decision, activation"
+      ],
+      "modelAnswer": "A dedicated UDP listener thread sits blocked on socket.receive(), doing nothing until a packet arrives. Once one does, that thread triggers a cascade of method calls rather than handling everything itself: it forwards the message to a protocol handler thread, which in turn forwards it onward and makes an action decision, ultimately activating logic on our main program thread. So the flow is message transmission → the listener thread forwards to the protocol handler thread → which forwards again and decides on an action → which activates the relevant behaviour on the main thread.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L9-034-m",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Describe the threaded event model for TCP-based networking: how does separating a thread per client connection work, and why does it matter?",
+      "keyBeats": [
+        "We can separate threads upon client connections (a TCP connection is treated as an event source)",
+        "When a client connects, threading and handling that client separately allows more clients to connect concurrently",
+        "From then on, message exchange (or whatever protocol logic) happens on that client's dedicated handler thread",
+        "Chain shown: TCP server thread → TCP client handler thread → System.out, with steps: message transmission, message forward, client interaction, activation"
+      ],
+      "modelAnswer": "The TCP server thread's only job is to accept incoming connections; each time a client connects, that event is handled by spawning a separate TCP client handler thread dedicated to that one client. Doing the handling on a per-client thread rather than on the single server thread is what allows multiple clients to be served concurrently instead of queueing behind one client. From there the handler thread does the actual message exchange with that client — message transmission, forwarding, client interaction, and activation of whatever logic is needed, e.g. writing to System.out — independently of the server thread, which just keeps accepting new connections.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 41",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L9-035-o",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Summarize the four 'important stuff' takeaways the lecture closes on regarding Java I/O, sockets, and events.",
+      "keyBeats": [
+        "Java I/O is built on a layered pattern: streams are always wrapped around each other to add functionality",
+        "Choose the right stream for the job — the naming tells you everything: Reader/Writer for characters, InputStream/OutputStream for bytes",
+        "Always close your streams — preferably with try-with-resources",
+        "Sockets abstract network communication into familiar I/O: once a socket is open, reading/writing over a network looks almost identical to reading/writing a file",
+        "Event-driven programming decouples who fires an event from who responds — fundamentally different from direct method calls, and what makes large systems manageable"
+      ],
+      "modelAnswer": "The lecture's closing summary has four points. First, Java I/O is layered — streams are wrapped around other streams to add functionality, and the naming convention tells you exactly which family you're in: Reader/Writer for characters, InputStream/OutputStream for bytes. Second, always close your streams, preferably via try-with-resources so it happens automatically. Third, sockets abstract network communication into familiar I/O — once a socket is open, reading and writing over the network looks almost identical to reading and writing a file. Fourth, event-driven programming decouples who fires an event from who responds to it, which is fundamentally different from a direct method call and is exactly what makes large systems manageable.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-036-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Walk through how TrainServer.java opens its socket and handles an incoming client's requests, from startup to the command loop.",
+      "keyBeats": [
+        "try (ServerSocket serverSocket = new ServerSocket(PORT)) opens the listening socket on port 5001, with serverSocket.setReuseAddress(true)",
+        "Socket clientSocket = serverSocket.accept() blocks until one client connects",
+        "Wraps clientSocket's streams: BufferedReader in over InputStreamReader(clientSocket.getInputStream()), and PrintWriter out over OutputStreamWriter(clientSocket.getOutputStream()) with autoFlush=true",
+        "while ((command = in.readLine()) != null) loops reading one line-based command at a time from the client",
+        "A switch on the command's first word (list/search/add/delete/quit) dispatches to TrainListManager and writes results back with out.println(...)",
+        "Every branch ends by sending out.println(\"END\") so the client's read loop knows the response is complete"
+      ],
+      "modelAnswer": "TrainServer opens its listening socket with try (ServerSocket serverSocket = new ServerSocket(PORT)), turns on setReuseAddress, and then blocks on serverSocket.accept() until a client connects, which hands back a dedicated clientSocket. It wraps that socket's input and output into a BufferedReader/InputStreamReader pair for reading, and a PrintWriter/OutputStreamWriter pair with auto-flush for writing. From there it loops on in.readLine(), treating each line as one text command, and a switch on the command's first token dispatches to the TrainListManager for list/search/add/delete, writing results with out.println(). Every branch, no matter what happened, finishes by writing out.println(\"END\") so the client's own read loop always has a clear terminator to stop on.",
+      "citation": "TrainServer.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-037-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "TrainClient.java opens four resources in one try-with-resources block. What are they, in what order, and what does each provide?",
+      "keyBeats": [
+        "1. Socket socket = new Socket(HOST, PORT) — establishes the TCP connection to the server",
+        "2. BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())) — reads text lines coming back from the server",
+        "3. PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true) — writes text lines to the server, with auto-flush=true so each println() is sent immediately",
+        "4. BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in)) — reads commands typed by the human user at the keyboard",
+        "try-with-resources closes all four automatically, and in the correct (reverse) order, when the block exits"
+      ],
+      "modelAnswer": "TrainClient's try-with-resources opens, in order: a Socket connecting to HOST:PORT, which establishes the TCP connection; a BufferedReader wrapping an InputStreamReader over the socket's input stream, used to read the server's text responses; a PrintWriter wrapping an OutputStreamWriter over the socket's output stream with auto-flush true, used to send commands to the server immediately on every println(); and finally a BufferedReader wrapping an InputStreamReader over System.in, used to read what the human user types at the keyboard. Because they're all declared in the try-with-resources header, Java closes all four automatically in the right order when the block exits, without any manual finally logic.",
+      "citation": "TrainClient.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-038-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "The comment header in TrainServer.java describes a deadlock bug that was fixed. What was the root cause, and what was the fix?",
+      "keyBeats": [
+        "Root cause: some responses (delete/add/default error cases) sent a single line with no 'END' marker",
+        "The client's readUntilEnd()/readLine() loop blocked forever waiting for an 'END' that would never arrive",
+        "Both sides then waited on each other — server waiting for the next command line, client waiting for END — a deadlock",
+        "Fix: every single response path now ends with out.println(\"END\"), with no exceptions, so the client can always rely on it",
+        "The quit command sends \"BYE\" then \"END\" before the connection is closed"
+      ],
+      "modelAnswer": "The bug was that some server responses — delete, add, and the default/unknown-command case — only ever sent a single line back with no 'END' terminator, while the client's read loop was written to keep calling readLine() until it saw 'END'. That mismatch meant the client would block forever on a response that never included an END marker, and since the server was then waiting for the client's next command line, both sides ended up stuck waiting on each other — a deadlock. The fix, as the header comment states, is that every single response path, no exceptions, now finishes with out.println(\"END\"), including quit which sends \"BYE\" then \"END\" before closing the socket.",
+      "citation": "TrainServer.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-039-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does TrainClientNetworked.java generalize the plain TrainClient.java to support connecting across a real network rather than just localhost?",
+      "keyBeats": [
+        "Host and port are read from command-line args: args[0] for host (default 127.0.0.1), args[1] for port (default 5001)",
+        "No recompilation is needed when the target IP changes — usage examples given for default, host-only, and host+port invocations",
+        "Uses switch expressions (Java 14+ arrow syntax) on the command string instead of if/else chains",
+        "Adds a dedicated catch (UnknownHostException e) branch, distinct from ConnectException, to separate 'bad hostname' from 'refused connection' failures",
+        "Otherwise structurally identical to TrainClient.java: same try-with-resources of Socket + BufferedReader/PrintWriter/BufferedReader, same text protocol (list/search/add/delete/quit) and readUntilEnd() helper"
+      ],
+      "modelAnswer": "TrainClientNetworked takes the same try-with-resources structure as TrainClient but pulls host and port from the command-line arguments instead of hardcoding 'localhost': args[0] becomes the host (defaulting to 127.0.0.1) and args[1] the port (defaulting to 5001), so you can point it at a different machine without recompiling. It also switches the command dispatch to Java's arrow-style switch expressions, and, importantly for real network use, it adds a separate catch (UnknownHostException e) alongside catch (ConnectException e), so a typo'd or unresolvable hostname is reported distinctly from a server that's simply not accepting connections on that IP.",
+      "citation": "TrainClientNetworked.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-040-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does TrainListManagerFile.java implement file-based persistence for the train fleet — what happens on startup, and what happens on every add/delete?",
+      "keyBeats": [
+        "Constructor calls loadFromFile(); if the file exists and has trains, it loads them into a CopyOnWriteArrayList",
+        "If no file is found (or it's empty), it falls back to FleetData.sampleFleet() and immediately calls saveToFile()",
+        "addTrain(t) adds to the list, then calls saveToFile() to persist immediately",
+        "deleteTrain(id) removes via removeIf, and only calls saveToFile() if something was actually removed",
+        "saveToFile() writes one line per train in a custom text format: DIESEL,id,len:wt|len:wt... or ELECTRIC,id,batteryLevel,len:wt|...",
+        "loadFromFile()/parseLine() reverse the format, skipping malformed lines with a warning instead of crashing",
+        "Uses try-with-resources PrintWriter/BufferedReader for the file I/O itself"
+      ],
+      "modelAnswer": "On construction, TrainListManagerFile calls loadFromFile(): if fleet.txt exists and parses to a non-empty list, that becomes the fleet; otherwise it falls back to FleetData.sampleFleet() and immediately writes that out via saveToFile() so the file exists going forward. Every subsequent addTrain() or successful deleteTrain() call triggers saveToFile() again, so the file is always kept in sync with the in-memory CopyOnWriteArrayList. saveToFile() writes a simple custom text format, one train per line — DIESEL,id,wagons or ELECTRIC,id,batteryLevel,wagons, with wagons encoded as len:wt pairs joined by '|' — and loadFromFile()/parseLine() parse that same format back, skipping and warning about any malformed line rather than crashing the whole load.",
+      "citation": "TrainListManagerFile.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-041-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In TrainClientGUI.java, how does the AtomicBoolean requestInProgress guard protect against rapid button clicks, and how does SwingWorker keep the UI responsive during a network call?",
+      "keyBeats": [
+        "requestInProgress.compareAndSet(false, true) atomically checks-and-sets in one step at the start of handleClick()",
+        "If the CAS fails (a request is already running), the click is rejected: rejectedClicks++ and the button flashes red — no second request is sent",
+        "If it succeeds, a SwingWorker<String, Void> is created; doInBackground() calls sendCommand() on a worker thread, off the Event Dispatch Thread",
+        "sendCommand() writes to the persistent shared out/in streams (opened once in connect(), reused across clicks) and reads the response until END/BYE",
+        "done() runs back on the EDT, logs the result, and resets requestInProgress to false in a finally block so the guard always releases even on exception"
+      ],
+      "modelAnswer": "handleClick() first tries requestInProgress.compareAndSet(false, true), which atomically checks that no request is in flight and marks one as started in a single operation; if that fails because a request is already running, the click is simply rejected — the rejected-click counter increments and the button flashes red, with no new network call made. If it succeeds, the actual network work runs inside a SwingWorker's doInBackground(), which executes on a separate worker thread so the Event Dispatch Thread stays responsive; that method reuses the persistent socket streams opened once in connect() to send the command and read the response until END or BYE. Back on the EDT, done() logs the result and, critically inside a finally block, resets requestInProgress to false so the guard is released even if an exception occurred, allowing the next click through.",
+      "citation": "TrainClientGUI.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-042-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In TrainClientAuto.java, why does the worker thread always wait to read a full response (until 'END') before sending the next request, and what would go wrong if it didn't?",
+      "keyBeats": [
+        "The worker loop: pick a random action, out.println(action), then read lines until 'END' is seen, then Thread.sleep(delayMs), repeat",
+        "Step 3 (reading the response) always happens before step 4 (sleeping and looping to send again) — this keeps client and server request/response in lockstep",
+        "Comment explicitly warns: without waiting, responses and requests would interleave on the shared socket and corrupt each other",
+        "This is because a single TCP socket carries one ordered byte stream in each direction — if you fire request 2 before reading all of response 1, the client cannot tell where response 1 ends and response 2 begins without careful framing",
+        "The 'END' marker in the text protocol is exactly the framing mechanism that makes waiting for a complete response well-defined"
+      ],
+      "modelAnswer": "The worker thread's loop always sends one request, then fully drains the response by reading lines until it sees 'END', and only after that does it sleep and loop back to send the next request — it never fires the next request before finishing the current response. The code's own comment spells out why: without that ordering, requests and responses would interleave on the shared socket and corrupt each other, because a TCP socket is just one continuous ordered byte stream in each direction, and the client has no other way to know where one response ends and the next begins except by relying on the protocol's 'END' marker as the framing boundary. Waiting for END before sending again keeps the whole request/response exchange synchronized.",
+      "citation": "TrainClientAuto.java",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-043-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "According to the lecture's own analysis (in TrainClientAuto.java's comments and the solutions document), what problems appear as request rate increases toward 0ms delay, and why would UDP break this protocol outright?",
+      "keyBeats": [
+        "At very low/0ms delay: server's readLine() can't keep up, responses queue up in the TCP send/receive buffer, then overflow",
+        "Symptoms: response latency grows, out-of-order-looking responses if buffers overflow, server log shows command backlog building",
+        "Eventually results in IOException such as 'Broken pipe' or connection reset, and the connection drops",
+        "Mitigations noted: add a minimum delay between requests, wait for the response before sending the next (already implemented), use a request/response acknowledgement protocol",
+        "UDP would break the protocol immediately: the 'END' marker the client waits for in readLine() could simply never arrive if the packet is dropped, so the client blocks forever — TCP's guaranteed delivery is not optional here, it's the foundation the whole protocol depends on"
+      ],
+      "modelAnswer": "As the delay between requests drops toward 0ms, the server's readLine()-based command loop can't keep up with the request rate, so responses back up in the TCP buffers and eventually overflow; observable symptoms are growing response latency, a visible backlog building on the server's console log, and ultimately an IOException like a broken pipe or connection reset that drops the connection. The suggested mitigations are enforcing a minimum delay between requests, always waiting for a response before sending the next one (already done in this client), or building a proper request/response acknowledgement scheme. As for TCP versus UDP, the solutions document is blunt: UDP would break this program immediately, because the END marker the client's readLine() loop waits for could simply be a dropped packet that never arrives, leaving the client blocked forever — TCP's guaranteed, ordered delivery isn't an optimization here, it's the foundation the entire protocol depends on.",
+      "citation": "ooadi9.solutions.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-044-s",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Before the client/server split, CommandLineInputHandler and TrainListManager talked directly through a shared object reference. Describe the before/after architecture change from the solutions document.",
+      "keyBeats": [
+        "BEFORE: CommandLineInputHandler → direct method call → TrainListManager (same JVM, same process, direct object reference)",
+        "AFTER: Client program (CommandLineInputHandler) → network (socket) → Server program (TrainListManager) — two separate programs/processes",
+        "The direct reference is replaced by a socket-based protocol: the client no longer calls manager methods directly, it sends text commands over a Socket and reads text responses back",
+        "This is the essence of assignment 1: splitting one program with two threads into two independent programs communicating over TCP"
+      ],
+      "modelAnswer": "Originally, CommandLineInputHandler and TrainListManager lived in the same JVM and simply called each other's methods directly through a shared object reference — CommandLineInputHandler → direct method call → TrainListManager. Splitting them into a client and server program means that direct reference no longer exists across the process boundary, so it has to be replaced with network communication: CommandLineInputHandler now runs in a client program, TrainListManager in a separate server program, and the two talk over a socket using a text-based request/response protocol instead of direct Java method calls. That's the core idea behind turning the original single threaded-Runnable design into an actual client-server system.",
+      "citation": "ooadi9.solutions.pdf.extracted.txt, PAGE 1",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L9-045-d",
+      "anchorsExamQ": 8,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is the role of System.in in the layered I/O model shown on the slides, and how does it compare to FileInputStream in terms of what a raw byte-stream .read() gives you?",
+      "keyBeats": [
+        "System.in is the JVM's standard input stream, specified by the host environment (default: the keyboard)",
+        "It is a raw InputStream (byte stream), just like FileInputStream is a byte stream over a file",
+        "Both share the same fundamental read()-based API from the InputStream abstract class",
+        "In practice System.in is wrapped (InputStreamReader, BufferedReader, or Scanner) rather than read raw, exactly as FileInputStream is often wrapped in Buffered/Data streams"
+      ],
+      "modelAnswer": "System.in is just the JVM's standard input stream, provided by the host environment and defaulting to the keyboard, and it's fundamentally the same kind of object as a FileInputStream: both are concrete InputStream (byte stream) implementations sharing the same read()-based API. The practical difference is only in what backs them — the keyboard versus a file on disk — and in both cases the raw byte stream is rarely used directly; it gets wrapped in higher-level classes (InputStreamReader/BufferedReader/Scanner for System.in, or BufferedInputStream/DataInputStream for a file) to get convenient, typed access to the underlying data.",
+      "citation": "ooadi9.slides.full.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L9-E01",
+      "source": "ooadi9.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Split your train program with the two types of threads into two separate programs (projects). One is the client program which contains the user input, and one is the server program which handles the list of trains.",
+      "whatItTests": "Understanding that a shared-object-reference design (CommandLineInputHandler calling TrainListManager directly) must be replaced by a socket-based client/server split when the two components move into separate processes/programs; core TCP ServerSocket/Socket setup.",
+      "answerSketch": "Replace the direct method-call relationship (CommandLineInputHandler → TrainListManager) with network communication: CommandLineInputHandler → socket → TrainListManager. Server side opens try (ServerSocket serverSocket = new ServerSocket(PORT)) { Socket clientSocket = serverSocket.accept(); ... }, blocking until a client connects. Client side opens try (Socket socket = new Socket(HOST, PORT); BufferedReader in = ...; PrintWriter out = ...; BufferedReader userInput = ...) { ... } — four resources in one try-with-resources block (connect, read-from-server, write-to-server, read-from-user), closed automatically in the right order so the last message isn't lost before the socket closes. Concretely realized as TrainClient.java (client) and TrainServer.java (server), run as separate programs: javac lectuer9Client/TrainClient.java then java lectuer9Client.TrainClient with TrainServer started separately from the IDE."
+    },
+    {
+      "id": "OOADI-L9-E02",
+      "source": "ooadi9.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Extend the train list server to also from time to time write the list to a file. If we wish to restart the server part, we should also read the file and initiate the list with the saved list.",
+      "whatItTests": "Applying file I/O (FileWriter/FileReader wrapped in PrintWriter/BufferedReader) with a distribution-of-responsibility design decision, and building a round-trip serialization format (write and re-parse) for domain objects that are not natively Serializable.",
+      "answerSketch": "Responsibility for file persistence is given entirely to TrainListManager (renamed TrainListManagerFile), since managing the fleet file belongs with fleet management. The fleet is saved on every change (add/delete) rather than on a timer, using a simple custom text format, one train per line: DIESEL,id,len:wt|len:wt|... or ELECTRIC,id,batteryLevel,len:wt|.... saveToFile() uses try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH))) to write it; the constructor calls loadFromFile(), which uses try (BufferedReader reader = new BufferedReader(new FileReader(file))) to read it back line by line and parseLine()/parseWagons() to reconstruct Train objects, falling back to FleetData.sampleFleet() if the file is absent, and skipping malformed lines with a warning rather than crashing. This matches the server console transcript in the solutions doc showing 'No saved fleet found - loading sample fleet' then 'Fleet saved to fleet.txt (5 trains)' on first run, and later 'Fleet saved to fleet.txt (6 trains)' after an add."
+    },
+    {
+      "id": "OOADI-L9-E03",
+      "source": "ooadi9.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Extend the client/server to allow the interaction to happen across a network... a) First use the clients with manual inputs/edits.",
+      "whatItTests": "Generalizing a hardcoded localhost socket client into a genuinely network-capable client (configurable host/port), and reasoning about real-network concerns (firewalls, IP discovery, latency) versus the loopback-only version.",
+      "answerSketch": "Change away from the hardcoded 'localhost' approach: accept host and port as command-line arguments so no recompilation is needed when the target IP changes, e.g. java lectuer9Client.TrainClientNetworked 192.168.1.42 5001 (defaults to 127.0.0.1:5001 if omitted). Real network deployment introduces latency, the need to negotiate firewall settings on both machines, and IP discovery (manually finding the server machine's IP and passing it to the client) rather than firewall/IP issues being invisible as they are on loopback. Also add a dedicated catch (UnknownHostException e) alongside catch (ConnectException e) to distinguish a bad hostname from a refused connection. Realized as TrainClientNetworked.java, working against the unmodified TrainServer.java."
+    },
+    {
+      "id": "OOADI-L9-E04",
+      "source": "ooadi9.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "b) Then extend the client design and implementation to trigger a random action based upon a mouse click. i. How fast can you \"click\" a request before you run into some issues? What type of issues to you experience? Can you do something about this?",
+      "whatItTests": "Building a persistent-connection GUI client with Swing, offloading blocking network I/O off the Event Dispatch Thread (SwingWorker), and using an atomic guard (AtomicBoolean/compareAndSet) to prevent overlapping requests from rapid user input.",
+      "answerSketch": "TrainClientGUI.java opens one persistent Socket/BufferedReader/PrintWriter in connect() at startup and reuses it for every button click (rather than reconnecting per click). Each click picks a random action from {list, search ELECTRIC, search DIESEL, delete D-999}, guarded by requestInProgress.compareAndSet(false, true) so that a click arriving while a request is still in flight is rejected (counter incremented, button flashes red) instead of corrupting the shared socket stream; the actual network call runs inside a SwingWorker's doInBackground() to keep the UI thread responsive, and requestInProgress is reset in a finally block in done() so the guard always releases. Per the solutions document: normal clicks work perfectly; moderately rapid clicks get rejected (counter increments, button flashes red) because only one request can be in flight at a time; very fast clicks produce many rejections but the system remains stable rather than corrupting state, because the atomic guard enforces one request at a time on the shared connection."
+    },
+    {
+      "id": "OOADI-L9-E05",
+      "source": "ooadi9.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "c) Then use the clients with automatic actions i.e. the clients should randomly without user interaction select a query, send it to the server and show the response. i. How fast can you have a large (as many as feasible) number of clients execute random queries, as fast as possible, without running into problems? What kind of problems do you observe? What can you do about these problems? ii. Does it matter if you use a TCP or UDP socket for the communication?",
+      "whatItTests": "Building an autonomous stress-testing client (worker thread firing requests in a synchronized send/wait-for-response loop) and reasoning about the practical and protocol-level consequences of request rate and transport protocol choice (TCP vs UDP) for a line-delimited, END-terminated text protocol.",
+      "answerSketch": "TrainClientAuto.java runs one worker thread that loops: pick a random action from {list, search ELECTRIC, search DIESEL}, send it, read the full response until 'END', update metrics, then sleep for a configurable delay (spinner, default 200ms) before repeating — always waiting for the complete response before sending the next request to keep the protocol synchronized on the shared socket. Per the solutions document, things work okay down to about 10ms delay; below that the server cannot keep up: readLine() backlogs, response latency grows, and eventually an IOException (broken pipe / connection reset) drops the connection. Mitigations: enforce a minimum delay, always wait for the response before sending again (already done), or add an explicit request/response acknowledgement scheme. On TCP vs UDP: UDP would break this program immediately, because the client's readLine() loop waits for an 'END' marker line that, under UDP, could simply be a dropped packet that never arrives — the client would then block forever. TCP's guaranteed, ordered delivery is not optional for this END-terminated protocol; it's the foundation everything else depends on."
+    }
+  ]
+}

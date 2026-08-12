@@ -1,0 +1,720 @@
+{
+  "courseCode": "OOADI",
+  "courseName": "Objektorienteret Analyse, Design og Implementering (OOADI)",
+  "lecture": 3,
+  "lectureTitle": "Class Relations and Diagrams",
+  "examQuestions": [
+    { "examQ": 2, "subPart": "a", "promptVerbatim": "Classes and how they relate" }
+  ],
+  "drills": [
+    {
+      "id": "OOADI-L3-001-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "Why do we need to model relations between classes at all, and what does UML give us for this?",
+      "keyBeats": [
+        "Objects rarely exist in isolation - a person may have a bicycle, use it, and it is made of smaller parts",
+        "We need a systematic way to capture how objects relate",
+        "UML specifies a set of different interactions/relations between classes",
+        "Class diagrams capture static structure, not dynamic (timely) behaviour"
+      ],
+      "modelAnswer": "Objects in a system interact with and are built from other objects - a person has a bicycle, the bicycle has parts, and it interacts with the road. UML gives us a standard set of relation types (association, inheritance, aggregation, composition, dependency, realization) and a way to draw them in class diagrams. These diagrams are useful for capturing the static relations between classes, but they do not capture dynamic, timely behaviour.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 3",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-002-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are the core relation types UML specifies for class diagrams?",
+      "keyBeats": [
+        "Association",
+        "Inheritance",
+        "Realization",
+        "Dependency",
+        "Aggregation",
+        "Composition"
+      ],
+      "modelAnswer": "UML specifies six main relation types used in class diagrams: association, inheritance, realization, dependency, aggregation, and composition. Each expresses a different kind and strength of relationship between classes, ranging from a loose 'these two interact' link (association) to strong ownership where lifecycles are tied together (composition).",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 4",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-003-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "In the order-system class diagram legend, what notation elements are shown and what do they mean?",
+      "keyBeats": [
+        "Class box with a Role label",
+        "Attribute line and Operation line inside the class box",
+        "Association line, plain line between two classes",
+        "Aggregation - diamond-headed line, 'multiplicity' label near the diamond end",
+        "Abstract Class - class name shown differently (italicised)",
+        "Generalization - line with a hollow triangle arrowhead pointing to the superclass"
+      ],
+      "modelAnswer": "Picture two class boxes connected by different line styles. A class box lists a Role, its Attributes, and its Operations. A plain line is an Association. A line ending in a diamond is an Aggregation, and near the diamond end a multiplicity number (e.g. 5) tells how many objects participate. An Abstract Class is marked distinctly in the box. A Generalization is drawn as a line with a hollow triangular arrowhead pointing up to the more general (super) class.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 5",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-004-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What does inheritance mean conceptually, and what relationship phrase describes it?",
+      "keyBeats": [
+        "Inheritance (generalization) is a key OO feature",
+        "Expressed as 'A is a B' relationship",
+        "Example: BicycleWheel is a Wheel; CarWheel is a Wheel but not a BicycleWheel",
+        "Wheel must capture the common attributes/methods of both wheel types",
+        "BicycleWheel can invoke and provide methods defined in Wheel"
+      ],
+      "modelAnswer": "Inheritance is the 'A is a B' relationship: a subclass is a specialized version of a more general superclass. For example, a BicycleWheel is a Wheel and a CarWheel is also a Wheel, but a CarWheel is not a BicycleWheel. The superclass Wheel captures the attributes and methods common to both wheel types, and BicycleWheel can invoke and provide the methods defined in Wheel.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-005-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Using the BicycleWheel / CarWheel / Wheel example, explain why Wheel is the superclass and why CarWheel is not a BicycleWheel.",
+      "keyBeats": [
+        "Wheel captures characteristics common to all wheels",
+        "BicycleWheel is a Wheel - inherits Wheel's attributes and methods",
+        "CarWheel is also a Wheel, but is a sibling, not a parent/child of BicycleWheel",
+        "Sibling subclasses do not inherit from each other"
+      ],
+      "modelAnswer": "Wheel sits at the top because it holds only what is common to every kind of wheel. BicycleWheel and CarWheel both extend Wheel and each is a Wheel, but they are siblings under the same parent, not related to each other - so a CarWheel is not a BicycleWheel even though both are Wheels.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 7",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-006-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What problem does inheritance solve, and what benefit does it give?",
+      "keyBeats": [
+        "One person may own different types of bikes with many similarities",
+        "Without inheritance we'd repeat code to handle similar things",
+        "A parent generalizes its children; children inherit from parents",
+        "Write code once, reuse it in several places",
+        "Leads to better and often less code"
+      ],
+      "modelAnswer": "Inheritance solves the problem of repeated code between similar classes - for example different bike types share a lot of behaviour. A parent class generalizes its children, and the children inherit that shared behaviour, so we write code in one place and reuse it in several places, which leads to better and typically less code overall.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 8",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-007-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How is inheritance implemented in Java, and what do you do if a class needs to inherit from more than one thing?",
+      "keyBeats": [
+        "Inheritance relies on the extends keyword",
+        "In Java a class can only extend one parent (single inheritance)",
+        "If more is needed, build a hierarchy, e.g. Vehicle -> Bicycle",
+        "public class MountainBike extends Bicycle",
+        "Terminology: sub class / super class"
+      ],
+      "modelAnswer": "In Java, inheritance is implemented with the extends keyword, e.g. public class MountainBike extends Bicycle. Java only allows extending from a single parent class, so if a class needs to combine several sets of general behaviour, you build a hierarchy instead - for example Vehicle as a super-superclass and Bicycle extending Vehicle. The class that inherits is the sub class, and the one it inherits from is the super class.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 9",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-008-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Why is inheritance also called generalization, and what shapes can an inheritance hierarchy take?",
+      "keyBeats": [
+        "Inheritance = generalization since the superclass is a generic version of the subclass",
+        "Example: generic version of a racer bike is a bicycle; generic version of a bus is a vehicle",
+        "A train is a means of transport, which is also a vehicle (multi-level)",
+        "Diagram shows three hierarchy shapes: Single Inheritance, Hierarchical Inheritance, Multilevel Inheritance"
+      ],
+      "modelAnswer": "Inheritance is called generalization because the superclass is meant to be a generic version of its subclass - a racer bike generalizes to a bicycle, a bus generalizes to a vehicle, and a train generalizes to 'means of transport' which itself is a vehicle. The slide illustrates three shapes: Single Inheritance draws one superclass box with one line down to one subclass box. Hierarchical Inheritance draws one superclass box with two lines fanning out to two separate sibling subclass boxes ('Sub Class 1' and 'Sub Class 2'). Multilevel Inheritance draws a chain - a superclass box, a line down to a subclass box, and another line down from that subclass to a further subclass, i.e. a grandparent-parent-child chain.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 10",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-009-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "When a class extends another in Java, what actually becomes available in the new class, and what is the limitation?",
+      "keyBeats": [
+        "extending a class means you don't need to rewrite the parent's code - it's already there",
+        "All attributes and methods from the parent become part of the new class",
+        "Limitation: scope - private members are not inherited",
+        "No hard limit on how many times you can extend, but at some point it becomes a design problem"
+      ],
+      "modelAnswer": "When Mountainbike extends Bicycle, all of Bicycle's attributes and methods become part of Mountainbike without rewriting anything. The one limitation is scope: private members of the parent are not inherited. There is technically no boundary on how deep an extension chain can go, but very long chains eventually become a design problem rather than a technical one.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 11",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-010-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Why are a Waste pump and a Drone given as a good example of candidates for inheriting from a shared superclass?",
+      "keyBeats": [
+        "Waste pump: attributes rotational speed, lifting height, power consumption; operations reset(), setSpeed(), getSpeed(), start(), stop(); hidden info: running hours, max flow, max current",
+        "Drone: attributes verticalSpeed, horizontalSpeed, powerConsumption; operations flyTo(), setVertSpeed(), start(), stop(); hidden info: battery power, running hours",
+        "Both are controllable electro-mechanical devices with state, start/stop/control operations, and hidden internal monitoring",
+        "Shared structure makes them good candidates for inheriting from a shared superclass"
+      ],
+      "modelAnswer": "A Waste pump and a Drone look unrelated on the surface, but both are controllable electro-mechanical devices: both track state like speed and power consumption, both expose start/stop/control-style operations, and both hide internal monitoring data like running hours. Because that structural and behavioural overlap is real (not just coincidental method names), they're good candidates for a shared superclass that captures the common state and operations, with each subclass adding its own specifics like lockSuspension-style or flyTo-style behaviour.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 12",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-011-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Explain the three visibility/access levels (public, protected, private) and who can access what.",
+      "keyBeats": [
+        "Public: accessible in same class, subclass, and non-subclass - yes to all",
+        "Protected: accessible in same class and subclass - yes; not a subclass - no",
+        "Private: accessible only in same class - yes; subclass - no; not a subclass - no",
+        "Protected exists specifically so inherited classes can use parent methods/attributes while keeping them from the outside world"
+      ],
+      "modelAnswer": "Picture a small three-row table with columns 'Same class', 'Subclass', 'Not a subclass'. Public is accessible everywhere - yes, yes, yes. Protected is accessible in the same class and in subclasses, but not from outside - yes, yes, no. Private is accessible only within the declaring class itself - yes, no, no. Protected is the level introduced specifically for inheritance, so a subclass can use and access a parent's members while still keeping them hidden from unrelated classes.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 14",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-012-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is an association in UML class diagrams, and what does cardinality express?",
+      "keyBeats": [
+        "Association = 'A knows B' relation",
+        "One direction may know the other without the other knowing back",
+        "Person knows Bicycle, but Bicycle does not know Person",
+        "Person can invoke methods in Bicycle",
+        "Cardinality tells us how objects are connected, e.g. a person has exactly one Passport",
+        "Arrows show directionality where lines alone would be ambiguous"
+      ],
+      "modelAnswer": "An association is the 'A knows B' relation - one class is aware of and can call into another, but the relation doesn't have to be symmetric. For instance, a Person knows a Bicycle and can invoke its methods, but the Bicycle does not know the Person. Cardinality (or multiplicity) specifies how many objects participate on each side of the relation, like a person having exactly one Passport. When a plain line would be ambiguous, arrows are added to make clear which direction the knowledge/relation flows.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-013-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Sketch and describe the Person/Bicycle association diagram, including its cardinality label.",
+      "keyBeats": [
+        "Two boxes: Person and Bicycle",
+        "A line connects them, labelled with cardinality 0..2 on the Bicycle side",
+        "Meaning: a person may know zero, one, or two bicycles",
+        "Line has no arrowhead by default unless directionality needs to be shown"
+      ],
+      "modelAnswer": "Draw two boxes, 'Person' and 'Bicycle', connected by a line. Near the Bicycle end of the line the multiplicity '0..2' is written, meaning a given Person object may be associated with zero, one, or two Bicycle objects at once - i.e. having a bike is optional and capped at two.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 16",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-014-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "What extra notation can be added to an association line to make it more specific, and what is shown in the Student/Exam example?",
+      "keyBeats": [
+        "Open arrows and crosses can be added to make directionality explicit or binary (one-way)",
+        "Annotations communicate the intent of the association",
+        "The property name and its visibility can be stated explicitly",
+        "Example diagram: Student and Exam classes connected, with an ordering/reading note"
+      ],
+      "modelAnswer": "Beyond a plain line, an association can carry open arrows or crosses to show whether it's one-way (binary) or the direction it should be read in. It can also carry an annotation describing the intent of the relation in words, and it can state the exact property name plus its visibility that realizes the association in code. The slide's Student/Exam example shows this refined notation, including a note on the order the association should be read in.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 17",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-015-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How are association, aggregation, and composition ranked in strength, and what does plain association fundamentally require?",
+      "keyBeats": [
+        "Association is the most generic type of composition of objects",
+        "All association requires is that a class knows another class",
+        "Ordering: Association < Aggregation < Composition",
+        "Association just means 'these two interact somehow'",
+        "Example: private fields of simple datatypes have no association; fields like Vector, CIMTree, etc. do create associations"
+      ],
+      "modelAnswer": "Association is the loosest, most generic relation - all it needs is that one class knows about another. The three relation types get progressively stronger: Association is weaker than Aggregation, which is weaker than Composition. Association just says 'these two interact somehow', with no implication of ownership. On the code side, a private field of a simple datatype (like a boolean) doesn't create an association, but a private field referencing another class, like a Vector or a CIMTree, does.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 18",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-016-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is aggregation, and how is it described in terms of ownership?",
+      "keyBeats": [
+        "Aggregation = 'a part of B' relation",
+        "One specific, stronger form of association",
+        "A class has objects of another class, e.g. a gear has two sprockets",
+        "Sprocket is part of Gear - a form of ownership",
+        "Gear can invoke actions in Sprocket",
+        "'The whole groups the parts but does not own their lifetime'"
+      ],
+      "modelAnswer": "Aggregation is the 'a part of B' relation - a specific, stronger form of association where one class holds objects of another class, expressing a kind of ownership. For example, a Gear has two Sprockets, so Sprocket is part of Gear, and Gear can invoke actions on its Sprockets. But as the slide phrases it, the whole groups its parts without owning their lifetime - the parts can outlive or exist independently of the whole.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-017-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Draw and describe the Gear/Sprocket aggregation diagram, including the multiplicity.",
+      "keyBeats": [
+        "Two boxes: Gear and Sprocket",
+        "Line ending in an open/hollow diamond at the Gear end (the 'whole')",
+        "Multiplicity '2' near the Sprocket end",
+        "Means one Gear aggregates exactly two Sprockets"
+      ],
+      "modelAnswer": "Draw a 'Gear' box and a 'Sprocket' box connected by a line that has a hollow diamond at the Gear side, since Gear is the whole. Near the Sprocket end the number '2' is written as the multiplicity, showing that one Gear is composed (in the aggregate sense) of exactly two Sprockets.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 20",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-018-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "How is aggregation different from plain association in terms of object lifetime?",
+      "keyBeats": [
+        "Aggregation is a stronger form of association than plain association",
+        "Does not involve owning - lifecycles of the objects are not tied to each other",
+        "Garbage collection does not necessarily happen; objects may hang around occupying memory",
+        "Neither object's absence destroys or prevents the other's existence"
+      ],
+      "modelAnswer": "Aggregation is stronger than plain association, but it still does not imply ownership in the lifecycle sense - the objects' lifetimes are not tied together. That means garbage collection isn't guaranteed to happen together; a part object may linger in memory even after the whole no longer references it. The key point is that removing either object doesn't destroy or prevent the existence of the other.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-019-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give two examples from the slides that illustrate aggregation, and explain why they qualify.",
+      "keyBeats": [
+        "The bicycle and its wheels can be separated",
+        "The Robator can run without the Drone",
+        "In both cases the lack of one part does not destroy or prevent the other from existing",
+        "Both examples 'seem a bit useless' on their own - but that's exactly why it's aggregation, not composition"
+      ],
+      "modelAnswer": "Two examples given are a bicycle and its wheels, which can be separated, and the Robator, which can run without its Drone. In both cases, removing one part doesn't destroy the other - a wheel can exist without being on a bike, and Robator functions (in a limited way) without the Drone. The slide notes these both feel a bit impractical on their own, which is precisely the point of aggregation: it's a weaker bond than composition.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 21",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-020-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "How does the Bank/Employee code example demonstrate aggregation in Java, and what is the coding-style caveat?",
+      "keyBeats": [
+        "Employee objects are created independently in main(): Employee emp = new Employee(\"Ridhi\")",
+        "Bank.addEmployee(Employee emp) just adds the already-created object to a Set<Employee>",
+        "Employees are 'a part of' the bank despite being created elsewhere",
+        "A bank can exist with no employees; employees can exist without a bank",
+        "If we remove employees we can do so directly in main code, but that's a bad style: it allows external manipulation of an internal attribute (employees) of another class (Bank)"
+      ],
+      "modelAnswer": "In the aggregation version, the Employee object is created outside the Bank, in main(), with `new Employee(\"Ridhi\")`, and then passed into `bank.addEmployee(emp)`, which just stores the reference in a Set<Employee>. The Bank doesn't own the Employee's creation or destruction - a Bank can exist without any employees and an Employee object can exist without belonging to a Bank. The slide flags that letting external code remove employees directly is poor style, since it lets outside code manipulate an attribute that's meant to be internal to Bank.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 22",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-021-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is composition, and how does it relate to aggregation?",
+      "keyBeats": [
+        "Composition = a special, stronger form of aggregation with added dependency",
+        "'A has a B' relation",
+        "If A is destroyed, B is also destroyed",
+        "B cannot exist without A, since B is a part of A",
+        "The life-cycle of B is controlled by A",
+        "'The parts cannot live without the whole'"
+      ],
+      "modelAnswer": "Composition is a special, stronger form of aggregation that adds a dependency on lifecycle: it's an 'A has a B' relation where B cannot exist without A because B is genuinely part of A. If A is destroyed, B is destroyed with it - the whole controls the life-cycle of its parts. As the slide puts it, the parts cannot live without the whole.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-022-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "How does the Gear/Sprocket example change when drawn as composition instead of aggregation?",
+      "keyBeats": [
+        "Same boxes Gear and Sprocket, same multiplicity 2",
+        "Diamond at the Gear end is filled/solid instead of hollow (composition notation)",
+        "Destroying the Gear also destroys its two Sprockets",
+        "Slide notes: in real life we could probably reuse the sprocket, but 'we work with models'"
+      ],
+      "modelAnswer": "The diagram looks like the aggregation version - Gear and Sprocket boxes with multiplicity 2 - but the diamond at the Gear end is now solid/filled rather than hollow, marking it as composition. Semantically, destroying the Gear also destroys its two Sprockets. The slide notes wryly that in real life you could probably reuse a sprocket, but in the model the lifecycle is tied together.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 25",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-023-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Give two real-world composition examples from the slides and explain the tied lifecycle.",
+      "keyBeats": [
+        "A building has rooms - if we tear down a building, its rooms go with it",
+        "A university has faculties - if AAU were to close, so would its faculties",
+        "Garbage collection happens and objects are cleared from memory",
+        "Semantically subtle vs. aggregation, but technically clearer"
+      ],
+      "modelAnswer": "A building has rooms: tear down the building and the rooms go with it. Similarly, a university has faculties: if AAU closed, its faculties would close too. In both cases destroying the owner clears the members from memory via garbage collection. The slide notes the semantic difference from aggregation can be subtle, but technically the tied lifecycle makes composition the clearer, stronger relation.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 26",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-024-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "In the Bank/Employee example, what single code change turns aggregation into composition, and what does it mean for who 'owns' the Employee?",
+      "keyBeats": [
+        "Composition version: bank.addEmployee(\"Ridhi\") - just a String, Bank itself constructs the Employee",
+        "public void addEmployee(String name) { Employee emp = new Employee(name); employees.add(emp); }",
+        "Aggregation version: bank.addEmployee(emp) - caller already created the Employee object and just passes the reference in",
+        "Aggregation: caller owns Employee, but the Bank merely references it",
+        "Composition: Bank owns Employee - its creation is entirely internal to Bank",
+        "To remove employees under composition, Bank would need its own removal methods"
+      ],
+      "modelAnswer": "The difference comes down to who calls `new Employee(...)`. In the composition version, main() only passes a name string, and Bank's `addEmployee(String name)` internally does `new Employee(name)` before adding it - so the Employee's entire lifecycle is created and controlled inside Bank. In the aggregation version, main() constructs the Employee object itself and Bank's `addEmployee(Employee emp)` just stores the already-existing reference - the caller owns the Employee, Bank merely references it. Under composition, if you want to remove employees you'd need to add explicit removal methods to Bank, since nothing outside Bank should be able to touch that internal list.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 27",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-025-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Smart Home Management System example, classify the three relations (SmartLightController/LightBulb, Room/SmartDevice, SmartDevice/UserAccount) and explain each.",
+      "keyBeats": [
+        "Composition: SmartLightController owns its LightBulbs - if the controller is removed, the bulbs are useless in this setup",
+        "Aggregation: Room aggregates SmartDevices - devices can be moved between rooms and still function",
+        "Association: SmartDevice is associated with UserAccount so the user can operate the device - removing a user does not remove the device, and vice versa",
+        "Modelling these wrong leads to bugs: deleting a room could wrongly delete devices, devices might not be reusable across rooms, or user/device links might wrongly imply ownership"
+      ],
+      "modelAnswer": "The Smart Home example maps all three relation strengths onto one domain. SmartLightController to LightBulb is composition - strong ownership, since if the controller is removed the bulbs become useless. Room to SmartDevice is aggregation - a device can be moved between rooms and still function, so rooms don't own the device's lifecycle. SmartDevice to UserAccount is plain association - it's just a link so the user can operate the device; deleting the user doesn't delete the device and vice versa. Getting these wrong causes real bugs, like accidentally deleting all devices when a room is deleted, or devices not being reusable across rooms.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 28",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-026-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Learning Management System (LMS) example, classify Course/Module, Teacher/Course, and Student/Course.",
+      "keyBeats": [
+        "Composition: a Course is composed of Modules or Assignments - if the course is deleted, its assignments must go too",
+        "Aggregation: a Teacher aggregates Courses they teach - courses still exist if a teacher leaves",
+        "Association: a Student is associated with Courses they are enrolled in - many-to-many with independent lifecycles"
+      ],
+      "modelAnswer": "In an LMS like Moodle or Canvas: a Course is composed of its Modules/Assignments, so deleting the course must delete its assignments too - composition. A Teacher aggregates the Courses they teach, but courses keep existing even if the teacher leaves - aggregation. A Student is associated with the Courses they're enrolled in, a many-to-many relationship where both sides have independent lifecycles - plain association.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 29",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-027-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is a dependency relation, and how does it differ from inheritance-based propagation of change?",
+      "keyBeats": [
+        "A special type of association where either changes in A also impact B, or A relies on B for some functionality",
+        "Example: if a Person ages, the Bicycle they use might need to change at some point",
+        "Alternative reading: to Ride() their bicycle, a Person needs to have one in the first place",
+        "Any change in Bicycle has immediate effect on RacingBicycle (via inheritance) without doing anything extra",
+        "Changes in RacingBicycle do NOT impact Bicycle - it only works one way"
+      ],
+      "modelAnswer": "Dependency is a special type of association meaning either A's changes ripple into B, or A relies on B to provide some functionality - for instance, a Person needs a Bicycle to call Ride(). The slide contrasts this with inheritance: because RacingBicycle extends Bicycle, any change made in Bicycle automatically and immediately affects RacingBicycle with no extra work, but the reverse is never true - changes in RacingBicycle never propagate back up to Bicycle. Dependency, like inheritance, is a one-way relation.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-028-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Sketch the Person / Bicycle / RacingBicycle dependency diagram from the slides.",
+      "keyBeats": [
+        "Person box associated with Bicycle box, multiplicity 0..2 on the Bicycle side (same as the association example)",
+        "RacingBicycle box below Bicycle, connected by a generalization (inheritance) arrow up to Bicycle",
+        "Person's dependency on Bicycle is the association line; RacingBicycle's dependency on/relation to Bicycle comes through inheritance"
+      ],
+      "modelAnswer": "The diagram reuses the Person-Bicycle association (Person box, Bicycle box, line labelled 0..2), and adds a RacingBicycle box beneath Bicycle connected by a generalization arrow pointing up to Bicycle, showing RacingBicycle extends Bicycle. This illustrates two flavours of one-way dependency side by side: Person depending on Bicycle through association/use, and RacingBicycle depending on Bicycle through inheritance.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 30",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-029-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What is realization in UML, and why is it useful?",
+      "keyBeats": [
+        "A relation pointing out who has the blueprint (interface) and who has the code realization of the blueprint",
+        "'A implements B' relation",
+        "Methods may be named the same (e.g. acquire/dispose properties) for very different implementing classes",
+        "Useful to interact with objects the same way even though implementations are very different",
+        "Example: shared Drive() interface across bicycle, car, train, etc."
+      ],
+      "modelAnswer": "Realization is the 'A implements B' relation - it points out that one class has the blueprint (an interface) and another class provides the concrete code that realizes that blueprint. This is useful because it lets very different implementations be interacted with in the same way; the slide's example is a shared Drive() interface that a bicycle, car, and train could each implement completely differently under the hood.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-030-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Describe the Owner interface realization example (Person, Corporation) shown on the slides.",
+      "keyBeats": [
+        "<<interface>> Owner box with methods +acquire(property) and +dispose(property)",
+        "Person and Corporation boxes, both connected to Owner by a dashed line with hollow triangle arrowhead (realization notation)",
+        "Corporation additionally lists attributes like current, fixed, long term, intangible",
+        "Same method signatures, but the implementation differs completely between a Person and a Corporation"
+      ],
+      "modelAnswer": "Draw an interface box labelled <<interface>> Owner with two operations: +acquire(property) and +dispose(property). Below it, Person and Corporation boxes each connect to Owner with a dashed line ending in a hollow triangle - the realization notation. Corporation also carries extra attributes (current, fixed, long term, intangible assets). Both classes implement the same acquire/dispose interface, but how a Person acquires property versus how a Corporation does is implemented very differently underneath.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 31",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-031-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "What are UML stereotypes (the <<thingies>>), and what are they used for?",
+      "keyBeats": [
+        "Stereotypes are a mechanism of UML to 'extend the vocabulary' of UML",
+        "Written in guillemets, e.g. <<enum>>, <<struct>>, <<constructor>>",
+        "Used to convey more information than vanilla UML supports - preferably sparingly",
+        "Examples: an <<enum>> is not a typical 'class'; neither is a <<struct>>; might make a <<constructor>> explicit"
+      ],
+      "modelAnswer": "Stereotypes are the <<keyword>> labels seen on some class diagrams - a UML mechanism to extend UML's vocabulary and communicate more meaning than the base notation supports, ideally used sparingly. Examples given are marking something as <<enum>> or <<struct>> to show it isn't a typical class, or marking a <<constructor>> explicitly to call it out.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 36",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-032-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "Walk through the algorithm for defining a class hierarchy when modeling the world.",
+      "keyBeats": [
+        "For each class, ask: is there a generic version of this class?",
+        "Yes: generalize it. No: do nothing (end if generalization is just 'object' - that's the root anyway)",
+        "Ask: does a method require specialized or same-type implementation? If specialized, consider an interface instead of a parent class",
+        "Construct the tree - e.g. on a blackboard (faster to work this way)",
+        "Some trees stand alone, some classes are on their own - that's fine",
+        "For each class, ask: is there a relation to other classes? Yes -> decide the type and draw it; No -> leave alone",
+        "Avoid jumping straight into diagram software - start with generic sketches first, then make it nice"
+      ],
+      "modelAnswer": "The recommended process is iterative and starts with two questions per class. First: is there a generic version of this class? If yes, generalize it into a superclass; if no, stop (unless you've reached plain 'object', which is the root anyway). Second: does a method need a specialized or identical implementation across subclasses? If specialized, consider using an interface instead of a parent class. Build this as a tree, ideally on a blackboard first since it's faster than fighting diagram software. Then, for each class, ask whether it relates to other classes; if so, decide the relation type and draw it, otherwise leave it alone. Some classes end up standing alone with no tree or relations, and that's fine.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 39",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-033-m",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "mechanism",
+      "question": "After sketching a first class hierarchy, what should you do next according to the design process slides?",
+      "keyBeats": [
+        "Give it a go with coding empty classes",
+        "Does it make sense? If no, iterate",
+        "Iterate when needed",
+        "Be aware: the longer you wait, the harder it gets to change things",
+        "Refactoring is a friend - but use it with care, 'with great power comes great responsibility'"
+      ],
+      "modelAnswer": "Once you have a sketch, try coding it up as empty classes and see if it makes sense in practice. If it doesn't, iterate on the design - and the sooner the better, since the longer you wait to make changes, the harder they become to make. Refactoring is presented as a friend for this, but one to use carefully, since it comes with real responsibility once code is in place.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 40",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-034-o",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "opener",
+      "question": "What makes a class diagram 'good', according to the slides?",
+      "keyBeats": [
+        "It is neither too small nor too big",
+        "It is descriptive and not too complex",
+        "It relates to our code and is consistent",
+        "It relates to the real world and is consistent",
+        "Getting there is a design process requiring several iterations; 'good' is by intuition and non-measurable"
+      ],
+      "modelAnswer": "The slides frame this as an intuitive, non-measurable judgement rather than a formula, but they give four guiding properties: the diagram should be neither too small nor too big, it should be descriptive without being overly complex, it should relate to and stay consistent with the actual code, and it should relate to and stay consistent with the real world it's modelling. Reaching this typically takes several design iterations.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 38",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-035-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Robator example, why is aggregation/composition chosen between the core Robator class and its internal modules (GUI, Keyboard, Comm. Manager)?",
+      "keyBeats": [
+        "For all internal modules, some sort of aggregation to the core part of Robator seems appropriate",
+        "A composition seems appropriate, since closing/destroying Robator should also close the other modules",
+        "Diagram: Robator (Core) box, with GUI, Keyboard, and Comm.Man. boxes attached to it",
+        "The GUI may be aware of the Comm. Manager and Keyboard, since it needs to show information based on what goes on there"
+      ],
+      "modelAnswer": "Picture a central 'Robator (Core)' box with three boxes attached to it: GUI, Keyboard, and Comm.Man. The relation from Core to each module is drawn as composition, because closing down the Robator should also close down its internal modules - their lifecycles are tied to the core. Separately, the GUI box has an association pointing to Comm.Man and Keyboard, since the GUI needs to know about and display what's happening there.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 43",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-036-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "In the Robator example, how are Transmitter and Receiver related to the Comm. Manager and to each other?",
+      "keyBeats": [
+        "Transmitter sends packets, Receiver receives data - they share some network-related parts",
+        "It seems reasonable to generalize the two, with specialization for sending vs receiving",
+        "Options: define an interface, create a parent class, or both",
+        "Both Transmitter and Receiver are parts of the Comm. Manager",
+        "Diagram shows NetworkIF / NetworkIMP with Transmitter and Receiver on both the Robator/communication and Drone/Communication sides, tied together via Comm. Manager, plus a 'Drone heartbeat' / 'Detect drone' relation"
+      ],
+      "modelAnswer": "Transmitter and Receiver do related but distinct jobs - sending vs. receiving packets - while sharing common network-related parts, so the slide proposes generalizing them, either via a shared parent class, a shared interface (NetworkIF with implementation NetworkIMP), or both. Structurally, both Transmitter and Receiver are parts of the Comm. Manager, and this pattern repeats on both the Robator side and the Drone side of the communication link, tied together by things like a drone heartbeat/detect-drone mechanism.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 44",
+      "unverified": false,
+      "diagram_only": true
+    },
+    {
+      "id": "OOADI-L3-037-d",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "definition",
+      "question": "Summarize the 'important stuff' takeaways about class diagrams and relationship strength from the end of the lecture.",
+      "keyBeats": [
+        "Class diagrams describe structure, not behaviour (classes, attributes, methods, relationships)",
+        "Multiplicity/cardinality matters - defines how many objects participate in a relationship",
+        "Relationship types differ in strength and ownership: Association < Aggregation < Composition",
+        "Use inheritance only for shared behaviour, not just shared method names",
+        "If each subclass implements behaviour differently, prefer an interface or composition over inheritance",
+        "Good class design mirrors reality and guides clean, maintainable, real-world implementations"
+      ],
+      "modelAnswer": "The closing summary is: class diagrams capture structure, not behaviour - classes, attributes, methods and relationships. Multiplicity/cardinality matters because it defines how many objects take part in a relationship. The three relation types differ in strength and ownership, ordered Association < Aggregation < Composition. Inheritance should be used only when behaviour is genuinely shared, not just because method names happen to match - if each subclass would implement things differently, an interface or composition is the better choice. Ultimately, good class design mirrors reality and leads to clean, maintainable, real-world-consistent implementations.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 46",
+      "unverified": false,
+      "diagram_only": false
+    },
+    {
+      "id": "OOADI-L3-038-s",
+      "anchorsExamQ": 2,
+      "anchorsSubPart": "a",
+      "type": "specific",
+      "question": "Describe the structure of the GUI class diagram example, naming the relation types used between its classes.",
+      "keyBeats": [
+        "Frame box (<<entity>> Note attached: 'The main window of the application') has a dependency and aggregation relation down to Shape",
+        "Shape is drawn as an Abstract Class with +draw(), +erase(), +move(), +resized() and is generalized (hollow-triangle arrow) into <<entity>> Circle, Rectangle, Polygon",
+        "Boundary classes ConsoleWindow and DialogBox (<<boundary>>) connect via a Boundary Class / generalization relation",
+        "A <<control>> DrawingContext / DataController class connects to the boundary and entity classes via association and composition, and holds a Point (with x,y or similar attributes)",
+        "Circle/Rectangle/Polygon each add their own attributes (radius, center, etc.) and an area()-style operation"
+      ],
+      "modelAnswer": "At the top is a Frame box (the main application window, annotated with an <<entity>> Note) linked by dependency and aggregation down to an abstract Shape class that declares +draw(), +erase(), +move(), +resized(). Shape is generalized - hollow triangle arrow pointing up to it - from three concrete <<entity>> subclasses: Circle, Rectangle, and Polygon, each adding its own attributes like radius or corner points plus an area-style operation. On another branch, Boundary classes like <<boundary>> ConsoleWindow and DialogBox connect through a boundary/generalization relationship, and a <<control>> class such as DrawingContext or DataController ties the boundary and entity sides together via association and composition, also referencing a Point class for coordinates.",
+      "citation": "ooadi3.slides.pdf.extracted.txt, PAGE 35",
+      "unverified": false,
+      "diagram_only": true
+    }
+  ],
+  "exercises": [
+    {
+      "id": "OOADI-L3-E1",
+      "source": "ooadi3.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Draw a class diagram of the bicycle from last time",
+      "whatItTests": "Ability to draw a single-class UML box correctly, listing private attributes and public operations with correct visibility markers.",
+      "answerSketch": "A single 'Bicycle' class box with private attributes '- colour' and '- speed', and public operations '+ setSpeed()', '+ getSpeed()', '+ changeColour()', '+ start()', '+ stop()'."
+    },
+    {
+      "id": "OOADI-L3-E2",
+      "source": "ooadi3.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Think of a larger group of bicycle types. Create a class hierarchy of the bicycles - both subclasses and super classes. Create methods and attributes for super and subclasses that are specific to that level. Top super class is always Object",
+      "whatItTests": "Ability to build a multi-level inheritance hierarchy with level-appropriate attributes/methods, rooted at Object.",
+      "answerSketch": "Hierarchy: Object (root, implicit) -> Vehicle (- brand, ~ weight, + start(), + stop()) -> Bicycle (- colour, - gearCount, - speed, + changeGear(), + setSpeed(), + break()) -> three siblings: MountainBike (- suspensionType, + lockSuspension()), RoadBike (- tirePressure, + pumpTires()), ElectricalBike (- batteryLevel, + assistPedalling(), + chargeBattery())."
+    },
+    {
+      "id": "OOADI-L3-E3",
+      "source": "ooadi3.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Implement at least three subclasses and one super class to the bicycle class",
+      "whatItTests": "Ability to implement a real Java inheritance hierarchy: protected fields for subclass access, method overriding-free specialization, and constructors/behaviour per level.",
+      "answerSketch": "class Vehicle { protected String brand; protected double weight; public void start(){...} public void stop(){...} } class Bicycle extends Vehicle { protected String colour; protected int gearCount; protected int speed; public void changeGear(int g){gearCount=g;} public void setSpeed(int s){speed=s;} } class MountainBike extends Bicycle { private String suspensionType=\"full\"; public void lockSuspension(){...} } class RoadBike extends Bicycle { private double tirePressure=8.0; public void pumpTires(){...} } class ElectricBike extends Bicycle { private int batteryLevel=80; public void assistPedalling(){...} public void chargeBattery(){batteryLevel=100;} }"
+    },
+    {
+      "id": "OOADI-L3-E4",
+      "source": "ooadi3.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Instantiate several types of the bicycle class and demonstrate by code execution that you are using three different bicycle types. Use methods from all levels of the defined hierarchy",
+      "whatItTests": "Ability to instantiate subclasses and call inherited, intermediate, and subclass-specific methods to prove the hierarchy works end to end.",
+      "answerSketch": "In main(): MountainBike mb = new MountainBike(); mb.start(); // from Vehicle mb.setSpeed(20); // from Bicycle mb.lockSuspension(); // from MountainBike. Then RoadBike rb = new RoadBike(); rb.start(); rb.pumpTires();. Then ElectricBike eb = new ElectricBike(); eb.start(); eb.assistPedalling();. Each object calls a method from Vehicle, Bicycle, and its own subclass, proving three distinct bicycle types share and specialize the hierarchy."
+    },
+    {
+      "id": "OOADI-L3-E5",
+      "source": "ooadi3.assignments.pdf.extracted.txt, PAGE 1",
+      "promptVerbatim": "Discuss the difference between the keywords this and super. Does it make sense to have a keyword sub?",
+      "whatItTests": "Conceptual understanding of the this/super keywords and why OO encapsulation forbids a superclass from referencing its subclasses.",
+      "answerSketch": "'this' refers to the current object instance - used to access the current object's attributes, call its methods, and disambiguate parameters from fields (this.colour = colour;). 'super' refers to the parent class - used to call superclass methods (super.start()), call the superclass constructor (super(brand, weight);), and access hidden/shadowed fields. A 'sub' keyword would not make sense: the superclass must not depend on knowledge of its subclasses (violates OO principles), subclasses are free to extend a superclass without it knowing who extends it, and a 'sub' keyword would invert the inheritance direction and break encapsulation. So a 'sub' keyword is not meaningful in proper OO design."
+    }
+  ]
+}
